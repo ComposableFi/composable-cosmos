@@ -7,6 +7,7 @@ import (
 
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
+	"github.com/cosmos/cosmos-sdk/x/consensus"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
@@ -56,7 +57,6 @@ import (
 	govtypesv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	distrclient "github.com/cosmos/cosmos-sdk/x/params/client"
 
-	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
@@ -81,13 +81,15 @@ import (
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+
+	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
+	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -145,6 +147,8 @@ var (
 		vesting.AppModuleBasic{},
 		tendermint.AppModuleBasic{},
 		wasm.AppModuleBasic{},
+		consensus.AppModuleBasic{},
+
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -163,7 +167,6 @@ var (
 
 var (
 	_ servertypes.Application = (*PolytopeApp)(nil)
-	_ ibctesting.TestingApp   = (*PolytopeApp)(nil)
 )
 
 func init() {
@@ -209,18 +212,9 @@ type PolytopeApp struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 
 	// make scoped keepers public for test purposes
-	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
-	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
-	// ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
-	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
-	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
-
-	ScopedStakeibcKeeper capabilitykeeper.ScopedKeeper
-
-	ScopedRecordsKeeper      capabilitykeeper.ScopedKeeper
-	ScopedIcacallbacksKeeper capabilitykeeper.ScopedKeeper
-	ScopedratelimitKeeper    capabilitykeeper.ScopedKeeper
-	ConsensusParamsKeeper    consensusparamkeeper.Keeper
+	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
+	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
+	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	mm           *module.Manager
@@ -254,7 +248,7 @@ func NewPolytopeApp(
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, // monitoringptypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey,
 
 		crisistypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
@@ -276,7 +270,7 @@ func NewPolytopeApp(
 	app.ParamsKeeper = initParamsKeeper(appCodec, cdc, keys[paramstypes.StoreKey], tkeys[paramstypes.TStoreKey])
 
 	// set the BaseApp's parameter store
-	app.ConsensusParamsKeeper = consensusparamkeeper.NewKeeper(appCodec, keys[upgradetypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
+	app.ConsensusParamsKeeper = consensusparamkeeper.NewKeeper(appCodec, keys[consensusparamtypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	bApp.SetParamStore(&app.ConsensusParamsKeeper)
 
 	// add capability keeper and ScopeToModule for ibc module
@@ -347,25 +341,6 @@ func NewPolytopeApp(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	// TODO(TEST-20): look for all lines that include 'monitoring' in this file! there are a few places this
-	// is commented out
-	// scopedMonitoringKeeper := app.CapabilityKeeper.ScopeToModule(monitoringptypes.ModuleName)
-	// app.MonitoringKeeper = *monitoringpkeeper.NewKeeper(
-	// 	appCodec,
-	// 	keys[monitoringptypes.StoreKey],
-	// 	keys[monitoringptypes.MemStoreKey],
-	// 	app.GetSubspace(monitoringptypes.ModuleName),
-	// 	app.StakingKeeper,
-	// 	app.IBCKeeper.ClientKeeper,
-	// 	app.IBCKeeper.ConnectionKeeper,
-	// 	app.IBCKeeper.ChannelKeeper,
-	// 	&app.IBCKeeper.PortKeeper,
-	// 	scopedMonitoringKeeper,
-	// )
-	// monitoringModule := monitoringp.NewAppModule(appCodec, app.MonitoringKeeper)
-
-	// Note: must be above app.StakeibcKeeper
-
 	// Register Gov (must be registerd after stakeibc)
 	govRouter := govtypesv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govtypesv1beta1.ProposalHandler).
@@ -387,20 +362,8 @@ func NewPolytopeApp(
 		),
 	)
 
-	var transferStack porttypes.IBCModule = transferIBCModule
-	transferStack = transfer.NewIBCModule(app.TransferKeeper)
-
-	// Create static IBC router, add transfer route, then set and seal it
-	// Two routes are included for the ICAController because of the following procedure when registering an ICA
-	//     1. RegisterInterchainAccount binds the new portId to the icacontroller module and initiates a channel opening
-	//     2. MsgChanOpenInit is invoked from the IBC message server.  The message server identifies that the
-	//        icacontroller module owns the portID and routes to the stakeibc stack (the "icacontroller" route below)
-	//     3. The stakeibc stack works top-down, first in the ICAController's OnChanOpenInit, and then in stakeibc's OnChanOpenInit
-	//     4. In stakeibc's OnChanOpenInit, the stakeibc module steals the portId from the icacontroller module
-	//     5. Now in OnChanOpenAck and any other subsequent IBC callback, the message server will identify
-	//        the portID owner as stakeibc and route to the same stakeibcStack, this time using the "stakeibc" route instead
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
@@ -434,6 +397,8 @@ func NewPolytopeApp(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
+		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
+
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -458,6 +423,7 @@ func NewPolytopeApp(
 		genutiltypes.ModuleName,
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
+		consensusparamtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -478,7 +444,7 @@ func NewPolytopeApp(
 		upgradetypes.ModuleName,
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
-		// monitoringptypes.ModuleName,
+		consensusparamtypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -503,6 +469,7 @@ func NewPolytopeApp(
 		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
+		consensusparamtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -751,7 +718,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
-	// paramsKeeper.Subspace(monitoringptypes.ModuleName)
+	paramsKeeper.Subspace(ibchost.ModuleName)
+
 	return paramsKeeper
 }
 
