@@ -95,9 +95,9 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "stride"
-	Name                 = "stride"
-	Version              = "5.0.0"
+	AccountAddressPrefix = "polytope"
+	Name                 = "polytope"
+	Version              = "1.0.0"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -162,8 +162,8 @@ var (
 )
 
 var (
-	_ servertypes.Application = (*StrideApp)(nil)
-	_ ibctesting.TestingApp   = (*StrideApp)(nil)
+	_ servertypes.Application = (*PolytopeApp)(nil)
+	_ ibctesting.TestingApp   = (*PolytopeApp)(nil)
 )
 
 func init() {
@@ -175,10 +175,10 @@ func init() {
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
 }
 
-// StrideApp extends an ABCI application, but with most of its parameters exported.
+// PolytopeApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type StrideApp struct {
+type PolytopeApp struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -230,7 +230,7 @@ type StrideApp struct {
 
 // RUN GOSEC
 // New returns a reference to an initialized blockchain app
-func NewStrideApp(
+func NewPolytopeApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -241,7 +241,7 @@ func NewStrideApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *StrideApp {
+) *PolytopeApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -262,7 +262,7 @@ func NewStrideApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &StrideApp{
+	app := &PolytopeApp{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -574,49 +574,49 @@ func NewStrideApp(
 }
 
 // Name returns the name of the App
-func (app *StrideApp) Name() string { return app.BaseApp.Name() }
+func (app *PolytopeApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app *StrideApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app *PolytopeApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *StrideApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *PolytopeApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *StrideApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
+func (app *PolytopeApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
 	return &app.TransferKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *StrideApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *PolytopeApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetScopedIBCKeeper implements the TestingApp interface.
-func (app *StrideApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *PolytopeApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *StrideApp) GetTxConfig() client.TxConfig {
+func (app *PolytopeApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
 
 // BeginBlocker application updates every begin block
-func (app *StrideApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *PolytopeApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *StrideApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *PolytopeApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *StrideApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *PolytopeApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -626,12 +626,12 @@ func (app *StrideApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) ab
 }
 
 // LoadHeight loads a particular height
-func (app *StrideApp) LoadHeight(height int64) error {
+func (app *PolytopeApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *StrideApp) ModuleAccountAddrs() map[string]bool {
+func (app *PolytopeApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -642,7 +642,7 @@ func (app *StrideApp) ModuleAccountAddrs() map[string]bool {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *StrideApp) BlacklistedModuleAccountAddrs() map[string]bool {
+func (app *PolytopeApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -656,7 +656,7 @@ func (app *StrideApp) BlacklistedModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *StrideApp) LegacyAmino() *codec.LegacyAmino {
+func (app *PolytopeApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -664,47 +664,47 @@ func (app *StrideApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *StrideApp) AppCodec() codec.Codec {
+func (app *PolytopeApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *StrideApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *PolytopeApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *StrideApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *PolytopeApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *StrideApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *PolytopeApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *StrideApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *PolytopeApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *StrideApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *PolytopeApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *StrideApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *PolytopeApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -715,17 +715,17 @@ func (app *StrideApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.API
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *StrideApp) RegisterTxService(clientCtx client.Context) {
+func (app *PolytopeApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *StrideApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *PolytopeApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
 }
 
 // RegisterNodeService registers the node gRPC Query service.
-func (app *StrideApp) RegisterNodeService(clientCtx client.Context) {
+func (app *PolytopeApp) RegisterNodeService(clientCtx client.Context) {
 	// TODO: implement!
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
@@ -756,6 +756,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *StrideApp) SimulationManager() *module.SimulationManager {
+func (app *PolytopeApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }

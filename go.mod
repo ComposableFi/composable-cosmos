@@ -3,26 +3,28 @@ module github.com/notional-labs/polytope/v2
 go 1.19
 
 require (
-	cosmossdk.io/math v1.0.0-beta.4
-	cosmossdk.io/simapp v0.0.0-20221216140705-ee8890cf30e7
-	github.com/cosmos/cosmos-proto v1.0.0-beta.1
 	github.com/cosmos/cosmos-sdk v0.47.0-rc1
-	github.com/cosmos/gogoproto v1.4.3
 	github.com/cosmos/ibc-go/v7 v7.0.0
-	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab
-	github.com/gogo/protobuf v1.3.3
-	github.com/golang/protobuf v1.5.2
-	github.com/gorilla/mux v1.8.0
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
-	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.8.1
 	github.com/tendermint/tendermint v0.37.0-rc2
 	github.com/tendermint/tm-db v0.6.7
-	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
-	google.golang.org/grpc v1.52.1
-	gopkg.in/yaml.v2 v2.4.0
+)
+
+require (
+	cosmossdk.io/math v1.0.0-beta.4 // indirect
+	github.com/cosmos/cosmos-proto v1.0.0-beta.1 // indirect
+	github.com/cosmos/gogoproto v1.4.3 // indirect
+	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
+	github.com/gogo/protobuf v1.3.3 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
+	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef // indirect
+	google.golang.org/grpc v1.52.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (
@@ -180,9 +182,6 @@ replace (
 
 	// Use a specific version of ignite cli
 	github.com/ignite-hq/cli => github.com/ignite-hq/cli v0.21.0
-
-	// fork cast to add additional error checking
-	github.com/spf13/cast => github.com/Stride-Labs/cast v0.0.3
 
 	// use the version of grpc compatible with the regen networks protobufs.
 	google.golang.org/grpc => google.golang.org/grpc v1.50.1

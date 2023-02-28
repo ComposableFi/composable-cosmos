@@ -12,32 +12,32 @@ TRACE=""
 command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
 
 # remove existing daemon
-rm -rf ~/.stride*
+rm -rf ~/.polytope*
 
-strided config keyring-backend $KEYRING
-strided config chain-id $CHAINID
+polytoped config keyring-backend $KEYRING
+polytoped config chain-id $CHAINID
 
 # if $KEY exists it should be deleted
-strided keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
+polytoped keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
 
 # Set moniker and chain-id for Evmos (Moniker can be anything, chain-id must be an integer)
-strided init $MONIKER --chain-id $CHAINID 
+polytoped init $MONIKER --chain-id $CHAINID 
 
 # Allocate genesis accounts (cosmos formatted addresses)
-strided add-genesis-account $KEY 100000000000000000000000000stake --keyring-backend $KEYRING
+polytoped add-genesis-account $KEY 100000000000000000000000000stake --keyring-backend $KEYRING
 
 # Sign genesis transaction
-strided gentx $KEY 1000000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+polytoped gentx $KEY 1000000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
 # Collect genesis tx
-strided collect-gentxs
+polytoped collect-gentxs
 
 # Run this to ensure everything worked and that the genesis file is setup correctly
-strided validate-genesis
+polytoped validate-genesis
 
 if [[ $1 == "pending" ]]; then
   echo "pending mode is on, please wait for the first block committed."
 fi
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-strided start --pruning=nothing  --minimum-gas-prices=0.0001stake 
+polytoped start --pruning=nothing  --minimum-gas-prices=0.0001stake 
