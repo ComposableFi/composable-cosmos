@@ -39,5 +39,9 @@ if [[ $1 == "pending" ]]; then
   echo "pending mode is on, please wait for the first block committed."
 fi
 
+# update request max size so that we can upload the light client
+# '' -e is a must have params on mac, if use linux please delete before run
+sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.polytope/config/config.toml
+
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
 polytoped start --pruning=nothing  --minimum-gas-prices=0.0001stake 
