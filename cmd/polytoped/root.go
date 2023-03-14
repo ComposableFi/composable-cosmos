@@ -8,13 +8,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
 
-	tmDb "github.com/tendermint/tm-db"
+	tmDb "github.com/cometbft/cometbft-db"
 
+	dbm "github.com/cometbft/cometbft-db"
+	tmcli "github.com/cometbft/cometbft/libs/cli"
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -36,9 +36,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 
+	tmcfg "github.com/cometbft/cometbft/config"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	tmcfg "github.com/tendermint/tendermint/config"
 
 	"github.com/notional-labs/polytope/v2/app"
 	// "github.com/notional-labs/polytope/v2/app/params"
