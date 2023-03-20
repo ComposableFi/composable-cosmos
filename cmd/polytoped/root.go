@@ -8,8 +8,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
 
-	tmDb "github.com/cometbft/cometbft-db"
-
 	dbm "github.com/cometbft/cometbft-db"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cometbft/cometbft/libs/log"
