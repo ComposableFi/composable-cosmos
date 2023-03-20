@@ -9,6 +9,7 @@ require (
 	github.com/cosmos/ibc-go/v7 v7.0.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
+	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4
 )
 
 require (
@@ -186,7 +187,7 @@ replace (
 	github.com/ignite-hq/cli => github.com/ignite-hq/cli v0.21.0
 
 	//  Use notional lab version of async-icq
-	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230217215418-a626cb28642e => github.com/notional-labs/async-icq v0.0.1
+	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
 
 	// use the version of grpc compatible with the regen networks protobufs.
 	google.golang.org/grpc => google.golang.org/grpc v1.50.1
