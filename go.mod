@@ -174,7 +174,7 @@ replace (
 	// dragonberry replkace line per: https://github.com/cosmos/cosmos-sdk/releases/tag/v0.45.9
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 
-	github.com/cosmos/ibc-go/v7 v7.1.0 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321085134-9ffecfb59d85
+	github.com/cosmos/ibc-go/v7 v7.1.0 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321185643-9020cfed6545
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
