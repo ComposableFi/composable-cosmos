@@ -18,7 +18,7 @@ polytoped config keyring-backend $KEYRING
 polytoped config chain-id $CHAINID
 
 # if $KEY exists it should be deleted
-polytoped keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
+echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | polytoped keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
 # Set moniker and chain-id for Evmos (Moniker can be anything, chain-id must be an integer)
 polytoped init $MONIKER --chain-id $CHAINID 
