@@ -11,6 +11,8 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
+	wasmkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -210,7 +212,7 @@ type PolytopeApp struct {
 	EvidenceKeeper   evidencekeeper.Keeper
 	TransferKeeper   ibctransferkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
-
+	WasmClientKeeper wasmkeeper.Keeper
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -248,7 +250,7 @@ func NewPolytopeApp(
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
 
 		crisistypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
@@ -320,6 +322,7 @@ func NewPolytopeApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
+	app.WasmClientKeeper = wasmkeeper.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
 	// Create Transfer Keepers
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
@@ -398,6 +401,7 @@ func NewPolytopeApp(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
+		wasm.NewAppModule(app.WasmClientKeeper),
 
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -424,6 +428,7 @@ func NewPolytopeApp(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		consensusparamtypes.ModuleName,
+		wasmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -445,6 +450,7 @@ func NewPolytopeApp(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		consensusparamtypes.ModuleName,
+		wasmtypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -470,6 +476,7 @@ func NewPolytopeApp(
 		ibctransfertypes.ModuleName,
 		feegrant.ModuleName,
 		consensusparamtypes.ModuleName,
+		wasmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
