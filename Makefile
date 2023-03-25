@@ -18,6 +18,13 @@ DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
 HTTPS_GIT := https://github.com/notional-labs/composable-testnet.git
+GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
+GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+GO_PATCH_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f3)
+MINIMUM_SUPPORTED_GO_MAJOR_VERSION = $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f2 | cut -d'.' -f1)
+MINIMUM_SUPPORTED_GO_MINOR_VERSION = $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f2 | cut -d'.' -f2)
+MINIMUM_SUPPORTED_GO_PATCH_VERSION = 0
+GO_VERSION_CHECK_ERR_MSG = \033[0;31mERROR:\033[0m Go version $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION).$(GO_PATCH_VERSION) is not supported. Update to at least $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION).$(MINIMUM_SUPPORTED_GO_MINOR_VERSION).$(MINIMUM_SUPPORTED_GO_PATCH_VERSION)
 
 export GO111MODULE = on
 
@@ -87,8 +94,24 @@ endif
 
 all: install
 
-install: go.sum
+check-go-version:
+	@if [ $(GO_MAJOR_VERSION) -gt $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION) ]; then \
+		exit 0 ;\
+	elif [ $(GO_MAJOR_VERSION) -lt $(MINIMUM_SUPPORTED_GO_MAJOR_VERSION) ]; then \
+		echo '$(GO_VERSION_CHECK_ERR_MSG)';\
+		exit 1; \
+	elif [ $(GO_MINOR_VERSION) -gt $(MINIMUM_SUPPORTED_GO_MINOR_VERSION) ] ; then \
+		exit 0 ;\
+	elif [ $(GO_MINOR_VERSION) -lt $(MINIMUM_SUPPORTED_GO_MINOR_VERSION) ] ; then \
+		echo '$(GO_VERSION_CHECK_ERR_MSG)';\
+		exit 1; \
+	elif [ $(GO_PATCH_VERSION) -lt $(MINIMUM_SUPPORTED_GO_PATCH_VERSION) ] ; then \
+		echo '$(GO_VERSION_CHECK_ERR_MSG)';\
+		exit 1; \
+	fi
+
+install: check-go-version go.sum
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/polytoped
 
-build:
+build: check-go-version
 	go build $(BUILD_FLAGS) -o bin/polytoped ./cmd/polytoped
