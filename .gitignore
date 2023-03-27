@@ -12,6 +12,7 @@
 # build
 launch.sh
 build/*
+bin
 state/*
 scripts/state
 scripts/logs
