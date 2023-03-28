@@ -21,7 +21,9 @@ dockernet/upgrades/binaries
 dockernet/upgrades/cosmovisor
 dockernet/temp.sh
 scripts/temp.sh
+wasm_client*
 vue/*
+bin/*
 # Test binary, built with `go test -c`
 *.test
 

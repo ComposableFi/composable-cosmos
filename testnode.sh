@@ -18,9 +18,8 @@ polytoped config keyring-backend $KEYRING
 polytoped config chain-id $CHAINID
 
 # if $KEY exists it should be deleted
-polytoped keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO
+echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | polytoped keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
-# Set moniker and chain-id for Evmos (Moniker can be anything, chain-id must be an integer)
 polytoped init $MONIKER --chain-id $CHAINID 
 
 # Allocate genesis accounts (cosmos formatted addresses)
@@ -38,6 +37,10 @@ polytoped validate-genesis
 if [[ $1 == "pending" ]]; then
   echo "pending mode is on, please wait for the first block committed."
 fi
+
+# update request max size so that we can upload the light client
+# '' -e is a must have params on mac, if use linux please delete before run
+sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.polytope/config/config.toml
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
 polytoped start --pruning=nothing  --minimum-gas-prices=0.0001stake 
