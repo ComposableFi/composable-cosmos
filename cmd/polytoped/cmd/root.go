@@ -2,13 +2,12 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
-
-	tmDb "github.com/cometbft/cometbft-db"
 
 	dbm "github.com/cometbft/cometbft-db"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
@@ -284,7 +283,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 	}
 
 	snapshotDir := filepath.Join(cast.ToString(appOpts.Get(flags.FlagHome)), "data", "snapshots")
-	snapshotDB, err := tmDb.NewDB("metadata", tmDb.GoLevelDBBackend, snapshotDir)
+	snapshotDB, err := dbm.NewDB("metadata", dbm.GoLevelDBBackend, snapshotDir)
 	if err != nil {
 		panic(err)
 	}
@@ -298,7 +297,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
 	)
 
-	return app.NewPolytopeApp(
+	newApp := app.NewPolytopeApp(
 		logger, db, traceStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
@@ -318,6 +317,8 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		baseapp.SetIAVLDisableFastNode(cast.ToBool(appOpts.Get(server.FlagDisableIAVLFastNode))),
 		baseapp.SetChainID("test-1"),
 	)
+	fmt.Println("new app", newApp.BaseApp)
+	return newApp
 }
 
 // appExport creates a new simapp (optionally at a given height)
