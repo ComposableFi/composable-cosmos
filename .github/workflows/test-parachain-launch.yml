@@ -12,20 +12,12 @@ env:
   DEBIAN_FRONTEND: noninteractive
 
 jobs:
-  linters:
+  test:
     name: Tests
+    runs-on: ubuntu-latest
     concurrency:
       group: tests-${{ github.ref }}
       cancel-in-progress: true
-    container:
-      image: ubuntu:jammy
-      env:
-        BUILD_DIR: /home/ghr/_work/_temp
-      volumes:
-        - /home/ghr/_work/_temp:/home/ghr/_work/_temp
-    runs-on:
-      - self-hosted
-      - x64-monster
     timeout-minutes: 300
     steps:
       - name: Install git
