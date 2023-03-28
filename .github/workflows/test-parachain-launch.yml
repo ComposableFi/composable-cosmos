@@ -14,6 +14,12 @@ env:
 jobs:
   test:
     name: Tests
+    container:
+      image: ubuntu:jammy
+      env:
+        BUILD_DIR: /home/ghr/_work/_temp
+      volumes:
+        - /home/ghr/_work/_temp:/home/ghr/_work/_temp
     runs-on: ubuntu-latest
     concurrency:
       group: tests-${{ github.ref }}
