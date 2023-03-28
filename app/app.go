@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -249,6 +250,8 @@ func NewPolytopeApp(
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetVersion(Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
+
+	fmt.Println("base app dcm", bApp)
 
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,

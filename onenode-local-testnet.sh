@@ -77,6 +77,6 @@ sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR1
 
 
 # start all three validators
-polytoped start --home=$HOME/.polytoped
+polytoped start --home=$HOME/.polytope
 
 # tmux new -s poly -d polytoped start --home=$HOME/.polytoped
