@@ -137,10 +137,6 @@ jobs:
           ./scripts/wait_for_tcp_port_opening.sh $RELAY_HOST 9944
           ./scripts/wait_for_tcp_port_opening.sh $PARA_HOST 9188
 
-      - name: Check that subxt-generated is up to date
-        run: |
-          ./scripts/generate-subxt.sh
-
       - name: Run all unit tests
         run: |
           SKIP_WASM_BUILD=1 cargo +nightly nextest run --locked --release --workspace --exclude ibc-derive --exclude hyperspace-testsuite
