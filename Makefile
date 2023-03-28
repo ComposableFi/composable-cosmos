@@ -13,7 +13,6 @@ endif
 
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
-TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::') 
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
@@ -63,8 +62,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=polytope \
 		  -X github.com/cosmos/cosmos-sdk/version.AppName=polytoped \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
-			-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
+		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
 
 ifeq (cleveldb,$(findstring cleveldb,$(COSMOS_BUILD_OPTIONS)))
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
@@ -92,3 +90,6 @@ install: go.sum
 
 build:
 	go build $(BUILD_FLAGS) -o bin/polytoped ./cmd/polytoped
+
+docker-build-debug:
+	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
