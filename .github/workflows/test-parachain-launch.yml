@@ -118,6 +118,7 @@ jobs:
 
       - name: Run local parachain cluster
         run: |
+          docker pull ghcr.io/notional-labs/parachain-node:lastest
           mkdir $BUILD_DIR/tmp
           yarn --cwd ./scripts/parachain-launch install
           TMPDIR=$BUILD_DIR/tmp OUTPUT=$BUILD_DIR yarn --cwd ./scripts/parachain-launch dev
