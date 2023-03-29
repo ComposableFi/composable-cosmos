@@ -172,20 +172,13 @@ replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
 
-	// dragonberry replkace line per: https://github.com/cosmos/cosmos-sdk/releases/tag/v0.45.9
-	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
-
-	github.com/cosmos/ibc-go/v7 v7.1.0 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321185643-9020cfed6545
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230327161923-eae575bf57cc
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-	// Use a specific version of ignite cli
-	github.com/ignite-hq/cli => github.com/ignite-hq/cli v0.21.0
-
 	//  Use notional lab version of async-icq
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
+
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
-	// use the version of grpc compatible with the regen networks protobufs.
-	google.golang.org/grpc => google.golang.org/grpc v1.50.1
 )

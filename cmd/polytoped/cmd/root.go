@@ -270,11 +270,11 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 
 	skipUpgradeHeights := make(map[int64]bool)
 	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
-		h_, err := cast.ToInt64E(h)
+		h, err := cast.ToInt64E(h)
 		if err != nil {
 			panic(err)
 		}
-		skipUpgradeHeights[h_] = true
+		skipUpgradeHeights[h] = true
 	}
 
 	pruningOpts, err := server.GetPruningOptionsFromFlags(appOpts)
@@ -324,7 +324,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 // appExport creates a new simapp (optionally at a given height)
 func (a appCreator) appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
-	appOpts servertypes.AppOptions, modulesToExport []string,
+	appOpts servertypes.AppOptions, _ []string,
 ) (servertypes.ExportedApp, error) {
 	var anApp *app.PolytopeApp
 
