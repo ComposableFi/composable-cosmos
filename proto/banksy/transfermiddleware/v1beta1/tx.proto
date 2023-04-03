@@ -6,7 +6,7 @@ import "cosmos/msg/v1/msg.proto";
 
 option go_package = "x/transfermiddleware/types";
 
-// Msg defines the composable Msg service.
+// Msg defines the transfer middleware Msg service.
 service Msg {
     rpc AddParachainInfo(MsgAddParachainInfo) returns (MsgAddParachainInfoResponse);
     rpc RemoveParachainInfo(MsgRemoveParachainInfo) returns (MsgRemoveParachainInfoResponse);
