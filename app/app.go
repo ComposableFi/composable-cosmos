@@ -103,8 +103,8 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "polytope"
-	Name                 = "polytope"
+	AccountAddressPrefix = "banksy"
+	Name                 = "banksy"
 	Version              = "1.0.0"
 )
 
@@ -173,7 +173,7 @@ var (
 )
 
 var (
-	_ servertypes.Application = (*PolytopeApp)(nil)
+	_ servertypes.Application = (*BanksyApp)(nil)
 )
 
 func init() {
@@ -185,10 +185,10 @@ func init() {
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
 }
 
-// PolytopeApp extends an ABCI application, but with most of its parameters exported.
+// BanksyApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type PolytopeApp struct {
+type BanksyApp struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -232,7 +232,7 @@ type PolytopeApp struct {
 
 // RUN GOSEC
 // New returns a reference to an initialized blockchain app
-func NewPolytopeApp(
+func NewBanksyApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -243,7 +243,7 @@ func NewPolytopeApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *PolytopeApp {
+) *BanksyApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -266,7 +266,7 @@ func NewPolytopeApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &PolytopeApp{
+	app := &BanksyApp{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -570,49 +570,49 @@ func NewPolytopeApp(
 }
 
 // Name returns the name of the App
-func (app *PolytopeApp) Name() string { return app.BaseApp.Name() }
+func (app *BanksyApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app *PolytopeApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app *BanksyApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *BanksyApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
+func (app *BanksyApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
 	return &app.TransferKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *BanksyApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetScopedIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *BanksyApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *PolytopeApp) GetTxConfig() client.TxConfig {
+func (app *BanksyApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
 
 // BeginBlocker application updates every begin block
-func (app *PolytopeApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *BanksyApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *PolytopeApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *BanksyApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *PolytopeApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *BanksyApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -622,12 +622,12 @@ func (app *PolytopeApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) 
 }
 
 // LoadHeight loads a particular height
-func (app *PolytopeApp) LoadHeight(height int64) error {
+func (app *BanksyApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *PolytopeApp) ModuleAccountAddrs() map[string]bool {
+func (app *BanksyApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -638,7 +638,7 @@ func (app *PolytopeApp) ModuleAccountAddrs() map[string]bool {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *PolytopeApp) BlacklistedModuleAccountAddrs() map[string]bool {
+func (app *BanksyApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -652,7 +652,7 @@ func (app *PolytopeApp) BlacklistedModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *PolytopeApp) LegacyAmino() *codec.LegacyAmino {
+func (app *BanksyApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -660,47 +660,47 @@ func (app *PolytopeApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *PolytopeApp) AppCodec() codec.Codec {
+func (app *BanksyApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *PolytopeApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *BanksyApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *BanksyApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *BanksyApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *PolytopeApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *BanksyApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *BanksyApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *PolytopeApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (app *BanksyApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -711,17 +711,17 @@ func (app *PolytopeApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.A
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *PolytopeApp) RegisterTxService(clientCtx client.Context) {
+func (app *BanksyApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *PolytopeApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *BanksyApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
 }
 
 // RegisterNodeService registers the node gRPC Query service.
-func (app *PolytopeApp) RegisterNodeService(clientCtx client.Context) {
+func (app *BanksyApp) RegisterNodeService(clientCtx client.Context) {
 	// TODO: implement!
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
@@ -754,6 +754,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *PolytopeApp) SimulationManager() *module.SimulationManager {
+func (app *BanksyApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }

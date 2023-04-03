@@ -1,11 +1,11 @@
-# This workflow pushes new polytope docker images on every new tag.
+# This workflow pushes new banksy docker images on every new tag.
 #
 # On every new `vX.Y.Z` tag the following images are pushed:
 #
-# notional-labs/polytope:X.Y.Z    # is pushed
-# notional-labs/polytope:X.Y      # is updated to X.Y.Z
-# notional-labs/polytope:X        # is updated to X.Y.Z
-# notional-labs/polytope:latest   # is updated to X.Y.Z
+# notional-labs/banksy:X.Y.Z    # is pushed
+# notional-labs/banksy:X.Y      # is updated to X.Y.Z
+# notional-labs/banksy:X        # is updated to X.Y.Z
+# notional-labs/banksy:latest   # is updated to X.Y.Z
 # 
 # All the images above have support for linux/amd64 and linux/arm64.
 #
@@ -58,9 +58,9 @@ jobs:
         with:
           file: Dockerfile
           context: .
-          push: true
+          push: trueascfasd
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/notional-labs/polytope:${{ env.MAJOR_VERSION }}
-            ghcr.io/notional-labs/polytope:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
-            ghcr.io/notional-labs/polytope:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}
+            ghcr.io/notional-labs/banksy:${{ env.MAJOR_VERSION }}
+            ghcr.io/notional-labs/banksy:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
+            ghcr.io/notional-labs/banksy:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}

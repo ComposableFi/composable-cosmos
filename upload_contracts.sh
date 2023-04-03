@@ -1,1 +1,1 @@
-polytoped tx 08-wasm push-wasm contracts/ics10_grandpa_cw.wasm --from mykey --keyring-backend test --gas 902152622 --fees 920166stake -y
+banksyd tx 08-wasm push-wasm contracts/ics10_grandpa_cw.wasm --from mykey --keyring-backend test --gas 902152622 --fees 920166stake -y
