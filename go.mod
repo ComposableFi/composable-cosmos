@@ -1,4 +1,4 @@
-module github.com/notional-labs/polytope/v2
+module github.com/notional-labs/composable-testnet/v2
 
 go 1.19
 
