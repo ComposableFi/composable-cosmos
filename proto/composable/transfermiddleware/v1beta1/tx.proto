@@ -1,0 +1,42 @@
+syntax = "proto3";
+package composable.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// Msg defines the composable Msg service.
+service Msg {
+    rpc AddParachainInfo(MsgAddParachainInfo) returns (MsgAddParachainInfoResponse);
+    rpc RemoveParachainInfo(MsgRemoveParachainInfo) returns (MsgRemoveParachainInfoResponse);
+}
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddParachainInfo {
+    option (cosmos.msg.v1.signer) = "authority";
+    
+    option (gogoproto.equal)           = false;
+    option (gogoproto.goproto_getters) = false;
+  
+    string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+}
+
+message MsgAddParachainInfoResponse {
+}
+
+
+// MsgRemoveParachainInfo represents a message to remove new parachain info.
+message MsgRemoveParachainInfo {
+    option (cosmos.msg.v1.signer) = "authority";
+
+    option (gogoproto.equal)           = false;
+    option (gogoproto.goproto_getters) = false;
+
+    string native_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+}
+
+message MsgRemoveParachainInfoResponse {
+}
