@@ -5,9 +5,9 @@ import (
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"github.com/notional-labs/polytope/v2/app"
-	cmd "github.com/notional-labs/polytope/v2/cmd/polytoped/cmd"
-	cmdcfg "github.com/notional-labs/polytope/v2/cmd/polytoped/config"
+	"github.com/notional-labs/banksy/v2/app"
+	cmd "github.com/notional-labs/banksy/v2/cmd/banksyd/cmd"
+	cmdcfg "github.com/notional-labs/banksy/v2/cmd/banksyd/config"
 )
 
 func main() {
