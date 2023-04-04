@@ -16,7 +16,7 @@ SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
-HTTPS_GIT := https://github.com/notional-labs/banksy.git
+HTTPS_GIT := https://github.com/notional-labs/composable-testnet.git
 
 export GO111MODULE = on
 
