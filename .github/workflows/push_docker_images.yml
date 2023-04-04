@@ -58,7 +58,7 @@ jobs:
         with:
           file: Dockerfile
           context: .
-          push: trueascfasd
+          push: true
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/notional-labs/banksy:${{ env.MAJOR_VERSION }}
