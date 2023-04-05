@@ -93,3 +93,24 @@ build:
 
 docker-build-debug:
 	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
+
+###############################################################################
+###                             Interchain test                             ###
+###############################################################################
+
+# Executes start chain tests via interchaintest
+ictest-start-cosmos:
+	cd tests/interchaintest && go test -race -v -run TestStartBanksy .
+
+# Executes start chain tests via interchaintest
+ictest-start-polkadot:
+	cd tests/interchaintest && go test -race -v -run TestPolkadotComposableChainStart .
+
+# Executes IBC tests via interchaintest
+ictest-ibc:
+	cd tests/interchaintest && go test -race -v -run TestBanksyPicassoIBCTransfer .
+
+# Executes all tests via interchaintest after compling a local image as juno:local
+ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
+
+.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-all
