@@ -1,8 +1,6 @@
 package interchaintest
 
 import (
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
-	"github.com/strangelove-ventures/interchaintest/v7/chain/cosmos"
 	"github.com/strangelove-ventures/interchaintest/v7/ibc"
 )
 
@@ -28,22 +26,10 @@ var (
 		GasAdjustment:       1.1,
 		TrustingPeriod:      "112h",
 		NoHostMount:         false,
-		SkipGenTx:           false,
-		PreGenesis:          nil,
 		ModifyGenesis:       nil,
 		ConfigFileOverrides: nil,
-		EncodingConfig:      banksyEncoding(),
 	}
 
 	pathBanksyPicasso   = "banksy-picasso"
 	genesisWalletAmount = int64(10_000_000)
 )
-
-// banksyEncoding registers the banksy specific module codecs so that the associated types and msgs
-// will be supported when writing to the blocksdb sqlite database.
-func banksyEncoding() *simappparams.EncodingConfig {
-	cfg := cosmos.DefaultEncoding()
-	// register custom types
-
-	return &cfg
-}
