@@ -8,35 +8,35 @@ option go_package = "x/transfermiddleware/types";
 
 // Msg defines the transfer middleware Msg service.
 service Msg {
-    rpc AddParachainInfo(MsgAddParachainInfo) returns (MsgAddParachainInfoResponse);
-    rpc RemoveParachainInfo(MsgRemoveParachainInfo) returns (MsgRemoveParachainInfoResponse);
+    rpc AddParachainIBCTokenInfo(MsgAddParachainIBCTokenInfo) returns (MsgAddParachainIBCTokenInfoResponse);
+    rpc RemoveParachainIBCTokenInfo(MsgRemoveParachainIBCTokenInfo) returns (MsgRemoveParachainIBCTokenInfoResponse);
 }
 
 // MsgAddParachainInfo represents a message to add new parachain info.
-message MsgAddParachainInfo {
+message MsgAddParachainIBCTokenInfo {
     option (cosmos.msg.v1.signer) = "authority";
     
-    option (gogoproto.equal)           = false;
-    option (gogoproto.goproto_getters) = false;
-  
-    string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
-    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
-    string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
+
+    string ibc_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string channel_id = 3 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string native_denom = 7 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
 }
 
-message MsgAddParachainInfoResponse {
+message MsgAddParachainIBCTokenInfoResponse {
 }
 
 
-// MsgRemoveParachainInfo represents a message to remove new parachain info.
-message MsgRemoveParachainInfo {
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain info.
+message MsgRemoveParachainIBCTokenInfo {
     option (cosmos.msg.v1.signer) = "authority";
 
-    option (gogoproto.equal)           = false;
-    option (gogoproto.goproto_getters) = false;
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
 
-    string native_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string native_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
 }
 
-message MsgRemoveParachainInfoResponse {
+message MsgRemoveParachainIBCTokenInfoResponse {
 }

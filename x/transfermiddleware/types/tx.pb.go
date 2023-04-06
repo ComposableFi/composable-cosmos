@@ -30,24 +30,26 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgAddParachainInfo represents a message to add new parachain info.
-type MsgAddParachainInfo struct {
-	IbcDenom    string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
-	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
-	NativeDenom string `protobuf:"bytes,3,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
+type MsgAddParachainIBCTokenInfo struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	IbcDenom    string `protobuf:"bytes,2,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
+	ChannelId   string `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	NativeDenom string `protobuf:"bytes,7,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 }
 
-func (m *MsgAddParachainInfo) Reset()         { *m = MsgAddParachainInfo{} }
-func (m *MsgAddParachainInfo) String() string { return proto.CompactTextString(m) }
-func (*MsgAddParachainInfo) ProtoMessage()    {}
-func (*MsgAddParachainInfo) Descriptor() ([]byte, []int) {
+func (m *MsgAddParachainIBCTokenInfo) Reset()         { *m = MsgAddParachainIBCTokenInfo{} }
+func (m *MsgAddParachainIBCTokenInfo) String() string { return proto.CompactTextString(m) }
+func (*MsgAddParachainIBCTokenInfo) ProtoMessage()    {}
+func (*MsgAddParachainIBCTokenInfo) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c6cd97f58b001439, []int{0}
 }
-func (m *MsgAddParachainInfo) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddParachainIBCTokenInfo) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddParachainInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddParachainIBCTokenInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddParachainInfo.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddParachainIBCTokenInfo.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -57,33 +59,61 @@ func (m *MsgAddParachainInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *MsgAddParachainInfo) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddParachainInfo.Merge(m, src)
+func (m *MsgAddParachainIBCTokenInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddParachainIBCTokenInfo.Merge(m, src)
 }
-func (m *MsgAddParachainInfo) XXX_Size() int {
+func (m *MsgAddParachainIBCTokenInfo) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddParachainInfo) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddParachainInfo.DiscardUnknown(m)
+func (m *MsgAddParachainIBCTokenInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddParachainIBCTokenInfo.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddParachainInfo proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddParachainIBCTokenInfo proto.InternalMessageInfo
 
-type MsgAddParachainInfoResponse struct {
+func (m *MsgAddParachainIBCTokenInfo) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
 }
 
-func (m *MsgAddParachainInfoResponse) Reset()         { *m = MsgAddParachainInfoResponse{} }
-func (m *MsgAddParachainInfoResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgAddParachainInfoResponse) ProtoMessage()    {}
-func (*MsgAddParachainInfoResponse) Descriptor() ([]byte, []int) {
+func (m *MsgAddParachainIBCTokenInfo) GetIbcDenom() string {
+	if m != nil {
+		return m.IbcDenom
+	}
+	return ""
+}
+
+func (m *MsgAddParachainIBCTokenInfo) GetChannelId() string {
+	if m != nil {
+		return m.ChannelId
+	}
+	return ""
+}
+
+func (m *MsgAddParachainIBCTokenInfo) GetNativeDenom() string {
+	if m != nil {
+		return m.NativeDenom
+	}
+	return ""
+}
+
+type MsgAddParachainIBCTokenInfoResponse struct {
+}
+
+func (m *MsgAddParachainIBCTokenInfoResponse) Reset()         { *m = MsgAddParachainIBCTokenInfoResponse{} }
+func (m *MsgAddParachainIBCTokenInfoResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddParachainIBCTokenInfoResponse) ProtoMessage()    {}
+func (*MsgAddParachainIBCTokenInfoResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c6cd97f58b001439, []int{1}
 }
-func (m *MsgAddParachainInfoResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddParachainIBCTokenInfoResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddParachainInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddParachainIBCTokenInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddParachainInfoResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -93,35 +123,37 @@ func (m *MsgAddParachainInfoResponse) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *MsgAddParachainInfoResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddParachainInfoResponse.Merge(m, src)
+func (m *MsgAddParachainIBCTokenInfoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse.Merge(m, src)
 }
-func (m *MsgAddParachainInfoResponse) XXX_Size() int {
+func (m *MsgAddParachainIBCTokenInfoResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddParachainInfoResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddParachainInfoResponse.DiscardUnknown(m)
+func (m *MsgAddParachainIBCTokenInfoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddParachainInfoResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse proto.InternalMessageInfo
 
-// MsgRemoveParachainInfo represents a message to remove new parachain info.
-type MsgRemoveParachainInfo struct {
-	NativeDenom string `protobuf:"bytes,1,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"ibc_denom"`
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain info.
+type MsgRemoveParachainIBCTokenInfo struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	NativeDenom string `protobuf:"bytes,2,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"ibc_denom"`
 }
 
-func (m *MsgRemoveParachainInfo) Reset()         { *m = MsgRemoveParachainInfo{} }
-func (m *MsgRemoveParachainInfo) String() string { return proto.CompactTextString(m) }
-func (*MsgRemoveParachainInfo) ProtoMessage()    {}
-func (*MsgRemoveParachainInfo) Descriptor() ([]byte, []int) {
+func (m *MsgRemoveParachainIBCTokenInfo) Reset()         { *m = MsgRemoveParachainIBCTokenInfo{} }
+func (m *MsgRemoveParachainIBCTokenInfo) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveParachainIBCTokenInfo) ProtoMessage()    {}
+func (*MsgRemoveParachainIBCTokenInfo) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c6cd97f58b001439, []int{2}
 }
-func (m *MsgRemoveParachainInfo) XXX_Unmarshal(b []byte) error {
+func (m *MsgRemoveParachainIBCTokenInfo) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgRemoveParachainInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgRemoveParachainIBCTokenInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgRemoveParachainInfo.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgRemoveParachainIBCTokenInfo.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -131,33 +163,49 @@ func (m *MsgRemoveParachainInfo) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgRemoveParachainInfo) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRemoveParachainInfo.Merge(m, src)
+func (m *MsgRemoveParachainIBCTokenInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveParachainIBCTokenInfo.Merge(m, src)
 }
-func (m *MsgRemoveParachainInfo) XXX_Size() int {
+func (m *MsgRemoveParachainIBCTokenInfo) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgRemoveParachainInfo) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRemoveParachainInfo.DiscardUnknown(m)
+func (m *MsgRemoveParachainIBCTokenInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveParachainIBCTokenInfo.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgRemoveParachainInfo proto.InternalMessageInfo
+var xxx_messageInfo_MsgRemoveParachainIBCTokenInfo proto.InternalMessageInfo
 
-type MsgRemoveParachainInfoResponse struct {
+func (m *MsgRemoveParachainIBCTokenInfo) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
 }
 
-func (m *MsgRemoveParachainInfoResponse) Reset()         { *m = MsgRemoveParachainInfoResponse{} }
-func (m *MsgRemoveParachainInfoResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgRemoveParachainInfoResponse) ProtoMessage()    {}
-func (*MsgRemoveParachainInfoResponse) Descriptor() ([]byte, []int) {
+func (m *MsgRemoveParachainIBCTokenInfo) GetNativeDenom() string {
+	if m != nil {
+		return m.NativeDenom
+	}
+	return ""
+}
+
+type MsgRemoveParachainIBCTokenInfoResponse struct {
+}
+
+func (m *MsgRemoveParachainIBCTokenInfoResponse) Reset() {
+	*m = MsgRemoveParachainIBCTokenInfoResponse{}
+}
+func (m *MsgRemoveParachainIBCTokenInfoResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveParachainIBCTokenInfoResponse) ProtoMessage()    {}
+func (*MsgRemoveParachainIBCTokenInfoResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c6cd97f58b001439, []int{3}
 }
-func (m *MsgRemoveParachainInfoResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgRemoveParachainInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgRemoveParachainInfoResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -167,23 +215,23 @@ func (m *MsgRemoveParachainInfoResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *MsgRemoveParachainInfoResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRemoveParachainInfoResponse.Merge(m, src)
+func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse.Merge(m, src)
 }
-func (m *MsgRemoveParachainInfoResponse) XXX_Size() int {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgRemoveParachainInfoResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRemoveParachainInfoResponse.DiscardUnknown(m)
+func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgRemoveParachainInfoResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgAddParachainInfo)(nil), "composable.transfermiddleware.v1beta1.MsgAddParachainInfo")
-	proto.RegisterType((*MsgAddParachainInfoResponse)(nil), "composable.transfermiddleware.v1beta1.MsgAddParachainInfoResponse")
-	proto.RegisterType((*MsgRemoveParachainInfo)(nil), "composable.transfermiddleware.v1beta1.MsgRemoveParachainInfo")
-	proto.RegisterType((*MsgRemoveParachainInfoResponse)(nil), "composable.transfermiddleware.v1beta1.MsgRemoveParachainInfoResponse")
+	proto.RegisterType((*MsgAddParachainIBCTokenInfo)(nil), "composable.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfo")
+	proto.RegisterType((*MsgAddParachainIBCTokenInfoResponse)(nil), "composable.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfoResponse")
+	proto.RegisterType((*MsgRemoveParachainIBCTokenInfo)(nil), "composable.transfermiddleware.v1beta1.MsgRemoveParachainIBCTokenInfo")
+	proto.RegisterType((*MsgRemoveParachainIBCTokenInfoResponse)(nil), "composable.transfermiddleware.v1beta1.MsgRemoveParachainIBCTokenInfoResponse")
 }
 
 func init() {
@@ -191,33 +239,34 @@ func init() {
 }
 
 var fileDescriptor_c6cd97f58b001439 = []byte{
-	// 414 bytes of a gzipped FileDescriptorProto
+	// 431 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xd2, 0x4a, 0x4a, 0xcc, 0xcb,
 	0x2e, 0xae, 0xd4, 0x2f, 0x29, 0x4a, 0xcc, 0x2b, 0x4e, 0x4b, 0x2d, 0xca, 0xcd, 0x4c, 0x49, 0xc9,
 	0x49, 0x2d, 0x4f, 0x2c, 0x4a, 0xd5, 0x2f, 0x33, 0x4c, 0x4a, 0x2d, 0x49, 0x34, 0xd4, 0x2f, 0xa9,
 	0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x52, 0x4d, 0xce, 0xcf, 0x2d, 0xc8, 0x2f, 0x4e, 0x4c,
 	0xca, 0x49, 0xd5, 0xc3, 0x54, 0xaf, 0x07, 0x55, 0x2f, 0x25, 0x92, 0x9e, 0x9f, 0x9e, 0x0f, 0xd6,
 	0xa1, 0x0f, 0x62, 0x41, 0x34, 0x4b, 0x89, 0x27, 0xe7, 0x17, 0xe7, 0xe6, 0x17, 0xeb, 0xe7, 0x16,
-	0xa7, 0xeb, 0x97, 0x19, 0x82, 0x28, 0x88, 0x84, 0xd2, 0x25, 0x46, 0x2e, 0x61, 0xdf, 0xe2, 0x74,
-	0xc7, 0x94, 0x94, 0x80, 0xc4, 0xa2, 0xc4, 0xe4, 0x8c, 0xc4, 0xcc, 0x3c, 0xcf, 0xbc, 0xb4, 0x7c,
-	0x21, 0x43, 0x2e, 0xce, 0xcc, 0xa4, 0xe4, 0xf8, 0x94, 0xd4, 0xbc, 0xfc, 0x5c, 0x09, 0x46, 0x05,
-	0x46, 0x0d, 0x4e, 0x27, 0x91, 0x4f, 0xf7, 0xe4, 0x05, 0x2a, 0x13, 0x73, 0x73, 0xac, 0x94, 0xe0,
-	0x52, 0x4a, 0x41, 0x1c, 0x99, 0x49, 0xc9, 0x2e, 0x20, 0xa6, 0x90, 0x09, 0x17, 0x57, 0x72, 0x46,
-	0x62, 0x5e, 0x5e, 0x6a, 0x4e, 0x7c, 0x66, 0x8a, 0x04, 0x13, 0x58, 0x8f, 0xe8, 0xa7, 0x7b, 0xf2,
-	0x82, 0x10, 0x3d, 0x08, 0x39, 0xa5, 0x20, 0x4e, 0x28, 0xc7, 0x33, 0x45, 0xc8, 0x8a, 0x8b, 0x27,
-	0x2f, 0xb1, 0x24, 0xb3, 0x2c, 0x15, 0x6a, 0x17, 0x33, 0x58, 0x9f, 0xf8, 0xa7, 0x7b, 0xf2, 0xc2,
-	0x10, 0x7d, 0xc8, 0xb2, 0x4a, 0x41, 0xdc, 0x10, 0x2e, 0xd8, 0x46, 0x2b, 0xb1, 0x8e, 0x05, 0xf2,
-	0x0c, 0x2f, 0x16, 0xc8, 0x33, 0x34, 0x3d, 0xdf, 0xa0, 0xc5, 0x99, 0x58, 0x5a, 0x92, 0x91, 0x5f,
-	0x94, 0x59, 0x52, 0xa9, 0x24, 0xcb, 0x25, 0x8d, 0xc5, 0x4f, 0x41, 0xa9, 0xc5, 0x05, 0xf9, 0x79,
-	0xc5, 0xa9, 0x4a, 0x99, 0x5c, 0x62, 0xbe, 0xc5, 0xe9, 0x41, 0xa9, 0xb9, 0xf9, 0x65, 0xa9, 0xa8,
-	0xbe, 0x36, 0x47, 0x73, 0x0c, 0x3e, 0x8f, 0x13, 0xe5, 0x12, 0x05, 0x2e, 0x39, 0xec, 0x56, 0xc1,
-	0x1c, 0x63, 0xb4, 0x83, 0x89, 0x8b, 0xd9, 0xb7, 0x38, 0x5d, 0x68, 0x12, 0x23, 0x97, 0x00, 0x46,
-	0x2c, 0x58, 0xe9, 0x11, 0x15, 0xe9, 0x7a, 0x58, 0x7c, 0x2b, 0xe5, 0x44, 0xbe, 0x5e, 0x98, 0xe3,
-	0x84, 0x66, 0x33, 0x72, 0x09, 0x63, 0x0b, 0x27, 0x5b, 0xe2, 0xcd, 0xc6, 0xa2, 0x5d, 0xca, 0x95,
-	0x22, 0xed, 0x30, 0xd7, 0x39, 0x99, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83,
-	0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43,
-	0x94, 0x54, 0x05, 0xb6, 0x2c, 0x55, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0x4e, 0xf8, 0xc6,
-	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3a, 0xd7, 0x8a, 0x1d, 0x7c, 0x03, 0x00, 0x00,
+	0xa7, 0xeb, 0x97, 0x19, 0x82, 0x28, 0x88, 0x84, 0x52, 0x1b, 0x13, 0x97, 0xb4, 0x6f, 0x71, 0xba,
+	0x63, 0x4a, 0x4a, 0x40, 0x62, 0x51, 0x62, 0x72, 0x46, 0x62, 0x66, 0x9e, 0xa7, 0x93, 0x73, 0x48,
+	0x7e, 0x76, 0x6a, 0x9e, 0x67, 0x5e, 0x5a, 0xbe, 0x90, 0x11, 0x17, 0x67, 0x62, 0x69, 0x49, 0x46,
+	0x7e, 0x51, 0x66, 0x49, 0xa5, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0xa7, 0x93, 0xc8, 0xa7, 0x7b, 0xf2,
+	0x02, 0x95, 0x89, 0xb9, 0x39, 0x56, 0x4a, 0x70, 0x29, 0xa5, 0x20, 0x84, 0x32, 0x21, 0x43, 0x2e,
+	0xce, 0xcc, 0xa4, 0xe4, 0xf8, 0x94, 0xd4, 0xbc, 0xfc, 0x5c, 0x09, 0x26, 0x74, 0x3d, 0x70, 0x29,
+	0xa5, 0x20, 0x8e, 0xcc, 0xa4, 0x64, 0x17, 0x10, 0x53, 0xc8, 0x84, 0x8b, 0x2b, 0x39, 0x23, 0x31,
+	0x2f, 0x2f, 0x35, 0x27, 0x3e, 0x33, 0x45, 0x82, 0x19, 0xac, 0x47, 0xf4, 0xd3, 0x3d, 0x79, 0x41,
+	0x88, 0x1e, 0x84, 0x9c, 0x52, 0x10, 0x27, 0x94, 0xe3, 0x99, 0x22, 0x64, 0xc5, 0xc5, 0x93, 0x97,
+	0x58, 0x92, 0x59, 0x96, 0x0a, 0xb5, 0x8b, 0x1d, 0xac, 0x4f, 0xfc, 0xd3, 0x3d, 0x79, 0x61, 0x88,
+	0x3e, 0x64, 0x59, 0xa5, 0x20, 0x6e, 0x08, 0x17, 0x6c, 0xa3, 0x15, 0x5f, 0xd3, 0xf3, 0x0d, 0x5a,
+	0x08, 0x47, 0x2b, 0xa9, 0x72, 0x29, 0xe3, 0x09, 0x87, 0xa0, 0xd4, 0xe2, 0x82, 0xfc, 0xbc, 0xe2,
+	0x54, 0xa5, 0xb9, 0x8c, 0x5c, 0x72, 0xbe, 0xc5, 0xe9, 0x41, 0xa9, 0xb9, 0xf9, 0x65, 0xa9, 0xd4,
+	0x0b, 0x32, 0x73, 0x34, 0x9f, 0xe0, 0x0b, 0x35, 0xbc, 0xde, 0xd0, 0xe0, 0x52, 0xc3, 0xef, 0x3c,
+	0x98, 0x4f, 0x8c, 0x5e, 0x30, 0x71, 0x31, 0xfb, 0x16, 0xa7, 0x0b, 0xad, 0x62, 0xe4, 0x92, 0xc0,
+	0x19, 0xfd, 0x4e, 0x7a, 0x44, 0xa5, 0x3a, 0x3d, 0x3c, 0x41, 0x27, 0xe5, 0x45, 0xb9, 0x19, 0x30,
+	0x47, 0x0b, 0x6d, 0x66, 0xe4, 0x92, 0xc6, 0x17, 0xf6, 0xae, 0xc4, 0xdb, 0x85, 0xc7, 0x18, 0x29,
+	0x5f, 0xaa, 0x18, 0x03, 0x73, 0xb5, 0x93, 0xc9, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31,
+	0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7, 0x72, 0x0c, 0x37, 0x1e, 0xcb,
+	0x31, 0x44, 0x49, 0x55, 0x60, 0xcb, 0xfb, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0xe0, 0x1c,
+	0x6a, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x0e, 0x13, 0xbb, 0x80, 0x25, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -232,8 +281,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	AddParachainInfo(ctx context.Context, in *MsgAddParachainInfo, opts ...grpc.CallOption) (*MsgAddParachainInfoResponse, error)
-	RemoveParachainInfo(ctx context.Context, in *MsgRemoveParachainInfo, opts ...grpc.CallOption) (*MsgRemoveParachainInfoResponse, error)
+	AddParachainIBCTokenInfo(ctx context.Context, in *MsgAddParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgAddParachainIBCTokenInfoResponse, error)
+	RemoveParachainIBCTokenInfo(ctx context.Context, in *MsgRemoveParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgRemoveParachainIBCTokenInfoResponse, error)
 }
 
 type msgClient struct {
@@ -244,18 +293,18 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) AddParachainInfo(ctx context.Context, in *MsgAddParachainInfo, opts ...grpc.CallOption) (*MsgAddParachainInfoResponse, error) {
-	out := new(MsgAddParachainInfoResponse)
-	err := c.cc.Invoke(ctx, "/composable.transfermiddleware.v1beta1.Msg/AddParachainInfo", in, out, opts...)
+func (c *msgClient) AddParachainIBCTokenInfo(ctx context.Context, in *MsgAddParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgAddParachainIBCTokenInfoResponse, error) {
+	out := new(MsgAddParachainIBCTokenInfoResponse)
+	err := c.cc.Invoke(ctx, "/composable.transfermiddleware.v1beta1.Msg/AddParachainIBCTokenInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) RemoveParachainInfo(ctx context.Context, in *MsgRemoveParachainInfo, opts ...grpc.CallOption) (*MsgRemoveParachainInfoResponse, error) {
-	out := new(MsgRemoveParachainInfoResponse)
-	err := c.cc.Invoke(ctx, "/composable.transfermiddleware.v1beta1.Msg/RemoveParachainInfo", in, out, opts...)
+func (c *msgClient) RemoveParachainIBCTokenInfo(ctx context.Context, in *MsgRemoveParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgRemoveParachainIBCTokenInfoResponse, error) {
+	out := new(MsgRemoveParachainIBCTokenInfoResponse)
+	err := c.cc.Invoke(ctx, "/composable.transfermiddleware.v1beta1.Msg/RemoveParachainIBCTokenInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -264,57 +313,57 @@ func (c *msgClient) RemoveParachainInfo(ctx context.Context, in *MsgRemoveParach
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	AddParachainInfo(context.Context, *MsgAddParachainInfo) (*MsgAddParachainInfoResponse, error)
-	RemoveParachainInfo(context.Context, *MsgRemoveParachainInfo) (*MsgRemoveParachainInfoResponse, error)
+	AddParachainIBCTokenInfo(context.Context, *MsgAddParachainIBCTokenInfo) (*MsgAddParachainIBCTokenInfoResponse, error)
+	RemoveParachainIBCTokenInfo(context.Context, *MsgRemoveParachainIBCTokenInfo) (*MsgRemoveParachainIBCTokenInfoResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) AddParachainInfo(ctx context.Context, req *MsgAddParachainInfo) (*MsgAddParachainInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddParachainInfo not implemented")
+func (*UnimplementedMsgServer) AddParachainIBCTokenInfo(ctx context.Context, req *MsgAddParachainIBCTokenInfo) (*MsgAddParachainIBCTokenInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddParachainIBCTokenInfo not implemented")
 }
-func (*UnimplementedMsgServer) RemoveParachainInfo(ctx context.Context, req *MsgRemoveParachainInfo) (*MsgRemoveParachainInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveParachainInfo not implemented")
+func (*UnimplementedMsgServer) RemoveParachainIBCTokenInfo(ctx context.Context, req *MsgRemoveParachainIBCTokenInfo) (*MsgRemoveParachainIBCTokenInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveParachainIBCTokenInfo not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_AddParachainInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgAddParachainInfo)
+func _Msg_AddParachainIBCTokenInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddParachainIBCTokenInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).AddParachainInfo(ctx, in)
+		return srv.(MsgServer).AddParachainIBCTokenInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/composable.transfermiddleware.v1beta1.Msg/AddParachainInfo",
+		FullMethod: "/composable.transfermiddleware.v1beta1.Msg/AddParachainIBCTokenInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).AddParachainInfo(ctx, req.(*MsgAddParachainInfo))
+		return srv.(MsgServer).AddParachainIBCTokenInfo(ctx, req.(*MsgAddParachainIBCTokenInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_RemoveParachainInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgRemoveParachainInfo)
+func _Msg_RemoveParachainIBCTokenInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveParachainIBCTokenInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).RemoveParachainInfo(ctx, in)
+		return srv.(MsgServer).RemoveParachainIBCTokenInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/composable.transfermiddleware.v1beta1.Msg/RemoveParachainInfo",
+		FullMethod: "/composable.transfermiddleware.v1beta1.Msg/RemoveParachainIBCTokenInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).RemoveParachainInfo(ctx, req.(*MsgRemoveParachainInfo))
+		return srv.(MsgServer).RemoveParachainIBCTokenInfo(ctx, req.(*MsgRemoveParachainIBCTokenInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,19 +373,19 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddParachainInfo",
-			Handler:    _Msg_AddParachainInfo_Handler,
+			MethodName: "AddParachainIBCTokenInfo",
+			Handler:    _Msg_AddParachainIBCTokenInfo_Handler,
 		},
 		{
-			MethodName: "RemoveParachainInfo",
-			Handler:    _Msg_RemoveParachainInfo_Handler,
+			MethodName: "RemoveParachainIBCTokenInfo",
+			Handler:    _Msg_RemoveParachainIBCTokenInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "banksy/transfermiddleware/v1beta1/tx.proto",
 }
 
-func (m *MsgAddParachainInfo) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddParachainIBCTokenInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -346,12 +395,12 @@ func (m *MsgAddParachainInfo) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddParachainInfo) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddParachainIBCTokenInfo) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddParachainInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddParachainIBCTokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -361,26 +410,33 @@ func (m *MsgAddParachainInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.NativeDenom)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.NativeDenom)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x3a
 	}
 	if len(m.ChannelId) > 0 {
 		i -= len(m.ChannelId)
 		copy(dAtA[i:], m.ChannelId)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x1a
 	}
 	if len(m.IbcDenom) > 0 {
 		i -= len(m.IbcDenom)
 		copy(dAtA[i:], m.IbcDenom)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.IbcDenom)))
 		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddParachainInfoResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddParachainIBCTokenInfoResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -390,12 +446,12 @@ func (m *MsgAddParachainInfoResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddParachainInfoResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddParachainIBCTokenInfoResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddParachainInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddParachainIBCTokenInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -403,7 +459,7 @@ func (m *MsgAddParachainInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgRemoveParachainInfo) Marshal() (dAtA []byte, err error) {
+func (m *MsgRemoveParachainIBCTokenInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -413,12 +469,12 @@ func (m *MsgRemoveParachainInfo) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgRemoveParachainInfo) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgRemoveParachainIBCTokenInfo) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgRemoveParachainInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgRemoveParachainIBCTokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -428,12 +484,19 @@ func (m *MsgRemoveParachainInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 		copy(dAtA[i:], m.NativeDenom)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.NativeDenom)))
 		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgRemoveParachainInfoResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -443,12 +506,12 @@ func (m *MsgRemoveParachainInfoResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgRemoveParachainInfoResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgRemoveParachainInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -467,12 +530,16 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgAddParachainInfo) Size() (n int) {
+func (m *MsgAddParachainIBCTokenInfo) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
 	l = len(m.IbcDenom)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
@@ -488,7 +555,7 @@ func (m *MsgAddParachainInfo) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddParachainInfoResponse) Size() (n int) {
+func (m *MsgAddParachainIBCTokenInfoResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -497,12 +564,16 @@ func (m *MsgAddParachainInfoResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgRemoveParachainInfo) Size() (n int) {
+func (m *MsgRemoveParachainIBCTokenInfo) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
 	l = len(m.NativeDenom)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
@@ -510,7 +581,7 @@ func (m *MsgRemoveParachainInfo) Size() (n int) {
 	return n
 }
 
-func (m *MsgRemoveParachainInfoResponse) Size() (n int) {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -525,7 +596,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgAddParachainInfo) Unmarshal(dAtA []byte) error {
+func (m *MsgAddParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -548,13 +619,45 @@ func (m *MsgAddParachainInfo) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddParachainInfo: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddParachainIBCTokenInfo: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddParachainInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddParachainIBCTokenInfo: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field IbcDenom", wireType)
 			}
@@ -586,7 +689,7 @@ func (m *MsgAddParachainInfo) Unmarshal(dAtA []byte) error {
 			}
 			m.IbcDenom = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
 			}
@@ -618,7 +721,7 @@ func (m *MsgAddParachainInfo) Unmarshal(dAtA []byte) error {
 			}
 			m.ChannelId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NativeDenom", wireType)
 			}
@@ -671,7 +774,7 @@ func (m *MsgAddParachainInfo) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddParachainInfoResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgAddParachainIBCTokenInfoResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -694,10 +797,10 @@ func (m *MsgAddParachainInfoResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddParachainInfoResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddParachainIBCTokenInfoResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddParachainInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddParachainIBCTokenInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -721,7 +824,7 @@ func (m *MsgAddParachainInfoResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgRemoveParachainInfo) Unmarshal(dAtA []byte) error {
+func (m *MsgRemoveParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -744,14 +847,46 @@ func (m *MsgRemoveParachainInfo) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRemoveParachainInfo: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgRemoveParachainIBCTokenInfo: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRemoveParachainInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgRemoveParachainIBCTokenInfo: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NativeDenom", wireType)
 			}
 			var stringLen uint64
@@ -803,7 +938,7 @@ func (m *MsgRemoveParachainInfo) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgRemoveParachainInfoResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgRemoveParachainIBCTokenInfoResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -826,10 +961,10 @@ func (m *MsgRemoveParachainInfoResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRemoveParachainInfoResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgRemoveParachainIBCTokenInfoResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRemoveParachainInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgRemoveParachainIBCTokenInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

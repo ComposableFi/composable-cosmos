@@ -8,11 +8,11 @@ option go_package = "x/transfermiddleware/types";
 // GenesisState defines the module various parameters when first
 // initialized
 message GenesisState {
-    repeated ParachainTokenInfo token_infos = 1 [ (gogoproto.nullable) = false ];
+    repeated ParachainIBCTokenInfo token_infos = 1 [ (gogoproto.nullable) = false ];
 }
   
-// ParachainTokenInfo represents information about transferable IBC tokens from Parachain.
-message ParachainTokenInfo{
+// ParachainIBCTokenInfo represents information about transferable IBC tokens from Parachain.
+message ParachainIBCTokenInfo{
     // ibc_denom is the denomination of the ibced token transferred from the dotsama chain.
     string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
     // channel_id is source channel in IBC connection from banksy chain
