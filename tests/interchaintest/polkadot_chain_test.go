@@ -28,8 +28,8 @@ func TestPolkadotComposableChainStart(t *testing.T) {
 
 	ctx := context.Background()
 
-	nv := 5
-	nf := 3
+	nv := 5 // Number of validators
+	nf := 3 // Number of full nodes
 
 	chains, err := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
@@ -46,7 +46,7 @@ func TestPolkadotComposableChainStart(t *testing.T) {
 					{
 						Repository: "seunlanlege/centauri-parachain",
 						Version:    "v0.9.27",
-						UidGid:     "1025:1025",
+						//UidGid:     "1025:1025",
 					},
 				},
 				Bin:            "polkadot",
