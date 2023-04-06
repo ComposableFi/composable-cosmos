@@ -29,7 +29,4 @@ var (
 		ModifyGenesis:       nil,
 		ConfigFileOverrides: nil,
 	}
-
-	pathBanksyPicasso   = "banksy-picasso"
-	genesisWalletAmount = int64(10_000_000)
 )

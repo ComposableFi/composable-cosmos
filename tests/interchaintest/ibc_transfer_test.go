@@ -112,14 +112,14 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 
 	ic := interchaintest.NewInterchain().
 		AddChain(composable).
-		AddChain(banksyd) //.
-		//AddRelayer(r, relayerName).
-		/*AddLink(interchaintest.InterchainLink{
+		AddChain(banksyd).
+		AddRelayer(r, relayerName).
+		AddLink(interchaintest.InterchainLink{
 			Chain1:  composable,
 			Chain2:  banksyd,
 			Relayer: r,
 			Path:    pathName,
-		})*/
+		})
 
 	require.NoError(t, ic.Build(ctx, eRep, interchaintest.InterchainBuildOptions{
 		TestName:  t.Name(),
@@ -130,9 +130,9 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 	}))
 
 	// If necessary you can wait for x number of blocks to pass before taking some action
-	//blocksToWait := 10
-	//err = testutil.WaitForBlocks(ctx, blocksToWait, composable)
-	//require.NoError(t, err)
+	blocksToWait := 5
+	err = testutil.WaitForBlocks(ctx, blocksToWait, composable)
+	require.NoError(t, err)
 	err = testutil.WaitForBlocks(ctx, 2000, banksyd)
 	require.NoError(t, err)
 	// Generate a new IBC path between the chains
@@ -147,17 +147,17 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 	// Once client, connection, and handshake logic is implemented for the Substrate provider
 	// we can link the path, start the relayer and attempt to send a token transfer via IBC.
 
-	//r.LinkPath()
-	//
-	//composable.SendIBCTransfer()
-	//
-	//r.StartRelayer()
-	//t.Cleanup(func() {
-	//	err = r.StopRelayer(ctx, eRep)
-	//	if err != nil {
-	//		panic(err)
-	//	}
-	//})
+	// r.LinkPath()
+
+	// composable.SendIBCTransfer()
+
+	// r.StartRelayer()
+	// t.Cleanup(func() {
+	// 	err = r.StopRelayer(ctx, eRep)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// })
 
 	// Make assertions to determine if the token transfer was successful
 
