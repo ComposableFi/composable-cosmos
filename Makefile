@@ -113,4 +113,8 @@ ictest-ibc:
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 
-.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-all
+# Executes push wasm client tests via interchaintest
+ictest-push-wasm:
+	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
+
+.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
