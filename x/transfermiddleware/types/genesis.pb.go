@@ -69,9 +69,13 @@ func (m *GenesisState) GetTokenInfos() []ParachainTokenInfo {
 	return nil
 }
 
+// ParachainTokenInfo represents information about transferable IBC tokens from Parachain.
 type ParachainTokenInfo struct {
-	IbcDenom    string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
-	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	// ibc_denom is denom of ibced token trasfered from dotsama chain.
+	IbcDenom string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
+	// channel_id is source channel in IBC connection from banksy chain
+	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	// native denom is new native minted denom in banksy chain.
 	NativeDenom string `protobuf:"bytes,3,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 }
 
