@@ -135,7 +135,7 @@ func initAppConfig() (string, interface{}) {
 	//
 	// In simapp, we set the min gas prices to 0.
 	// TODO TEST-48 investigate if this is sufficient to allow 0 gas transactions
-	srvCfg.MinGasPrices = "0ustrd"
+	srvCfg.MinGasPrices = ""
 	srvCfg.API.Enable = true
 	srvCfg.API.EnableUnsafeCORS = true
 	srvCfg.GRPCWeb.EnableUnsafeCORS = true
