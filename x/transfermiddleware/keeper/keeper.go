@@ -4,14 +4,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
 )
 
 type Keeper struct {
-	cdc         codec.BinaryCodec
-	storeKey    storetypes.StoreKey
-	ics4Wrapper porttypes.ICS4Wrapper
+	cdc            codec.BinaryCodec
+	storeKey       storetypes.StoreKey
+	ics4Wrapper    porttypes.ICS4Wrapper
+	bankKeeper     types.BankKeeper
+	transferKeeper ibctransferkeeper.Keeper
 
 	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
 	// should be the x/gov module account.
