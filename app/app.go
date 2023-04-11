@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -94,6 +93,10 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
+
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
@@ -154,6 +157,7 @@ var (
 		vesting.AppModuleBasic{},
 		tendermint.AppModuleBasic{},
 		wasm.AppModuleBasic{},
+		router.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -224,6 +228,7 @@ type BanksyApp struct {
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	RouterKeeper *routerkeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -253,14 +258,11 @@ func NewBanksyApp(
 	bApp.SetVersion(Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 
-	fmt.Println("base app dcm", bApp)
-
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey,
-
-		crisistypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -294,25 +296,25 @@ func NewBanksyApp(
 
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
-		appCodec, keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms, AccountAddressPrefix, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms, AccountAddressPrefix, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.BankKeeper = bankkeeper.NewBaseKeeper(
-		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.BlacklistedModuleAccountAddrs(), authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.BlacklistedModuleAccountAddrs(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.StakingKeeper = *stakingkeeper.NewKeeper(
-		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, keys[distrtypes.StoreKey], app.AccountKeeper, app.BankKeeper,
-		app.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		app.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.SlashingKeeper = slashingkeeper.NewKeeper(
-		appCodec, encodingConfig.Amino, keys[slashingtypes.StoreKey], app.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, encodingConfig.Amino, keys[slashingtypes.StoreKey], app.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.CrisisKeeper = crisiskeeper.NewKeeper(appCodec, keys[crisistypes.StoreKey],
-		invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: fix
+		invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -343,8 +345,12 @@ func NewBanksyApp(
 		app.BankKeeper,
 		scopedTransferKeeper,
 	)
+
+	app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.IBCKeeper.ChannelKeeper, &app.DistrKeeper, app.BankKeeper, app.IBCKeeper.ChannelKeeper)
+
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
+	routerModule := router.NewAppModule(app.RouterKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -353,6 +359,13 @@ func NewBanksyApp(
 	)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
+	ibcMiddlewareStack := router.NewIBCMiddleware(
+		transferIBCModule,
+		app.RouterKeeper,
+		0,
+		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -383,7 +396,7 @@ func NewBanksyApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
@@ -421,7 +434,7 @@ func NewBanksyApp(
 		icqModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		wasm.NewAppModule(app.WasmClientKeeper),
-
+		routerModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -439,6 +452,7 @@ func NewBanksyApp(
 		vestingtypes.ModuleName,
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
+		routertypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -468,6 +482,7 @@ func NewBanksyApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		ibchost.ModuleName,
+		routertypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -496,6 +511,7 @@ func NewBanksyApp(
 		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
+		routertypes.ModuleName,
 		feegrant.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasmtypes.ModuleName,
@@ -722,7 +738,6 @@ func (app *BanksyApp) RegisterTendermintService(clientCtx client.Context) {
 
 // RegisterNodeService registers the node gRPC Query service.
 func (app *BanksyApp) RegisterNodeService(clientCtx client.Context) {
-	// TODO: implement!
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
@@ -744,6 +759,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
+	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable()) //nolint:staticcheck
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)

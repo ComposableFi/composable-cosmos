@@ -28,8 +28,8 @@ const (
 )
 
 const (
-	HumanReadableCoinUnit = "STRD"
-	BaseCoinUnit          = "ustrd"
+	HumanReadableCoinUnit = "PICA"
+	BaseCoinUnit          = "upica"
 	DefaultBondDenom      = BaseCoinUnit
 )
 
