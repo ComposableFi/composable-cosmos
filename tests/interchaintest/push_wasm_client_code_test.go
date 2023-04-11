@@ -38,12 +38,12 @@ func TestPushWasmClientCode(t *testing.T) {
 	configTomlOverrides := make(testutil.Toml)
 
 	apiOverrides := make(testutil.Toml)
-	apiOverrides["rpc-max-body-bytes"] = 1350000
+	apiOverrides["rpc-max-body-bytes"] = 1350000000
 	appTomlOverrides["api"] = apiOverrides
 
 	rpcOverrides := make(testutil.Toml)
-	rpcOverrides["max_body_bytes"] = 1350000
-	rpcOverrides["max_header_bytes"] = 1400000
+	rpcOverrides["max_body_bytes"] = 1350000000
+	rpcOverrides["max_header_bytes"] = 1400000000
 	configTomlOverrides["rpc"] = rpcOverrides
 
 	//mempoolOverrides := make(testutil.Toml)
