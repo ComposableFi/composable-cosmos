@@ -9,7 +9,7 @@ require (
 	github.com/cosmos/ibc-go/v7 v7.0.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
-	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4
+	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230410200408-3315fe3057aa
 	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230321175727-de5b28b4b6ca
 )
 
