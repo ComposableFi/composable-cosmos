@@ -130,7 +130,7 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 		zaptest.NewLogger(t),
 		// These two fields are used to pass in a custom Docker image built locally
 		// relayer.ImagePull(false),
-		relayer.CustomDockerImage("composablefi/hyperspace", "lastest", "1000:1000"),
+		relayer.CustomDockerImage("composablefi/hyperspace", "latest", "1000:1000"),
 	).Build(t, client, network)
 
 	// Build the network; spin up the chains and configure the relayer
