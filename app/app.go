@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -93,6 +92,10 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
+	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
+
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
@@ -102,8 +105,8 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "polytope"
-	Name                 = "polytope"
+	AccountAddressPrefix = "banksy"
+	Name                 = "banksy"
 	Version              = "1.0.0"
 )
 
@@ -152,6 +155,7 @@ var (
 		vesting.AppModuleBasic{},
 		tendermint.AppModuleBasic{},
 		wasm.AppModuleBasic{},
+		router.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -170,7 +174,7 @@ var (
 	}
 )
 
-var _ servertypes.Application = (*PolytopeApp)(nil)
+var _ servertypes.Application = (*BanksyApp)(nil)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()
@@ -181,10 +185,10 @@ func init() {
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
 }
 
-// PolytopeApp extends an ABCI application, but with most of its parameters exported.
+// BanksyApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type PolytopeApp struct {
+type BanksyApp struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -220,6 +224,7 @@ type PolytopeApp struct {
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	RouterKeeper *routerkeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -228,7 +233,7 @@ type PolytopeApp struct {
 
 // RUN GOSEC
 // New returns a reference to an initialized blockchain app
-func NewPolytopeApp(
+func NewBanksyApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -239,7 +244,7 @@ func NewPolytopeApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *PolytopeApp {
+) *BanksyApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -249,20 +254,17 @@ func NewPolytopeApp(
 	bApp.SetVersion(Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 
-	fmt.Println("base app dcm", bApp)
-
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey,
-
-		crisistypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &PolytopeApp{
+	app := &BanksyApp{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -290,25 +292,25 @@ func NewPolytopeApp(
 
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
-		appCodec, keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms, AccountAddressPrefix, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms, AccountAddressPrefix, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.BankKeeper = bankkeeper.NewBaseKeeper(
-		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.BlacklistedModuleAccountAddrs(), authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.BlacklistedModuleAccountAddrs(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.StakingKeeper = *stakingkeeper.NewKeeper(
-		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, keys[distrtypes.StoreKey], app.AccountKeeper, app.BankKeeper,
-		app.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		app.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.SlashingKeeper = slashingkeeper.NewKeeper(
-		appCodec, encodingConfig.Amino, keys[slashingtypes.StoreKey], app.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: Fix
+		appCodec, encodingConfig.Amino, keys[slashingtypes.StoreKey], app.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.CrisisKeeper = crisiskeeper.NewKeeper(appCodec, keys[crisistypes.StoreKey],
-		invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(), // TODO: fix
+		invCheckPeriod, app.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AccountKeeper)
@@ -339,8 +341,12 @@ func NewPolytopeApp(
 		app.BankKeeper,
 		scopedTransferKeeper,
 	)
+
+	app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.IBCKeeper.ChannelKeeper, &app.DistrKeeper, app.BankKeeper, app.IBCKeeper.ChannelKeeper)
+
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
+	routerModule := router.NewAppModule(app.RouterKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -349,6 +355,13 @@ func NewPolytopeApp(
 	)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
+	ibcMiddlewareStack := router.NewIBCMiddleware(
+		transferIBCModule,
+		app.RouterKeeper,
+		0,
+		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -379,7 +392,7 @@ func NewPolytopeApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
@@ -417,7 +430,7 @@ func NewPolytopeApp(
 		icqModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		wasm.NewAppModule(app.WasmClientKeeper),
-
+		routerModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -435,6 +448,7 @@ func NewPolytopeApp(
 		vestingtypes.ModuleName,
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
+		routertypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -464,6 +478,7 @@ func NewPolytopeApp(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		ibchost.ModuleName,
+		routertypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -492,6 +507,7 @@ func NewPolytopeApp(
 		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
+		routertypes.ModuleName,
 		feegrant.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasmtypes.ModuleName,
@@ -566,49 +582,49 @@ func NewPolytopeApp(
 }
 
 // Name returns the name of the App
-func (app *PolytopeApp) Name() string { return app.BaseApp.Name() }
+func (app *BanksyApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app *PolytopeApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app *BanksyApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *BanksyApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
+func (app *BanksyApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
 	return &app.TransferKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *BanksyApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetScopedIBCKeeper implements the TestingApp interface.
-func (app *PolytopeApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *BanksyApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *PolytopeApp) GetTxConfig() client.TxConfig {
+func (app *BanksyApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
 
 // BeginBlocker application updates every begin block
-func (app *PolytopeApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *BanksyApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *PolytopeApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *BanksyApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *PolytopeApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *BanksyApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -618,12 +634,12 @@ func (app *PolytopeApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) 
 }
 
 // LoadHeight loads a particular height
-func (app *PolytopeApp) LoadHeight(height int64) error {
+func (app *BanksyApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *PolytopeApp) ModuleAccountAddrs() map[string]bool {
+func (app *BanksyApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -634,7 +650,7 @@ func (app *PolytopeApp) ModuleAccountAddrs() map[string]bool {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *PolytopeApp) BlacklistedModuleAccountAddrs() map[string]bool {
+func (app *BanksyApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -648,7 +664,7 @@ func (app *PolytopeApp) BlacklistedModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *PolytopeApp) LegacyAmino() *codec.LegacyAmino {
+func (app *BanksyApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -656,47 +672,47 @@ func (app *PolytopeApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *PolytopeApp) AppCodec() codec.Codec {
+func (app *BanksyApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *PolytopeApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *BanksyApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *BanksyApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *BanksyApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *PolytopeApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *BanksyApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *PolytopeApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *BanksyApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *PolytopeApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
+func (app *BanksyApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -707,18 +723,17 @@ func (app *PolytopeApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *PolytopeApp) RegisterTxService(clientCtx client.Context) {
+func (app *BanksyApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *PolytopeApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *BanksyApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
 }
 
 // RegisterNodeService registers the node gRPC Query service.
-func (app *PolytopeApp) RegisterNodeService(clientCtx client.Context) {
-	// TODO: implement!
+func (app *BanksyApp) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
@@ -740,6 +755,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
+	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable()) //nolint:staticcheck
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
@@ -750,6 +766,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *PolytopeApp) SimulationManager() *module.SimulationManager {
+func (app *BanksyApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }

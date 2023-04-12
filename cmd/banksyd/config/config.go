@@ -11,7 +11,7 @@ import (
 
 const (
 	// Bech32Prefix defines the Bech32 prefix used for EthAccounts
-	Bech32Prefix = "polytope"
+	Bech32Prefix = "banksy"
 
 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
 	Bech32PrefixAccAddr = Bech32Prefix
@@ -28,8 +28,8 @@ const (
 )
 
 const (
-	HumanReadableCoinUnit = "STRD"
-	BaseCoinUnit          = "ustrd"
+	HumanReadableCoinUnit = "PICA"
+	BaseCoinUnit          = "upica"
 	DefaultBondDenom      = BaseCoinUnit
 )
 
@@ -40,8 +40,8 @@ func SetupConfig() {
 	SetAddressPrefixes(config)
 	config.Seal()
 
-	version.AppName = "polytope"
-	version.Name = "polytoped"
+	version.AppName = "banksy"
+	version.Name = "banksyd"
 	version.Version = "v1.0.0"
 }
 

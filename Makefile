@@ -58,8 +58,8 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=polytope \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=polytoped \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=banksy \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=banksyd \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
@@ -86,10 +86,10 @@ endif
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/polytoped
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/banksyd
 
 build:
-	go build $(BUILD_FLAGS) -o bin/polytoped ./cmd/polytoped
+	go build $(BUILD_FLAGS) -o bin/banksyd ./cmd/banksyd
 
 docker-build-debug:
 	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
