@@ -1,5 +1,5 @@
 {
-  "genesis_time": "2023-04-07T04:24:10.995537561Z",
+  "genesis_time": "2023-04-12T16:39:26.596284212Z",
   "chain_id": "banksy-testnet-1",
   "initial_height": "1",
   "consensus_params": {
@@ -24,7 +24,9 @@
   "app_hash": "",
   "app_state": {
     "07-tendermint": null,
-    "08-wasm": null,
+    "08-wasm": {
+      "contracts": []
+    },
     "auth": {
       "params": {
         "max_memo_characters": "256",
@@ -33,48 +35,14 @@
         "sig_verify_cost_ed25519": "590",
         "sig_verify_cost_secp256k1": "1000"
       },
-      "accounts": [
-        {
-          "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "banksy1g5r2vmnp6lta9cpst4lzc4syy3kcj2lj95rzp0",
-          "pub_key": null,
-          "account_number": "0",
-          "sequence": "0"
-        },
-        {
-          "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "banksy1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6",
-          "pub_key": null,
-          "account_number": "1",
-          "sequence": "0"
-        }
-      ]
+      "accounts": []
     },
     "bank": {
       "params": {
         "send_enabled": [],
         "default_send_enabled": true
       },
-      "balances": [
-        {
-          "address": "banksy1g5r2vmnp6lta9cpst4lzc4syy3kcj2lj95rzp0",
-          "coins": [
-            {
-              "denom": "upicax",
-              "amount": "10000000000"
-            }
-          ]
-        },
-        {
-          "address": "banksy1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6",
-          "coins": [
-            {
-              "denom": "upicax",
-              "amount": "1000000000000000"
-            }
-          ]
-        }
-      ],
+      "balances": [],
       "supply": [],
       "denom_metadata": [],
       "send_enabled": []
@@ -86,7 +54,7 @@
     "consensus": null,
     "crisis": {
       "constant_fee": {
-        "denom": "upicax",
+        "denom": "banksy",
         "amount": "1000"
       }
     },
@@ -116,70 +84,7 @@
       "allowances": []
     },
     "genutil": {
-      "gen_txs": [
-        {
-          "body": {
-            "messages": [
-              {
-                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
-                "description": {
-                  "moniker": "localtestnet",
-                  "identity": "",
-                  "website": "",
-                  "security_contact": "",
-                  "details": ""
-                },
-                "commission": {
-                  "rate": "0.100000000000000000",
-                  "max_rate": "0.200000000000000000",
-                  "max_change_rate": "0.010000000000000000"
-                },
-                "min_self_delegation": "1",
-                "delegator_address": "banksy1g5r2vmnp6lta9cpst4lzc4syy3kcj2lj95rzp0",
-                "validator_address": "banksyvaloper1g5r2vmnp6lta9cpst4lzc4syy3kcj2ljmtl3vh",
-                "pubkey": {
-                  "@type": "/cosmos.crypto.ed25519.PubKey",
-                  "key": "2gG/ICz0Iqvk8b49Vf7cVaRFnW1SpXwkQIJOW+qQxeE="
-                },
-                "value": {
-                  "denom": "upicax",
-                  "amount": "10000000000"
-                }
-              }
-            ],
-            "memo": "f562624b631c8f1c5e213930071f09f87b4a2748@65.108.73.88:26656",
-            "timeout_height": "0",
-            "extension_options": [],
-            "non_critical_extension_options": []
-          },
-          "auth_info": {
-            "signer_infos": [
-              {
-                "public_key": {
-                  "@type": "/cosmos.crypto.secp256k1.PubKey",
-                  "key": "AsFzLKnLfG76p8IFiHVluXh8q169t7wd2HKiH8jJ77Vq"
-                },
-                "mode_info": {
-                  "single": {
-                    "mode": "SIGN_MODE_DIRECT"
-                  }
-                },
-                "sequence": "0"
-              }
-            ],
-            "fee": {
-              "amount": [],
-              "gas_limit": "200000",
-              "payer": "",
-              "granter": ""
-            },
-            "tip": null
-          },
-          "signatures": [
-            "saHbADowOa66ympWNcNVVnuB/w3txAJAlJq3JLWunqB6wPFy3PxgGDssiyNJa5xK30iflVWzeVBhE0gB2VxcmQ=="
-          ]
-        }
-      ]
+      "gen_txs": []
     },
     "gov": {
       "starting_proposal_id": "1",
@@ -187,14 +92,12 @@
       "votes": [],
       "proposals": [],
       "deposit_params": null,
-      "voting_params": {
-        "voting_period": "45s"
-      },
+      "voting_params": null,
       "tally_params": null,
       "params": {
         "min_deposit": [
           {
-            "denom": "upicax",
+            "denom": "banksy",
             "amount": "10000000"
           }
         ],
@@ -275,7 +178,7 @@
         "max_validators": 100,
         "max_entries": 7,
         "historical_entries": 10000,
-        "bond_denom": "upicax",
+        "bond_denom": "banksy",
         "min_commission_rate": "0.000000000000000000"
       },
       "last_total_power": "0",
