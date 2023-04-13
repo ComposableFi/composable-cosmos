@@ -310,7 +310,7 @@ func pushWasmContractViaGov(t *testing.T, ctx context.Context, banksyd *cosmos.C
 		Summary:  "new grandpa contract",
 	}
 
-	proposalTx, codeHash, err := banksyd.PushNewWasmClientProposal(ctx, contractUser.KeyName(), "../polkadot/ics10_grandpa_cw.wasm", proposal)
+	proposalTx, codeHash, err := banksyd.PushNewWasmClientProposal(ctx, contractUser.KeyName(), "ics10_grandpa_cw.wasm", proposal)
 	require.NoError(t, err, "error submitting new wasm contract proposal tx")
 
 	height, err := banksyd.Height(ctx)

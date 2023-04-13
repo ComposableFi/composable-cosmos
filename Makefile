@@ -104,11 +104,11 @@ ictest-start-cosmos:
 
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
-	cd tests/interchaintest && go test -race -v -run TestPolkadotComposableChainStart .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
 
 # Executes IBC tests via interchaintest
 ictest-ibc:
-	cd tests/interchaintest && go test -race -v -run TestBanksyPicassoIBCTransfer .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestBanksyPicassoIBCTransfer .
 
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
