@@ -72,7 +72,7 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 					{
 						Repository: "seunlanlege/centauri-polkadot",
 						Version:    "v0.9.27",
-						UidGid:     "1025:1025",
+						UidGid:     "1000:1000",
 					},
 					{
 						Repository: "seunlanlege/centauri-parachain",
