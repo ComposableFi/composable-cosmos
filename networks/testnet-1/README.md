@@ -1,4 +1,4 @@
-# Composable Testnet Install Instructions
+# Composable Testnet 1
 
 ## Hardware Requirements
 
