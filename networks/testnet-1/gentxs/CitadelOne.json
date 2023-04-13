@@ -24,7 +24,7 @@
         },
         "value": {
           "denom": "ubanksy",
-          "amount": "10000000"
+          "amount": "1000000000"
         }
       }
     ],
@@ -57,6 +57,6 @@
     "tip": null
   },
   "signatures": [
-    "Cg7Yexk0zVniAx98Y+NCppn0K81giYMlMHodKGTDJzIcZba5B1zkcixeF2ueo9MYw3YriaW3FUjzPVWCOM7toQ=="
+    "T+0UA8JmVhTMjWXs8MLNr4iRV5LN6Ck7kdB8Aj/5ig45zDG3zu5NHe2IGw6IDI9eE22U7PlrWFmtzIid8LZlUA=="
   ]
 }
