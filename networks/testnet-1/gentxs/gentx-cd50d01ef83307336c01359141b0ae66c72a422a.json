@@ -1,0 +1,62 @@
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+        "description": {
+          "moniker": "Kleomedes",
+          "identity": "AD6C05DA12E42B70",
+          "website": "https://www.kleomed.es",
+          "security_contact": "",
+          "details": "The First Community Governed Validator in the Cosmos 🪐"
+        },
+        "commission": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.010000000000000000"
+        },
+        "min_self_delegation": "1",
+        "delegator_address": "banksy1gz2c6rkwf9quztvwynwr2hsa9lmldnjl20u2rr",
+        "validator_address": "banksyvaloper1gz2c6rkwf9quztvwynwr2hsa9lmldnjl5sqewm",
+        "pubkey": {
+          "@type": "/cosmos.crypto.ed25519.PubKey",
+          "key": "Ic8wjyX4UDSBqcL5/2qu1kL8Sa3jwy6158vKmGyO340="
+        },
+        "value": {
+          "denom": "ubanksy",
+          "amount": "1000000000"
+        }
+      }
+    ],
+    "memo": "cd50d01ef83307336c01359141b0ae66c72a422a@10.10.10.63:26656",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [
+      {
+        "public_key": {
+          "@type": "/cosmos.crypto.secp256k1.PubKey",
+          "key": "A1MpTE9K5vwJuvtdlh/veiuIsL2f6B4koP4Q9Bm4qfoD"
+        },
+        "mode_info": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "0"
+      }
+    ],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    },
+    "tip": null
+  },
+  "signatures": [
+    "bBWqGNjDdFTTxWU5xxteoeIOgn2RCErv4NkFfzKiMjtMHIBFIMWDX0zaWQKSvO5n8mklAH5pUfSMOaigIehQTw=="
+  ]
+}
