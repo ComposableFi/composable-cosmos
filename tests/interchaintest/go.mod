@@ -135,7 +135,7 @@ require (
 	github.com/mimoo/StrobeGo v0.0.0-20220103164710-9a04d6ca976b // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/minio/sha256-simd v1.0.0 // indirect
-	github.com/misko9/go-substrate-rpc-client/v4 v4.0.0-20230316181816-6037bb49fa8d // indirect
+	github.com/misko9/go-substrate-rpc-client/v4 v4.0.0-20230413215336-5bd2aea337ae // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -230,7 +230,7 @@ replace (
 	//  Use notional lab version of async-icq
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
 
-	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.0.6
+	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.0.7
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
 	github.com/vedhavyas/go-subkey => github.com/strangelove-ventures/go-subkey v1.0.7
