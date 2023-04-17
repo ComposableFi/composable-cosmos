@@ -1,13 +1,15 @@
 package transfermiddleware
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-
+	transfertype "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
+	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
 )
 
@@ -87,7 +89,48 @@ func (im IBCMiddleware) OnRecvPacket(
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	return im.app.OnRecvPacket(ctx, packet, relayer)
+	logger := im.keeper.Logger(ctx)
+	ack := channeltypes.NewResultAcknowledgement([]byte{byte(1)})
+
+	var data transfertype.FungibleTokenPacketData
+	var ackErr error
+	if err := transfertype.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
+		return channeltypes.NewErrorAcknowledgement(err)
+	}
+
+	if ack.Success() {
+		err := im.keeper.OnRecvPacket(ctx, packet, data)
+		if err != nil {
+			ack = channeltypes.NewErrorAcknowledgement(err)
+			ackErr = err
+		} else {
+			logger.Info("successfully handled ICS-20 packet sequence: %d", packet.Sequence)
+		}
+	}
+
+	eventAttributes := []sdk.Attribute{
+		sdk.NewAttribute(sdk.AttributeKeyModule, transfertype.ModuleName),
+		sdk.NewAttribute(sdk.AttributeKeySender, data.Sender),
+		sdk.NewAttribute(transfertype.AttributeKeyReceiver, data.Receiver),
+		sdk.NewAttribute(transfertype.AttributeKeyDenom, data.Denom),
+		sdk.NewAttribute(transfertype.AttributeKeyAmount, data.Amount),
+		sdk.NewAttribute(transfertype.AttributeKeyMemo, data.Memo),
+		sdk.NewAttribute(transfertype.AttributeKeyAckSuccess, fmt.Sprintf("%t", ack.Success())),
+	}
+
+	if ackErr != nil {
+		eventAttributes = append(eventAttributes, sdk.NewAttribute(transfertype.AttributeKeyAckError, ackErr.Error()))
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			transfertype.EventTypePacket,
+			eventAttributes...,
+		),
+	)
+
+	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
+	return ack
 }
 
 // OnTimeoutPacket implements the IBCModule interface.

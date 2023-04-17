@@ -1,13 +1,19 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
 
+	errorsmod "cosmossdk.io/errors"
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+	coretypes "github.com/cosmos/ibc-go/v7/modules/core/types"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
 )
 
@@ -81,6 +87,92 @@ func (k Keeper) executeTransferMsg(ctx sdk.Context, transferMsg *transfertypes.M
 	}
 	return k.transferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
 
+}
+
+func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
+	if err := data.ValidateBasic(); err != nil {
+		return errorsmod.Wrapf(err, "error validating ICS-20 transfer packet data")
+	}
+
+	if !k.transferKeeper.GetReceiveEnabled(ctx) {
+		return transfertypes.ErrReceiveDisabled
+	}
+
+	// decode the receiver address
+	receiver, err := sdk.AccAddressFromBech32(data.Receiver)
+	if err != nil {
+		return errorsmod.Wrapf(err, "failed to decode receiver address: %s", data.Receiver)
+	}
+
+	// parse the transfer amount
+	transferAmount, ok := sdk.NewIntFromString(data.Amount)
+	if !ok {
+		return errorsmod.Wrapf(transfertypes.ErrInvalidAmount, "unable to parse transfer amount: %s", data.Amount)
+	}
+
+	labels := []metrics.Label{
+		telemetry.NewLabel(coretypes.LabelSourcePort, packet.GetSourcePort()),
+		telemetry.NewLabel(coretypes.LabelSourceChannel, packet.GetSourceChannel()),
+	}
+
+	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
+
+	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
+		return errorsmod.Wrap(errors.New("Not source chain"), "sender chain is not the source")
+	}
+
+	// sender chain is the source, mint vouchers
+
+	// since SendPacket did not prefix the denomination, we must prefix denomination here
+	sourcePrefix := paraTokenInfo.NativeDenom
+	// NOTE: sourcePrefix contains the trailing "/"
+	prefixedDenom := sourcePrefix
+
+	// construct the denomination trace from the full raw denomination
+	denomTrace := transfertypes.ParseDenomTrace(prefixedDenom)
+
+	voucherDenom := denomTrace.IBCDenom()
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			transfertypes.EventTypeDenomTrace,
+			sdk.NewAttribute(transfertypes.AttributeKeyDenom, voucherDenom),
+		),
+	)
+	voucher := sdk.NewCoin(voucherDenom, transferAmount)
+
+	// mint new tokens if the source of the transfer is the same chain
+	if err := k.bankKeeper.MintCoins(
+		ctx, types.ModuleName, sdk.NewCoins(voucher),
+	); err != nil {
+		return errorsmod.Wrap(err, "failed to mint tokens")
+	}
+
+	// send to receiver
+	if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+		ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
+	); err != nil {
+		return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
+	}
+
+	defer func() {
+		if transferAmount.IsInt64() {
+			telemetry.SetGaugeWithLabels(
+				[]string{"ibc", types.ModuleName, "packet", "receive"},
+				float32(transferAmount.Int64()),
+				[]metrics.Label{telemetry.NewLabel(coretypes.LabelDenom, data.Denom)},
+			)
+		}
+
+		telemetry.IncrCounterWithLabels(
+			[]string{"ibc", types.ModuleName, "receive"},
+			1,
+			append(
+				labels, telemetry.NewLabel(coretypes.LabelSource, "false"),
+			),
+		)
+	}()
+
+	return nil
 }
 
 // SendPacket wraps IBC ChannelKeeper's SendPacket function
