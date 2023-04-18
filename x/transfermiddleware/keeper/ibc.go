@@ -117,40 +117,6 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 
 	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
 
-	// if sourceChannel is from parachain, mint new native token
-	if packet.SourceChannel == paraTokenInfo.ChannelId {
-		denom := paraTokenInfo.NativeDenom
-		voucher := sdk.NewCoin(denom, transferAmount)
-
-		// mint coins
-		if err := k.bankKeeper.MintCoins(
-			ctx, types.ModuleName, sdk.NewCoins(voucher),
-		); err != nil {
-			return errorsmod.Wrap(err, "failed to mint IBC tokens")
-		}
-
-		// send to receiver
-		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
-			ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
-		); err != nil {
-			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
-		}
-
-		defer func() {
-			if transferAmount.IsInt64() {
-				telemetry.SetGaugeWithLabels(
-					[]string{"ibc", types.ModuleName, "packet", "receive"},
-					float32(transferAmount.Int64()),
-					[]metrics.Label{telemetry.NewLabel(coretypes.LabelDenom, denom)},
-				)
-			}
-			// TODO: should we use IncrCounterWithLabels instead ?
-			telemetry.IncrCounter(1, "ibc", types.ModuleName, "receive")
-		}()
-
-		return nil
-	}
-
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		// sender chain is not the source, unescrow tokens
 
@@ -236,11 +202,39 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		return errorsmod.Wrap(err, "failed to mint IBC tokens")
 	}
 
-	// send to receiver
-	if err := k.bankKeeper.SendCoinsFromModuleToAccount(
-		ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
-	); err != nil {
-		return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
+	// lock ibc token if srcChannel is paraChannel
+	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
+		// escrow ibc token
+		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx, types.ModuleName, escrowAddress, sdk.NewCoins(voucher),
+		); err != nil {
+			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
+		}
+
+		// mint native token
+		denom := paraTokenInfo.NativeDenom
+		voucher = sdk.NewCoin(denom, transferAmount)
+
+		if err := k.bankKeeper.MintCoins(
+			ctx, types.ModuleName, sdk.NewCoins(voucher),
+		); err != nil {
+			return errorsmod.Wrap(err, "failed to mint IBC tokens")
+		}
+
+		// send to receiver
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
+		); err != nil {
+			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
+		}
+	} else {
+		// send to receiver
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
+		); err != nil {
+			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
+		}
 	}
 
 	defer func() {
