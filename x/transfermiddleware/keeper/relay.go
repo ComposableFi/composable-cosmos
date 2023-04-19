@@ -17,7 +17,6 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	if err := data.ValidateBasic(); err != nil {
 		return errorsmod.Wrapf(err, "error validating ICS-20 transfer packet data")
 	}
-
 	if !k.transferKeeper.GetReceiveEnabled(ctx) {
 		return transfertypes.ErrReceiveDisabled
 	}

@@ -83,7 +83,6 @@ func (im IBCMiddleware) OnChanCloseConfirm(ctx sdk.Context, portID, channelID st
 }
 
 // OnRecvPacket implements the IBCModule interface.
-// TODO: more detail describe.
 func (im IBCMiddleware) OnRecvPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
