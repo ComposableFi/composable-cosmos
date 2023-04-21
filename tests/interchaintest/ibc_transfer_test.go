@@ -354,24 +354,5 @@ func fundUsers(t *testing.T, ctx context.Context, fundAmount int64, composable i
 	require.NoError(t, err)
 	require.Equal(t, fundAmount, cosmosUserAmount, "Initial cosmos user amount not expected")
 
-	// Mint 100 "UNIT"/"Asset 1" for alice , not sure why the ~1.5M UNIT from balance/genesis doesn't work
-	mint := ibc.WalletAmount{
-		Address: "5yNZjX24n2eg7W6EVamaTXNQbWCwchhThEaSWB7V3GRjtHeL",
-		Denom:   "1",
-		Amount:  int64(100_000_000_000_000), // 100 UNITS, not 100T
-	}
-	err = composable.(*polkadot.PolkadotChain).MintFunds("alice", mint)
-	require.NoError(t, err)
-	err = testutil.WaitForBlocks(ctx, 2, composable, banksyd) // Only waiting 1 block is flaky for parachain
-	require.NoError(t, err, "cosmos or polkadot chain failed to make blocks")
-	// Mint 100 "UNIT"/"Asset 1" for alice , not sure why the ~1.5M UNIT from balance/genesis doesn't work
-	mint2 := ibc.WalletAmount{
-		Address: polkadotUser.FormattedAddress(), // Alice
-		Denom:   "1",
-		Amount:  int64(123_789_000_000_000), // 100 UNITS, not 100T
-	}
-	err = composable.(*polkadot.PolkadotChain).MintFunds("alice", mint2)
-	require.NoError(t, err)
-
 	return polkadotUser, cosmosUser
 }
