@@ -116,6 +116,9 @@ func TestPushWasmClientCode(t *testing.T) {
 	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", int64(fundAmount), banksyd)
 	banksyd1User := users[0]
 
+	err = testutil.WaitForBlocks(ctx, 10, banksyd)
+	require.NoError(t, err)
+
 	banksyd1UserBalInitial, err := banksyd.GetBalance(ctx, banksyd1User.FormattedAddress(), banksyd.Config().Denom)
 	require.NoError(t, err)
 	require.Equal(t, fundAmount, banksyd1UserBalInitial)
