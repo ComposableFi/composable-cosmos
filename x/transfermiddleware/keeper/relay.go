@@ -15,7 +15,6 @@ import (
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
-	fmt.Println("dsahdhasdhjasdjhasjhdsajhg")
 	if err := data.ValidateBasic(); err != nil {
 		return errorsmod.Wrapf(err, "error validating ICS-20 transfer packet data")
 	}
@@ -119,16 +118,18 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		),
 	)
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
-
+	fmt.Println("Channel source", packet.GetSourceChannel())
 	// mint new tokens if the source of the transfer is the same chain
 	if err := k.bankKeeper.MintCoins(
 		ctx, types.ModuleName, sdk.NewCoins(voucher),
 	); err != nil {
 		return errorsmod.Wrap(err, "failed to mint IBC tokens")
 	}
-
+	fmt.Println("packet.GetSourceChannel()", packet.GetSourceChannel())
+	fmt.Println("paraTokenInfo.ChannelId", paraTokenInfo.ChannelId)
 	// lock ibc token if srcChannel is paraChannel
 	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
+		fmt.Println("truong hop 1")
 		// escrow ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
@@ -154,6 +155,7 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
 		}
 	} else {
+		fmt.Println("truong hop 2")
 		// send to receiver
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
 			ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),

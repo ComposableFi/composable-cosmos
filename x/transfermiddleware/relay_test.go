@@ -1,6 +1,7 @@
 package transfermiddleware_test
 
 import (
+	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -52,14 +53,18 @@ func TestFromIBCTransferToContract(t *testing.T) {
 
 			coordinator.SetupConnections(path)
 			coordinator.CreateChannels(path)
+			// Setup chainB
+			chainBtransMiddleware := chainB.TransferMiddleware()
+			err := chainBtransMiddleware.AddParachainIBCTokenInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+			require.NoError(t, err)
 			// Setup chainA
-
 			originalChainABalance := chainA.Balance(chainA.SenderAccount.GetAddress(), sdk.DefaultBondDenom)
+			originalChainBBalance := chainB.Balance(chainB.SenderAccount.GetAddress(), sdk.DefaultBondDenom)
 			// when transfer via sdk transfer from A (module) -> B (contract)
 			coinToSendToB := sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 			timeoutHeight := clienttypes.NewHeight(1, 110)
 			msg := ibctransfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, coinToSendToB, chainA.SenderAccount.GetAddress().String(), chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
-			_, err := chainA.SendMsgs(msg)
+			_, err = chainA.SendMsgs(msg)
 			require.NoError(t, err)
 			require.NoError(t, path.EndpointB.UpdateClient())
 
@@ -80,8 +85,8 @@ func TestFromIBCTransferToContract(t *testing.T) {
 			assert.Equal(t, originalChainABalance.Amount.Add(spec.expChainABalanceDiff), newChainABalance.Amount)
 
 			// and dest chain balance contains voucher
-			expBalance := ibctransfertypes.GetTransferCoin(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, coinToSendToB.Denom, spec.expChainBBalanceDiff)
-			gotBalance := chainB.Balance(chainB.SenderAccount.GetAddress(), expBalance.Denom)
+			expBalance := originalChainBBalance.Add(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount))
+			gotBalance := chainB.Balance(chainB.SenderAccount.GetAddress(), sdk.DefaultBondDenom)
 			assert.Equal(t, expBalance, gotBalance)
 		})
 	}

@@ -38,6 +38,7 @@ import (
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 	banksy "github.com/notional-labs/banksy/v2/app"
+	routerKeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -542,6 +543,10 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 	return cap
 }
 
+func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
+	return chain.GetTestSupport().TransferMiddleware()
+}
+
 func (chain *TestChain) Balance(acc sdk.AccAddress, denom string) sdk.Coin {
 	return chain.GetTestSupport().BankKeeper().GetBalance(chain.GetContext(), acc, denom)
 }
@@ -590,9 +595,5 @@ func (a TestingAppDecorator) TestSupport() *banksy.TestSupport {
 }
 
 func (a TestingAppDecorator) GetWasmKeeper() wasm08.Keeper {
-	return a.TestSupport().Wasm08Keeper()
-}
-
-func (a TestingAppDecorator) GOGOGO() wasm08.Keeper {
 	return a.TestSupport().Wasm08Keeper()
 }
