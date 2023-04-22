@@ -16,7 +16,6 @@ require (
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4
-	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230321175727-de5b28b4b6ca
 	github.com/stretchr/testify v1.8.2
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
 	google.golang.org/grpc v1.53.0
@@ -46,7 +45,6 @@ require (
 	github.com/hashicorp/go-getter v1.7.0 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
-	github.com/iancoleman/orderedmap v0.2.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/manifoldco/promptui v0.9.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
