@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -104,13 +103,11 @@ func TestOnRecvPacket_TransferPacket(t *testing.T) {
 	receiver, _ := sdk.AccAddressFromBech32(receiver)
 	setup.Mocks.BankKeeperMock.EXPECT().SendCoinsFromModuleToAccount(ctx, "transfermiddleware", receiver, sdk.NewCoins(voucher))
 	ack := ibcMiddleware.OnRecvPacket(ctx, packet, senderAccAddr)
-	fmt.Println("ack", string(ack.Acknowledgement()))
 	require.True(t, ack.Success())
 
 	expectedAck := &channeltypes.Acknowledgement{}
 	err := cdc.UnmarshalJSON(ack.Acknowledgement(), expectedAck)
 	require.NoError(t, err)
 	require.Equal(t, "", expectedAck.GetError())
-
 	require.Equal(t, []byte{0x1}, expectedAck.GetResult())
 }

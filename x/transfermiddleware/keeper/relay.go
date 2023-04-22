@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"errors"
+	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
 	"github.com/armon/go-metrics"
@@ -14,6 +15,7 @@ import (
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
+	fmt.Println("dsahdhasdhjasdjhasjhdsajhg")
 	if err := data.ValidateBasic(); err != nil {
 		return errorsmod.Wrapf(err, "error validating ICS-20 transfer packet data")
 	}

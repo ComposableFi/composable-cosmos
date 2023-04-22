@@ -2,7 +2,7 @@ package types
 
 const (
 	// Module name store the name of the module
-	ModuleName = "transfermiddleware"
+	ModuleName = "transmiddleware"
 
 	// StoreKey is the string store representation
 	StoreKey = ModuleName
