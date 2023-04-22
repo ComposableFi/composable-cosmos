@@ -93,15 +93,16 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
-	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
-	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
+	router "github.com/notional-labs/banksy/v2/x/transfermiddleware"
+	routerkeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	routertypes "github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 )
 
@@ -172,6 +173,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		routertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -223,12 +225,13 @@ type BanksyApp struct {
 	ICQKeeper        icqkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	WasmClientKeeper wasmkeeper.Keeper
+	Wasm08Keeper     wasm08.Keeper // TODO: use this name ?
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	RouterKeeper *routerkeeper.Keeper
+	RouterKeeper routerkeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -346,11 +349,11 @@ func NewBanksyApp(
 		scopedTransferKeeper,
 	)
 
-	app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.IBCKeeper.ChannelKeeper, &app.DistrKeeper, app.BankKeeper, app.IBCKeeper.ChannelKeeper)
+	app.RouterKeeper = routerkeeper.NewKeeper(keys[routertypes.StoreKey], appCodec, app.TransferKeeper, app.BankKeeper)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
-	routerModule := router.NewAppModule(app.RouterKeeper)
+	routerModule := router.NewAppModule(&app.RouterKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -362,9 +365,6 @@ func NewBanksyApp(
 	ibcMiddlewareStack := router.NewIBCMiddleware(
 		transferIBCModule,
 		app.RouterKeeper,
-		0,
-		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
-		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
@@ -759,7 +759,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
+	// paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable()) // TODO:
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable()) //nolint:staticcheck
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
