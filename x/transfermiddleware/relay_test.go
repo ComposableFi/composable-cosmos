@@ -1,7 +1,6 @@
 package transfermiddleware_test
 
 import (
-	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
