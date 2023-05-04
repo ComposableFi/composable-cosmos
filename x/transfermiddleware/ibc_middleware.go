@@ -1,8 +1,6 @@
 package transfermiddleware
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	transfertype "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -89,10 +87,9 @@ func (im IBCMiddleware) OnRecvPacket(
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
 	logger := im.keeper.Logger(ctx)
-	ack := channeltypes.NewResultAcknowledgement([]byte{byte(1)})
+	ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
 	var data transfertype.FungibleTokenPacketData
-	var ackErr error
 	if err := transfertype.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
 		return channeltypes.NewErrorAcknowledgement(err)
 	}
@@ -101,32 +98,10 @@ func (im IBCMiddleware) OnRecvPacket(
 		err := im.keeper.OnRecvPacket(ctx, packet, data)
 		if err != nil {
 			ack = channeltypes.NewErrorAcknowledgement(err)
-			ackErr = err
 		} else {
 			logger.Info("successfully handled ICS-20 packet sequence: %d", packet.Sequence)
 		}
 	}
-
-	eventAttributes := []sdk.Attribute{
-		sdk.NewAttribute(sdk.AttributeKeyModule, transfertype.ModuleName),
-		sdk.NewAttribute(sdk.AttributeKeySender, data.Sender),
-		sdk.NewAttribute(transfertype.AttributeKeyReceiver, data.Receiver),
-		sdk.NewAttribute(transfertype.AttributeKeyDenom, data.Denom),
-		sdk.NewAttribute(transfertype.AttributeKeyAmount, data.Amount),
-		sdk.NewAttribute(transfertype.AttributeKeyMemo, data.Memo),
-		sdk.NewAttribute(transfertype.AttributeKeyAckSuccess, fmt.Sprintf("%t", ack.Success())),
-	}
-
-	if ackErr != nil {
-		eventAttributes = append(eventAttributes, sdk.NewAttribute(transfertype.AttributeKeyAckError, ackErr.Error()))
-	}
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			transfertype.EventTypePacket,
-			eventAttributes...,
-		),
-	)
 
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
 	return ack

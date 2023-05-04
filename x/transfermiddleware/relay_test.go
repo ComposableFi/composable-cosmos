@@ -105,6 +105,8 @@ func TestFromIBCTransferToContract(t *testing.T) {
 			// and dest chain balance contains voucher
 			expBalance := originalChainBBalance.Add(tc.expChainBBalanceDiff)
 			gotBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
+			fmt.Println("expBalance", expBalance)
+			fmt.Println("gotBalance", gotBalance)
 			assert.Equal(t, expBalance, gotBalance)
 		})
 	}
