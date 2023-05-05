@@ -43,10 +43,6 @@ func TestOnrecvPacket(t *testing.T) {
 	coordinator.SetupConnections(path)
 	coordinator.CreateChannels(path)
 
-	originalChainABalance := chainA.AllBalances(chainA.SenderAccount.GetAddress())
-	// chainB.SenderAccount: 10000000000000000000stake
-	originalChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
-
 	// when transfer via sdk transfer from A (module) -> B (contract)
 	coinToSendToB := sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	timeoutHeight := clienttypes.NewHeight(1, 110)
@@ -57,12 +53,12 @@ func TestOnrecvPacket(t *testing.T) {
 		expChainBBalanceDiff sdk.Coin
 		malleate             func()
 	}{
-		// {
-		// 	"Transfer with no pre-set ParachainIBCTokenInfo",
-		// 	sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
-		// 	ibctransfertypes.GetTransferCoin(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, coinToSendToB.Denom, transferAmount),
-		// 	func() {},
-		// },
+		{
+			"Transfer with no pre-set ParachainIBCTokenInfo",
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			ibctransfertypes.GetTransferCoin(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, coinToSendToB.Denom, transferAmount),
+			func() {},
+		},
 		{
 			"Transfer with pre-set ParachainIBCTokenInfo",
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
@@ -80,6 +76,11 @@ func TestOnrecvPacket(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			tc.malleate()
+
+			originalChainABalance := chainA.AllBalances(chainA.SenderAccount.GetAddress())
+			// chainB.SenderAccount: 10000000000000000000stake
+			originalChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
+
 			fmt.Println("chainB.AllBalances(chainB.SenderAccount.GetAddress())", chainB.AllBalances(chainB.SenderAccount.GetAddress()))
 			msg := ibctransfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, coinToSendToB, chainA.SenderAccount.GetAddress().String(), chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
 			_, err := chainA.SendMsgs(msg)
