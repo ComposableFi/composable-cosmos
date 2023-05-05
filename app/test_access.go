@@ -67,5 +67,5 @@ func (s TestSupport) GetTxConfig() client.TxConfig {
 }
 
 func (s TestSupport) TransferMiddleware() routerKeeper.Keeper {
-	return s.app.RouterKeeper
+	return s.app.TransferMiddlewarekeeper
 }
