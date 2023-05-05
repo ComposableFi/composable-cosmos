@@ -2,6 +2,7 @@ package transfermiddleware
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	transfertype "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
@@ -109,7 +110,20 @@ func (im IBCMiddleware) OnRecvPacket(
 
 // OnTimeoutPacket implements the IBCModule interface.
 func (im IBCMiddleware) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
-	return im.app.OnTimeoutPacket(ctx, packet, relayer)
+	var data transfertype.FungibleTokenPacketData
+	if err := transfertype.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
+	}
+
+	if err := im.app.OnTimeoutPacket(ctx, packet, relayer); err != nil {
+		return err
+	}
+
+	if err := im.keeper.OnTimeoutPacket(ctx, packet, data); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // OnAcknowledgementPacket implements the IBCModule interface.

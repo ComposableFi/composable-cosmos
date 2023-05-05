@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestFromIBCTransferToContract(t *testing.T) {
+func TestOnrecvPacket(t *testing.T) {
 	// scenario: given two chains,
 	//           with a contract on chain B
 	//           then the contract can handle the receiving side of an ics20 transfer
