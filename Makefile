@@ -122,3 +122,26 @@ proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
 .PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking 
+###                             Interchain test                             ###
+###############################################################################
+
+# Executes start chain tests via interchaintest
+ictest-start-cosmos:
+	cd tests/interchaintest && go test -race -v -run TestStartBanksy .
+
+# Executes start chain tests via interchaintest
+ictest-start-polkadot:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
+
+# Executes IBC tests via interchaintest
+ictest-ibc:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestBanksyPicassoIBCTransfer .
+
+# Executes all tests via interchaintest after compling a local image as juno:local
+ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
+
+# Executes push wasm client tests via interchaintest
+ictest-push-wasm:
+	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
+
+.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
