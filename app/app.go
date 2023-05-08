@@ -368,6 +368,7 @@ func NewBanksyApp(
 	app.TransferMiddlewarekeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
 		appCodec,
+		app.IBCKeeper.ChannelKeeper,
 		app.TransferKeeper,
 		app.BankKeeper,
 	)

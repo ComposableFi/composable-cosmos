@@ -26,6 +26,7 @@ type Keeper struct {
 func NewKeeper(
 	storeKey storetypes.StoreKey,
 	codec codec.BinaryCodec,
+	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
 ) Keeper {
