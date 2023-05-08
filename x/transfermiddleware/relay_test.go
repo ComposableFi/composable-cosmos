@@ -14,13 +14,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TODO: use testsuite here.
 func TestOnrecvPacket(t *testing.T) {
 	// scenario: given two chains,
 	//           with a contract on chain B
 	//           then the contract can handle the receiving side of an ics20 transfer
 	//           that was started on chain A via ibc transfer module
 
-	transferAmount := sdk.NewInt(1)
+	transferAmount := sdk.NewInt(1000000000)
 	var (
 		coordinator = customibctesting.NewCoordinator(t, 2)
 		chainA      = coordinator.GetChain(customibctesting.GetChainID(0))
@@ -66,7 +67,7 @@ func TestOnrecvPacket(t *testing.T) {
 			func() {
 				// Add parachain token info
 				chainBtransMiddleware := chainB.TransferMiddleware()
-				err := chainBtransMiddleware.AddParachainIBCTokenInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+				err := chainBtransMiddleware.AddParachainIBCInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
 				require.NoError(t, err)
 			},
 		},

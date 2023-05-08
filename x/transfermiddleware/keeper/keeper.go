@@ -55,8 +55,10 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelId, n
 		return err
 	}
 	store := ctx.KVStore(keeper.storeKey)
-	store.Set(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom), bz)
+	store.Set(types.GetKeyParachainIBCTokenInfo(nativeDenom), bz)
 
+	// update the IBCdenom-native index
+	store.Set(types.GetKeyIBCDenomAndNativeIndex(ibcDenom), []byte(nativeDenom))
 	return nil
 }
 
@@ -67,8 +69,18 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
 
+	// get the IBCdenom
+	IBCDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
+
 	store := ctx.KVStore(keeper.storeKey)
-	store.Delete(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom))
+	store.Delete(types.GetKeyParachainIBCTokenInfo(nativeDenom))
+
+	// update the IBCdenom-native index
+	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(IBCDenom)) {
+		panic("broken data in state")
+	}
+
+	store.Delete(types.GetKeyIBCDenomAndNativeIndex(IBCDenom))
 
 	return nil
 }
@@ -77,11 +89,18 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
 func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(nativeDenom))
 
 	keeper.cdc.Unmarshal(bz, &info)
 
 	return info
+}
+
+func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBCdenom string) string {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(IBCdenom))
+
+	return string(bz)
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
