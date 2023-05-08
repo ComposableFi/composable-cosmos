@@ -53,6 +53,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 
 	// burn native token
 	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
+
 	// release lock IBC token and send it to sender
 	keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, transfertypes.ModuleName, sender, sdk.NewCoins(ibcTransferToken))
 
@@ -92,8 +93,7 @@ func (k Keeper) SendPacket(
 	timeoutTimestamp uint64,
 	data []byte,
 ) (sequence uint64, err error) {
-
-	return k.ics4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
+	return k.handleOverrideSendPacketTransferLogic(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 }
 
 // WriteAcknowledgement wraps IBC ICS4Wrapper WriteAcknowledgement function.

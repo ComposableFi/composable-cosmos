@@ -39,7 +39,7 @@ func NewKeeper(
 
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
-func (keeper Keeper) AddParachainIBCTokenInfo(ctx sdk.Context, ibcDenom, channelId, nativeDenom string) error {
+func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelId, nativeDenom string) error {
 	if keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
@@ -62,7 +62,7 @@ func (keeper Keeper) AddParachainIBCTokenInfo(ctx sdk.Context, ibcDenom, channel
 
 // TODO: testing
 // RemoveParachainIBCTokenInfo remove parachain token information from chain state.
-func (keeper Keeper) RemoveParachainIBCTokenInfo(ctx sdk.Context, ibcDenom, channelId, nativeDenom string) error {
+func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
