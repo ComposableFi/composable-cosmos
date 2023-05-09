@@ -13,7 +13,7 @@ import (
 type Keeper struct {
 	cdc            codec.BinaryCodec
 	storeKey       storetypes.StoreKey
-	ics4Wrapper    porttypes.ICS4Wrapper
+	ICS4Wrapper    porttypes.ICS4Wrapper
 	bankKeeper     types.BankKeeper
 	transferKeeper types.TransferKeeper
 
@@ -35,6 +35,7 @@ func NewKeeper(
 		transferKeeper: transferKeeper,
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
+		ICS4Wrapper:    ics4Wrapper,
 	}
 }
 
