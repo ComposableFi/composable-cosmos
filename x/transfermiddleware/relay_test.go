@@ -66,7 +66,7 @@ func TestOnrecvPacket(t *testing.T) {
 			func() {
 				// Add parachain token info
 				chainBtransMiddleware := chainB.TransferMiddleware()
-				err := chainBtransMiddleware.AddParachainIBCTokenInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+				err := chainBtransMiddleware.AddParachainIBCInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
 				require.NoError(t, err)
 			},
 		},
