@@ -107,11 +107,16 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
+	transfermiddleware "github.com/notional-labs/banksy/v2/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
+
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 )
 
@@ -171,6 +176,7 @@ var (
 		tendermint.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
+		transfermiddleware.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -184,6 +190,7 @@ var (
 		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:                 {authtypes.Burner},
+		transfermiddlewaretypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
@@ -237,13 +244,15 @@ type BanksyApp struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
 	WasmClientKeeper wasmkeeper.Keeper
+	Wasm08Keeper     wasm08.Keeper // TODO: use this name ?
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	RouterKeeper   *routerkeeper.Keeper
-	AllianceKeeper alliancemodulekeeper.Keeper
+	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
+	RouterKeeper             *routerkeeper.Keeper
+	AllianceKeeper           alliancemodulekeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -277,7 +286,7 @@ func NewBanksyApp(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, alliancemoduletypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, alliancemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -374,10 +383,18 @@ func NewBanksyApp(
 
 	app.WasmClientKeeper = wasmkeeper.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
 	// Create Transfer Keepers
+	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
+		keys[transfermiddlewaretypes.StoreKey],
+		appCodec,
+		app.IBCKeeper.ChannelKeeper,
+		app.TransferKeeper,
+		app.BankKeeper,
+	)
+
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+		&app.TransferMiddlewareKeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -385,11 +402,21 @@ func NewBanksyApp(
 		scopedTransferKeeper,
 	)
 
-	app.RouterKeeper = routerkeeper.NewKeeper(appCodec, keys[routertypes.StoreKey], app.GetSubspace(routertypes.ModuleName), app.TransferKeeper, app.IBCKeeper.ChannelKeeper, &app.DistrKeeper, app.BankKeeper, app.IBCKeeper.ChannelKeeper)
+	app.RouterKeeper = routerkeeper.NewKeeper(
+		appCodec,
+		app.keys[routertypes.StoreKey],
+		app.GetSubspace(routertypes.ModuleName),
+		app.TransferKeeper,
+		app.IBCKeeper.ChannelKeeper,
+		&app.DistrKeeper,
+		app.BankKeeper,
+		app.IBCKeeper.ChannelKeeper,
+	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
+	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -404,6 +431,11 @@ func NewBanksyApp(
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	)
+
+	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
+		ibcMiddlewareStack,
+		app.TransferMiddlewareKeeper,
 	)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
@@ -436,7 +468,7 @@ func NewBanksyApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transfermiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
@@ -476,6 +508,7 @@ func NewBanksyApp(
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		wasm.NewAppModule(app.WasmClientKeeper),
 		routerModule,
+		transfermiddlewareModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -495,6 +528,7 @@ func NewBanksyApp(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
+		transfermiddlewaretypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -528,6 +562,7 @@ func NewBanksyApp(
 		upgradetypes.ModuleName,
 		ibchost.ModuleName,
 		routertypes.ModuleName,
+		transfermiddlewaretypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -558,6 +593,7 @@ func NewBanksyApp(
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
+		transfermiddlewaretypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -807,8 +843,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable())
-	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable()) //nolint:staticcheck
+	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable()) // TODO:
+	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable())     //nolint:staticcheck
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(icqtypes.ModuleName)
