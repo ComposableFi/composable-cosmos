@@ -15,7 +15,6 @@ import (
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-
 	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "banksy/MsgAddParachainInfo")
 	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "banksy/MsgRemoveParachainInfo")
 }

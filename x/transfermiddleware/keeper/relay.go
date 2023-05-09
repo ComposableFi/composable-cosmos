@@ -12,13 +12,6 @@ import (
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
-	if err := data.ValidateBasic(); err != nil {
-		return errorsmod.Wrapf(err, "error validating ICS-20 transfer packet data")
-	}
-	if !k.transferKeeper.GetReceiveEnabled(ctx) {
-		return transfertypes.ErrReceiveDisabled
-	}
-
 	// decode the receiver address
 	receiver, err := sdk.AccAddressFromBech32(data.Receiver)
 	if err != nil {
@@ -31,14 +24,10 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		return errorsmod.Wrapf(transfertypes.ErrInvalidAmount, "unable to parse transfer amount: %s", data.Amount)
 	}
 
-	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
-
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		// Do nothing
 		return nil
 	}
-
-	// sender chain is the source, mint vouchers
 
 	// since SendPacket did not prefix the denomination, we must prefix denomination here
 	sourcePrefix := transfertypes.GetDenomPrefix(packet.GetDestPort(), packet.GetDestChannel())
@@ -56,6 +45,12 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	voucherDenom := denomTrace.IBCDenom()
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
 
+	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
+
+	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()) != paraTokenInfo.NativeDenom {
+		return nil
+	}
+
 	// lock ibc token if srcChannel is paraChannel
 	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
 		// escrow ibc token
@@ -69,17 +64,17 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 
 		// mint native token
 		denom := paraTokenInfo.NativeDenom
-		voucher = sdk.NewCoin(denom, transferAmount)
+		nativeCoin := sdk.NewCoin(denom, transferAmount)
 
 		if err := k.bankKeeper.MintCoins(
-			ctx, types.ModuleName, sdk.NewCoins(voucher),
+			ctx, types.ModuleName, sdk.NewCoins(nativeCoin),
 		); err != nil {
 			return errorsmod.Wrap(err, "failed to mint IBC tokens")
 		}
 
 		// send to receiver
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
-			ctx, types.ModuleName, receiver, sdk.NewCoins(voucher),
+			ctx, types.ModuleName, receiver, sdk.NewCoins(nativeCoin),
 		); err != nil {
 			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
 		}
@@ -110,30 +105,24 @@ func (k Keeper) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, dat
 	}
 
 	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
-	paraToken := sdk.NewCoin(paraTokenInfo.NativeDenom, transferAmount)
-
 	// only trigger if source channel is from parachain
+	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom()) != paraTokenInfo.NativeDenom {
+		return nil
+	}
+
 	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
-		// burn ibc token
+		nativeToken := sdk.NewCoin(paraTokenInfo.NativeDenom, transferAmount)
+		// send IBC token to escrow address ibc token
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(token)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from account to module despite previously minting coins to module account: %v", err))
 		}
 
-		// mint vouchers back to sender
-		if err := k.bankKeeper.BurnCoins(
-			ctx, types.ModuleName, sdk.NewCoins(token),
-		); err != nil {
+		// mint native token back to sender
+		if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(nativeToken)); err != nil {
 			return err
 		}
 
-		// mint vouchers back to sender
-		if err := k.bankKeeper.MintCoins(
-			ctx, types.ModuleName, sdk.NewCoins(paraToken),
-		); err != nil {
-			return err
-		}
-
-		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(paraToken)); err != nil {
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(nativeToken)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from module to account despite previously minting coins to module account: %v", err))
 		}
 	}

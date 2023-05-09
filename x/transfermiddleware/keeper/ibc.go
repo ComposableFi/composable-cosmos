@@ -13,7 +13,7 @@ import (
 
 func (keeper Keeper) hasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
 	store := ctx.KVStore(keeper.storeKey)
-	return store.Has(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom))
+	return store.Has(types.GetKeyParachainIBCTokenInfo(nativeDenom))
 }
 
 func (keeper Keeper) handleOverrideSendPacketTransferLogic(
@@ -55,6 +55,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 
 	// release lock IBC token and send it to sender
+	// TODO: should we use an module address for this ?
 	keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, transfertypes.ModuleName, sender, sdk.NewCoins(ibcTransferToken))
 
 	// new msg transfer from transfer to parachain

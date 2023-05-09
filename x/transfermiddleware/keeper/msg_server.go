@@ -27,7 +27,6 @@ func (ms msgServer) AddParachainIBCTokenInfo(goCtx context.Context, req *types.M
 	if err != nil {
 		return nil, err
 	}
-
 	return &types.MsgAddParachainIBCTokenInfoResponse{}, nil
 }
 
