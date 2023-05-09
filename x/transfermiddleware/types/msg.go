@@ -54,3 +54,17 @@ func (msg *MsgRemoveParachainIBCTokenInfo) ValidateBasic() error {
 
 	return nil
 }
+
+func NewMsgAddParachainIBCTokenInfo(
+	authority string,
+	ibcDenom string,
+	channelId string,
+	nativeDenom string,
+) *MsgAddParachainIBCTokenInfo {
+	return &MsgAddParachainIBCTokenInfo{
+		Authority:   authority,
+		IbcDenom:    ibcDenom,
+		ChannelId:   channelId,
+		NativeDenom: nativeDenom,
+	}
+}

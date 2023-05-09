@@ -42,3 +42,5 @@ bin/*
 !.vscode/settings.json
 .vendor
 vendor
+go.work
+go.work.sum

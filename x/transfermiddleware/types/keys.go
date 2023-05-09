@@ -2,7 +2,7 @@ package types
 
 const (
 	// Module name store the name of the module
-	ModuleName = "transfermiddleware"
+	ModuleName = "transmiddleware"
 
 	// StoreKey is the string store representation
 	StoreKey = ModuleName
@@ -19,8 +19,13 @@ const (
 
 var (
 	KeysParachainIBCTokenInfo = []byte{0x01}
+	KeyIBCDenomAndNativeIndex = []byte{0x02}
 )
 
-func GetKeyKeysParachainIBCTokenInfo(nativeDenom string) []byte {
+func GetKeyParachainIBCTokenInfo(nativeDenom string) []byte {
 	return append(KeysParachainIBCTokenInfo, []byte(nativeDenom)...)
+}
+
+func GetKeyIBCDenomAndNativeIndex(IBCdenom string) []byte {
+	return append(KeysParachainIBCTokenInfo, []byte(IBCdenom)...)
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	"github.com/cosmos/cosmos-sdk/x/auth/migrations/legacytx"
 	authzcodec "github.com/cosmos/cosmos-sdk/x/authz/codec"
 	govcodec "github.com/cosmos/cosmos-sdk/x/gov/codec"
 	groupcodec "github.com/cosmos/cosmos-sdk/x/group/codec"
@@ -16,11 +15,8 @@ import (
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-
-	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "banksy/transfermiddleware/MsgAddParachainInfo")
-	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "banksy/transfermiddleware/MsgAddParachainInfo")
-
-	legacytx.RegisterLegacyAminoCodec(cdc)
+	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "banksy/MsgAddParachainInfo")
+	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "banksy/MsgRemoveParachainInfo")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {

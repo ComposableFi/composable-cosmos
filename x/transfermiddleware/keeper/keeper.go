@@ -1,11 +1,12 @@
 package keeper
 
 import (
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
+	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
 )
 
@@ -14,7 +15,7 @@ type Keeper struct {
 	storeKey       storetypes.StoreKey
 	ics4Wrapper    porttypes.ICS4Wrapper
 	bankKeeper     types.BankKeeper
-	transferKeeper ibctransferkeeper.Keeper
+	transferKeeper types.TransferKeeper
 
 	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
 	// should be the x/gov module account.
@@ -25,10 +26,15 @@ type Keeper struct {
 func NewKeeper(
 	storeKey storetypes.StoreKey,
 	codec codec.BinaryCodec,
+	ics4Wrapper porttypes.ICS4Wrapper,
+	transferKeeper types.TransferKeeper,
+	bankKeeper types.BankKeeper,
 ) Keeper {
 	return Keeper{
-		storeKey: storeKey,
-		cdc:      codec,
+		storeKey:       storeKey,
+		transferKeeper: transferKeeper,
+		bankKeeper:     bankKeeper,
+		cdc:            codec,
 	}
 }
 
@@ -50,8 +56,10 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelId, n
 		return err
 	}
 	store := ctx.KVStore(keeper.storeKey)
-	store.Set(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom), bz)
+	store.Set(types.GetKeyParachainIBCTokenInfo(nativeDenom), bz)
 
+	// update the IBCdenom-native index
+	store.Set(types.GetKeyIBCDenomAndNativeIndex(ibcDenom), []byte(nativeDenom))
 	return nil
 }
 
@@ -62,8 +70,18 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
 
+	// get the IBCdenom
+	IBCDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
+
 	store := ctx.KVStore(keeper.storeKey)
-	store.Delete(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom))
+	store.Delete(types.GetKeyParachainIBCTokenInfo(nativeDenom))
+
+	// update the IBCdenom-native index
+	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(IBCDenom)) {
+		panic("broken data in state")
+	}
+
+	store.Delete(types.GetKeyIBCDenomAndNativeIndex(IBCDenom))
 
 	return nil
 }
@@ -72,9 +90,20 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
 func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyKeysParachainIBCTokenInfo(nativeDenom))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(nativeDenom))
 
 	keeper.cdc.Unmarshal(bz, &info)
 
 	return info
+}
+
+func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBCdenom string) string {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(IBCdenom))
+
+	return string(bz)
+}
+
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", "x/"+exported.ModuleName+"-"+types.ModuleName)
 }
