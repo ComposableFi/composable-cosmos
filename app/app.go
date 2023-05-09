@@ -250,7 +250,6 @@ type BanksyApp struct {
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	RouterKeeper             *routerkeeper.Keeper
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper

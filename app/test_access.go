@@ -3,7 +3,6 @@ package app
 import (
 	"testing"
 
-	"github.com/CosmWasm/wasmd/app/params"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 
@@ -63,7 +62,7 @@ func (s TestSupport) GetBaseApp() *baseapp.BaseApp {
 }
 
 func (s TestSupport) GetTxConfig() client.TxConfig {
-	return params.MakeEncodingConfig().TxConfig
+	return s.app.GetTxConfig()
 }
 
 func (s TestSupport) TransferMiddleware() routerKeeper.Keeper {

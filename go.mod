@@ -4,8 +4,7 @@ go 1.19
 
 require (
 	cosmossdk.io/math v1.0.0
-	cosmossdk.io/simapp v0.0.0-20230224204036-a6adb0821462
-	github.com/CosmWasm/wasmd v0.40.0-rc.0
+	cosmossdk.io/simapp v0.0.0-20230323161446-0af178d721ff
 	github.com/cometbft/cometbft v0.37.0
 	github.com/cometbft/cometbft-db v0.7.0
 	github.com/cosmos/cosmos-sdk v0.47.1
@@ -17,7 +16,7 @@ require (
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.7.0
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230410200408-3315fe3057aa
-	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230412224111-136e94e98861
+	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230321175727-de5b28b4b6ca
 	github.com/stretchr/testify v1.8.2
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
@@ -55,6 +54,7 @@ require (
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
+	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
