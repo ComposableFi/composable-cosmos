@@ -31,7 +31,7 @@ func NewPath(chainA, chainB *TestChain) *Path {
 func NewDefaultEndpoint(chain *TestChain) *Endpoint {
 	return &Endpoint{
 		Chain:            chain,
-		ClientConfig:     ibctesting.NewTendermintConfig(),
+		ClientConfig:     ibctesting.NewTendermintConfig(false),
 		ConnectionConfig: ibctesting.NewConnectionConfig(),
 		ChannelConfig:    ibctesting.NewChannelConfig(),
 	}
