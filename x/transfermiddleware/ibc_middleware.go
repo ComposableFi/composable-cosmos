@@ -136,47 +136,9 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 	if err := im.app.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
 		return err
 	}
-	var ack channeltypes.Acknowledgement
-	if err := transfertypes.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet acknowledgement: %v", err)
-	}
-	var data transfertypes.FungibleTokenPacketData
-	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
-	}
 
-	if err := im.keeper.OnAcknowledgementPacket(ctx, packet, data, ack); err != nil {
+	if err := im.keeper.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
 		return err
-	}
-
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			transfertypes.EventTypePacket,
-			sdk.NewAttribute(sdk.AttributeKeyModule, transfertypes.ModuleName),
-			sdk.NewAttribute(sdk.AttributeKeySender, data.Sender),
-			sdk.NewAttribute(transfertypes.AttributeKeyReceiver, data.Receiver),
-			sdk.NewAttribute(transfertypes.AttributeKeyDenom, data.Denom),
-			sdk.NewAttribute(transfertypes.AttributeKeyAmount, data.Amount),
-			sdk.NewAttribute(transfertypes.AttributeKeyMemo, data.Memo),
-			sdk.NewAttribute(transfertypes.AttributeKeyAck, ack.String()),
-		),
-	)
-
-	switch resp := ack.Response.(type) {
-	case *channeltypes.Acknowledgement_Result:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				transfertypes.EventTypePacket,
-				sdk.NewAttribute(transfertypes.AttributeKeyAckSuccess, string(resp.Result)),
-			),
-		)
-	case *channeltypes.Acknowledgement_Error:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				transfertypes.EventTypePacket,
-				sdk.NewAttribute(transfertypes.AttributeKeyAckError, resp.Error),
-			),
-		)
 	}
 
 	return nil

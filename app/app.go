@@ -237,7 +237,7 @@ type BanksyApp struct {
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	RouterKeeper             *routerkeeper.Keeper
-	TransferMiddlewarekeeper transfermiddlewarekeeper.Keeper
+	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -344,10 +344,18 @@ func NewBanksyApp(
 
 	app.WasmClientKeeper = wasmkeeper.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
 	// Create Transfer Keepers
+	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
+		keys[transfermiddlewaretypes.StoreKey],
+		appCodec,
+		app.IBCKeeper.ChannelKeeper,
+		app.TransferKeeper,
+		app.BankKeeper,
+	)
+
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+		&app.TransferMiddlewareKeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -365,17 +373,11 @@ func NewBanksyApp(
 		app.BankKeeper,
 		app.IBCKeeper.ChannelKeeper,
 	)
-	app.TransferMiddlewarekeeper = transfermiddlewarekeeper.NewKeeper(
-		keys[transfermiddlewaretypes.StoreKey],
-		appCodec,
-		app.IBCKeeper.ChannelKeeper,
-		app.TransferKeeper,
-		app.BankKeeper,
-	)
+
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
-	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewarekeeper)
+	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -394,8 +396,9 @@ func NewBanksyApp(
 
 	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
 		ibcMiddlewareStack,
-		app.TransferMiddlewarekeeper,
+		app.TransferMiddlewareKeeper,
 	)
+
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
 		appCodec, keys[evidencetypes.StoreKey], &app.StakingKeeper, app.SlashingKeeper,
