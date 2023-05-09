@@ -191,7 +191,6 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 		txCommand(),
 		keys.Commands(app.DefaultNodeHome),
 	)
-
 }
 
 func addModuleInitFlags(startCmd *cobra.Command) {
@@ -256,14 +255,13 @@ type appCreator struct {
 
 // newApp is an AppCreator
 func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {
-
 	skipUpgradeHeights := make(map[int64]bool)
 	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
-		h_, err := cast.ToInt64E(h)
+		h, err := cast.ToInt64E(h)
 		if err != nil {
 			panic(err)
 		}
-		skipUpgradeHeights[h_] = true
+		skipUpgradeHeights[h] = true
 	}
 
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
@@ -285,7 +283,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 // appExport creates a new simapp (optionally at a given height)
 func (a appCreator) appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
-	appOpts servertypes.AppOptions, modulesToExport []string,
+	appOpts servertypes.AppOptions, _ []string,
 ) (servertypes.ExportedApp, error) {
 	var anApp *app.BanksyApp
 

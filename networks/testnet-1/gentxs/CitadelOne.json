@@ -1,0 +1,62 @@
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
+        "description": {
+          "moniker": "Citadel.one",
+          "identity": "EBB03EB4BB4CFCA7",
+          "website": "https://citadel.one",
+          "security_contact": "",
+          "details": "Citadel.one is a multi-asset non-custodial staking platform that lets anyone become a part of decentralized infrastructure and earn passive income. Stake with our nodes or any other validator across multiple networks in a few clicks"
+        },
+        "commission": {
+          "rate": "0.050000000000000000",
+          "max_rate": "0.200000000000000000",
+          "max_change_rate": "0.030000000000000000"
+        },
+        "min_self_delegation": "1",
+        "delegator_address": "banksy17zc3la626txhj38dazwu6hpx0zzlyn4k5krvrw",
+        "validator_address": "banksyvaloper17zc3la626txhj38dazwu6hpx0zzlyn4k2fllwk",
+        "pubkey": {
+          "@type": "/cosmos.crypto.ed25519.PubKey",
+          "key": "XGef51pfrCVJRpG4oTcM4ghCnjnf73LziDA9IiJn5v8="
+        },
+        "value": {
+          "denom": "ubanksy",
+          "amount": "1000000000"
+        }
+      }
+    ],
+    "memo": "b07cbd9f9c16fe14b553b8cf066f38615c518cd1@192.168.70.132:26656",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [
+      {
+        "public_key": {
+          "@type": "/cosmos.crypto.secp256k1.PubKey",
+          "key": "ArKZyGaie5QFs5QnmqEY1LbXm7WOQGGPGyQ2SQ1nMsMo"
+        },
+        "mode_info": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "0"
+      }
+    ],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    },
+    "tip": null
+  },
+  "signatures": [
+    "T+0UA8JmVhTMjWXs8MLNr4iRV5LN6Ck7kdB8Aj/5ig45zDG3zu5NHe2IGw6IDI9eE22U7PlrWFmtzIid8LZlUA=="
+  ]
+}
