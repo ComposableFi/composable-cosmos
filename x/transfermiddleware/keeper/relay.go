@@ -38,7 +38,6 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	if !k.transferKeeper.HasDenomTrace(ctx, traceHash) {
 		k.transferKeeper.SetDenomTrace(ctx, denomTrace)
 	}
-
 	voucherDenom := denomTrace.IBCDenom()
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
 

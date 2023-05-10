@@ -112,12 +112,12 @@ func (k Keeper) SendPacket(
 
 // WriteAcknowledgement wraps IBC ICS4Wrapper WriteAcknowledgement function.
 // ICS29 WriteAcknowledgement is used for asynchronous acknowledgements.
-func (k *Keeper) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, acknowledgement ibcexported.Acknowledgement) error {
+func (k Keeper) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, acknowledgement ibcexported.Acknowledgement) error {
 	return k.ICS4Wrapper.WriteAcknowledgement(ctx, chanCap, packet, acknowledgement)
 }
 
 // WriteAcknowledgement wraps IBC ICS4Wrapper GetAppVersion function.
-func (k *Keeper) GetAppVersion(
+func (k Keeper) GetAppVersion(
 	ctx sdk.Context,
 	portID,
 	channelID string,
@@ -125,7 +125,7 @@ func (k *Keeper) GetAppVersion(
 	return k.ICS4Wrapper.GetAppVersion(ctx, portID, channelID)
 }
 
-func (k *Keeper) OnAcknowledgementPacket(
+func (k Keeper) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,

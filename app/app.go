@@ -387,14 +387,14 @@ func NewBanksyApp(
 		keys[transfermiddlewaretypes.StoreKey],
 		appCodec,
 		app.IBCKeeper.ChannelKeeper,
-		app.TransferKeeper,
+		&app.TransferKeeper,
 		app.BankKeeper,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		&app.TransferMiddlewareKeeper, // ICS4Wrapper
+		app.TransferMiddlewareKeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,

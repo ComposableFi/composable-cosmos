@@ -1,6 +1,7 @@
 package ibctesting
 
 import (
+	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
@@ -9,6 +10,10 @@ type Path struct {
 	EndpointA *Endpoint
 	EndpointB *Endpoint
 }
+
+const (
+	TransferPort = ibctransfertypes.ModuleName
+)
 
 // NewPath constructs an endpoint for each chain using the default values
 // for the endpoints. Each endpoint is updated to have a pointer to the
