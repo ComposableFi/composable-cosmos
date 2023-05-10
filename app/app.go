@@ -387,7 +387,7 @@ func NewBanksyApp(
 		keys[transfermiddlewaretypes.StoreKey],
 		appCodec,
 		app.IBCKeeper.ChannelKeeper,
-		app.TransferKeeper,
+		&app.TransferKeeper,
 		app.BankKeeper,
 	)
 
