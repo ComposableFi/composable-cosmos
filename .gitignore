@@ -15,6 +15,7 @@ build/*
 state/*
 scripts/state
 scripts/logs
+scripts/*
 dockernet/state
 dockernet/logs
 dockernet/upgrades/binaries
@@ -41,6 +42,7 @@ bin/*
 .vscode
 !.vscode/settings.json
 .vendor
+.gitignore
 vendor
 go.work
 go.work.sum
