@@ -63,8 +63,9 @@ type TestChain struct {
 	Vals    *tmtypes.ValidatorSet
 	Signers []tmtypes.PrivValidator
 
-	senderPrivKey cryptotypes.PrivKey
-	SenderAccount authtypes.AccountI
+	senderPrivKey   cryptotypes.PrivKey
+	SenderAccount   authtypes.AccountI
+	ReceiverAccount authtypes.AccountI
 
 	PendingSendPackets []channeltypes.Packet
 	PendingAckPackets  []PacketAck

@@ -29,6 +29,7 @@ func NewKeeper(
 	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
+	authority string,
 ) Keeper {
 	return Keeper{
 		storeKey:       storeKey,
@@ -36,6 +37,7 @@ func NewKeeper(
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
 		ICS4Wrapper:    ics4Wrapper,
+		authority:      authority,
 	}
 }
 
@@ -107,4 +109,8 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBC
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+exported.ModuleName+"-"+types.ModuleName)
+}
+
+func (k Keeper) GetAuthority(ctx sdk.Context) string {
+	return k.authority
 }
