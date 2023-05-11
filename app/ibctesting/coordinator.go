@@ -36,7 +36,7 @@ func NewCoordinator(t *testing.T, n int) *Coordinator {
 		t:           t,
 		CurrentTime: globalStartTime,
 	}
-	
+
 	for i := 0; i < n; i++ {
 		chainID := GetChainID(i)
 		chains[chainID] = NewTestChain(t, coord, chainID)
@@ -275,6 +275,51 @@ func (coord *Coordinator) RelayAndAckPendingPackets(path *Path) error {
 	toAck := dest.Chain.PendingAckPackets
 	// TODO: assert >= len(toSend)?
 	coord.t.Logf("Ack %d Packets B->A\n", len(toAck))
+
+	// send the ack back from dest -> src
+	coord.IncrementTime()
+	coord.CommitBlock(dest.Chain)
+	err = src.UpdateClient()
+	if err != nil {
+		return err
+	}
+	for _, ack := range toAck {
+		err = src.AcknowledgePacket(ack.Packet, ack.Ack)
+		if err != nil {
+			return err
+		}
+	}
+	dest.Chain.PendingAckPackets = nil
+	return nil
+}
+
+// from B to A
+func (coord *Coordinator) RelayAndAckPendingPacketsReverse(path *Path) error {
+	// get all the packet to relay src->dest
+	src := path.EndpointB
+	dest := path.EndpointA
+	toSend := src.Chain.PendingSendPackets
+	coord.t.Logf("Relay %d Packets B->A\n", len(toSend))
+
+	// send this to the other side
+	coord.IncrementTime()
+	coord.CommitBlock(src.Chain)
+	err := dest.UpdateClient()
+	if err != nil {
+		return err
+	}
+	for _, packet := range toSend {
+		err = dest.RecvPacket(packet)
+		if err != nil {
+			return err
+		}
+	}
+	src.Chain.PendingSendPackets = nil
+
+	// get all the acks to relay dest->src
+	toAck := dest.Chain.PendingAckPackets
+	// TODO: assert >= len(toSend)?
+	coord.t.Logf("Ack %d Packets A->B\n", len(toAck))
 
 	// send the ack back from dest -> src
 	coord.IncrementTime()

@@ -51,12 +51,25 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	nativeTransferToken := sdk.NewCoin(fungibleTokenPacketData.Denom, transferAmount)
 	ibcTransferToken := sdk.NewCoin(parachainInfo.IbcDenom, transferAmount)
 
+	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, parachainInfo.ChannelId)
+	escrowToken := keeper.bankKeeper.GetAllBalances(ctx, escrowAddress)
+	fmt.Println(escrowToken)
+
+	err = keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
+	if err != nil {
+		return 0, err
+	}
 	// burn native token
 	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 
 	// release lock IBC token and send it to sender
-	// TODO: should we use an module address for this ?
-	keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, transfertypes.ModuleName, sender, sdk.NewCoins(ibcTransferToken))
+	// TODO: should we use a module address for this ?
+	err = keeper.bankKeeper.SendCoins(ctx, escrowAddress, sender, sdk.NewCoins(ibcTransferToken))
+	if err != nil {
+		return 0, err
+	}
+	escrowToken = keeper.bankKeeper.GetAllBalances(ctx, escrowAddress)
+	fmt.Println(escrowToken)
 
 	// new msg transfer from transfer to parachain
 	transferMsg := transfertypes.MsgTransfer{
@@ -168,6 +181,7 @@ func (k Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, data tr
 
 	if transfertypes.SenderChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		// Do nothing
+		// This case should never happend
 		return nil
 	}
 
