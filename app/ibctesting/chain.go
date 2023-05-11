@@ -39,7 +39,7 @@ import (
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 	banksy "github.com/notional-labs/banksy/v2/app"
 	"github.com/notional-labs/banksy/v2/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	transfermiddlewareKeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -554,7 +554,7 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 	return cap
 }
 
-func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
+func (chain *TestChain) TransferMiddleware() transfermiddlewareKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 
@@ -607,4 +607,8 @@ func (a TestingAppDecorator) TestSupport() *banksy.TestSupport {
 
 func (a TestingAppDecorator) GetWasmKeeper() wasm08.Keeper {
 	return a.TestSupport().Wasm08Keeper()
+}
+
+func (a TestingAppDecorator) GetTransferMiddlewareKeeper() transfermiddlewareKeeper.Keeper {
+	return a.TestSupport().TransferMiddleware()
 }
