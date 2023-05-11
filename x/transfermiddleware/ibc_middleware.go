@@ -1,6 +1,8 @@
 package transfermiddleware
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
@@ -90,12 +92,16 @@ func (im IBCMiddleware) OnRecvPacket(
 	logger := im.keeper.Logger(ctx)
 	ack := im.app.OnRecvPacket(ctx, packet, relayer)
 
-	var data transfertypes.FungibleTokenPacketData
-	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		return channeltypes.NewErrorAcknowledgement(err)
-	}
-
 	if ack.Success() {
+		fmt.Println("ack.success")
+		var data transfertypes.FungibleTokenPacketData
+		if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
+			return channeltypes.NewErrorAcknowledgement(err)
+		}
+		if data.Memo != "" {
+			fmt.Println("do nothing")
+			return ack
+		}
 		err := im.keeper.OnRecvPacket(ctx, packet, data)
 		if err != nil {
 			ack = channeltypes.NewErrorAcknowledgement(err)

@@ -347,7 +347,7 @@ func NewBanksyApp(
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+		&app.TransferMiddlewarekeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -384,17 +384,17 @@ func NewBanksyApp(
 	)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
-	ibcMiddlewareStack := router.NewIBCMiddleware(
+
+	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
 		transferIBCModule,
+		app.TransferMiddlewarekeeper,
+	)
+	ibcMiddlewareStack := router.NewIBCMiddleware(
+		transfermiddlewareStack,
 		app.RouterKeeper,
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
-	)
-
-	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
-		ibcMiddlewareStack,
-		app.TransferMiddlewarekeeper,
 	)
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -425,7 +425,7 @@ func NewBanksyApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transfermiddlewareStack)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router

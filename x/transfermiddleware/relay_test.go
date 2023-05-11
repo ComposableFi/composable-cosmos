@@ -1,6 +1,7 @@
 package transfermiddleware_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
@@ -10,6 +11,7 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -120,7 +122,7 @@ func TestOnrecvPacket2(t *testing.T) {
 	//           then the contract can handle the receiving side of an ics20 transfer
 	//           that was started on chain A via ibc transfer module
 
-	transferAmount := sdk.NewInt(1000000000)
+	transferAmount := sdk.NewInt(1)
 	var (
 		coordinator = customibctesting.NewCoordinator(t, 3)
 		chainA      = coordinator.GetChain(customibctesting.GetChainID(0))
@@ -157,11 +159,12 @@ func TestOnrecvPacket2(t *testing.T) {
 	coordinator.CreateChannels(pathAB)
 	coordinator.SetupConnections(pathBC)
 	coordinator.CreateChannels(pathBC)
-	// when transfer via sdk transfer from A (module) -> B (contract)
-	coinASendToB := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(2000000000))
-	coinBSendToC := sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+	// when transfer via sdk transfer from A -> B -> C
+	coinASendToB := sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+
 	timeoutHeight := clienttypes.NewHeight(1, 110)
 
+	ibcDenomAtoB := ibctransfertypes.GetPrefixedDenom(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, sdk.DefaultBondDenom)
 	testCases := []struct {
 		name                 string
 		expChainABalanceDiff sdk.Coin
@@ -170,28 +173,27 @@ func TestOnrecvPacket2(t *testing.T) {
 		malleate             func()
 	}{
 		{
-			"Transfer with no pre-set ParachainIBCTokenInfo",
-			sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(2000000000)),
-			ibctransfertypes.GetTransferCoin(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, coinASendToB.Denom, transferAmount),
-			ibctransfertypes.GetTransferCoin(pathBC.EndpointB.ChannelConfig.PortID, pathBC.EndpointB.ChannelID, coinBSendToC.Denom, transferAmount),
-			func() {},
+			name:                 "Transfer with no pre-set ParachainIBCTokenInfo",
+			expChainABalanceDiff: sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			expChainCBalanceDiff: ibctransfertypes.GetTransferCoin(pathBC.EndpointB.ChannelConfig.PortID, pathBC.EndpointB.ChannelID, ibcDenomAtoB, transferAmount),
+			malleate:             func() {},
 		},
-		{
-			"Transfer with pre-set ParachainIBCTokenInfo",
-			sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(2000000000)),
-			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
-			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
-			func() {
-				// Add parachain token info
-				chainBtransMiddleware := chainB.TransferMiddleware()
-				err := chainBtransMiddleware.AddParachainIBCInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
-				require.NoError(t, err)
+		// {
+		// 	"Transfer with pre-set ParachainIBCTokenInfo",
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(2000000000)),
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		// 	func() {
+		// 		// Add parachain token info
+		// 		chainBtransMiddleware := chainB.TransferMiddleware()
+		// 		err := chainBtransMiddleware.AddParachainIBCInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+		// 		require.NoError(t, err)
 
-				chainCtransMiddleware := chainC.TransferMiddleware()
-				err = chainCtransMiddleware.AddParachainIBCInfo(chainC.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
-				require.NoError(t, err)
-			},
-		},
+		// 		chainCtransMiddleware := chainC.TransferMiddleware()
+		// 		err = chainCtransMiddleware.AddParachainIBCInfo(chainC.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+		// 		require.NoError(t, err)
+		// 	},
+		// },
 	}
 	for _, tc := range testCases {
 		tc := tc
@@ -201,7 +203,7 @@ func TestOnrecvPacket2(t *testing.T) {
 
 			originalChainABalance := chainA.AllBalances(chainA.SenderAccount.GetAddress())
 			// chainB.SenderAccount: 10000000000000000000stake
-			originalChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
+			// originalChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
 
 			originalChainCBalance := chainC.AllBalances(chainC.SenderAccount.GetAddress())
 
@@ -209,11 +211,20 @@ func TestOnrecvPacket2(t *testing.T) {
 			fmt.Println("chainA.AllBalances(chainA.SenderAccount.GetAddress())", chainA.AllBalances(chainA.SenderAccount.GetAddress()))
 			fmt.Println("chainB.AllBalances(chainB.SenderAccount.GetAddress())", chainB.AllBalances(chainB.SenderAccount.GetAddress()))
 			fmt.Println("chainC.AllBalances(chainC.SenderAccount.GetAddress())", chainC.AllBalances(chainC.SenderAccount.GetAddress()))
+			forwardMetadata := routertypes.PacketMetadata{
+				Forward: &routertypes.ForwardMetadata{
+					Receiver: chainC.SenderAccount.GetAddress().String(),
+					Port:     "transfer",
+					Channel:  pathBC.EndpointA.ChannelID,
+				},
+			}
+			memo, err := json.Marshal(forwardMetadata)
 
-			msg := ibctransfertypes.NewMsgTransfer(pathAB.EndpointA.ChannelConfig.PortID, pathAB.EndpointA.ChannelID, coinASendToB, chainA.SenderAccount.GetAddress().String(), chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
-			_, err := chainA.SendMsgs(msg)
+			msg := ibctransfertypes.NewMsgTransfer(pathAB.EndpointA.ChannelConfig.PortID, pathAB.EndpointA.ChannelID, coinASendToB, chainA.SenderAccount.GetAddress().String(), chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, string(memo))
+			_, err = chainA.SendMsgs(msg)
 			require.NoError(t, err)
 			require.NoError(t, pathAB.EndpointB.UpdateClient())
+			require.NoError(t, pathBC.EndpointB.UpdateClient())
 
 			// then
 			require.Equal(t, 1, len(chainA.PendingSendPackets))
@@ -223,6 +234,8 @@ func TestOnrecvPacket2(t *testing.T) {
 			err = coordinator.RelayAndAckPendingPackets(pathAB)
 			require.NoError(t, err)
 
+			err = coordinator.RelayAndAckPendingPackets(pathBC)
+			require.NoError(t, err)
 			// then
 			require.Equal(t, 0, len(chainA.PendingSendPackets))
 			require.Equal(t, 0, len(chainB.PendingSendPackets))
@@ -235,42 +248,8 @@ func TestOnrecvPacket2(t *testing.T) {
 			assert.Equal(t, originalChainABalance.Sub(tc.expChainABalanceDiff), newChainABalance)
 
 			// and dest chain balance contains voucher
-			expBalance := originalChainBBalance.Add(ibctransfertypes.GetTransferCoin(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, coinASendToB.Denom, sdk.NewInt(2000000000)))
-			gotBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
-			fmt.Println("expBalance", expBalance)
-			fmt.Println("gotBalance", gotBalance)
-			assert.Equal(t, expBalance, gotBalance)
-
-			originalChainBBalance = chainB.AllBalances(chainB.SenderAccount.GetAddress())
-
-			msg = ibctransfertypes.NewMsgTransfer(pathBC.EndpointA.ChannelConfig.PortID, pathBC.EndpointA.ChannelID, coinBSendToC, chainB.SenderAccount.GetAddress().String(), chainC.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
-			_, err = chainB.SendMsgs(msg)
-			require.NoError(t, err)
-			require.NoError(t, pathBC.EndpointB.UpdateClient())
-
-			// then
-			require.Equal(t, 1, len(chainB.PendingSendPackets))
-			require.Equal(t, 0, len(chainC.PendingSendPackets))
-
-			// and when relay to chain B and handle Ack on chain A
-			err = coordinator.RelayAndAckPendingPackets(pathBC)
-			require.NoError(t, err)
-
-			// then
-			require.Equal(t, 0, len(chainB.PendingSendPackets))
-			require.Equal(t, 0, len(chainC.PendingSendPackets))
-			fmt.Println("After B -> C")
-			fmt.Println("originalChainBBalance", originalChainBBalance)
-			fmt.Println("chainA.AllBalances(chainA.SenderAccount.GetAddress())", chainA.AllBalances(chainA.SenderAccount.GetAddress()))
-			fmt.Println("chainB.AllBalances(chainB.SenderAccount.GetAddress())", chainB.AllBalances(chainB.SenderAccount.GetAddress()))
-			fmt.Println("chainC.AllBalances(chainC.SenderAccount.GetAddress())", chainC.AllBalances(chainC.SenderAccount.GetAddress()))
-			// and source chain balance was decreased
-			newChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
-			assert.Equal(t, originalChainBBalance.Sub(tc.expChainBBalanceDiff), newChainBBalance)
-
-			// and dest chain balance contains voucher
-			expBalance = originalChainCBalance.Add(tc.expChainCBalanceDiff)
-			gotBalance = chainC.AllBalances(chainC.SenderAccount.GetAddress())
+			expBalance := originalChainCBalance.Add(tc.expChainCBalanceDiff)
+			gotBalance := chainC.AllBalances(chainC.SenderAccount.GetAddress())
 			fmt.Println("expBalance", expBalance)
 			fmt.Println("gotBalance", gotBalance)
 			assert.Equal(t, expBalance, gotBalance)

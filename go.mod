@@ -180,12 +180,14 @@ replace (
 	github.com/cosmos/ibc-go/v7 v7.1.0 => github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230327161923-eae575bf57cc
 	// use cosmos-flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-
 	// Use a specific version of ignite cli
 	github.com/ignite-hq/cli => github.com/ignite-hq/cli v0.21.0
 
 	//  Use notional lab version of async-icq
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
+
+	//TODO: for testing purpose
+	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230412224111-136e94e98861 => github.com/expertdicer/packet-forward-middleware/v7 v7.0.4
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
 	// use the version of grpc compatible with the regen networks protobufs.
