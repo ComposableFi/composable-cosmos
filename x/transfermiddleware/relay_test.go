@@ -3,6 +3,7 @@ package transfermiddleware_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -206,10 +207,85 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 
 	// check escrow address don't have any token in chain A
 	escrowAddressChainA := ibctransfertypes.GetEscrowAddress(ibctransfertypes.PortID, path.EndpointA.ChannelID)
-	escrowTokenChainA := suite.chainB.AllBalances(escrowAddressChainA)
+	escrowTokenChainA := suite.chainA.AllBalances(escrowAddressChainA)
 	suite.Require().Equal(sdk.Coins{}, escrowTokenChainA)
 
 	// equal chain A sender address balances
 	chainASenderBalances := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 	suite.Require().Equal(originalChainABalance, chainASenderBalances)
+}
+
+// TODO: use testsuite here.
+func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
+	var (
+		transferAmount = sdk.NewInt(1000000000)
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		nativeToken   = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+	)
+	var (
+		expChainBBalanceDiff sdk.Coin
+		path                 = NewTransferPath(suite.chainA, suite.chainB)
+		expChainABalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+	)
+
+	suite.SetupTest() // reset
+
+	path = NewTransferPath(suite.chainA, suite.chainB)
+	suite.coordinator.Setup(path)
+
+	// Add parachain token info
+	chainBtransMiddlewareKeeper := suite.chainB.TransferMiddleware()
+	expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+	suite.Require().NoError(err)
+
+	originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+	originalChainBBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+
+	msg := ibctransfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, nativeToken, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+	_, err = suite.chainA.SendMsgs(msg)
+	suite.Require().NoError(err)
+	suite.Require().NoError(err, path.EndpointB.UpdateClient())
+
+	// then
+	suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// and when relay to chain B and handle Ack on chain A
+	err = suite.coordinator.RelayAndAckPendingPackets(path)
+	suite.Require().NoError(err)
+
+	// then
+	suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// and source chain balance was decreased
+	newChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+	suite.Require().Equal(originalChainABalance.Sub(expChainABalanceDiff), newChainABalance)
+
+	// and dest chain balance contains voucher
+	expBalance := originalChainBBalance.Add(expChainBBalanceDiff)
+	gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+	suite.Require().Equal(expBalance, gotBalance)
+
+	// send token back
+	timeout := uint64(suite.chainB.LastHeader.Header.Time.Add(time.Nanosecond).UnixNano()) // will timeout
+	msg = ibctransfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeToken, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), clienttypes.NewHeight(1, 20), timeout, "")
+	_, err = suite.chainB.SendMsgs(msg)
+	suite.Require().NoError(err)
+	suite.Require().NoError(err, path.EndpointA.UpdateClient())
+
+	// then
+	suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+	// and when relay to chain B and handle Ack on chain A
+	err = suite.coordinator.TimeoutPendingPacketsReverse(path)
+	suite.Require().NoError(err)
+
+	// then
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// equal chain A sender address balances
+	chainBSenderBalances := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+	suite.Equal(expBalance, chainBSenderBalances)
 }

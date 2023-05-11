@@ -368,6 +368,36 @@ func (coord *Coordinator) TimeoutPendingPackets(path *Path) error {
 	return nil
 }
 
+// TimeoutPendingPackets returns the package to source chain to let the IBC app revert any operation.
+// from B to B
+func (coord *Coordinator) TimeoutPendingPacketsReverse(path *Path) error {
+	src := path.EndpointB
+	dest := path.EndpointA
+
+	toSend := src.Chain.PendingSendPackets
+	coord.t.Logf("Timeout %d Packets B->B\n", len(toSend))
+
+	if err := src.UpdateClient(); err != nil {
+		return err
+	}
+	// Increment time and commit block so that 5 second delay period passes between send and receive
+	coord.IncrementTime()
+	coord.CommitBlock(src.Chain, dest.Chain)
+	for _, packet := range toSend {
+		// get proof of packet unreceived on dest
+		packetKey := host.PacketReceiptKey(packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence())
+		proofUnreceived, proofHeight := dest.QueryProof(packetKey)
+		timeoutMsg := channeltypes.NewMsgTimeout(packet, packet.Sequence, proofUnreceived, proofHeight, src.Chain.SenderAccount.GetAddress().String())
+		err := src.Chain.sendMsgs(timeoutMsg)
+		if err != nil {
+			return err
+		}
+	}
+	src.Chain.PendingSendPackets = nil
+	dest.Chain.PendingAckPackets = nil
+	return nil
+}
+
 // CloseChannel close channel on both sides
 func (coord *Coordinator) CloseChannel(path *Path) {
 	err := path.EndpointA.ChanCloseInit()

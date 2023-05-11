@@ -53,7 +53,6 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 
 	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, parachainInfo.ChannelId)
 	escrowToken := keeper.bankKeeper.GetAllBalances(ctx, escrowAddress)
-	fmt.Println(escrowToken)
 
 	err = keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 	if err != nil {
@@ -184,21 +183,22 @@ func (k Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, data tr
 		// This case should never happend
 		return nil
 	}
-
-	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
-	// only trigger if source channel is from parachain
-	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom()) != paraTokenInfo.NativeDenom {
+	nativeDenom := k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
+	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, nativeDenom)
+	// only trigger if source channel is from parachain.
+	if !k.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return nil
 	}
 
 	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
 		nativeToken := sdk.NewCoin(paraTokenInfo.NativeDenom, transferAmount)
 		// send IBC token to escrow address ibc token
-		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(token)); err != nil {
+		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelId)
+		if err := k.bankKeeper.SendCoins(ctx, sender, escrowAddress, sdk.NewCoins(token)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from account to module despite previously minting coins to module account: %v", err))
 		}
 
-		// mint native token back to sender
+		// mint native token and send back to sender
 		if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(nativeToken)); err != nil {
 			return err
 		}
