@@ -237,8 +237,4 @@ replace (
 
 replace github.com/notional-labs/composable-testnet => ../../
 
-<<<<<<< HEAD
-replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-=======
 replace github.com/cosmos/gogoproto => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
->>>>>>> main
