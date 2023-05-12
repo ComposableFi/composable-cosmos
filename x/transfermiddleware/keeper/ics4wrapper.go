@@ -52,11 +52,14 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	ibcTransferToken := sdk.NewCoin(parachainInfo.IbcDenom, transferAmount)
 
 	// burn native token
+	// Get Coin from excrow address
+	escrowAddress := transfertypes.GetEscrowAddress(sourcePort, sourceChannel)
+	keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 
 	// release lock IBC token and send it to sender
 	// TODO: should we use an module address for this ?
-	keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, transfertypes.ModuleName, sender, sdk.NewCoins(ibcTransferToken))
+	keeper.bankKeeper.SendCoins(ctx, escrowAddress, sender, sdk.NewCoins(ibcTransferToken))
 
 	// new msg transfer from transfer to parachain
 	transferMsg := transfertypes.MsgTransfer{

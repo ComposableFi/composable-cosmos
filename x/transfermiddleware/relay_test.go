@@ -79,7 +79,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
-		pathBtoC      *customibctesting.Path
+		pathCtoB      *customibctesting.Path
 		path          *customibctesting.Path
 		srcPort       string
 		srcChannel    string
@@ -105,9 +105,9 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 		{
 			"Receiver is sink chain",
 			func() {
-				path = pathBtoC
-				srcPort = pathBtoC.EndpointA.ChannelConfig.PortID
-				srcChannel = pathBtoC.EndpointA.ChannelID
+				path = pathCtoB
+				srcPort = pathCtoB.EndpointB.ChannelConfig.PortID
+				srcChannel = pathCtoB.EndpointB.ChannelID
 				chain = suite.chainC
 				expDenom = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 			},
@@ -118,8 +118,8 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			suite.SetupTest()
 			pathAtoB = NewTransferPath(suite.chainA, suite.chainB)
 			suite.coordinator.Setup(pathAtoB)
-			pathBtoC = NewTransferPath(suite.chainB, suite.chainC)
-			suite.coordinator.Setup(pathBtoC)
+			pathCtoB = NewTransferPath(suite.chainC, suite.chainB)
+			suite.coordinator.Setup(pathCtoB)
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
 			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
@@ -145,7 +145,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			// and when relay to chain B and handle Ack on chain A
-			err = suite.coordinator.RelayAndAckPendingPackets(pathAtoB)
+			err = suite.coordinator.RelayAndAckPendingPacketsWithPath(pathAtoB)
 			suite.Require().NoError(err)
 
 			// then
@@ -171,9 +171,15 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			suite.Require().NoError(err)
 			suite.Require().NoError(err, path.EndpointB.UpdateClient())
 
+			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(chain.PendingSendPackets))
+
 			// and when relay to chain B and handle Ack on chain A
-			err = suite.coordinator.RelayAndAckPendingPackets(path)
+			err = suite.coordinator.RelayAndAckPendingPackets(path.EndpointB, path.EndpointA)
 			suite.Require().NoError(err)
+
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(chain.PendingSendPackets))
 
 			balance := chain.AllBalances(testAcc2)
 			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, sdk.NewInt(500000)))
@@ -244,7 +250,7 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			// and when relay to chain B and handle Ack on chain A
-			err = suite.coordinator.RelayAndAckPendingPackets(path)
+			err = suite.coordinator.RelayAndAckPendingPacketsWithPath(path)
 			suite.Require().NoError(err)
 
 			// then
