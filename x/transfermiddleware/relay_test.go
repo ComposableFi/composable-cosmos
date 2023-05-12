@@ -74,6 +74,44 @@ func RandomBech32AccountAddress(t testing.TB) string {
 	return RandomAccountAddress(t).String()
 }
 
+func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
+	var (
+		transferAmount = sdk.NewInt(1000000000)
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+		pathAtoB      *customibctesting.Path
+		pathBtoC      *customibctesting.Path
+		srcPort       string
+		srcChannel    string
+		chain         *customibctesting.TestChain
+		expDenom      string
+	)
+
+	testCases := []struct {
+		name string
+		// malleate func()
+	}{
+		{
+			"Receiver is Parachain chain",
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			suite.SetupTest()
+			pathAtoB = NewTransferPath(suite.chainA, suite.chainB)
+			suite.coordinator.Setup(pathAtoB)
+			pathBtoC = NewTransferPath(suite.chainC, suite.chainB)
+			suite.coordinator.Setup(pathBtoC)
+
+			// Add parachain token info
+			chainBtransMiddleware := suite.chainB.TransferMiddleware()
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			suite.Require().NoError(err)
+
+		})
+	}
+}
+
 func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
