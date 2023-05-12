@@ -26,9 +26,7 @@ type ForwardMetadata struct {
 	Channel  string        `json:"channel,omitempty"`
 	Timeout  time.Duration `json:"timeout,omitempty"`
 	Retries  *uint8        `json:"retries,omitempty"`
-
-	// Memo for the cross-chain-swap contract
-	Next string `json:"next,omitempty"`
+	Next     string        `json:"next,omitempty"`
 }
 
 // TODO: use testsuite here.
