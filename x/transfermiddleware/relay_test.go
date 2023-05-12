@@ -94,7 +94,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 		malleate func()
 	}{
 		{
-			"Receiver is source chain",
+			"Receiver is Parachain chain",
 			func() {
 				path = pathAtoB
 				srcPort = pathAtoB.EndpointB.ChannelConfig.PortID
@@ -104,7 +104,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			},
 		},
 		{
-			"Receiver is sink chain",
+			"Receiver is cosmos chain chain",
 			func() {
 				path = pathCtoB
 				srcPort = pathCtoB.EndpointB.ChannelConfig.PortID
@@ -145,15 +145,13 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
-			// and when relay to chain B and handle Ack on chain A
+			// and when relay to chain A and handle Ack on chain B
 			err = suite.coordinator.RelayAndAckPendingPackets(pathAtoB)
 			suite.Require().NoError(err)
 
 			// then
 			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
-
-			// balance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 
 			tc.malleate()
 
