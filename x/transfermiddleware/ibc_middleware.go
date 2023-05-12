@@ -119,9 +119,9 @@ func (im IBCMiddleware) OnRecvPacket(
 
 	paraTokenInfo := im.keeper.GetParachainIBCTokenInfo(ctx, data.Denom)
 	if packet.DestinationChannel == paraTokenInfo.ChannelId {
-		ctx = ctx.WithValue(routertypes.ProcessedKey{}, true)
 		ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true)
 	}
+	ctx = ctx.WithValue(routertypes.ProcessedKey{}, true)
 
 	return im.next.OnRecvPacket(ctx, packet, relayer)
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
