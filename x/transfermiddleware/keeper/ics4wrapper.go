@@ -51,14 +51,13 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	nativeTransferToken := sdk.NewCoin(fungibleTokenPacketData.Denom, transferAmount)
 	ibcTransferToken := sdk.NewCoin(parachainInfo.IbcDenom, transferAmount)
 
-	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, parachainInfo.ChannelId)
-	escrowToken := keeper.bankKeeper.GetAllBalances(ctx, escrowAddress)
-
+	escrowAddress := transfertypes.GetEscrowAddress(sourcePort, sourceChannel)
 	err = keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 	if err != nil {
 		return 0, err
 	}
 	// burn native token
+	// Get Coin from excrow address
 	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 
 	// release lock IBC token and send it to sender
@@ -67,8 +66,6 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	if err != nil {
 		return 0, err
 	}
-	escrowToken = keeper.bankKeeper.GetAllBalances(ctx, escrowAddress)
-	fmt.Println(escrowToken)
 
 	// new msg transfer from transfer to parachain
 	transferMsg := transfertypes.MsgTransfer{
