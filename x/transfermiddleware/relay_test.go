@@ -84,6 +84,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 		srcPort       string
 		srcChannel    string
 		chain         *customibctesting.TestChain
+		expDenom      string
 		// pathBtoC      = NewTransferPath(suite.chainB, suite.chainC)
 	)
 
@@ -98,15 +99,17 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 				srcPort = pathAtoB.EndpointB.ChannelConfig.PortID
 				srcChannel = pathAtoB.EndpointB.ChannelID
 				chain = suite.chainA
+				expDenom = sdk.DefaultBondDenom
 			},
 		},
 		{
 			"Receiver is sink chain",
 			func() {
 				path = pathBtoC
-				srcPort = pathBtoC.EndpointB.ChannelConfig.PortID
-				srcChannel = pathBtoC.EndpointB.ChannelID
+				srcPort = pathBtoC.EndpointA.ChannelConfig.PortID
+				srcChannel = pathBtoC.EndpointA.ChannelID
 				chain = suite.chainC
+				expDenom = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 			},
 		},
 	}
@@ -114,8 +117,8 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 		suite.Run(tc.name, func() {
 			suite.SetupTest()
 			pathAtoB = NewTransferPath(suite.chainA, suite.chainB)
-			pathBtoC = NewTransferPath(suite.chainB, suite.chainC)
 			suite.coordinator.Setup(pathAtoB)
+			pathBtoC = NewTransferPath(suite.chainB, suite.chainC)
 			suite.coordinator.Setup(pathBtoC)
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
@@ -159,7 +162,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 				srcChannel,
 				sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(500000)),
 				suite.chainB.SenderAccount.GetAddress().String(),
-				chain.SenderAccount.GetAddress().String(),
+				testAcc2.String(),
 				timeoutHeight,
 				0,
 				"",
@@ -172,7 +175,9 @@ func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
 			err = suite.coordinator.RelayAndAckPendingPackets(path)
 			suite.Require().NoError(err)
 
-			fmt.Printf("-------%v\n", chain.AllBalances(testAcc2))
+			balance := chain.AllBalances(testAcc2)
+			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, sdk.NewInt(500000)))
+			suite.Require().Equal(expBalance, balance)
 		})
 	}
 }

@@ -103,6 +103,7 @@ func (k Keeper) SendPacket(
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
 	parachainInfo := k.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
 
+	// fmt.Printf("%s - %s\n", parachainInfo.ChannelId, sourceChannel)
 	if parachainInfo.ChannelId != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
 		return k.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
