@@ -87,7 +87,7 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gogo/googleapis v1.4.1 // indirect
-	github.com/cosmos/gogoproto v1.3.3 // indirect
+	github.com/gogo/protobuf v1.3.3 // indirect
 	github.com/golang/glog v1.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/mock v1.6.0 // indirect
@@ -237,4 +237,4 @@ replace (
 
 replace github.com/notional-labs/composable-testnet => ../../
 
-replace github.com/cosmos/gogoproto => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
