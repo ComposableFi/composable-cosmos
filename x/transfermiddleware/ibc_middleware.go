@@ -1,6 +1,9 @@
 package transfermiddleware
 
 import (
+	"encoding/json"
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
@@ -10,6 +13,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 )
 
 var _ porttypes.Middleware = &IBCMiddleware{}
@@ -19,13 +23,15 @@ var _ porttypes.Middleware = &IBCMiddleware{}
 type IBCMiddleware struct {
 	app    porttypes.IBCModule
 	keeper keeper.Keeper
+	next   porttypes.Middleware
 }
 
 // NewIBCMiddleware creates a new IBCMiddlware given the keeper and underlying application
-func NewIBCMiddleware(app porttypes.IBCModule, k keeper.Keeper) IBCMiddleware {
+func NewIBCMiddleware(app porttypes.IBCModule, k keeper.Keeper, next porttypes.Middleware) IBCMiddleware {
 	return IBCMiddleware{
 		app:    app,
 		keeper: k,
+		next:   next,
 	}
 }
 
@@ -95,6 +101,8 @@ func (im IBCMiddleware) OnRecvPacket(
 		return channeltypes.NewErrorAcknowledgement(err)
 	}
 
+	fmt.Printf("OnRecvPacket ack: %v\n", ack)
+
 	if ack.Success() {
 		err := im.keeper.OnRecvPacket(ctx, packet, data)
 		if err != nil {
@@ -104,8 +112,20 @@ func (im IBCMiddleware) OnRecvPacket(
 		}
 	}
 
+	m := &routertypes.PacketMetadata{}
+	err := json.Unmarshal([]byte(data.Memo), m)
+	if err != nil || m.Forward == nil {
+		// not a packet that should be forwarded
+		im.keeper.Logger(ctx).Debug("packetForwardMiddleware OnRecvPacket forward metadata does not exist")
+		return ack
+	}
+
+	ctx = ctx.WithValue(routertypes.ProcessedKey{}, true)
+	ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true)
+
+	return im.next.OnRecvPacket(ctx, packet, relayer)
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
-	return ack
+	// return ack
 }
 
 // OnTimeoutPacket implements the IBCModule interface.

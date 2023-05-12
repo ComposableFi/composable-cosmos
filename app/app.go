@@ -394,7 +394,7 @@ func NewBanksyApp(
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		&app.TransferMiddlewareKeeper, // ICS4Wrapper
+		app.TransferMiddlewareKeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -426,17 +426,24 @@ func NewBanksyApp(
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
 	ibcMiddlewareStack := router.NewIBCMiddleware(
-		transferIBCModule,
+		nil,
 		app.RouterKeeper,
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
-
 	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
-		ibcMiddlewareStack,
+		transferIBCModule,
 		app.TransferMiddlewareKeeper,
+		ibcMiddlewareStack,
 	)
+	// ibcMiddlewareStack := router.NewIBCMiddleware(
+	// 	transfermiddlewareStack,
+	// 	app.RouterKeeper,
+	// 	0,
+	// 	routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+	// 	routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+	// )
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(

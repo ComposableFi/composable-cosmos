@@ -493,6 +493,7 @@ func NewSimApp(
 	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
 		transferStack,
 		app.TransferMiddlewarekeeper,
+		nil,
 	)
 	// Add transfer stack to IBC Router
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transfermiddlewareStack)
