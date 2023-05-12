@@ -106,7 +106,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 		// malleate func()
 	}{
 		{
-			"Success case",
+			"Success case A -> B -> C",
 		},
 	}
 	for _, tc := range testCases {
