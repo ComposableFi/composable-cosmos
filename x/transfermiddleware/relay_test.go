@@ -179,7 +179,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 
 			err = pathBtoC.EndpointB.RecvPacket(sendingPacket)
 			suite.Require().NoError(err)
-			suite.chainA.PendingSendPackets = nil
+			suite.chainB.PendingSendPackets = nil
 
 			// relay ack C to B
 			suite.Require().Equal(1, len(suite.chainC.PendingAckPackets))
@@ -203,7 +203,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 
 			err = pathAtoB.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
 			suite.Require().NoError(err)
-			suite.chainC.PendingAckPackets = nil
+			suite.chainB.PendingAckPackets = nil
 
 			expDenom := "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
