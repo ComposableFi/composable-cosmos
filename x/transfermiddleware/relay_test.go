@@ -1,6 +1,7 @@
 package transfermiddleware_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
@@ -9,6 +10,7 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
+	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -93,7 +95,6 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 			suite.coordinator.Setup(path)
 
 			tc.malleate()
-
 			originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 			// chainB.SenderAccount: 10000000000000000000stake
 			originalChainBBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
@@ -123,6 +124,112 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 			// and dest chain balance contains voucher
 			expBalance := originalChainBBalance.Add(expChainBBalanceDiff)
 			gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			fmt.Println("expBalance", expBalance)
+			fmt.Println("gotBalance", gotBalance)
+			suite.Require().Equal(expBalance, gotBalance)
+		})
+	}
+}
+func (suite *TransferMiddlewareTestSuite) TestOnrecvPacketBetween3Chain() {
+	var (
+		transferAmount = sdk.NewInt(1000000000)
+		// when transfer via sdk transfer from A -> B -> C
+		coinASendToB  = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+	)
+	var (
+		pathAB       = NewTransferPath(suite.chainA, suite.chainB)
+		pathBC       = NewTransferPath(suite.chainB, suite.chainC)
+		ibcDenomAtoB = ibctransfertypes.GetPrefixedDenom(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+	)
+	testCases := []struct {
+		name                 string
+		expChainABalanceDiff sdk.Coin
+		expChainBBalanceDiff sdk.Coin
+		expChainCBalanceDiff sdk.Coin
+		malleate             func()
+	}{
+		{
+			name:                 "Transfer with no pre-set ParachainIBCTokenInfo",
+			expChainABalanceDiff: sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			expChainCBalanceDiff: ibctransfertypes.GetTransferCoin(pathBC.EndpointB.ChannelConfig.PortID, pathBC.EndpointB.ChannelID, ibcDenomAtoB, transferAmount),
+			malleate:             func() {},
+		},
+		// {
+		// 	"Transfer with pre-set ParachainIBCTokenInfo",
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(2000000000)),
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		// 	sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		// 	func() {
+		// 		// Add parachain token info
+		// 		chainBtransMiddleware := chainB.TransferMiddleware()
+		// 		err := chainBtransMiddleware.AddParachainIBCInfo(chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+		// 		require.NoError(t, err)
+
+		// 		chainCtransMiddleware := chainC.TransferMiddleware()
+		// 		err = chainCtransMiddleware.AddParachainIBCInfo(chainC.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+		// 		require.NoError(t, err)
+		// 	},
+		// },
+	}
+	for _, tc := range testCases {
+		tc := tc
+		suite.Run(tc.name, func() {
+			suite.SetupTest() // reset
+			suite.coordinator.Setup(pathAB)
+			suite.coordinator.Setup(pathBC)
+
+			tc.malleate()
+
+			originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			// chainB.SenderAccount: 10000000000000000000stake
+			// originalChainBBalance := chainB.AllBalances(chainB.SenderAccount.GetAddress())
+
+			originalChainCBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+
+			fmt.Println("Begin")
+			fmt.Println("chainA.AllBalances(chainA.SenderAccount.GetAddress())", suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress()))
+			fmt.Println("chainB.AllBalances(chainB.SenderAccount.GetAddress())", suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress()))
+			fmt.Println("chainC.AllBalances(chainC.SenderAccount.GetAddress())", suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress()))
+			forwardMetadata := routertypes.PacketMetadata{
+				Forward: &routertypes.ForwardMetadata{
+					Receiver: suite.chainC.SenderAccount.GetAddress().String(),
+					Port:     "transfer",
+					Channel:  pathBC.EndpointA.ChannelID,
+				},
+			}
+			memo, err := json.Marshal(forwardMetadata)
+
+			msg := ibctransfertypes.NewMsgTransfer(pathAB.EndpointA.ChannelConfig.PortID, pathAB.EndpointA.ChannelID, coinASendToB, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, string(memo))
+			_, err = suite.chainA.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(pathAB.EndpointB.UpdateClient())
+			suite.Require().NoError(pathBC.EndpointB.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// and when relay to chain B and handle Ack on chain A
+			err = suite.coordinator.RelayAndAckPendingPackets(pathAB)
+			suite.Require().NoError(err)
+
+			err = suite.coordinator.RelayAndAckPendingPackets(pathBC)
+			suite.Require().NoError(err)
+			// then
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+			fmt.Println("After A -> B")
+			fmt.Println("chainA.AllBalances(chainA.SenderAccount.GetAddress())", suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress()))
+			fmt.Println("chainB.AllBalances(chainB.SenderAccount.GetAddress())", suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress()))
+			fmt.Println("chainC.AllBalances(chainC.SenderAccount.GetAddress())", suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress()))
+			// and source chain balance was decreased
+			newChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			suite.Require().Equal(originalChainABalance.Sub(tc.expChainABalanceDiff), newChainABalance)
+
+			// and dest chain balance contains voucher
+			expBalance := originalChainCBalance.Add(tc.expChainCBalanceDiff)
+			gotBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
 			fmt.Println("expBalance", expBalance)
 			fmt.Println("gotBalance", gotBalance)
 			suite.Require().Equal(expBalance, gotBalance)
