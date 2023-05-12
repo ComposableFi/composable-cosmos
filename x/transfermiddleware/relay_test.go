@@ -139,6 +139,8 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			memo_marshalled, err := json.Marshal(&memo)
 			suite.Require().NoError(err)
 
+			intermediaryOriginalBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+
 			msg := ibctransfertypes.NewMsgTransfer(
 				pathAtoB.EndpointA.ChannelConfig.PortID,
 				pathAtoB.EndpointA.ChannelID,
@@ -205,6 +207,8 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			suite.Require().NoError(err)
 			suite.chainB.PendingAckPackets = nil
 
+			intermediaryBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			suite.Require().Equal(intermediaryOriginalBalance, intermediaryBalance)
 			expDenom := "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
 			balance := suite.chainC.AllBalances(testAcc)
