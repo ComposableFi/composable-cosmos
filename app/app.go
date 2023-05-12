@@ -425,14 +425,15 @@ func NewBanksyApp(
 	)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
+	var transfermiddlewareStack porttypes.Middleware
 	ibcMiddlewareStack := router.NewIBCMiddleware(
-		nil,
+		transferIBCModule,
 		app.RouterKeeper,
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
-	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
+	transfermiddlewareStack = transfermiddleware.NewIBCMiddleware(
 		transferIBCModule,
 		app.TransferMiddlewareKeeper,
 		ibcMiddlewareStack,

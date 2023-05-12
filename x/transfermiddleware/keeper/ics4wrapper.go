@@ -103,9 +103,7 @@ func (k Keeper) SendPacket(
 	timeoutTimestamp uint64,
 	data []byte,
 ) (sequence uint64, err error) {
-	fmt.Printf("--------------------test SendPacket\n")
 	var fungibleTokenPacketData transfertypes.FungibleTokenPacketData
-
 	err = transfertypes.ModuleCdc.UnmarshalJSON(data, &fungibleTokenPacketData)
 	if err != nil {
 		return 0, err
@@ -114,7 +112,6 @@ func (k Keeper) SendPacket(
 	parachainInfo := k.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
 
 	if parachainInfo.ChannelId != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
-		fmt.Printf("--------------------test SendPacket %v\n", fungibleTokenPacketData)
 		return k.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
 

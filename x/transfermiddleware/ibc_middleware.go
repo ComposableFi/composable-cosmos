@@ -2,7 +2,6 @@ package transfermiddleware
 
 import (
 	"encoding/json"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -101,8 +100,6 @@ func (im IBCMiddleware) OnRecvPacket(
 		return channeltypes.NewErrorAcknowledgement(err)
 	}
 
-	fmt.Printf("OnRecvPacket ack: %v\n", ack)
-
 	if ack.Success() {
 		err := im.keeper.OnRecvPacket(ctx, packet, data)
 		if err != nil {
@@ -135,7 +132,7 @@ func (im IBCMiddleware) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Pac
 		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
 	}
 
-	if err := im.app.OnTimeoutPacket(ctx, packet, relayer); err != nil {
+	if err := im.next.OnTimeoutPacket(ctx, packet, relayer); err != nil {
 		return err
 	}
 
@@ -153,7 +150,8 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 	acknowledgement []byte,
 	relayer sdk.AccAddress,
 ) error {
-	if err := im.app.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
+	// TODO: need to handle Error Ack
+	if err := im.next.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
 		return err
 	}
 

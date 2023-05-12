@@ -108,7 +108,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 		// malleate func()
 	}{
 		{
-			"Receiver is Parachain chain",
+			"Success case",
 		},
 	}
 	for _, tc := range testCases {
@@ -171,6 +171,47 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			// then should have a packet from B to C
 			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
+
+			// relay packet
+			sendingPacket = suite.chainB.PendingSendPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathBtoC.EndpointB.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointB.RecvPacket(sendingPacket)
+			suite.Require().NoError(err)
+			suite.chainA.PendingSendPackets = nil
+
+			// relay ack C to B
+			suite.Require().Equal(1, len(suite.chainC.PendingAckPackets))
+			ack := suite.chainC.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainC)
+			err = pathBtoC.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainC.PendingAckPackets = nil
+
+			// relay ack B to A
+			suite.Require().Equal(1, len(suite.chainB.PendingAckPackets))
+			ack = suite.chainB.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathAtoB.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathAtoB.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainC.PendingAckPackets = nil
+
+			expDenom := "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			balance := suite.chainC.AllBalances(testAcc)
+			fmt.Printf("balances: %v\n", balance)
+			suite.Require().Equal(expBalance, balance)
 		})
 	}
 }
