@@ -43,13 +43,12 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
 
 	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
-
 	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()) != paraTokenInfo.NativeDenom {
 		return nil
 	}
 
-	// lock ibc token if srcChannel is paraChannel
-	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
+	// lock ibc token if dstChannel is paraChannel
+	if packet.GetDestChannel() == paraTokenInfo.ChannelId {
 		// escrow ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
 

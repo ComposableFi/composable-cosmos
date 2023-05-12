@@ -249,7 +249,7 @@ func (coord *Coordinator) ChanOpenInitOnBothChains(path *Path) error {
 }
 
 // from A to B
-func (coord *Coordinator) RelayAndAckPendingPacketsWithPath(path *Path) error {
+func (coord *Coordinator) RelayAndAckPendingPackets(path *Path) error {
 	// get all the packet to relay src->dest
 	src := path.EndpointA
 	dest := path.EndpointB
@@ -293,9 +293,13 @@ func (coord *Coordinator) RelayAndAckPendingPacketsWithPath(path *Path) error {
 	return nil
 }
 
-func (coord *Coordinator) RelayAndAckPendingPackets(src *Endpoint, dest *Endpoint) error {
+// from B to A
+func (coord *Coordinator) RelayAndAckPendingPacketsReverse(path *Path) error {
+	// get all the packet to relay src->dest
+	src := path.EndpointB
+	dest := path.EndpointA
 	toSend := src.Chain.PendingSendPackets
-	coord.t.Logf("Relay %d Packets A->B\n", len(toSend))
+	coord.t.Logf("Relay %d Packets B->A\n", len(toSend))
 
 	// send this to the other side
 	coord.IncrementTime()
@@ -315,7 +319,7 @@ func (coord *Coordinator) RelayAndAckPendingPackets(src *Endpoint, dest *Endpoin
 	// get all the acks to relay dest->src
 	toAck := dest.Chain.PendingAckPackets
 	// TODO: assert >= len(toSend)?
-	coord.t.Logf("Ack %d Packets B->A\n", len(toAck))
+	coord.t.Logf("Ack %d Packets A->B\n", len(toAck))
 
 	// send the ack back from dest -> src
 	coord.IncrementTime()
@@ -342,6 +346,36 @@ func (coord *Coordinator) TimeoutPendingPackets(path *Path) error {
 
 	toSend := src.Chain.PendingSendPackets
 	coord.t.Logf("Timeout %d Packets A->A\n", len(toSend))
+
+	if err := src.UpdateClient(); err != nil {
+		return err
+	}
+	// Increment time and commit block so that 5 second delay period passes between send and receive
+	coord.IncrementTime()
+	coord.CommitBlock(src.Chain, dest.Chain)
+	for _, packet := range toSend {
+		// get proof of packet unreceived on dest
+		packetKey := host.PacketReceiptKey(packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence())
+		proofUnreceived, proofHeight := dest.QueryProof(packetKey)
+		timeoutMsg := channeltypes.NewMsgTimeout(packet, packet.Sequence, proofUnreceived, proofHeight, src.Chain.SenderAccount.GetAddress().String())
+		err := src.Chain.sendMsgs(timeoutMsg)
+		if err != nil {
+			return err
+		}
+	}
+	src.Chain.PendingSendPackets = nil
+	dest.Chain.PendingAckPackets = nil
+	return nil
+}
+
+// TimeoutPendingPackets returns the package to source chain to let the IBC app revert any operation.
+// from B to B
+func (coord *Coordinator) TimeoutPendingPacketsReverse(path *Path) error {
+	src := path.EndpointB
+	dest := path.EndpointA
+
+	toSend := src.Chain.PendingSendPackets
+	coord.t.Logf("Timeout %d Packets B->B\n", len(toSend))
 
 	if err := src.UpdateClient(); err != nil {
 		return err
