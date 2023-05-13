@@ -292,6 +292,7 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacketBetween3Chain() {
 		{
 			name:                 "Transfer with no pre-set ParachainIBCTokenInfo",
 			expChainABalanceDiff: sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			expChainBBalanceDiff: ibctransfertypes.GetTransferCoin(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, ibcDenomAtoB, transferAmount),
 			expChainCBalanceDiff: ibctransfertypes.GetTransferCoin(pathBC.EndpointB.ChannelConfig.PortID, pathBC.EndpointB.ChannelID, ibcDenomAtoB, transferAmount),
 			malleate:             func() {},
 		},
@@ -313,10 +314,11 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacketBetween3Chain() {
 		// },
 	}
 	for _, tc := range testCases {
-		tc := tc
 		suite.Run(tc.name, func() {
 			suite.SetupTest() // reset
+			pathAB = NewTransferPath(suite.chainA, suite.chainB)
 			suite.coordinator.Setup(pathAB)
+			pathBC = NewTransferPath(suite.chainB, suite.chainC)
 			suite.coordinator.Setup(pathBC)
 
 			tc.malleate()
@@ -344,7 +346,6 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacketBetween3Chain() {
 			_, err = suite.chainA.SendMsgs(msg)
 			suite.Require().NoError(err)
 			suite.Require().NoError(pathAB.EndpointB.UpdateClient())
-			suite.Require().NoError(pathBC.EndpointB.UpdateClient())
 
 			// then
 			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
