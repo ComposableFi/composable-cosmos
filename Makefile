@@ -16,7 +16,7 @@ SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
-HTTPS_GIT := https://github.com/notional-labs/composable-testnet.git
+HTTPS_GIT := https://github.com/notional-labs/banksy/.git
 
 export GO111MODULE = on
 
@@ -93,3 +93,55 @@ build:
 
 docker-build-debug:
 	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
+
+###############################################################################
+###                                  Proto                                  ###
+###############################################################################
+
+protoVer=v0.8
+protoImageName=ghcr.io/notional-labs/fa-proto-gen:$(protoVer)
+containerProtoGen=fa-proto-gen-$(protoVer)
+containerProtoFmt=fa-proto-fmt-$(protoVer)
+
+proto-all: proto-format proto-gen
+
+proto-gen:
+	@echo "Generating Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protocgen.sh; fi
+
+proto-format:
+	@echo "Formatting Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
+		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+
+proto-lint:
+	@$(DOCKER_BUF) lint --error-format=json
+
+proto-check-breaking:
+	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
+
+.PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking 
+###                             Interchain test                             ###
+###############################################################################
+
+# Executes start chain tests via interchaintest
+ictest-start-cosmos:
+	cd tests/interchaintest && go test -race -v -run TestStartBanksy .
+
+# Executes start chain tests via interchaintest
+ictest-start-polkadot:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
+
+# Executes IBC tests via interchaintest
+ictest-ibc:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestBanksyPicassoIBCTransfer .
+
+# Executes all tests via interchaintest after compling a local image as juno:local
+ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
+
+# Executes push wasm client tests via interchaintest
+ictest-push-wasm:
+	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
+
+.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
