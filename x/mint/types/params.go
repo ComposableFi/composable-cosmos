@@ -19,6 +19,7 @@ var (
 	KeyInflationMin        = []byte("InflationMin")
 	KeyGoalBonded          = []byte("GoalBonded")
 	KeyBlocksPerYear       = []byte("BlocksPerYear")
+	ParamsKey              = []byte("ParamsKey")
 )
 
 // ParamTable for minting module.
