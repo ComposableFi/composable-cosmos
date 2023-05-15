@@ -3,6 +3,7 @@ package banksy.mint.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "banksy/mint/v1beta1/mint.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "x/mint/types";
 
@@ -13,4 +14,9 @@ message GenesisState {
 
   // params defines all the paramaters of the module.
   Params params = 2 [(gogoproto.nullable) = false];
+
+  cosmos.base.v1beta1.Coin incentives_supply = 3 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false
+  ];
 }
