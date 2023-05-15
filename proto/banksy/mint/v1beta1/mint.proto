@@ -34,24 +34,14 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
-  // maximum inflation rate
-  string inflation_max = 3 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
-  // minimum inflation rate
-  string inflation_min = 4 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
   // goal of percent bonded atoms
-  string goal_bonded = 5 [
+  string goal_bonded = 3 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable)   = false
   ];
   // expected blocks per year
-  uint64 blocks_per_year = 6;
+  uint64 blocks_per_year = 4;
+    // expected token to be distribute per year
+  uint64 token_per_year = 5;
 }
