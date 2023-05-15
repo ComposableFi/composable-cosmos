@@ -92,13 +92,10 @@ func RandomBech32AccountAddress(t testing.TB) string {
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
-		// when transfer via sdk transfer from A (module) -> B (contract)
-		timeoutHeight = clienttypes.NewHeight(1, 110)
-		pathAtoB      *customibctesting.Path
-		pathBtoC      *customibctesting.Path
-		ibcDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
-		// successAck    = channeltypes.NewResultAcknowledgement([]byte{byte(1)})
-		// failedAck = channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed packet transfer"))
+		timeoutHeight  = clienttypes.NewHeight(1, 110)
+		pathAtoB       *customibctesting.Path
+		pathBtoC       *customibctesting.Path
+		ibcDenom       = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 	)
 
 	suite.SetupTest()
