@@ -41,7 +41,9 @@ func ValidateMinter(minter Minter) error {
 }
 
 // NextInflationRate returns the new inflation rate for the next hour.
-func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec) sdk.Dec {
+func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec, totalStakingSupply sdk.Int) sdk.Dec {
+	totalStakingSupplyDec := sdk.NewDecFromInt(totalStakingSupply)
+
 	// The target annual inflation rate is recalculated for each previsions cycle. The
 	// inflation is also subject to a rate change (positive or negative) depending on
 	// the distance from the desired ratio (67%). The maximum rate change possible is
@@ -56,11 +58,15 @@ func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec) sdk.Dec {
 
 	// adjust the new annual inflation for this next cycle
 	inflation := m.Inflation.Add(inflationRateChange) // note inflationRateChange may be negative
-	if inflation.GT(params.InflationMax) {
-		inflation = params.InflationMax
+
+	inflationMax := sdk.NewDecFromInt(params.MaxTokenPerYear).Quo(totalStakingSupplyDec)
+	inflationMin := sdk.NewDecFromInt(params.MinTokenPerYear).Quo(totalStakingSupplyDec)
+
+	if inflation.GT(inflationMax) {
+		inflation = inflationMax
 	}
-	if inflation.LT(params.InflationMin) {
-		inflation = params.InflationMin
+	if inflation.LT(inflationMin) {
+		inflation = inflationMin
 	}
 
 	return inflation

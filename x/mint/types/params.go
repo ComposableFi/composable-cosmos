@@ -28,15 +28,15 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 func NewParams(
-	mintDenom string, inflationRateChange, inflationMax, inflationMin, goalBonded sdk.Dec, blocksPerYear uint64,
+	mintDenom string, inflationRateChange, inflationMax, inflationMin, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear sdk.Int,
 ) Params {
 	return Params{
 		MintDenom:           mintDenom,
 		InflationRateChange: inflationRateChange,
-		InflationMax:        inflationMax,
-		InflationMin:        inflationMin,
 		GoalBonded:          goalBonded,
 		BlocksPerYear:       blocksPerYear,
+		MaxTokenPerYear:     tokenPerYear,
+		MinTokenPerYear:     tokenPerYear,
 	}
 }
 
@@ -45,10 +45,10 @@ func DefaultParams() Params {
 	return Params{
 		MintDenom:           sdk.DefaultBondDenom,
 		InflationRateChange: sdk.NewDecWithPrec(13, 2),
-		InflationMax:        sdk.NewDecWithPrec(20, 2),
-		InflationMin:        sdk.NewDecWithPrec(7, 2),
 		GoalBonded:          sdk.NewDecWithPrec(67, 2),
 		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 second block times
+		MaxTokenPerYear:     sdk.NewIntFromUint64(1000000),
+		MinTokenPerYear:     sdk.NewIntFromUint64(1000000),
 	}
 }
 
@@ -60,23 +60,11 @@ func (p Params) Validate() error {
 	if err := validateInflationRateChange(p.InflationRateChange); err != nil {
 		return err
 	}
-	if err := validateInflationMax(p.InflationMax); err != nil {
-		return err
-	}
-	if err := validateInflationMin(p.InflationMin); err != nil {
-		return err
-	}
 	if err := validateGoalBonded(p.GoalBonded); err != nil {
 		return err
 	}
 	if err := validateBlocksPerYear(p.BlocksPerYear); err != nil {
 		return err
-	}
-	if p.InflationMax.LT(p.InflationMin) {
-		return fmt.Errorf(
-			"max inflation (%s) must be greater than or equal to min inflation (%s)",
-			p.InflationMax, p.InflationMin,
-		)
 	}
 
 	return nil
@@ -93,8 +81,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
 		paramtypes.NewParamSetPair(KeyInflationRateChange, &p.InflationRateChange, validateInflationRateChange),
-		paramtypes.NewParamSetPair(KeyInflationMax, &p.InflationMax, validateInflationMax),
-		paramtypes.NewParamSetPair(KeyInflationMin, &p.InflationMin, validateInflationMin),
 		paramtypes.NewParamSetPair(KeyGoalBonded, &p.GoalBonded, validateGoalBonded),
 		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
 	}
