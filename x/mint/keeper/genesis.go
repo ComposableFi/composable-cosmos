@@ -13,12 +13,19 @@ func (keeper Keeper) InitGenesis(ctx sdk.Context, ak types.AccountKeeper, data *
 		panic(err)
 	}
 
+	newCoins := sdk.NewCoins(data.IncentivesSupply)
+	if err := keeper.MintCoins(ctx, newCoins); err != nil {
+		panic(err)
+	}
+
 	ak.GetModuleAccount(ctx, types.ModuleName)
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
-func (keeper Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
+func (keeper Keeper) ExportGenesis(ctx sdk.Context, authKeeper types.AccountKeeper) *types.GenesisState {
 	minter := keeper.GetMinter(ctx)
 	params := keeper.GetParams(ctx)
-	return types.NewGenesisState(minter, params)
+
+	remIncentives := keeper.bankKeeper.GetBalance(ctx, authKeeper.GetModuleAddress(types.ModuleName), params.MintDenom)
+	return types.NewGenesisState(minter, params, remIncentives)
 }
