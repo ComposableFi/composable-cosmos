@@ -218,7 +218,6 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 
 	escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
 	escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
-	fmt.Printf("testing2: %v\n", escrowIbcDenomAddress)
 	suite.Require().Empty(escrowIbcDenomAddressBalance)
 
 	escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)

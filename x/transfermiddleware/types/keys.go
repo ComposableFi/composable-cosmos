@@ -20,6 +20,7 @@ const (
 var (
 	KeysParachainIBCTokenInfo = []byte{0x01}
 	KeyIBCDenomAndNativeIndex = []byte{0x02}
+	KeyInflightPacket         = []byte{0x03}
 )
 
 func GetKeyParachainIBCTokenInfo(nativeDenom string) []byte {
@@ -28,4 +29,8 @@ func GetKeyParachainIBCTokenInfo(nativeDenom string) []byte {
 
 func GetKeyIBCDenomAndNativeIndex(IBCdenom string) []byte {
 	return append(KeysParachainIBCTokenInfo, []byte(IBCdenom)...)
+}
+
+func GetKeyInFlightPacketKey(packetBz []byte) []byte {
+	return append(KeysParachainIBCTokenInfo, packetBz...)
 }

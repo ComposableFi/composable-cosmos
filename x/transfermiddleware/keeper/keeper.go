@@ -5,10 +5,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
-	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 )
 
 type Keeper struct {
@@ -17,7 +17,6 @@ type Keeper struct {
 	ICS4Wrapper    porttypes.ICS4Wrapper
 	bankKeeper     types.BankKeeper
 	transferKeeper types.TransferKeeper
-	routerKeeper   *routerkeeper.Keeper
 	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
 	// should be the x/gov module account.
 	authority string
@@ -30,7 +29,6 @@ func NewKeeper(
 	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
-	router *routerkeeper.Keeper,
 ) Keeper {
 	return Keeper{
 		storeKey:       storeKey,
@@ -38,7 +36,6 @@ func NewKeeper(
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
 		ICS4Wrapper:    ics4Wrapper,
-		routerKeeper:   router,
 	}
 }
 
@@ -90,6 +87,12 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	return nil
 }
 
+func (keeper Keeper) HasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyParachainIBCTokenInfo(nativeDenom)
+	return store.Has(key)
+}
+
 // TODO: testing
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
 func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
@@ -106,6 +109,27 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBC
 	bz := store.Get(types.GetKeyParachainIBCTokenInfo(IBCdenom))
 
 	return string(bz)
+}
+
+func (keeper Keeper) SetInflightPackageFromPicasso(ctx sdk.Context, packet transfertypes.FungibleTokenPacketData) {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := keeper.cdc.MustMarshal(&packet)
+	key := types.GetKeyInFlightPacketKey(bz)
+	store.Set(key, []byte{})
+}
+
+func (keeper Keeper) IsInflightPackageFromPicasso(ctx sdk.Context, packet transfertypes.FungibleTokenPacketData) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := keeper.cdc.MustMarshal(&packet)
+	key := types.GetKeyInFlightPacketKey(bz)
+	return store.Has(key)
+}
+
+func (keeper Keeper) RemoveInflightPackageFromPicasso(ctx sdk.Context, packet transfertypes.FungibleTokenPacketData) {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := keeper.cdc.MustMarshal(&packet)
+	key := types.GetKeyInFlightPacketKey(bz)
+	store.Delete(key)
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {

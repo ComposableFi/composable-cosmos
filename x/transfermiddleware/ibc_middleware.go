@@ -117,10 +117,37 @@ func (im IBCMiddleware) OnRecvPacket(
 		return ack
 	}
 
-	paraTokenInfo := im.keeper.GetParachainIBCTokenInfo(ctx, data.Denom)
-	if packet.DestinationChannel == paraTokenInfo.ChannelId {
-		ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true) // We want to send native token in composable instead of ibc token
-		ctx = ctx.WithValue(routertypes.NonrefundableKey{}, true)           // If token send from Picasso, we want to handle the error
+	if im.keeper.HasParachainIBCTokenInfo(ctx, data.Denom) {
+		paraTokenInfo := im.keeper.GetParachainIBCTokenInfo(ctx, data.Denom)
+		if packet.DestinationChannel == paraTokenInfo.ChannelId {
+			ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true) // We want to send native token in composable instead of ibc token
+			// ctx = ctx.WithValue(routertypes.NonrefundableKey{}, true)           // If token send from Picasso, we want to handle the error
+
+			// store forward packet so that we can handle later
+			// set memo for next transfer with next from this transfer.
+			memo := ""
+			if m.Forward.Next != nil {
+				memoBz, err := json.Marshal(m.Forward.Next)
+				if err != nil {
+					im.keeper.Logger(ctx).Error("packetForwardMiddleware error marshaling next as JSON",
+						"error", err,
+					)
+					return channeltypes.NewErrorAcknowledgement(err)
+				}
+				memo = string(memoBz)
+			}
+
+			denom := data.Denom
+			amount := data.Amount
+			sender := data.Receiver
+			receiver := m.Forward.Receiver
+
+			packetData := transfertypes.NewFungibleTokenPacketData(
+				denom, amount, sender, receiver, memo,
+			)
+
+			im.keeper.SetInflightPackageFromPicasso(ctx, packetData)
+		}
 	}
 	ctx = ctx.WithValue(routertypes.ProcessedKey{}, true) // Already minted, so no need to process the base ibc-app anymore
 

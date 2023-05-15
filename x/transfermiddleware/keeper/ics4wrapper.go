@@ -108,6 +108,7 @@ func (k Keeper) SendPacket(
 	if err != nil {
 		return 0, err
 	}
+
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
 	parachainInfo := k.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
 
@@ -175,8 +176,46 @@ func (k Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, data tr
 	}
 
 	if transfertypes.SenderChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
-		// Do nothing
-		// This case should never happend
+		// Check if it is PFM
+		if k.IsInflightPackageFromPicasso(ctx, data) {
+			// Clear package
+			k.RemoveInflightPackageFromPicasso(ctx, data)
+			// just burn 2 token from escrow address
+			nativeDenom := data.Denom
+			paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, nativeDenom)
+			nativeTokenEscrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelId)
+			// Burn native token and ibc token on composable
+			err := k.bankKeeper.SendCoinsFromAccountToModule(
+				ctx,
+				nativeTokenEscrowAddress,
+				transfertypes.ModuleName,
+				sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount)),
+			)
+			if err != nil {
+				return fmt.Errorf("failed to send coins from escrow to module account for burn: %w", err)
+			}
+			ibcTokenEscrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelId)
+			err = k.bankKeeper.SendCoinsFromAccountToModule(
+				ctx,
+				ibcTokenEscrowAddress,
+				transfertypes.ModuleName,
+				sdk.NewCoins(sdk.NewCoin(paraTokenInfo.IbcDenom, transferAmount)),
+			)
+			if err != nil {
+				return fmt.Errorf("failed to send coins from escrow to module account for burn: %w", err)
+			}
+			err = k.bankKeeper.BurnCoins(
+				ctx,
+				transfertypes.ModuleName,
+				sdk.NewCoins(sdk.NewCoin(paraTokenInfo.IbcDenom, transferAmount), sdk.NewCoin(nativeDenom, transferAmount)),
+			)
+			if err != nil {
+				// NOTE: should not happen as the module account was
+				// retrieved on the step above and it has enough balace
+				// to burn.
+				panic(fmt.Sprintf("cannot burn coins after a successful send from escrow account to module account: %v", err))
+			}
+		}
 		return nil
 	}
 	nativeDenom := k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
