@@ -8,6 +8,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
+	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 )
 
 type Keeper struct {
@@ -16,7 +17,7 @@ type Keeper struct {
 	ICS4Wrapper    porttypes.ICS4Wrapper
 	bankKeeper     types.BankKeeper
 	transferKeeper types.TransferKeeper
-
+	routerKeeper   *routerkeeper.Keeper
 	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
 	// should be the x/gov module account.
 	authority string
@@ -29,6 +30,7 @@ func NewKeeper(
 	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
+	router *routerkeeper.Keeper,
 ) Keeper {
 	return Keeper{
 		storeKey:       storeKey,
@@ -36,6 +38,7 @@ func NewKeeper(
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
 		ICS4Wrapper:    ics4Wrapper,
+		routerKeeper:   router,
 	}
 }
 

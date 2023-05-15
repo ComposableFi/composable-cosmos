@@ -389,6 +389,7 @@ func NewBanksyApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.TransferKeeper,
 		app.BankKeeper,
+		app.RouterKeeper,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(

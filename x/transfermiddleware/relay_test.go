@@ -11,6 +11,7 @@ import (
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
 	"github.com/stretchr/testify/suite"
@@ -88,6 +89,152 @@ func RandomBech32AccountAddress(t testing.TB) string {
 	return RandomAccountAddress(t).String()
 }
 
+func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
+	var (
+		transferAmount = sdk.NewInt(1000000000)
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+		pathAtoB      *customibctesting.Path
+		pathBtoC      *customibctesting.Path
+		ibcDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		// successAck    = channeltypes.NewResultAcknowledgement([]byte{byte(1)})
+		// failedAck = channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed packet transfer"))
+	)
+
+	suite.SetupTest()
+	pathAtoB = NewTransferPath(suite.chainA, suite.chainB)
+	suite.coordinator.Setup(pathAtoB)
+	pathBtoC = NewTransferPath(suite.chainB, suite.chainC)
+	suite.coordinator.Setup(pathBtoC)
+	// Add parachain token info
+	chainBtransMiddleware := suite.chainB.TransferMiddleware()
+	err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+	suite.Require().NoError(err)
+
+	params := transfertypes.Params{
+		SendEnabled:    true,
+		ReceiveEnabled: false,
+	}
+
+	// set send params
+	suite.chainC.GetTestSupport().TransferKeeper().SetParams(suite.chainC.GetContext(), params)
+	senderAOriginalBalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+
+	testAcc := RandomAccountAddress(suite.T())
+	timeOut := 10 * time.Minute
+	retries := uint8(0)
+	// Build MEMO
+	memo := PacketMetadata{
+		Forward: &ForwardMetadata{
+			Receiver: testAcc.String(),
+			Port:     pathBtoC.EndpointA.ChannelConfig.PortID,
+			Channel:  pathBtoC.EndpointA.ChannelID,
+			Timeout:  timeOut,
+			Retries:  &retries,
+			Next:     "",
+		},
+	}
+	memo_marshalled, err := json.Marshal(&memo)
+	suite.Require().NoError(err)
+
+	msg := ibctransfertypes.NewMsgTransfer(
+		pathAtoB.EndpointA.ChannelConfig.PortID,
+		pathAtoB.EndpointA.ChannelID,
+		sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		suite.chainA.SenderAccount.GetAddress().String(),
+		testAcc.String(),
+		timeoutHeight,
+		0,
+		string(memo_marshalled),
+	)
+	_, err = suite.chainA.SendMsgs(msg)
+	suite.Require().NoError(err)
+	suite.Require().NoError(err, pathAtoB.EndpointB.UpdateClient())
+
+	// then
+	suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+	// relay packet
+	sendingPacket := suite.chainA.PendingSendPackets[0]
+	suite.coordinator.IncrementTime()
+	suite.coordinator.CommitBlock(suite.chainA)
+	err = pathAtoB.EndpointB.UpdateClient()
+	suite.Require().NoError(err)
+
+	err = pathAtoB.EndpointB.RecvPacket(sendingPacket)
+	suite.Require().NoError(err)
+	suite.chainA.PendingSendPackets = nil
+
+	// Check after first Hop
+	senderABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+	suite.Require().Equal(senderAOriginalBalance.Sub(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)), senderABalance)
+
+	escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+	escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
+	suite.Require().Equal(sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount)), escrowIbcDenomAddressBalance)
+
+	escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+	escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
+	suite.Require().Equal(sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)), escrowNativeDenomAddressBalance)
+
+	// then should have a packet from B to C
+	suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
+
+	// relay packet
+	sendingPacket = suite.chainB.PendingSendPackets[0]
+	suite.coordinator.IncrementTime()
+	suite.coordinator.CommitBlock(suite.chainB)
+	err = pathBtoC.EndpointB.UpdateClient()
+	suite.Require().NoError(err)
+
+	err = pathBtoC.EndpointB.RecvPacket(sendingPacket)
+	suite.Require().NoError(err)
+	suite.chainB.PendingSendPackets = nil
+
+	// relay ack C to B
+	suite.Require().Equal(1, len(suite.chainC.PendingAckPackets))
+	ack := suite.chainC.PendingAckPackets[0]
+	suite.coordinator.IncrementTime()
+	suite.coordinator.CommitBlock(suite.chainC)
+	err = pathBtoC.EndpointA.UpdateClient()
+	suite.Require().NoError(err)
+	// relay failed ack
+	err = pathBtoC.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+	suite.Require().NoError(err)
+	suite.chainC.PendingAckPackets = nil
+
+	// relay ack B to A
+	suite.Require().Equal(1, len(suite.chainB.PendingAckPackets))
+	ack = suite.chainB.PendingAckPackets[0]
+	suite.coordinator.IncrementTime()
+	suite.coordinator.CommitBlock(suite.chainB)
+	err = pathAtoB.EndpointA.UpdateClient()
+	suite.Require().NoError(err)
+
+	err = pathAtoB.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+	suite.Require().NoError(err)
+	suite.chainB.PendingAckPackets = nil
+
+	escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+	escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+	fmt.Printf("testing2: %v\n", escrowIbcDenomAddress)
+	suite.Require().Empty(escrowIbcDenomAddressBalance)
+
+	escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+	escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+	suite.Require().Empty(escrowNativeDenomAddressBalance)
+
+	balance := suite.chainB.AllBalances(testAcc)
+	suite.Require().Empty(balance)
+
+	balance = suite.chainC.AllBalances(testAcc)
+	suite.Require().Empty(balance)
+
+	balance = suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+	suite.Require().Equal(senderAOriginalBalance, balance)
+}
+
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
@@ -95,15 +242,10 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
 		pathBtoC      *customibctesting.Path
-		// srcPort       string
-		// srcChannel    string
-		// chain         *customibctesting.TestChain
-		// expDenom      string
 	)
 
 	testCases := []struct {
 		name string
-		// malleate func()
 	}{
 		{
 			"Success case A -> B -> C",

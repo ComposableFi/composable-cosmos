@@ -119,9 +119,10 @@ func (im IBCMiddleware) OnRecvPacket(
 
 	paraTokenInfo := im.keeper.GetParachainIBCTokenInfo(ctx, data.Denom)
 	if packet.DestinationChannel == paraTokenInfo.ChannelId {
-		ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true)
+		ctx = ctx.WithValue(routertypes.DisableDenomCompositionKey{}, true) // We want to send native token in composable instead of ibc token
+		ctx = ctx.WithValue(routertypes.NonrefundableKey{}, true)           // If token send from Picasso, we want to handle the error
 	}
-	ctx = ctx.WithValue(routertypes.ProcessedKey{}, true)
+	ctx = ctx.WithValue(routertypes.ProcessedKey{}, true) // Already minted, so no need to process the base ibc-app anymore
 
 	return im.next.OnRecvPacket(ctx, packet, relayer)
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
@@ -157,7 +158,6 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 	if err := im.next.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
 		return err
 	}
-
 	if err := im.keeper.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
 		return err
 	}
