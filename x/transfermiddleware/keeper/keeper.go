@@ -41,14 +41,14 @@ func NewKeeper(
 
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
-func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelId, nativeDenom string) error {
+func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom string) error {
 	if keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
 
 	info := types.ParachainIBCTokenInfo{
 		IbcDenom:    ibcDenom,
-		ChannelId:   channelId,
+		ChannelId:   channelID,
 		NativeDenom: nativeDenom,
 	}
 
@@ -105,6 +105,6 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBC
 	return string(bz)
 }
 
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+exported.ModuleName+"-"+types.ModuleName)
 }
