@@ -1,8 +1,8 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 )
 
@@ -26,7 +26,8 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 	}
 
 	// validate channelId
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	err := host.ChannelIdentifierValidator(msg.ChannelId)
+	if err != nil {
 		return err
 	}
 

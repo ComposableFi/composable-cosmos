@@ -26,6 +26,6 @@ func GetKeyParachainIBCTokenInfo(nativeDenom string) []byte {
 	return append(KeysParachainIBCTokenInfo, []byte(nativeDenom)...)
 }
 
-func GetKeyIBCDenomAndNativeIndex(IBCdenom string) []byte {
-	return append(KeysParachainIBCTokenInfo, []byte(IBCdenom)...)
+func GetKeyIBCDenomAndNativeIndex(ibcDenom string) []byte {
+	return append(KeysParachainIBCTokenInfo, []byte(ibcDenom)...)
 }

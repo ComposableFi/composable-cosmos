@@ -72,17 +72,17 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	}
 
 	// get the IBCdenom
-	IBCDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
+	ibcDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
 
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfo(nativeDenom))
 
 	// update the IBCdenom-native index
-	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(IBCDenom)) {
+	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(ibcDenom)) {
 		panic("broken data in state")
 	}
 
-	store.Delete(types.GetKeyIBCDenomAndNativeIndex(IBCDenom))
+	store.Delete(types.GetKeyIBCDenomAndNativeIndex(ibcDenom))
 
 	return nil
 }
@@ -98,9 +98,9 @@ func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom strin
 	return info
 }
 
-func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBCdenom string) string {
+func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibcDenom string) string {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfo(IBCdenom))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(ibcDenom))
 
 	return string(bz)
 }

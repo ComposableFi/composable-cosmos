@@ -3,9 +3,9 @@ package keeper
 import (
 	"fmt"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
+	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
@@ -21,8 +21,8 @@ func (keeper Keeper) hasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom strin
 
 func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	ctx sdk.Context,
-	chanCap *capabilitytypes.Capability,
-	sourcePort string, sourceChannel string,
+	_ *capabilitytypes.Capability,
+	sourcePort, sourceChannel string,
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 	data []byte,
@@ -91,14 +91,13 @@ func (keeper Keeper) executeTransferMsg(ctx sdk.Context, transferMsg *transferty
 		return nil, fmt.Errorf("bad msg %v", err.Error())
 	}
 	return keeper.transferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
-
 }
 
 // SendPacket wraps IBC ChannelKeeper's SendPacket function
 func (keeper Keeper) SendPacket(
 	ctx sdk.Context,
 	chanCap *capabilitytypes.Capability,
-	sourcePort string, sourceChannel string,
+	sourcePort, sourceChannel string,
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 	data []byte,
@@ -138,15 +137,15 @@ func (keeper *Keeper) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,
-	relayer sdk.AccAddress,
+	_ sdk.AccAddress,
 ) error {
 	var ack channeltypes.Acknowledgement
 	if err := transfertypes.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet acknowledgement: %v", err)
+		return errors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet acknowledgement: %v", err)
 	}
 	var data transfertypes.FungibleTokenPacketData
 	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
+		return errors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
 	}
 
 	switch ack.Response.(type) {
@@ -165,7 +164,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 	// parse the transfer amount
 	transferAmount, ok := sdk.NewIntFromString(data.Amount)
 	if !ok {
-		return sdkerrors.Wrapf(transfertypes.ErrInvalidAmount, "unable to parse transfer amount (%s) into math.Int", data.Amount)
+		return errors.Wrapf(transfertypes.ErrInvalidAmount, "unable to parse transfer amount (%s) into math.Int", data.Amount)
 	}
 	token := sdk.NewCoin(trace.IBCDenom(), transferAmount)
 
@@ -177,7 +176,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 
 	if transfertypes.SenderChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		// Do nothing
-		// This case should never happend
+		// This case should never happened
 		return nil
 	}
 	nativeDenom := keeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
