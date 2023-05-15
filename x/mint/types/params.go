@@ -47,8 +47,8 @@ func DefaultParams() Params {
 		InflationRateChange: sdk.NewDecWithPrec(13, 2),
 		GoalBonded:          sdk.NewDecWithPrec(67, 2),
 		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 second block times
-		MaxTokenPerYear:     sdk.NewIntFromUint64(1000000),
-		MinTokenPerYear:     sdk.NewIntFromUint64(1000000),
+		MaxTokenPerYear:     sdk.NewIntFromUint64(1000000000000000),
+		MinTokenPerYear:     sdk.NewIntFromUint64(800000000000000),
 	}
 }
 
@@ -65,6 +65,13 @@ func (p Params) Validate() error {
 	}
 	if err := validateBlocksPerYear(p.BlocksPerYear); err != nil {
 		return err
+	}
+
+	if p.MaxTokenPerYear.LT(p.MinTokenPerYear) {
+		return fmt.Errorf(
+			"MaxTokenPerYear (%s) must be greater than or equal to MinTokenPerYear (%s)",
+			p.MinTokenPerYear, p.MaxTokenPerYear,
+		)
 	}
 
 	return nil
