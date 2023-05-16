@@ -38,8 +38,13 @@ banksyd gentx KEYNAME 1000000upica \
 --security-contact="" \
 --chain-id banksy-testnet-2 \
 ```
-The out put will look like this: 
+The output will look like this: 
 ```
 Genesis transaction written to "~/.banksy/config/gentx/gentx-799d25f37dc6c68a549abbcd98e73127ac60d492.json"
 ```
 Fork the repo and create a pull request with your gentx-XXX.json moved to this directory: https://github.com/notional-labs/composable-testnet/tree/main/networks/testnet-2/gentxs
+Remember to change the file name to your validator name `gentx-YOURNAME.json`
+Example:
+```
+mv ~/.banksy/config/gentx/gentx-XXX.json ~/composable-testnet/networks/testnet-2/gentxs/gentx-YOURNAME.json
+```
