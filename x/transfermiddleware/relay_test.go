@@ -350,7 +350,6 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			expDenom := "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
 			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
 			balance := suite.chainC.AllBalances(testAcc)
-			fmt.Printf("balances: %v\n", balance)
 			suite.Require().Equal(expBalance, balance)
 		})
 	}
