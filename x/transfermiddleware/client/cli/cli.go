@@ -31,7 +31,7 @@ func GetCmdParaTokenInfo() *cobra.Command {
 		Use:     "para-token-info",
 		Short:   "Query the current transfer middleware para-token-info based on denom",
 		Long:    "Query the current transfer middleware para-token-info based on denom",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactValidArgs(1),
 		Example: fmt.Sprintf("%s query transfermiddleware para-token-info atom", version.AppName),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

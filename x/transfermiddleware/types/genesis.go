@@ -4,3 +4,9 @@ package types
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{}
 }
+
+// ValidateGenesis validates the provided genesis state to ensure the
+// expected invariants holds.
+func ValidateGenesis(data GenesisState) error {
+	return nil
+}

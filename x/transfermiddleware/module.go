@@ -3,6 +3,7 @@ package transfermiddleware
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -72,7 +73,8 @@ type AppModule struct {
 // NewAppModule creates a new router module
 func NewAppModule(k *keeper.Keeper) AppModule {
 	return AppModule{
-		keeper: k,
+		AppModuleBasic: AppModuleBasic{},
+		keeper:         k,
 	}
 }
 
@@ -93,6 +95,16 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 	cdc.MustUnmarshalJSON(data, &genesisState)
 	am.keeper.InitGenesis(ctx, genesisState)
 	return []abci.ValidatorUpdate{}
+}
+
+// ValidateGenesis performs genesis state validation for the mint module.
+func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
+	var data types.GenesisState
+	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
+		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
+	}
+
+	return types.ValidateGenesis(data)
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the ibc-router
