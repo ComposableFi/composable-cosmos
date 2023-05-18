@@ -87,6 +87,13 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	return nil
 }
 
+func (keeper Keeper) HasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyParachainIBCTokenInfo(nativeDenom)
+
+	return store.Has(key)
+}
+
 // TODO: testing
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
 func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {

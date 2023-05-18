@@ -422,6 +422,7 @@ func NewBanksyApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.DistrKeeper,
 		app.BankKeeper,
+		app.TransferMiddlewareKeeper,
 		app.IBCKeeper.ChannelKeeper,
 	)
 
@@ -437,17 +438,17 @@ func NewBanksyApp(
 	)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	icqIBCModule := icq.NewIBCModule(app.ICQKeeper)
-	ibcMiddlewareStack := router.NewIBCMiddleware(
+	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
 		transferIBCModule,
+		app.TransferMiddlewareKeeper,
+	)
+
+	ibcMiddlewareStack := router.NewIBCMiddleware(
+		transfermiddlewareStack,
 		app.RouterKeeper,
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
-	)
-
-	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
-		ibcMiddlewareStack,
-		app.TransferMiddlewareKeeper,
 	)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
@@ -480,7 +481,7 @@ func NewBanksyApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transfermiddlewareStack)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
