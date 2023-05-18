@@ -1,18 +1,18 @@
 # Composable Testnet 2 Genesis Transaction
 
 ## Binary
-Compile from source:
+Compile from source (go 1.20 recommended):
 ```
 git clone https://github.com/notional-labs/composable-testnet
 cd composable-testnet 
-git checkout v3.0.0
+git checkout v2.3.0 
 make install
 ```
 
 ## Init
 ```
 banksyd init NODE_NAME --chain-id banksy-testnet-2
-wget -O ~/.banksy/config/genesis.json <PREGENESIS_LINK>
+wget -O ~/.banksy/config/genesis.json https://raw.githubusercontent.com/notional-labs/composable-testnet/main/networks/testnet-2/pregenesis.json
 banksyd config chain-id banksy-testnet-2
 ```
 
@@ -36,7 +36,7 @@ banksyd gentx KEYNAME 1000000upica \
 --details="" \
 --website="" \
 --security-contact="" \
---chain-id banksy-testnet-2 \
+--chain-id banksy-testnet-2
 ```
 The output will look like this: 
 ```
