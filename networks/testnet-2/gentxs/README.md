@@ -13,7 +13,7 @@ Precompiled binary could be found here: https://github.com/notional-labs/composa
 ## Init
 ```
 banksyd init NODE_NAME --chain-id banksy-testnet-2
-wget -O ~/.banksy/config/genesis.json https://raw.githubusercontent.com/notional-labs/composable-testnet/main/networks/testnet-2/pregenesis.json
+wget -O ~/.banksy/config/genesis.json https://raw.githubusercontent.com/notional-labs/composable-networks/main/testnet-2/pregenesis.json
 banksyd config chain-id banksy-testnet-2
 ```
 
@@ -43,9 +43,10 @@ The output will look like this:
 ```
 Genesis transaction written to "~/.banksy/config/gentx/gentx-799d25f37dc6c68a549abbcd98e73127ac60d492.json"
 ```
-Fork the repo and create a pull request with your gentx-XXX.json moved to this directory: https://github.com/notional-labs/composable-testnet/tree/main/networks/testnet-2/gentxs
+Fork the repo and create a pull request with your gentx-XXX.json moved to this directory: https://github.com/notional-labs/composable-networks/tree/main/testnet-2/gentxs
 Remember to change the file name to your validator name `gentx-YOURNAME.json`
 Example:
 ```
-mv ~/.banksy/config/gentx/gentx-XXX.json ~/composable-testnet/networks/testnet-2/gentxs/gentx-YOURNAME.json
+git clone https://github.com/notional-labs/composable-networks/tree/main/testnet-2/gentxs
+mv ~/.banksy/config/gentx/gentx-XXX.json ~/composable-networks/testnet-2/gentxs/gentx-YOURNAME.json
 ```
