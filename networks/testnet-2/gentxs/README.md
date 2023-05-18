@@ -8,6 +8,7 @@ cd composable-testnet
 git checkout v2.3.0 
 make install
 ```
+Precompiled binary could be found here: https://github.com/notional-labs/composable-testnet/releases/tag/v2.3.0
 
 ## Init
 ```
