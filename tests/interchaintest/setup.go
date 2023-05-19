@@ -8,8 +8,8 @@ var (
 	BanksyMainRepo = "ghcr.io/notional-labs/banksy"
 
 	BanksyImage = ibc.DockerImage{
-		Repository: "ghcr.io/notional-labs/banksy",
-		Version:    "2.0.1",
+		Repository: "ghcr.io/notional-labs/banksy-ictest",
+		Version:    "latest",
 		UidGid:     "1025:1025",
 	}
 
