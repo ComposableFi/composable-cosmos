@@ -113,6 +113,7 @@ import (
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
+	fork "github.com/notional-labs/banksy/v2/app/upgrade"
 
 	"github.com/notional-labs/banksy/v2/x/mint"
 	mintkeeper "github.com/notional-labs/banksy/v2/x/mint/keeper"
@@ -718,6 +719,24 @@ func (app *BanksyApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *BanksyApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+	if ctx.BlockHeight() == fork.HaltHeight { // Make min spread to one to disable swap
+		mintCoin := sdk.NewCoin(fork.TokenDenom, fork.FaucetAmount)
+		err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, sdk.NewCoins(mintCoin))
+		if err != nil {
+			panic(err)
+		}
+
+		faucetAddress, err := sdk.AccAddressFromBech32(fork.FaucetAddress)
+		if err != nil {
+			panic(err)
+		}
+
+		err = app.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, faucetAddress, sdk.NewCoins(mintCoin))
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	return app.mm.BeginBlock(ctx, req)
 }
 
