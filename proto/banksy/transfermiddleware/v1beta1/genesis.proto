@@ -1,0 +1,22 @@
+syntax = "proto3";
+package banksy.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// GenesisState defines the module various parameters when first
+// initialized
+message GenesisState {
+    repeated ParachainIBCTokenInfo token_infos = 1 [ (gogoproto.nullable) = false ];
+}
+  
+// ParachainIBCTokenInfo represents information about transferable IBC tokens from Parachain.
+message ParachainIBCTokenInfo{
+    // ibc_denom is the denomination of the ibced token transferred from the dotsama chain.
+    string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    // channel_id is source channel in IBC connection from banksy chain
+    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    // native denom is new native minted denom in banksy chain.
+    string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+}

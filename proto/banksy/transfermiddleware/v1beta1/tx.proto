@@ -1,0 +1,42 @@
+syntax = "proto3";
+package banksy.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// Msg defines the transfer middleware Msg service.
+service Msg {
+    rpc AddParachainIBCTokenInfo(MsgAddParachainIBCTokenInfo) returns (MsgAddParachainIBCTokenInfoResponse);
+    rpc RemoveParachainIBCTokenInfo(MsgRemoveParachainIBCTokenInfo) returns (MsgRemoveParachainIBCTokenInfoResponse);
+}
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddParachainIBCTokenInfo {
+    option (cosmos.msg.v1.signer) = "authority";
+    
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
+
+    string ibc_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string channel_id = 3 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string native_denom = 7 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+}
+
+message MsgAddParachainIBCTokenInfoResponse {
+}
+
+
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain info.
+message MsgRemoveParachainIBCTokenInfo {
+    option (cosmos.msg.v1.signer) = "authority";
+
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
+
+    string native_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+}
+
+message MsgRemoveParachainIBCTokenInfoResponse {
+}

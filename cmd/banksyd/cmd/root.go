@@ -33,8 +33,8 @@ import (
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
-	"github.com/notional-labs/composable-testnet/v2/app"
-	// "github.com/notional-labs/composable-testnet/v2/app/params"
+	"github.com/notional-labs/banksy/v2/app"
+	// "github.com/notional-labs/banksy/v2/app/params"
 	// this line is used by starport scaffolding # stargate/root/import
 )
 
@@ -139,6 +139,7 @@ func initAppConfig() (string, interface{}) {
 	srvCfg.API.Enable = true
 	srvCfg.API.EnableUnsafeCORS = true
 	srvCfg.GRPCWeb.EnableUnsafeCORS = true
+	srvCfg.MinGasPrices = "0stake"
 
 	// This ensures that upgraded nodes will use iavl fast node.
 	srvCfg.IAVLDisableFastNode = false

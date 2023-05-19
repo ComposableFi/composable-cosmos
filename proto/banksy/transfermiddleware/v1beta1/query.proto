@@ -1,0 +1,27 @@
+syntax = "proto3";
+package banksy.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// Query provides defines the gRPC querier service.
+service Query {
+  // ParaTokenInfo queries all token info of a native denom.
+  rpc ParaTokenInfo(QueryParaTokenInfoRequest) returns (QueryParaTokenInfoResponse) {
+    option (google.api.http).get = "/banksy/paratokeninfo";
+  }
+}
+
+// QueryParaTokenInfoRequest is the request type for the Query/Params RPC method.
+message QueryParaTokenInfoRequest {
+    string native_denom = 1 [(gogoproto.moretags) = "yaml:\"native_denom\""];
+}
+
+// QueryParaTokenInfoResponse is the response type for the Query/ParaTokenInfo RPC method.
+message QueryParaTokenInfoResponse {
+    string ibc_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string channel_id = 3 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string native_denom = 7 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+}
