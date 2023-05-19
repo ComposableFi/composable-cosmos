@@ -14,13 +14,13 @@ command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https
 # remove existing daemon
 rm -rf ~/.banksy*
 
-./banksyd config keyring-backend $KEYRING
-./banksyd config chain-id $CHAINID
+banksyd config keyring-backend $KEYRING
+banksyd config chain-id $CHAINID
 
 # if $KEY exists it should be deleted
-echo "taste shoot adapt slow truly grape gift need suggest midnight burger horn whisper hat vast aspect exit scorpion jewel axis great area awful blind" | ./banksyd keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
+echo "taste shoot adapt slow truly grape gift need suggest midnight burger horn whisper hat vast aspect exit scorpion jewel axis great area awful blind" | banksyd keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
-./banksyd init $MONIKER --chain-id $CHAINID 
+banksyd init $MONIKER --chain-id $CHAINID 
 
 # Allocate genesis accounts (cosmos formatted addresses)
 banksyd add-genesis-account $KEY 10000000000stake --keyring-backend $KEYRING
@@ -29,10 +29,10 @@ banksyd add-genesis-account banksy1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6 100000
 banksyd gentx $KEY 10000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
 # Collect genesis tx
-./banksyd collect-gentxs
+banksyd collect-gentxs
 
 # Run this to ensure everything worked and that the genesis file is setup correctly
-./banksyd validate-genesis
+banksyd validate-genesis
 
 if [[ $1 == "pending" ]]; then
   echo "pending mode is on, please wait for the first block committed."
@@ -44,4 +44,4 @@ sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.t
 cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["voting_params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-banksyd start --pruning=nothing  --minimum-gas-prices=0.0001stake 
+banksyd start --pruning=nothing  --minimum-gas-prices=0.0001stake --rpc.laddr tcp://0.0.0.0:26657
