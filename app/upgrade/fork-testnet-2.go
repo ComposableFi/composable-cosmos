@@ -9,5 +9,6 @@ var (
 	TokenDenom    = "upica"
 	FaucetAddress = "banksy1wxl09qwpwe94c5702ttw5hj8h4lr4k5cleakh6"
 	// TODO: need to calculate halt height from halt time.
-	HaltHeight = int64(15000)
+	HaltHeight = int64(25642)
+	ChainID    = "banksy-testnet-2"
 )

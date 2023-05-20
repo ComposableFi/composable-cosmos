@@ -719,7 +719,7 @@ func (app *BanksyApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *BanksyApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	if ctx.BlockHeight() == fork.HaltHeight {
+	if ctx.BlockHeight() == fork.HaltHeight && ctx.ChainID() == fork.ChainID {
 		mintCoin := sdk.NewCoin(fork.TokenDenom, fork.FaucetAmount)
 		err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, sdk.NewCoins(mintCoin))
 		if err != nil {
