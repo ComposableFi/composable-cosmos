@@ -1,3 +1,5 @@
+#!/bin/bash
+
 KEY="mykey"
 CHAINID="test-1"
 MONIKER="localtestnet"
@@ -7,9 +9,6 @@ LOGLEVEL="info"
 # to trace evm
 #TRACE="--trace"
 TRACE=""
-
-# validate dependencies are installed
-command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
 
 # remove existing daemon
 rm -rf ~/.banksy*
@@ -43,4 +42,4 @@ fi
 sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.toml
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-banksyd start --pruning=nothing  --minimum-gas-prices=0.0001stake 
+banksyd start --pruning=nothing  --minimum-gas-prices=0.0001stake --rpc.laddr tcp://0.0.0.0:26657
