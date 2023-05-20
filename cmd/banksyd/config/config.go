@@ -42,7 +42,6 @@ func SetupConfig() {
 
 	version.AppName = "banksy"
 	version.Name = "banksyd"
-	version.Version = "v1.0.0"
 }
 
 // SetBech32Prefixes sets the global prefixes to be used when serializing addresses and public keys to Bech32 strings.
