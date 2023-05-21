@@ -11,7 +11,6 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
-	wasmkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -249,7 +248,6 @@ type BanksyApp struct {
 	ICQKeeper        icqkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
-	WasmClientKeeper wasmkeeper.Keeper
 	Wasm08Keeper     wasm08.Keeper // TODO: use this name ?
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
@@ -391,7 +389,7 @@ func NewBanksyApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.WasmClientKeeper = wasmkeeper.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
+	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -518,7 +516,7 @@ func NewBanksyApp(
 		transferModule,
 		icqModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
-		wasm.NewAppModule(app.WasmClientKeeper),
+		wasm.NewAppModule(app.Wasm08Keeper),
 		routerModule,
 		transfermiddlewareModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),

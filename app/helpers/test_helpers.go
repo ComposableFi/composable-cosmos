@@ -10,7 +10,6 @@ import (
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
 	tmrand "github.com/cometbft/cometbft/libs/rand"
-	abcitypes1 "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,8 +24,8 @@ const (
 
 // DefaultConsensusParams defines the default Tendermint consensus params used
 // in feeapp testing.
-var DefaultConsensusParams = &abcitypes1.ConsensusParams{
-	Block: &abcitypes1.BlockParams{
+var DefaultConsensusParams = &tmproto.ConsensusParams{
+	Block: &tmproto.BlockParams{
 		MaxBytes: 200000,
 		MaxGas:   2000000,
 	},
@@ -44,7 +43,7 @@ var DefaultConsensusParams = &abcitypes1.ConsensusParams{
 
 type EmptyAppOptions struct{}
 
-func (EmptyAppOptions) Get(o string) interface{} { return nil }
+func (EmptyAppOptions) Get(_ string) interface{} { return nil }
 
 func NewContextForApp(app banksy.BanksyApp) sdk.Context {
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{

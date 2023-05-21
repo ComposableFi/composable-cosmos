@@ -86,7 +86,7 @@ func TestPolkadotComposableChainStart(t *testing.T) {
 	PARACHAIN_DEFAULT_AMOUNT := 1_152_921_504_606_847_000
 	RELAYCHAIN_DEFAULT_AMOUNT := 1_100_000_000_000_000_000
 	FAUCET_AMOUNT := 100_000_000_000_000_000 // set in interchain.go/global
-	//RELAYER_AMOUNT :=                   1_000_000_000_000 // set in interchain.go/global
+	// RELAYER_AMOUNT :=                   1_000_000_000_000 // set in interchain.go/global
 
 	// Check the faucet amounts
 	polkadotFaucetAddress, err := polkadotChain.GetAddress(ctx, "faucet")
@@ -216,5 +216,4 @@ func TestPolkadotComposableChainStart(t *testing.T) {
 	require.NoError(t, err)
 	fmt.Println("Parachain user2 amount: ", parachainUser2Amount)
 	require.Equal(t, fundAmount+txAmount, parachainUser2Amount, "Final parachain user2 amount not expected")
-
 }

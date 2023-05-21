@@ -204,19 +204,22 @@ func (coord *Coordinator) CommitNBlocks(chain *TestChain, n uint64) {
 // ConnOpenInitOnBothChains initializes a connection on both endpoints with the state INIT
 // using the OpenInit handshake call.
 func (coord *Coordinator) ConnOpenInitOnBothChains(path *Path) error {
-	if err := path.EndpointA.ConnOpenInit(); err != nil {
+	err := path.EndpointA.ConnOpenInit()
+	if err != nil {
+		return err
+	}
+	err = path.EndpointB.ConnOpenInit()
+	if err != nil {
 		return err
 	}
 
-	if err := path.EndpointB.ConnOpenInit(); err != nil {
+	err = path.EndpointA.UpdateClient()
+	if err != nil {
 		return err
 	}
 
-	if err := path.EndpointA.UpdateClient(); err != nil {
-		return err
-	}
-
-	if err := path.EndpointB.UpdateClient(); err != nil {
+	err = path.EndpointB.UpdateClient()
+	if err != nil {
 		return err
 	}
 
@@ -229,19 +232,22 @@ func (coord *Coordinator) ChanOpenInitOnBothChains(path *Path) error {
 	// NOTE: only creation of a capability for a transfer or mock port is supported
 	// Other applications must bind to the port in InitGenesis or modify this code.
 
-	if err := path.EndpointA.ChanOpenInit(); err != nil {
+	err := path.EndpointA.ChanOpenInit()
+	if err != nil {
+		return err
+	}
+	err = path.EndpointB.ChanOpenInit()
+	if err != nil {
 		return err
 	}
 
-	if err := path.EndpointB.ChanOpenInit(); err != nil {
+	err = path.EndpointA.UpdateClient()
+	if err != nil {
 		return err
 	}
 
-	if err := path.EndpointA.UpdateClient(); err != nil {
-		return err
-	}
-
-	if err := path.EndpointB.UpdateClient(); err != nil {
+	err = path.EndpointB.UpdateClient()
+	if err != nil {
 		return err
 	}
 

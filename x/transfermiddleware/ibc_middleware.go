@@ -1,6 +1,7 @@
 package transfermiddleware
 
 import (
+	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
@@ -112,14 +113,16 @@ func (im IBCMiddleware) OnRecvPacket(
 func (im IBCMiddleware) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
 	var data transfertypes.FungibleTokenPacketData
 	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
+		return errors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal ICS-20 transfer packet data: %s", err.Error())
 	}
 
-	if err := im.app.OnTimeoutPacket(ctx, packet, relayer); err != nil {
+	err := im.app.OnTimeoutPacket(ctx, packet, relayer)
+	if err != nil {
 		return err
 	}
 
-	if err := im.keeper.OnTimeoutPacket(ctx, packet, data); err != nil {
+	err = im.keeper.OnTimeoutPacket(ctx, packet, data)
+	if err != nil {
 		return err
 	}
 
@@ -133,11 +136,12 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 	acknowledgement []byte,
 	relayer sdk.AccAddress,
 ) error {
-	if err := im.app.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
+	err := im.app.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
+	if err != nil {
 		return err
 	}
-
-	if err := im.keeper.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer); err != nil {
+	err = im.keeper.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
+	if err != nil {
 		return err
 	}
 
@@ -148,7 +152,7 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 func (im IBCMiddleware) SendPacket(
 	ctx sdk.Context,
 	chanCap *capabilitytypes.Capability,
-	sourcePort string, sourceChannel string,
+	sourcePort, sourceChannel string,
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 	data []byte,

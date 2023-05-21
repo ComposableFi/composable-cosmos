@@ -47,7 +47,6 @@ func (suite *TransferMiddlewareTestSuite) SetupTest() {
 	suite.chainA = suite.coordinator.GetChain(customibctesting.GetChainID(1))
 	suite.chainB = suite.coordinator.GetChain(customibctesting.GetChainID(2))
 	suite.chainC = suite.coordinator.GetChain(customibctesting.GetChainID(3))
-
 }
 
 func NewTransferPath(chainA, chainB *customibctesting.TestChain) *customibctesting.Path {
@@ -58,7 +57,6 @@ func NewTransferPath(chainA, chainB *customibctesting.TestChain) *customibctesti
 	path.EndpointB.ChannelConfig.Version = ibctransfertypes.Version
 
 	return path
-
 }
 
 func TestKeeperTestSuite(t *testing.T) {
@@ -491,7 +489,6 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
 			func() {
 				expChainBBalanceDiff = ibctransfertypes.GetTransferCoin(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, coinToSendToB.Denom, transferAmount)
-
 			},
 		},
 		{
@@ -561,13 +558,12 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	)
 	var (
 		expChainBBalanceDiff sdk.Coin
-		path                 = NewTransferPath(suite.chainA, suite.chainB)
 		expChainABalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	)
 
 	suite.SetupTest() // reset
 
-	path = NewTransferPath(suite.chainA, suite.chainB)
+	path := NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(path)
 
 	// Add parachain token info
@@ -646,13 +642,12 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	)
 	var (
 		expChainBBalanceDiff sdk.Coin
-		path                 = NewTransferPath(suite.chainA, suite.chainB)
 		expChainABalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	)
 
 	suite.SetupTest() // reset
 
-	path = NewTransferPath(suite.chainA, suite.chainB)
+	path := NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(path)
 
 	// Add parachain token info
