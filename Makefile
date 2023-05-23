@@ -98,10 +98,10 @@ docker-build-debug:
 ###                                  Proto                                  ###
 ###############################################################################
 
-protoVer=v0.8
-protoImageName=ghcr.io/notional-labs/fa-proto-gen:$(protoVer)
-containerProtoGen=fa-proto-gen-$(protoVer)
-containerProtoFmt=fa-proto-fmt-$(protoVer)
+protoVer=0.11.6
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+containerProtoGen=proto-gen-$(protoVer)
+containerProtoFmt=proto-fmt-$(protoVer)
 
 proto-all: proto-format proto-gen
 
