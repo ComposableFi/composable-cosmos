@@ -362,3 +362,105 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	chainBSenderBalances := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 	suite.Equal(expBalance, chainBSenderBalances)
 }
+
+func (suite *TransferMiddlewareTestSuite) TestMint() {
+	var (
+		transferAmount, _ = sdk.NewIntFromString("10000000000000000000")
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+		path          *customibctesting.Path
+		expDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		// pathBtoC      = NewTransferPath(suite.chainB, suite.chainC)
+	)
+
+	testCases := []struct {
+		name string
+	}{
+		{
+			"Test Mint",
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			suite.SetupTest()
+			// When setup chainB(Composable already have 10^19 stake in test account (genesis))
+			path = NewTransferPath(suite.chainA, suite.chainB)
+			suite.coordinator.Setup(path)
+			// Send coin from picasso (chainA) to escrow address
+			escrowAddress := ibctransfertypes.GetEscrowAddress(ibctransfertypes.PortID, path.EndpointB.ChannelID)
+			msg := ibctransfertypes.NewMsgTransfer(
+				path.EndpointA.ChannelConfig.PortID,
+				path.EndpointA.ChannelID,
+				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				suite.chainA.SenderAccount.GetAddress().String(),
+				escrowAddress.String(),
+				timeoutHeight,
+				0,
+				"",
+			)
+			_, err := suite.chainA.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, path.EndpointB.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// and when relay to chain A and handle Ack on chain B
+			err = suite.coordinator.RelayAndAckPendingPackets(path)
+			suite.Require().NoError(err)
+
+			// then
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			balance := suite.chainB.AllBalances(escrowAddress)
+			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			suite.Require().Equal(expBalance, balance)
+
+			// Add parachain token info
+			chainBtransMiddleware := suite.chainB.TransferMiddleware()
+			err = chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, path.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			suite.Require().NoError(err)
+			// send coin from B to A
+			newTransferAmount := sdk.NewInt(1000000000)
+			msg = ibctransfertypes.NewMsgTransfer(
+				path.EndpointB.ChannelConfig.PortID,
+				path.EndpointB.ChannelID,
+				sdk.NewCoin(sdk.DefaultBondDenom, newTransferAmount),
+				suite.chainB.SenderAccount.GetAddress().String(),
+				suite.chainA.SenderAccount.GetAddress().String(),
+				timeoutHeight,
+				0,
+				"",
+			)
+			_, err = suite.chainB.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, path.EndpointA.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+
+			// and when relay to chain A and handle Ack on chain B
+			err = suite.coordinator.RelayAndAckPendingPacketsReverse(path)
+			suite.Require().NoError(err)
+
+			// then
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+
+			balance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount.Sub(newTransferAmount)))
+			suite.Require().Equal(expBalance, balance)
+
+			balance = suite.chainB.AllBalances(escrowAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount.Sub(newTransferAmount)))
+			suite.Require().Equal(expBalance, balance)
+
+			balance = suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, newTransferAmount))
+			suite.Require().Equal(expBalance, balance)
+		})
+	}
+}
