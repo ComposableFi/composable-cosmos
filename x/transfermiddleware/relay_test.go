@@ -406,7 +406,7 @@ func (suite *TransferMiddlewareTestSuite) TestMint() {
 			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
-			// and when relay to chain A and handle Ack on chain B
+			// and when relay to chain B and handle Ack on chain A
 			err = suite.coordinator.RelayAndAckPendingPackets(path)
 			suite.Require().NoError(err)
 
