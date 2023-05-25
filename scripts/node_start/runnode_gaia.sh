@@ -38,23 +38,23 @@ from_scratch () {
   update_test_genesis '.consensus_params["block"]["max_gas"]="100000000"'
   update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"]="45s"'
 
-  update_test_genesis '.app_state["staking"]["params"]["bond_denom"]="stake"'
-  update_test_genesis '.app_state["bank"]["params"]["send_enabled"]=[{"denom": "stake","enabled": true}]'
+  update_test_genesis '.app_state["staking"]["params"]["bond_denom"]="upica"'
+  update_test_genesis '.app_state["bank"]["params"]["send_enabled"]=[{"denom": "upica","enabled": true}]'
   # update_test_genesis '.app_state["staking"]["params"]["min_commission_rate"]="0.100000000000000000"' # sdk 46 only
 
-  update_test_genesis '.app_state["mint"]["params"]["mint_denom"]="stake"'
-  update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom": "stake","amount": "1000000"}]'
-  update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": "stake","amount": "1000"}'
+  update_test_genesis '.app_state["mint"]["params"]["mint_denom"]="upica"'
+  update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom": "upica","amount": "1000000"}]'
+  update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": "upica","amount": "1000"}'
 
-  update_test_genesis '.app_state["tokenfactory"]["params"]["denom_creation_fee"]=[{"denom":"stake","amount":"100"}]'
+  update_test_genesis '.app_state["tokenfactory"]["params"]["denom_creation_fee"]=[{"denom":"upica","amount":"100"}]'
 
-  update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["stake"]'
+  update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["upica"]'
 
   # Allocate genesis accounts
-  gaiad add-genesis-account $KEY 10000000000000uatom,10000000000000stake,100000000000000utest --keyring-backend $KEYRING
-  gaiad add-genesis-account gnad 10000000000000uatom,10000000000000stake,100000000000000utest --keyring-backend $KEYRING
+  gaiad add-genesis-account $KEY 10000000000000uatom,1000000000000000upica,100000000000000utest --keyring-backend $KEYRING
+  gaiad add-genesis-account gnad 10000000000000uatom,1000000000000000upica,100000000000000utest --keyring-backend $KEYRING
   
-  gaiad gentx $KEY 10000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+  gaiad gentx $KEY 1000000000000000upica --keyring-backend $KEYRING --chain-id $CHAINID
 
   # Collect genesis tx
   gaiad collect-gentxs
@@ -72,4 +72,4 @@ fi
 echo "Starting node..."
 
 gaiad config node tcp://0.0.0.0:3241
-gaiad start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:3240 --rpc.laddr tcp://0.0.0.0:3241 --grpc.address 0.0.0.0:3242 --grpc-web.address 0.0.0.0:3243
+gaiad start --pruning=nothing  --minimum-gas-prices=0upica --p2p.laddr tcp://0.0.0.0:3240 --rpc.laddr tcp://0.0.0.0:3241 --grpc.address 0.0.0.0:3242 --grpc-web.address 0.0.0.0:3243
