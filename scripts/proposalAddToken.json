@@ -1,0 +1,14 @@
+{
+    "messages": [
+      {
+        "@type": "/banksy.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfo",
+        "ibc_denom": "cosmos1...", // The gov module module address
+        "channel_id": "cosmos1...",
+        "native_denom": ""
+      }
+    ],
+    "metadata": "AQ==",
+    "deposit": "10stake",
+    "title": "Proposal Title",
+    "summary": "Proposal Summary"
+  }
