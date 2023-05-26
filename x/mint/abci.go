@@ -32,7 +32,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 	err := k.AddCollectedFees(ctx, mintedCoins)
 
 	if err != nil {
-		return
+		panic(err)
 	}
 
 	if mintedCoin.Amount.IsInt64() {
