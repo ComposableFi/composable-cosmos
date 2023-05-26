@@ -9,7 +9,6 @@ import (
 	"github.com/cometbft/cometbft/crypto"
 	"github.com/cometbft/cometbft/crypto/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
@@ -52,8 +51,8 @@ func NewTransferPath(chainA, chainB *customibctesting.TestChain) *customibctesti
 	path := customibctesting.NewPath(chainA, chainB)
 	path.EndpointA.ChannelConfig.PortID = customibctesting.TransferPort
 	path.EndpointB.ChannelConfig.PortID = customibctesting.TransferPort
-	path.EndpointA.ChannelConfig.Version = ibctransfertypes.Version
-	path.EndpointB.ChannelConfig.Version = ibctransfertypes.Version
+	path.EndpointA.ChannelConfig.Version = transfertypes.Version
+	path.EndpointB.ChannelConfig.Version = transfertypes.Version
 
 	return path
 }
@@ -128,10 +127,10 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 			Next:     "",
 		},
 	}
-	memo_marshalled, err := json.Marshal(&memo)
+	memoMarshalled, err := json.Marshal(&memo)
 	suite.Require().NoError(err)
 
-	msg := ibctransfertypes.NewMsgTransfer(
+	msg := transfertypes.NewMsgTransfer(
 		pathAtoB.EndpointA.ChannelConfig.PortID,
 		pathAtoB.EndpointA.ChannelID,
 		sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
@@ -139,7 +138,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 		testAcc.String(),
 		timeoutHeight,
 		0,
-		string(memo_marshalled),
+		string(memoMarshalled),
 	)
 	_, err = suite.chainA.SendMsgs(msg)
 	suite.Require().NoError(err)
@@ -271,12 +270,12 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 					Next:     "",
 				},
 			}
-			memo_marshalled, err := json.Marshal(&memo)
+			memoMarshalled, err := json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			intermediaryOriginalBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 
-			msg := ibctransfertypes.NewMsgTransfer(
+			msg := transfertypes.NewMsgTransfer(
 				pathAtoB.EndpointA.ChannelConfig.PortID,
 				pathAtoB.EndpointA.ChannelID,
 				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
@@ -284,7 +283,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 			_, err = suite.chainA.SendMsgs(msg)
 			suite.Require().NoError(err)
