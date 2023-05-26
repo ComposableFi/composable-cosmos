@@ -351,3 +351,235 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 		})
 	}
 }
+
+func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
+	var (
+		transferAmount = sdk.NewInt(1000000000)
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		timeoutHeight = clienttypes.NewHeight(1, 110)
+		pathAtoB      *customibctesting.Path
+		pathBtoC      *customibctesting.Path
+		expDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+	)
+
+	testCases := []struct {
+		name string
+	}{
+		{
+			"Success case Picasso -> Composable -> Osmosis and reverse from Osmosis -> Composable -> Picasso",
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			suite.SetupTest()
+			pathAtoB = NewTransferPath(suite.chainA, suite.chainB)
+			suite.coordinator.Setup(pathAtoB)
+			pathBtoC = NewTransferPath(suite.chainB, suite.chainC)
+			suite.coordinator.Setup(pathBtoC)
+			senderAOriginalBalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			senderBOriginalBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			senderCOriginalBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+			// Add parachain token info
+			chainBtransMiddleware := suite.chainB.TransferMiddleware()
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			suite.Require().NoError(err)
+
+			timeOut := 10 * time.Minute
+			retries := uint8(0)
+			// Build MEMO
+			memo := PacketMetadata{
+				Forward: &ForwardMetadata{
+					Receiver: suite.chainC.SenderAccount.GetAddress().String(),
+					Port:     pathBtoC.EndpointA.ChannelConfig.PortID,
+					Channel:  pathBtoC.EndpointA.ChannelID,
+					Timeout:  timeOut,
+					Retries:  &retries,
+					Next:     "",
+				},
+			}
+			memo_marshalled, err := json.Marshal(&memo)
+			suite.Require().NoError(err)
+
+			msg := ibctransfertypes.NewMsgTransfer(
+				pathAtoB.EndpointA.ChannelConfig.PortID,
+				pathAtoB.EndpointA.ChannelID,
+				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				suite.chainA.SenderAccount.GetAddress().String(),
+				suite.chainB.SenderAccount.GetAddress().String(),
+				timeoutHeight,
+				0,
+				string(memo_marshalled),
+			)
+			_, err = suite.chainA.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, pathAtoB.EndpointB.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+			// relay packet
+			sendingPacket := suite.chainA.PendingSendPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainA)
+			err = pathAtoB.EndpointB.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathAtoB.EndpointB.RecvPacket(sendingPacket)
+			suite.Require().NoError(err)
+			suite.chainA.PendingSendPackets = nil
+			// then should have a packet from B to C
+			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
+
+			// relay packet
+			sendingPacket = suite.chainB.PendingSendPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathBtoC.EndpointB.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointB.RecvPacket(sendingPacket)
+			suite.Require().NoError(err)
+			suite.chainB.PendingSendPackets = nil
+
+			// relay ack C to B
+			suite.Require().Equal(1, len(suite.chainC.PendingAckPackets))
+			ack := suite.chainC.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainC)
+			err = pathBtoC.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainC.PendingAckPackets = nil
+
+			// relay ack B to A
+			suite.Require().Equal(1, len(suite.chainB.PendingAckPackets))
+			ack = suite.chainB.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathAtoB.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathAtoB.EndpointA.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainB.PendingAckPackets = nil
+
+			senderBCurrentBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			suite.Require().Equal(senderBOriginalBalance, senderBCurrentBalance)
+
+			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
+
+			balance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+			receiveBalance := balance.AmountOf(expDenom)
+			suite.Require().Equal(transferAmount, receiveBalance)
+
+			// transfer back from osmosis to picasso
+			memo = PacketMetadata{
+				Forward: &ForwardMetadata{
+					Receiver: suite.chainA.SenderAccount.GetAddress().String(),
+					Port:     pathAtoB.EndpointB.ChannelConfig.PortID,
+					Channel:  pathAtoB.EndpointB.ChannelID,
+					Timeout:  timeOut,
+					Retries:  &retries,
+					Next:     "",
+				},
+			}
+
+			memo_marshalled, err = json.Marshal(&memo)
+			suite.Require().NoError(err)
+
+			msg = ibctransfertypes.NewMsgTransfer(
+				pathBtoC.EndpointB.ChannelConfig.PortID,
+				pathBtoC.EndpointB.ChannelID,
+				sdk.NewCoin(expDenom, transferAmount),
+				suite.chainC.SenderAccount.GetAddress().String(),
+				suite.chainB.SenderAccount.GetAddress().String(),
+				timeoutHeight,
+				0,
+				string(memo_marshalled),
+			)
+
+			_, err = suite.chainC.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, pathBtoC.EndpointA.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainC.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+			// relay packet
+			sendingPacket = suite.chainC.PendingSendPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainC)
+			err = pathBtoC.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointA.RecvPacket(sendingPacket)
+			suite.Require().NoError(err)
+			suite.chainC.PendingSendPackets = nil
+
+			// then should have a packet from B to A
+			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+
+			// relay packet
+			sendingPacket = suite.chainB.PendingSendPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathAtoB.EndpointA.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathAtoB.EndpointA.RecvPacket(sendingPacket)
+			suite.Require().NoError(err)
+			suite.chainB.PendingSendPackets = nil
+
+			// relay ack A to B
+			suite.Require().Equal(1, len(suite.chainA.PendingAckPackets))
+			ack = suite.chainA.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainA)
+			err = pathAtoB.EndpointB.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathAtoB.EndpointB.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainA.PendingAckPackets = nil
+
+			// relay ack B to C
+			suite.Require().Equal(1, len(suite.chainB.PendingAckPackets))
+			ack = suite.chainB.PendingAckPackets[0]
+			suite.coordinator.IncrementTime()
+			suite.coordinator.CommitBlock(suite.chainB)
+			err = pathBtoC.EndpointB.UpdateClient()
+			suite.Require().NoError(err)
+
+			err = pathBtoC.EndpointB.AcknowledgePacket(ack.Packet, ack.Ack)
+			suite.Require().NoError(err)
+			suite.chainB.PendingAckPackets = nil
+
+			senderACurrentBalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			suite.Require().Equal(senderAOriginalBalance, senderACurrentBalance)
+
+			senderBCurrentBalance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			suite.Require().Equal(senderBOriginalBalance, senderBCurrentBalance)
+
+			senderCCurrentBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+			suite.Require().Equal(senderCOriginalBalance, senderCCurrentBalance)
+
+			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+			suite.Require().Empty(escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+			suite.Require().Empty(escrowNativeDenomAddressBalance)
+		})
+	}
+}
