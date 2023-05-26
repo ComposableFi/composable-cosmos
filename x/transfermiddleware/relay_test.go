@@ -2,12 +2,14 @@ package transfermiddleware_test
 
 import (
 	"fmt"
+	"testing"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
+	"github.com/stretchr/testify/suite"
 )
 
 func (suite *TransferMiddlewareTestSuite) TestSendTransfer() {
@@ -363,7 +365,11 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	suite.Equal(expBalance, chainBSenderBalances)
 }
 
-func (suite *TransferMiddlewareTestSuite) TestMint() {
+func TestTransferMiddlewareTestSuiteTestSuite(t *testing.T) {
+	suite.Run(t, new(TransferMiddlewareTestSuite))
+}
+
+func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain() {
 	var (
 		transferAmount, _ = sdk.NewIntFromString("10000000000000000000")
 		// when transfer via sdk transfer from A (module) -> B (contract)
@@ -386,12 +392,15 @@ func (suite *TransferMiddlewareTestSuite) TestMint() {
 			// When setup chainB(Composable already have 10^19 stake in test account (genesis))
 			path = NewTransferPath(suite.chainA, suite.chainB)
 			suite.coordinator.Setup(path)
+
+			senderAbalance := suite.chainB.Balance(suite.chainB.SenderAccount.GetAddress(), "stake")
+
 			// Send coin from picasso (chainA) to escrow address
 			escrowAddress := ibctransfertypes.GetEscrowAddress(ibctransfertypes.PortID, path.EndpointB.ChannelID)
 			msg := ibctransfertypes.NewMsgTransfer(
 				path.EndpointA.ChannelConfig.PortID,
 				path.EndpointA.ChannelID,
-				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				senderAbalance,
 				suite.chainA.SenderAccount.GetAddress().String(),
 				escrowAddress.String(),
 				timeoutHeight,
@@ -422,12 +431,13 @@ func (suite *TransferMiddlewareTestSuite) TestMint() {
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
 			err = chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, path.EndpointB.ChannelID, sdk.DefaultBondDenom)
 			suite.Require().NoError(err)
+
 			// send coin from B to A
-			newTransferAmount := sdk.NewInt(1000000000)
+			transferAmountFromChainBToChainA := sdk.NewInt(1000000000)
 			msg = ibctransfertypes.NewMsgTransfer(
 				path.EndpointB.ChannelConfig.PortID,
 				path.EndpointB.ChannelID,
-				sdk.NewCoin(sdk.DefaultBondDenom, newTransferAmount),
+				sdk.NewCoin("stake", transferAmountFromChainBToChainA),
 				suite.chainB.SenderAccount.GetAddress().String(),
 				suite.chainA.SenderAccount.GetAddress().String(),
 				timeoutHeight,
@@ -451,15 +461,15 @@ func (suite *TransferMiddlewareTestSuite) TestMint() {
 			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
 
 			balance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount.Sub(newTransferAmount)))
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount.Sub(transferAmountFromChainBToChainA)))
 			suite.Require().Equal(expBalance, balance)
 
 			balance = suite.chainB.AllBalances(escrowAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount.Sub(newTransferAmount)))
+			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount.Sub(transferAmountFromChainBToChainA)))
 			suite.Require().Equal(expBalance, balance)
 
 			balance = suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, newTransferAmount))
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmountFromChainBToChainA))
 			suite.Require().Equal(expBalance, balance)
 		})
 	}
