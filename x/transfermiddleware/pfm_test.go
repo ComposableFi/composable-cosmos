@@ -127,7 +127,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 			Next:     "",
 		},
 	}
-	memo_marshalled, err := json.Marshal(&memo)
+	memoMarshalled, err := json.Marshal(&memo)
 	suite.Require().NoError(err)
 
 	msg := transfertypes.NewMsgTransfer(
@@ -138,7 +138,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 		testAcc.String(),
 		timeoutHeight,
 		0,
-		string(memo_marshalled),
+		string(memoMarshalled),
 	)
 	_, err = suite.chainA.SendMsgs(msg)
 	suite.Require().NoError(err)
@@ -270,7 +270,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 					Next:     "",
 				},
 			}
-			memo_marshalled, err := json.Marshal(&memo)
+			memoMarshalled, err := json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			intermediaryOriginalBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
@@ -283,7 +283,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 			_, err = suite.chainA.SendMsgs(msg)
 			suite.Require().NoError(err)
@@ -407,7 +407,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 					Next:     "",
 				},
 			}
-			memo_marshalled, err := json.Marshal(&memo)
+			memoMarshalled, err := json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			msg := transfertypes.NewMsgTransfer(
@@ -418,7 +418,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 			_, err = suite.chainA.SendMsgs(msg)
 			suite.Require().NoError(err)
@@ -508,7 +508,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 				},
 			}
 
-			memo_marshalled, err = json.Marshal(&memo)
+			memoMarshalled, err = json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			msg = transfertypes.NewMsgTransfer(
@@ -519,7 +519,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 
 			_, err = suite.chainC.SendMsgs(msg)
@@ -646,7 +646,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 					Next:     "",
 				},
 			}
-			memo_marshalled, err := json.Marshal(&memo)
+			memoMarshalled, err := json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			msg := transfertypes.NewMsgTransfer(
@@ -657,7 +657,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 			_, err = suite.chainA.SendMsgs(msg)
 			suite.Require().NoError(err)
@@ -744,7 +744,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 				},
 			}
 
-			memo_marshalled, err = json.Marshal(&memo)
+			memoMarshalled, err = json.Marshal(&memo)
 			suite.Require().NoError(err)
 
 			msg = transfertypes.NewMsgTransfer(
@@ -755,7 +755,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
 				0,
-				string(memo_marshalled),
+				string(memoMarshalled),
 			)
 
 			_, err = suite.chainC.SendMsgs(msg)
