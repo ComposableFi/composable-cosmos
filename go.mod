@@ -175,7 +175,7 @@ replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
 	// ibc-go with wasm client
-	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321185643-9020cfed6545
+	github.com/cosmos/ibc-go/v7 => github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230410223156-8c202c556f82
 
 	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230517054520-e1958ca2830e
 
