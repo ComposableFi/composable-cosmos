@@ -757,8 +757,6 @@ github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OS
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc1NGpU8TntXwM/s7Z/whsKNDVPiLim35HLBAzA=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
-github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321185643-9020cfed6545 h1:Lzot2Zk+fT4ks8IQ+hq9BbtXGY9g0PPUeflzYfxJe1k=
-github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230321185643-9020cfed6545/go.mod h1:WPyGyrrMYsIwWLKjOY5DzfUlbiGkCfJNnItCPnBKV/s=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230517054520-e1958ca2830e h1:VnV20PYZsHoApnSNdxgM9E8f3Xxsk8yx8lL7WZZs1Ls=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230517054520-e1958ca2830e/go.mod h1:ZqzpgUUK75BHIttNMs2ANFUNGEmi+aFij6gYmiDjdqc=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
@@ -899,6 +897,8 @@ github.com/spf13/viper v1.15.0 h1:js3yy885G8xwJa6iOISGFwd+qlUo5AvyXb7CiihdtiU=
 github.com/spf13/viper v1.15.0/go.mod h1:fFcTBJxvhhzSJiZy8n+PeW6t8l+KeT/uTARa0jHOQLA=
 github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897 h1:lCTD5L1v1K1KC6KXjyt4o1X+yzV14RbbrPZaF29n8uI=
 github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897/go.mod h1:ag05Q54Wkr0jVwfe+14sxnuWbw0gBOxtPQv9afBBnr0=
+github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230410223156-8c202c556f82 h1:tcMLfpXNngvKF8Klr1UWFNSmeqO14ILjiJv+r0OhWBE=
+github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230410223156-8c202c556f82/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
 github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a/go.mod h1:qNTQ5P5JnDBl6z3cMAg/SywNDC5ABu5ApDIw6lUbRmI=
