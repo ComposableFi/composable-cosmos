@@ -373,9 +373,11 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain(
 	var (
 		transferAmount, _ = sdk.NewIntFromString("10000000000000000000")
 		// when transfer via sdk transfer from A (module) -> B (contract)
-		timeoutHeight = clienttypes.NewHeight(1, 110)
-		path          *customibctesting.Path
-		expDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		timeoutHeight                    = clienttypes.NewHeight(1, 110)
+		path                             *customibctesting.Path
+		expDenom                         = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		transferAmountFromChainBToChainA = sdk.NewInt(1000000000)
+
 		// pathBtoC      = NewTransferPath(suite.chainB, suite.chainC)
 	)
 
@@ -393,14 +395,14 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain(
 			path = NewTransferPath(suite.chainA, suite.chainB)
 			suite.coordinator.Setup(path)
 
-			senderAbalance := suite.chainB.Balance(suite.chainB.SenderAccount.GetAddress(), "stake")
+			senderABalance := suite.chainB.Balance(suite.chainB.SenderAccount.GetAddress(), "stake")
 
 			// Send coin from picasso (chainA) to escrow address
 			escrowAddress := ibctransfertypes.GetEscrowAddress(ibctransfertypes.PortID, path.EndpointB.ChannelID)
 			msg := ibctransfertypes.NewMsgTransfer(
 				path.EndpointA.ChannelConfig.PortID,
 				path.EndpointA.ChannelID,
-				senderAbalance,
+				senderABalance,
 				suite.chainA.SenderAccount.GetAddress().String(),
 				escrowAddress.String(),
 				timeoutHeight,
@@ -433,7 +435,6 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain(
 			suite.Require().NoError(err)
 
 			// send coin from B to A
-			transferAmountFromChainBToChainA := sdk.NewInt(1000000000)
 			msg = ibctransfertypes.NewMsgTransfer(
 				path.EndpointB.ChannelConfig.PortID,
 				path.EndpointB.ChannelID,
