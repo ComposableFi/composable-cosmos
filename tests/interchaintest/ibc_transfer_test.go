@@ -93,16 +93,10 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 		},
 		{
 			ChainConfig: ibc.ChainConfig{
-				Type:    "cosmos",
-				Name:    "banksy",
-				ChainID: "banksyd",
-				Images: []ibc.DockerImage{
-					{
-						Repository: "ghcr.io/notional-labs/banksy-ictest",
-						Version:    "latest",
-						UidGid:     "1025:1025",
-					},
-				},
+				Type:           "cosmos",
+				Name:           "banksy",
+				ChainID:        "banksyd",
+				Images:         []ibc.DockerImage{BanksyImage},
 				Bin:            "banksyd",
 				Bech32Prefix:   "banksy",
 				Denom:          "stake",

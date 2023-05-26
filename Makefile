@@ -92,7 +92,7 @@ build:
 	go build $(BUILD_FLAGS) -o bin/banksyd ./cmd/banksyd
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t banksy:debug -f Dockerfile .
 
 ###############################################################################
 ###                                  Proto                                  ###

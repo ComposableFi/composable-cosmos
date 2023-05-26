@@ -65,16 +65,10 @@ func TestPushWasmClientCode(t *testing.T) {
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
 			ChainConfig: ibc.ChainConfig{
-				Type:    "cosmos",
-				Name:    "banksy",
-				ChainID: "banksyd",
-				Images: []ibc.DockerImage{
-					{
-						Repository: "ghcr.io/notional-labs/banksy",
-						Version:    "2.0.1",
-						UidGid:     "1025:1025",
-					},
-				},
+				Type:           "cosmos",
+				Name:           "banksy",
+				ChainID:        "banksyd",
+				Images:         []ibc.DockerImage{BanksyImage},
 				Bin:            "banksyd",
 				Bech32Prefix:   "banksy",
 				Denom:          "stake",
