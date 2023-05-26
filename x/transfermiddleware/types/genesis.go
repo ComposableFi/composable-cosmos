@@ -7,6 +7,6 @@ func DefaultGenesisState() *GenesisState {
 
 // ValidateGenesis validates the provided genesis state to ensure the
 // expected invariants holds.
-func ValidateGenesis(data GenesisState) error {
+func ValidateGenesis(_ GenesisState) error {
 	return nil
 }

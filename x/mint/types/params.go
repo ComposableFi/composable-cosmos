@@ -7,6 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
@@ -28,7 +29,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 func NewParams(
-	mintDenom string, inflationRateChange, inflationMax, inflationMin, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear sdk.Int,
+	mintDenom string, inflationRateChange, _, _, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear math.Int,
 ) Params {
 	return Params{
 		MintDenom:           mintDenom,
@@ -126,37 +127,37 @@ func validateInflationRateChange(i interface{}) error {
 	return nil
 }
 
-func validateInflationMax(i interface{}) error {
-	v, ok := i.(sdk.Dec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
+// func validateInflationMax(i interface{}) error {
+// 	v, ok := i.(sdk.Dec)
+// 	if !ok {
+// 		return fmt.Errorf("invalid parameter type: %T", i)
+// 	}
 
-	if v.IsNegative() {
-		return fmt.Errorf("max inflation cannot be negative: %s", v)
-	}
-	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("max inflation too large: %s", v)
-	}
+// 	if v.IsNegative() {
+// 		return fmt.Errorf("max inflation cannot be negative: %s", v)
+// 	}
+// 	if v.GT(sdk.OneDec()) {
+// 		return fmt.Errorf("max inflation too large: %s", v)
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func validateInflationMin(i interface{}) error {
-	v, ok := i.(sdk.Dec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
+// func validateInflationMin(i interface{}) error {
+// 	v, ok := i.(sdk.Dec)
+// 	if !ok {
+// 		return fmt.Errorf("invalid parameter type: %T", i)
+// 	}
 
-	if v.IsNegative() {
-		return fmt.Errorf("min inflation cannot be negative: %s", v)
-	}
-	if v.GT(sdk.OneDec()) {
-		return fmt.Errorf("min inflation too large: %s", v)
-	}
+// 	if v.IsNegative() {
+// 		return fmt.Errorf("min inflation cannot be negative: %s", v)
+// 	}
+// 	if v.GT(sdk.OneDec()) {
+// 		return fmt.Errorf("min inflation too large: %s", v)
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func validateGoalBonded(i interface{}) error {
 	v, ok := i.(sdk.Dec)
