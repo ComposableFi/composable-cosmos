@@ -7,6 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
@@ -28,7 +29,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 func NewParams(
-	mintDenom string, inflationRateChange, _, _, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear sdk.Int,
+	mintDenom string, inflationRateChange, _, _, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear math.Int,
 ) Params {
 	return Params{
 		MintDenom:           mintDenom,
