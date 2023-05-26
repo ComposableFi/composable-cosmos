@@ -108,6 +108,7 @@ func (keeper Keeper) SendPacket(
 	if err != nil {
 		return 0, err
 	}
+
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
 	parachainInfo := keeper.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
 
@@ -173,7 +174,6 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 	if err != nil {
 		return err
 	}
-
 	if transfertypes.SenderChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), data.Denom) {
 		// Do nothing
 		// This case should never happened
@@ -181,6 +181,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 	}
 	nativeDenom := keeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
 	paraTokenInfo := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom)
+
 	// only trigger if source channel is from parachain.
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return nil
