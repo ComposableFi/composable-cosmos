@@ -12,6 +12,19 @@ service Query {
   rpc ParaTokenInfo(QueryParaTokenInfoRequest) returns (QueryParaTokenInfoResponse) {
     option (google.api.http).get = "/banksy/paratokeninfo";
   }
+  rpc EscrowAddress(QueryEscrowAddressRequest) returns (QueryEscrowAddressResponse) {
+    option (google.api.http).get = "/banksy/escrowaddress";
+  }
+}
+
+// message QueryEscrowAddressRequest 
+message QueryEscrowAddressRequest {
+  string channel_id = 1 [(gogoproto.moretags) = "yaml:\"channel_id\""];
+}
+
+// QueryEscrowAddressResponse 
+message QueryEscrowAddressResponse {
+  string escrow_address = 1 [(gogoproto.moretags) = "yaml:\"escrow_address\""];
 }
 
 // QueryParaTokenInfoRequest is the request type for the Query/Params RPC method.
