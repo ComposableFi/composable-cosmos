@@ -371,7 +371,6 @@ func TestTransferMiddlewareTestSuiteTestSuite(t *testing.T) {
 
 func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain() {
 	var (
-		transferAmount, _ = sdk.NewIntFromString("10000000000000000000")
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight                    = clienttypes.NewHeight(1, 110)
 		path                             *customibctesting.Path
@@ -426,7 +425,7 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain(
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			balance := suite.chainB.AllBalances(escrowAddress)
-			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, senderABalance.Amount))
 			suite.Require().Equal(expBalance, balance)
 
 			// Add parachain token info
@@ -462,11 +461,11 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain(
 			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
 
 			balance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount.Sub(transferAmountFromChainBToChainA)))
+			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, senderABalance.Amount.Sub(transferAmountFromChainBToChainA)))
 			suite.Require().Equal(expBalance, balance)
 
 			balance = suite.chainB.AllBalances(escrowAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount.Sub(transferAmountFromChainBToChainA)))
+			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, senderABalance.Amount.Sub(transferAmountFromChainBToChainA)))
 			suite.Require().Equal(expBalance, balance)
 
 			balance = suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
