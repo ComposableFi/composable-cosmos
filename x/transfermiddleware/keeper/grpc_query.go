@@ -19,7 +19,7 @@ func (k Keeper) ParaTokenInfo(c context.Context, req *types.QueryParaTokenInfoRe
 	}, nil
 }
 
-func (k Keeper) EscrowAddress(c context.Context, req *types.QueryEscrowAddressRequest) (*types.QueryEscrowAddressResponse, error) {
+func (k Keeper) EscrowAddress(_ context.Context, req *types.QueryEscrowAddressRequest) (*types.QueryEscrowAddressResponse, error) {
 	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, req.ChannelId)
 
 	return &types.QueryEscrowAddressResponse{
