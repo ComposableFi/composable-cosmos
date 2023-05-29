@@ -42,7 +42,7 @@ func ValidateMinter(minter Minter) error {
 }
 
 // NextInflationRate returns the new inflation rate for the next hour.
-func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec, totalStakingSupply sdk.Int) sdk.Dec {
+func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec, totalStakingSupply math.Int) sdk.Dec {
 	totalStakingSupplyDec := sdk.NewDecFromInt(totalStakingSupply)
 
 	// The target annual inflation rate is recalculated for each previsions cycle. The

@@ -98,7 +98,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 	// generate genesis account
 	senderPrivKey := secp256k1.GenPrivKey()
 	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
-	amount, ok := sdk.NewIntFromString("10000000000000000000")
+	amount, ok := sdk.NewIntFromString("10000000000000000000000")
 	require.True(t, ok)
 
 	balance := banktypes.Balance{

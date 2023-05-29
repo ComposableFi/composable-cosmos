@@ -383,6 +383,7 @@ func NewSimApp(
 		app.IBCKeeper.ChannelKeeper,
 		app.TransferKeeper,
 		app.BankKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.AuthzKeeper = authzkeeper.NewKeeper(keys[authzkeeper.StoreKey], appCodec, app.MsgServiceRouter(), app.AccountKeeper)
 

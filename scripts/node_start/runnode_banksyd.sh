@@ -37,7 +37,7 @@ from_scratch () {
 
   # Set gas limit in genesis
   update_test_genesis '.consensus_params["block"]["max_gas"]="100000000"'
-  update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"]="45s"'
+  update_test_genesis '.app_state["gov"]["params"]["voting_period"]="45s"'
 
   update_test_genesis '.app_state["staking"]["params"]["bond_denom"]="stake"'
   #update_test_genesis '.app_state["bank"]["params"]["send_enabled"]=[{"denom": "stake","enabled": true}]'
@@ -52,10 +52,10 @@ from_scratch () {
   update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["stake"]'
 
   # Allocate genesis accounts
-  banksyd add-genesis-account $KEY 10000000000000stake,100000000000000utest --keyring-backend $KEYRING
-  banksyd add-genesis-account myaccount 10000000000000stake,100000000000000utest --keyring-backend $KEYRING
+  banksyd add-genesis-account $KEY 1000000000stake,100000000000000utest --keyring-backend $KEYRING
+  banksyd add-genesis-account myaccount 1000000000stake,100000000000000utest --keyring-backend $KEYRING
 
-  banksyd gentx $KEY 10000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+  banksyd gentx $KEY 1000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
   # Collect genesis tx
   banksyd collect-gentxs
@@ -79,7 +79,7 @@ sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
 sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
 
 banksyd config node tcp://0.0.0.0:2241
-banksyd start --pruning=nothing  --minimum-gas-prices=0.0001stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
+banksyd start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
 
 #MEMO='{"forward":{"receiver":"cosmos18p5cs3z0q68hq7q0d8tr8kp3ldnqkx2fx3f88w","port":"transfer","channel":"channel-0","timeout":600000000000,"retries":0,"next":"{}"}'
 #hermes --config scripts/relayer_hermes/config_compose_gaia.toml create channel --a-chain banksyd-t1 --b-chain gaiad-t1 --a-port transfer --b-port transfer --new-client-connection --yes
