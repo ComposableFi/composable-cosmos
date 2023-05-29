@@ -211,6 +211,8 @@ func init() {
 	}
 
 	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	// manually update the power reduction by replacing micro (u) -> pico (p)pica
+	sdk.DefaultPowerReduction = PowerReduction
 }
 
 // BanksyApp extends an ABCI application, but with most of its parameters exported.

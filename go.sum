@@ -755,8 +755,8 @@ github.com/nats-io/nkeys v0.1.0/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxzi
 github.com/nats-io/nkeys v0.1.3/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxziKVo7w=
 github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OSON2c=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230517054520-e1958ca2830e h1:VnV20PYZsHoApnSNdxgM9E8f3Xxsk8yx8lL7WZZs1Ls=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230517054520-e1958ca2830e/go.mod h1:ZqzpgUUK75BHIttNMs2ANFUNGEmi+aFij6gYmiDjdqc=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230526180458-68520c6b500d h1:1O+4lgWVLMXaXPmn5hYBpf4dFansC80mnSeS4KhZWrc=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230526180458-68520c6b500d/go.mod h1:ZqzpgUUK75BHIttNMs2ANFUNGEmi+aFij6gYmiDjdqc=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
