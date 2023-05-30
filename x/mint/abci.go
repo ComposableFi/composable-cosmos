@@ -31,7 +31,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 	// send the minted coins to the fee collector account
 	err := k.AddCollectedFees(ctx, mintedCoins)
 	if err != nil {
-		return
+		k.Logger(ctx).Info("Not enough incentive tokens in the mint pool to distribute")
 	}
 
 	if mintedCoin.Amount.IsInt64() {
