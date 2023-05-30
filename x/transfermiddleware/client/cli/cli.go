@@ -20,6 +20,7 @@ func GetQueryCmd() *cobra.Command {
 
 	queryCmd.AddCommand(
 		GetCmdParaTokenInfo(),
+		GetEscowAddress(),
 	)
 
 	return queryCmd
@@ -31,7 +32,7 @@ func GetCmdParaTokenInfo() *cobra.Command {
 		Use:     "para-token-info",
 		Short:   "Query the current transfer middleware para-token-info based on denom",
 		Long:    "Query the current transfer middleware para-token-info based on denom",
-		Args:    cobra.NoArgs,
+		Args:    cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Example: fmt.Sprintf("%s query transfermiddleware para-token-info atom", version.AppName),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -41,6 +42,32 @@ func GetCmdParaTokenInfo() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 			res, err := queryClient.ParaTokenInfo(cmd.Context(), &types.QueryParaTokenInfoRequest{
 				NativeDenom: args[0],
+			})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func GetEscowAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "escrow-address [channel-id]",
+		Short: "Query the escrow address",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+			res, err := queryClient.EscrowAddress(cmd.Context(), &types.QueryEscrowAddressRequest{
+				ChannelId: args[0],
 			})
 			if err != nil {
 				return err

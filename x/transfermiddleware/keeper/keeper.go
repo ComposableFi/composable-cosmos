@@ -29,6 +29,7 @@ func NewKeeper(
 	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
+	authority string,
 ) Keeper {
 	return Keeper{
 		storeKey:       storeKey,
@@ -36,19 +37,20 @@ func NewKeeper(
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
 		ICS4Wrapper:    ics4Wrapper,
+		authority:      authority,
 	}
 }
 
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
-func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelId, nativeDenom string) error {
+func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom string) error {
 	if keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
 
 	info := types.ParachainIBCTokenInfo{
 		IbcDenom:    ibcDenom,
-		ChannelId:   channelId,
+		ChannelId:   channelID,
 		NativeDenom: nativeDenom,
 	}
 
@@ -72,19 +74,26 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	}
 
 	// get the IBCdenom
-	IBCDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
+	ibcDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
 
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfo(nativeDenom))
 
 	// update the IBCdenom-native index
-	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(IBCDenom)) {
+	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(ibcDenom)) {
 		panic("broken data in state")
 	}
 
-	store.Delete(types.GetKeyIBCDenomAndNativeIndex(IBCDenom))
+	store.Delete(types.GetKeyIBCDenomAndNativeIndex(ibcDenom))
 
 	return nil
+}
+
+func (keeper Keeper) HasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyParachainIBCTokenInfo(nativeDenom)
+
+	return store.Has(key)
 }
 
 // TODO: testing
@@ -98,13 +107,13 @@ func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom strin
 	return info
 }
 
-func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, IBCdenom string) string {
+func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibcDenom string) string {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfo(IBCdenom))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfo(ibcDenom))
 
 	return string(bz)
 }
 
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+exported.ModuleName+"-"+types.ModuleName)
 }

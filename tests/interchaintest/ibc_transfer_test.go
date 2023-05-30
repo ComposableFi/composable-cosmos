@@ -61,8 +61,8 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 	// Get both chains
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			//Name:    "composable",
-			//Version: "seunlanlege/centauri-polkadot:v0.9.27,seunlanlege/centauri-parachain:v0.9.27",
+			// Name:    "composable",
+			// Version: "seunlanlege/centauri-polkadot:v0.9.27,seunlanlege/centauri-parachain:v0.9.27",
 			ChainName: "composable", // Set ChainName so that a suffix with a "dash" is not appended (required for hyperspace)
 			ChainConfig: ibc.ChainConfig{
 				Type:    "polkadot",
@@ -77,7 +77,7 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 					{
 						Repository: "seunlanlege/centauri-parachain",
 						Version:    "v0.9.27",
-						//UidGid: "1025:1025",
+						// UidGid: "1025:1025",
 					},
 				},
 				Bin:            "polkadot",
@@ -93,16 +93,10 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 		},
 		{
 			ChainConfig: ibc.ChainConfig{
-				Type:    "cosmos",
-				Name:    "banksy",
-				ChainID: "banksyd",
-				Images: []ibc.DockerImage{
-					{
-						Repository: "ghcr.io/notional-labs/banksy",
-						Version:    "2.0.1",
-						UidGid:     "1025:1025",
-					},
-				},
+				Type:           "cosmos",
+				Name:           "banksy",
+				ChainID:        "banksyd",
+				Images:         []ibc.DockerImage{BanksyImage},
 				Bin:            "banksyd",
 				Bech32Prefix:   "banksy",
 				Denom:          "stake",
@@ -110,7 +104,7 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 				GasAdjustment:  1.3,
 				TrustingPeriod: "504h",
 				CoinType:       "118",
-				//EncodingConfig: WasmClientEncoding(),
+				// EncodingConfig: WasmClientEncoding(),
 				NoHostMount:         true,
 				ConfigFileOverrides: configFileOverrides,
 				ModifyGenesis:       modifyGenesisShortProposals(votingPeriod, maxDepositPeriod),
@@ -289,8 +283,8 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 	fmt.Println("********* Test passed **********")
 	fmt.Println("********************************")
 
-	//err = testutil.WaitForBlocks(ctx, 50, banksyd, composable)
-	//require.NoError(t, err)
+	// err = testutil.WaitForBlocks(ctx, 50, banksyd, composable)
+	// require.NoError(t, err)
 }
 
 func pushWasmContractViaGov(t *testing.T, ctx context.Context, banksyd *cosmos.CosmosChain) string {
@@ -337,7 +331,7 @@ func pushWasmContractViaGov(t *testing.T, ctx context.Context, banksyd *cosmos.C
 	return codeHash
 }
 
-func fundUsers(t *testing.T, ctx context.Context, fundAmount int64, composable ibc.Chain, banksyd ibc.Chain) (ibc.Wallet, ibc.Wallet) {
+func fundUsers(t *testing.T, ctx context.Context, fundAmount int64, composable, banksyd ibc.Chain) (ibc.Wallet, ibc.Wallet) {
 	users := interchaintest.GetAndFundTestUsers(t, ctx, "user", fundAmount, composable, banksyd)
 	polkadotUser, cosmosUser := users[0], users[1]
 	err := testutil.WaitForBlocks(ctx, 2, composable, banksyd) // Only waiting 1 block is flaky for parachain

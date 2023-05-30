@@ -139,6 +139,7 @@ func initAppConfig() (string, interface{}) {
 	srvCfg.API.Enable = true
 	srvCfg.API.EnableUnsafeCORS = true
 	srvCfg.GRPCWeb.EnableUnsafeCORS = true
+	srvCfg.MinGasPrices = "0stake"
 
 	// This ensures that upgraded nodes will use iavl fast node.
 	srvCfg.IAVLDisableFastNode = false

@@ -16,7 +16,7 @@ import (
 	"github.com/strangelove-ventures/interchaintest/v7/testutil"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zaptest"
-	//simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	// simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 )
 
 const (
@@ -55,36 +55,31 @@ func TestPushWasmClientCode(t *testing.T) {
 	rpcOverrides["max_header_bytes"] = 2_100_000
 	configTomlOverrides["rpc"] = rpcOverrides
 
-	//mempoolOverrides := make(testutil.Toml)
-	//mempoolOverrides["max_tx_bytes"] = 6000000
-	//configTomlOverrides["mempool"] = mempoolOverrides
+	// mempoolOverrides := make(testutil.Toml)
+	// mempoolOverrides["max_tx_bytes"] = 6000000
+	// configTomlOverrides["mempool"] = mempoolOverrides
 
 	configFileOverrides["config/app.toml"] = appTomlOverrides
 	configFileOverrides["config/config.toml"] = configTomlOverrides
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
-		{ChainConfig: ibc.ChainConfig{
-			Type:    "cosmos",
-			Name:    "banksy",
-			ChainID: "banksyd",
-			Images: []ibc.DockerImage{
-				{
-					Repository: "ghcr.io/notional-labs/banksy",
-					Version:    "2.0.1",
-					UidGid:     "1025:1025",
-				},
+		{
+			ChainConfig: ibc.ChainConfig{
+				Type:           "cosmos",
+				Name:           "banksy",
+				ChainID:        "banksyd",
+				Images:         []ibc.DockerImage{BanksyImage},
+				Bin:            "banksyd",
+				Bech32Prefix:   "banksy",
+				Denom:          "stake",
+				GasPrices:      "0.00stake",
+				GasAdjustment:  1.3,
+				TrustingPeriod: "504h",
+				// EncodingConfig: WasmClientEncoding(),
+				NoHostMount:         true,
+				ConfigFileOverrides: configFileOverrides,
+				ModifyGenesis:       modifyGenesisShortProposals(votingPeriod, maxDepositPeriod),
 			},
-			Bin:            "banksyd",
-			Bech32Prefix:   "banksy",
-			Denom:          "stake",
-			GasPrices:      "0.00stake",
-			GasAdjustment:  1.3,
-			TrustingPeriod: "504h",
-			//EncodingConfig: WasmClientEncoding(),
-			NoHostMount:         true,
-			ConfigFileOverrides: configFileOverrides,
-			ModifyGenesis:       modifyGenesisShortProposals(votingPeriod, maxDepositPeriod),
-		},
 		},
 	})
 
@@ -165,7 +160,7 @@ type GetCodeQueryMsgResponse struct {
 	Code []byte `json:"code"`
 }
 
-func modifyGenesisShortProposals(votingPeriod string, maxDepositPeriod string) func(ibc.ChainConfig, []byte) ([]byte, error) {
+func modifyGenesisShortProposals(votingPeriod, maxDepositPeriod string) func(ibc.ChainConfig, []byte) ([]byte, error) {
 	return func(chainConfig ibc.ChainConfig, genbz []byte) ([]byte, error) {
 		g := make(map[string]interface{})
 		if err := json.Unmarshal(genbz, &g); err != nil {

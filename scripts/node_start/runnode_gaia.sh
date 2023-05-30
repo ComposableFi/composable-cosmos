@@ -51,10 +51,10 @@ from_scratch () {
   update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["stake"]'
 
   # Allocate genesis accounts
-  gaiad add-genesis-account $KEY 10000000000000uatom,10000000000000stake,100000000000000utest --keyring-backend $KEYRING
-  gaiad add-genesis-account gnad 10000000000000uatom,10000000000000stake,100000000000000utest --keyring-backend $KEYRING
+  gaiad add-genesis-account $KEY 10000000000000uatom,10000000000stake,100000000000000utest --keyring-backend $KEYRING
+  gaiad add-genesis-account gnad 10000000000000uatom,10000000000stake,100000000000000utest --keyring-backend $KEYRING
   
-  gaiad gentx $KEY 10000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+  gaiad gentx $KEY 10000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
   # Collect genesis tx
   gaiad collect-gentxs

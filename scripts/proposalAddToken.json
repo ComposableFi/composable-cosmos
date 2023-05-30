@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "@type": "/banksy.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfo",
+      "authority": "banksy10d07y265gmmuvt4z0w9aw880jnsr700js9vsvc",
+      "ibc_denom": "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878",
+      "channel_id": "channel-0",
+      "native_denom": "stake"
+    }
+  ],
+  "metadata": "AQ==",
+  "deposit": "1000000000stake",
+  "title": "Proposal Title",
+  "summary": "Proposal Summary"
+}
+

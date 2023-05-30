@@ -92,16 +92,16 @@ build:
 	go build $(BUILD_FLAGS) -o bin/banksyd ./cmd/banksyd
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t composable-testnet:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t banksy:debug -f Dockerfile .
 
 ###############################################################################
 ###                                  Proto                                  ###
 ###############################################################################
 
-protoVer=v0.8
-protoImageName=ghcr.io/notional-labs/fa-proto-gen:$(protoVer)
-containerProtoGen=fa-proto-gen-$(protoVer)
-containerProtoFmt=fa-proto-fmt-$(protoVer)
+protoVer=0.11.6
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+containerProtoGen=proto-gen-$(protoVer)
+containerProtoFmt=proto-fmt-$(protoVer)
 
 proto-all: proto-format proto-gen
 

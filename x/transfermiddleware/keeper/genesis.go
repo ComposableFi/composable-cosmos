@@ -14,6 +14,6 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 }
 
 // ExportGenesis returns the x/transfermiddleware module's exported genesis.
-func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
+func (k Keeper) ExportGenesis(_ sdk.Context) *types.GenesisState {
 	return &types.GenesisState{}
 }

@@ -61,5 +61,5 @@ var (
 	MockFailPacketData           = mock.MockFailPacketData
 	MockRecvCanaryCapabilityName = mock.MockRecvCanaryCapabilityName
 
-	prefix = commitmenttypes.NewMerklePrefix([]byte("ibc"))
+	_ = commitmenttypes.NewMerklePrefix([]byte("ibc"))
 )
