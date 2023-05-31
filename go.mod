@@ -1,4 +1,4 @@
-module github.com/notional-labs/banksy/v2
+module github.com/notional-labs/centauri/v2
 
 go 1.19
 
@@ -52,6 +52,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
+	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect

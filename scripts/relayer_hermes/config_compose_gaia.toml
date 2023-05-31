@@ -117,12 +117,12 @@ trust_threshold = { numerator = '1', denominator = '3' }
 
 
 [[chains]]
-id = 'banksyd-t1'
+id = 'centaurid-t1'
 rpc_addr = 'http://127.0.0.1:2241'
 grpc_addr = 'http://127.0.0.1:2242'
 websocket_addr = 'ws://127.0.0.1:2241/websocket'
 rpc_timeout = '10s'
-account_prefix = 'banksy'
+account_prefix = 'centauri'
 key_name = 'alice'
 address_type = { derivation = 'cosmos' }
 store_prefix = 'ibc'

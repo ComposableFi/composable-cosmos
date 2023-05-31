@@ -6,7 +6,7 @@ Middleware: A self-contained module that sits between core IBC and an underlying
 In this case, the IBC application is `transfer` module in ibc-go.
 
 ## How is it working 
-As we want a shared total supply between Banksy and Picasso, token transfers from Picasso to Banksy via IBC will not have the `ibc/` denom prefix. Instead, the native token in Picasso, PICA, should be used.
+As we want a shared total supply between Centauri and Picasso, token transfers from Picasso to Centauri via IBC will not have the `ibc/` denom prefix. Instead, the native token in Picasso, PICA, should be used.
 
 We have introduced an IBC middleware module to lock `ibc/` tokens and mint native tokens. This module handles middleware processes when executing the ICS26 implementation of IBC transfer, including SendPacket, OnRecvPacket, OnAcknowledgementPacket, and OnTimeoutPacket.
 
