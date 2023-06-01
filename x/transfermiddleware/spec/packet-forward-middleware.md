@@ -17,14 +17,22 @@ When we receive a packet that will be forwarded, we will check if that packet wa
 ### Handle Ack
 When we receive the package with memo for forwarding, we will extract the memo to store the transfer data package. The data will be used to check the ACK. When we receiver the ACK the responsible with the forwarding package, we will handle it.
 
-If Success Ack, then nothing happen.
-If Error Ack, we want to burn the ibc-token that lock in the escrow account (from Picasso to Composable) and native-token that lock in escrow account (from Composable to Cosmos chain).
+Successful case:
+- The ibc-token that received on Composable will be locked in the escrow address. TransferMiddleware will mint native token and send to receiver
+- PFM will create a new transfer msg that responsible with the MEMO that will send the amount of native token just minted from receiver on Composable and send that msg to Cosmos chain
+
+Error Ack case: 
+- PFM module will refund the amount of sent token to the sender (Picasso)
+- Transfermiddleware module will recovery the amount of token that lock to the escrow address (burn the amount of token in the escros address)
 
 ### Handle TimeOut
-Same as Error Ack
+- PFM module will refund the amount of sent token to the sender (Picasso)
+- Transfermiddleware module will recovery the amount of token that lock to the escrow address (burn the amount of token in the escros address)
 
 ## Problem when packet forward from Cosmos chain to Picasso
-When we want to forward a transfer packet from Cosmos chain to Picasso, there are 2 scenario. First, we send cosmos chain token. The second, we send token that was received from Picasso.
+When we want to forward a transfer packet from Cosmos chain to Picasso, there are 2 scenario:
+- Cosmos chain token.
+- Token that was received from Picasso.
 
 In the first case, every things will active like normal. But it will have a problem with the second case.
 
@@ -35,6 +43,11 @@ Composable after receive a transfer message with a PFM that forward to Picasso, 
 - unlock the amount of ibc token in escrow address
 - transfer the amount of ibc token just unlocked to Picasso
 ### Handle Ack
-If Success Ack, then nothing happen.
-If Error Ack, PFM module will refund the amount of sent token to the sender. the Transfermiddleware module will recovery the amount of token that lock to the escrow address.
+Successful case: Then nothing happen.
+Error Ack case: 
+- PFM module will refund the amount of sent token to the sender (Cosmos chain)
+- Transfermiddleware module will recovery the amount of token that lock to the escrow address (mint the amount of token in the escros address)
+### Handle TimeOut
+- PFM module will refund the amount of sent token to the sender (Cosmos chain)
+- Transfermiddleware module will recovery the amount of token that lock to the escrow address (mint the amount of token in the escros address)
 
