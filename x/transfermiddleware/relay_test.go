@@ -257,7 +257,7 @@ func TestTransferMiddlewareTestSuiteTestSuite(t *testing.T) {
 	suite.Run(t, new(TransferMiddlewareTestSuite))
 }
 
-func (suite *TransferMiddlewareTestSuite) TestMintAndBurnProcessWhenLaunchChain() {
+func (suite *TransferMiddlewareTestSuite) TestMintAndEscrowProcessWhenLaunchChain() {
 	var (
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight                    = clienttypes.NewHeight(1, 110)
