@@ -154,8 +154,8 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	_, err = suite.chainB.SendMsgs(msg)
 	suite.Require().NoError(err)
 	suite.Require().NoError(err, path.EndpointA.UpdateClient())
+	suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
 
-	suite.Require().NoError(err)
 	// and when relay to chain B and handle Ack on chain A
 	err = suite.coordinator.RelayAndAckPendingPacketsReverse(path)
 	suite.Require().NoError(err)
@@ -351,12 +351,12 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndEscrowProcessWhenLaunchChai
 		expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, chainBSupply.Amount.Sub(transferAmountFromChainBToChainA)))
 		suite.Require().Equal(expBalance, balance)
 
-		//  receiver in chain A receive exactly native token that transferd from chain B
+		//  receiver in chain A receive exactly native token that transferred from chain B
 		balance = suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 		expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmountFromChainBToChainA))
 		suite.Require().Equal(expBalance, balance)
 
-		// Continue send coin from (chainA) to escrow address in chain B
+		// Continue send coin from (chainA) to sender account in chain B
 		msg = ibctransfertypes.NewMsgTransfer(
 			path.EndpointA.ChannelConfig.PortID,
 			path.EndpointA.ChannelID,
