@@ -23,10 +23,10 @@ echo "taste shoot adapt slow truly grape gift need suggest midnight burger horn 
 banksyd init $MONIKER --chain-id $CHAINID 
 
 # Allocate genesis accounts (cosmos formatted addresses)
-banksyd add-genesis-account $KEY 10000000000stake --keyring-backend $KEYRING
+banksyd add-genesis-account $KEY 1000000000000000000000stake --keyring-backend $KEYRING
 banksyd add-genesis-account banksy1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6 1000000000000000stake --keyring-backend $KEYRING
 # Sign genesis transaction banksy1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6
-banksyd gentx $KEY 10000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+banksyd gentx $KEY 1000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
 # Collect genesis tx
 banksyd collect-gentxs
