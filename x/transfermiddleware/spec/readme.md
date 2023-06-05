@@ -1,6 +1,7 @@
 # Transfer middleware
-
+This module keep Centauri and Picasso have shared total supply
 ## Definitions
+
 Middleware: A self-contained module that sits between core IBC and an underlying IBC application during packet execution. All messages between core IBC and underlying application must flow through middleware, which may perform its own custom logic. 
 
 In this case, the IBC application is `transfer` module in ibc-go.
