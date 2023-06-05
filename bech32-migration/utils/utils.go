@@ -65,7 +65,7 @@ func IterateStoreByPrefix(
 }
 
 // AccAddressFromBech32 creates an AccAddress from a Bech32 string.
-func AccAddressFromOldBech32(address string, prefix string) (addr sdk.AccAddress, err error) {
+func AccAddressFromOldBech32(address, prefix string) (addr sdk.AccAddress, err error) {
 	if len(strings.TrimSpace(address)) == 0 {
 		return sdk.AccAddress{}, errors.New("empty address string is not allowed")
 	}
@@ -84,7 +84,7 @@ func AccAddressFromOldBech32(address string, prefix string) (addr sdk.AccAddress
 }
 
 // ConsAddressFromBech32 creates a ConsAddress from a Bech32 string.
-func ConsAddressFromOldBech32(address string, prefix string) (addr sdk.ConsAddress, err error) {
+func ConsAddressFromOldBech32(address, prefix string) (addr sdk.ConsAddress, err error) {
 	if len(strings.TrimSpace(address)) == 0 {
 		return sdk.ConsAddress{}, errors.New("empty address string is not allowed")
 	}
@@ -103,7 +103,7 @@ func ConsAddressFromOldBech32(address string, prefix string) (addr sdk.ConsAddre
 }
 
 // ValAddressFromBech32 creates a ValAddress from a Bech32 string.
-func ValAddressFromOldBech32(address string, prefix string) (addr sdk.ValAddress, err error) {
+func ValAddressFromOldBech32(address, prefix string) (addr sdk.ValAddress, err error) {
 	if len(strings.TrimSpace(address)) == 0 {
 		return sdk.ValAddress{}, errors.New("empty address string is not allowed")
 	}

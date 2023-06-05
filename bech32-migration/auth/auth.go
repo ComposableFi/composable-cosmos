@@ -21,33 +21,33 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		if err != nil {
 			panic(err)
 		}
-		switch accountI.(type) {
+		switch acci := accountI.(type) {
 		case *types.BaseAccount:
-			acc := accountI.(*types.BaseAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["BaseAccount"]++
 		case *types.ModuleAccount:
-			acc := accountI.(*types.ModuleAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["ModuleAccount"]++
 		case *vestingtypes.BaseVestingAccount:
-			acc := accountI.(*vestingtypes.BaseVestingAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["BaseVestingAccount"]++
 		case *vestingtypes.ContinuousVestingAccount:
-			acc := accountI.(*vestingtypes.ContinuousVestingAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["ContinuousVestingAccount"]++
 		case *vestingtypes.DelayedVestingAccount:
-			acc := accountI.(*vestingtypes.DelayedVestingAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["DelayedVestingAccount"]++
 		case *vestingtypes.PeriodicVestingAccount:
-			acc := accountI.(*vestingtypes.PeriodicVestingAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["PeriodicVestingAccount"]++
 		case *vestingtypes.PermanentLockedAccount:
-			acc := accountI.(*vestingtypes.PermanentLockedAccount)
+			acc := acci
 			acc.Address = utils.ConvertAccAddr(acc.Address)
 			migratedAccountTypesStat["PermanentLockedAccount"]++
 		default:

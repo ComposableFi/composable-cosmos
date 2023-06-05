@@ -44,5 +44,4 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		depositCount++
 		return cdc.MustMarshal(&deposit)
 	})
-
 }
