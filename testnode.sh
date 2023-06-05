@@ -22,9 +22,9 @@ echo "taste shoot adapt slow truly grape gift need suggest midnight burger horn 
 
 centaurid init $MONIKER --chain-id $CHAINID 
 
-# Allocate genesis accounts (cosmos formatted addresses)
+# Allocate genesis accounts (centauri formatted addresses)
 centaurid add-genesis-account $KEY 10000000000000000000stake --keyring-backend $KEYRING
-centaurid add-genesis-account centauri1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6 1000000000000000stake --keyring-backend $KEYRING
+
 # Sign genesis transaction centauri1594tdya20hxz7kjenkn5w09jljyvdfk8kx5rd6
 centaurid gentx $KEY 100000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
@@ -41,7 +41,7 @@ fi
 # update request max size so that we can upload the light client
 # '' -e is a must have params on mac, if use linux please delete before run
 sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.toml
-cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["voting_params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
+cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
 centaurid start --pruning=nothing  --minimum-gas-prices=0.0001stake 
