@@ -96,6 +96,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
+	centauriupgrade "github.com/notional-labs/centauri/v2/app/upgrade/centauri"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -126,6 +127,7 @@ import (
 const (
 	AccountAddressPrefix = "centauri"
 	Name                 = "centauri"
+	dirName              = "banksy"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -210,7 +212,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+dirName)
 	// manually update the power reduction by replacing micro (u) -> pico (p)pica
 	sdk.DefaultPowerReduction = PowerReduction
 }
@@ -681,6 +683,7 @@ func NewCentauriApp(
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
+	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec))
 
 	return app
 }
