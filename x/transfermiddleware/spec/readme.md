@@ -32,7 +32,7 @@ Scope:
 #### OnTimeoutPacket
 
 
-#### Burn and mint PICA token when launch chain and when IBC connected :
+## Burn and mint PICA token when launch chain and when IBC connected :
 Before the bridge launch, there will be approximately 1 billion PICA tokens on the Banksy chain and 9 billion on the Picasso chain. The supply of PICA is fixed, and the tokens cannot flow between the two chains yet.
 
 After the bridge launch, PICA tokens will be able to flow between the two chains, so the amount on each chain will change, but the total supply will remain the same.
