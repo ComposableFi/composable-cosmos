@@ -137,6 +137,10 @@ ictest-start-polkadot:
 ictest-ibc:
 	cd tests/interchaintest && go test -timeout=25m -race -v -run TestBanksyPicassoIBCTransfer .
 
+# Executes Basic Upgrade Chain tests via interchaintest
+ictest-upgrade:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestBanksyUpgrade .
+
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 
