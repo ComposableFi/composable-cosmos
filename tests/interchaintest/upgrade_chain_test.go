@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	haltHeightDelta    = uint64(10) // will propose upgrade this many blocks in the future
+	haltHeightDelta    = uint64(25) // will propose upgrade this many blocks in the future
 	blocksAfterUpgrade = uint64(10)
 )
 
 func TestBanksyUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, "banksy", version, repo, "v3.0.0", "upgrade_test")
+	CosmosChainUpgradeTest(t, "banksy", version, repo, "debug", "upgrade_test")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, chainName, initialVersion, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -87,9 +87,10 @@ func CosmosChainUpgradeTest(t *testing.T, chainName, initialVersion, upgradeCont
 		Name:        upgradeName,
 		Description: "First chain software upgrade",
 		Height:      haltHeight,
+		Info:        "UPGRADE",
 	}
 
-	upgradeTx, err := chain.UpgradeProposal(ctx, chainUser.KeyName(), proposal)
+	upgradeTx, err := chain.LegacyUpgradeProposal(ctx, chainUser.KeyName(), proposal)
 	require.NoError(t, err, "error submitting software upgrade proposal tx")
 
 	err = chain.VoteOnProposalAllValidators(ctx, upgradeTx.ProposalID, cosmos.ProposalVoteYes)
