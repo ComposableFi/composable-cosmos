@@ -19,6 +19,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -567,6 +568,10 @@ func (chain *TestChain) AllBalances(acc sdk.AccAddress) sdk.Coins {
 	return chain.GetTestSupport().BankKeeper().GetAllBalances(chain.GetContext(), acc)
 }
 
+func (chain *TestChain) GetBankKeeper() bankkeeper.Keeper {
+	return chain.GetTestSupport().BankKeeper()
+}
+
 func (chain TestChain) GetTestSupport() *banksy.TestSupport {
 	return chain.App.(*TestingAppDecorator).TestSupport()
 }
@@ -588,6 +593,10 @@ func (a TestingAppDecorator) GetBaseApp() *baseapp.BaseApp {
 
 func (a TestingAppDecorator) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return a.TestSupport().StakingKeeper()
+}
+
+func (a TestingAppDecorator) GetBankKeeper() bankkeeper.Keeper {
+	return a.TestSupport().BankKeeper()
 }
 
 func (a TestingAppDecorator) GetIBCKeeper() *ibckeeper.Keeper {
