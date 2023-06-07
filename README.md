@@ -1,2 +1,33 @@
-# composable-testnet
+# Centauri
 Cosmos testnet with IBC-v7 and wasm client enable.
+
+## Hardware Recommendation
+
+* Quad core or larger amd64 CPU
+* 64GB+ RAM
+* 1TB+ NVMe Storage
+
+## Quick start
+
+Requires [Go 1.19](https://go.dev/doc/install) or higher.
+
+```bash
+make install
+banksyd version
+```
+Then you can run a node with a single command.
+
+```bash
+./scripts/testnode.sh   
+```
+
+If you have Docker installed, then you can run a local node with a single command.
+
+```bash
+docker compose up -d
+```
+and remove all node running with
+
+```bash
+docker compose down
+```
