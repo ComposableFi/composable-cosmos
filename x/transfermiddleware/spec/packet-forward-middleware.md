@@ -1,8 +1,6 @@
 # Transfer Middleware integrated with Packet-Forward-Middleware
 ## Context
-As the requirment of Composable (we want to mint native token that represent ibc-token that was sent from Picasso), the Transfer-middleware had been developed. The ideal of Transfer-middleware is lock the ibc-token that was sent and mint the same amount of native-token to receiver address.
-
-=> Transfer-middleware will effect to packet-forward-middleware, so we need to handle it.
+As the requirment of Composable (we want to mint native token that represent ibc-token that was sent from Picasso), the Transfer-middleware had been developed. The ideal of Transfer-middleware is lock the ibc-token that was sent and mint the same amount of native-token to receiver address. Transfer-middleware will effect to packet-forward-middleware, so we need to handle it.
 
 ## Problem when packet forward from Picasso to Cosmos chain
 
