@@ -80,6 +80,8 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 	// Slashes this block happened after reward allocation, but we have to account
 	// for them for the stake sanity check below.
 	endingHeight := uint64(ctx.BlockHeight())
+	fmt.Printf("------------startingHeight: %v\n", startingHeight)
+	fmt.Printf("------------endingHeight: %v\n", endingHeight)
 	if endingHeight > startingHeight {
 		k.IterateValidatorSlashEventsBetween(ctx, del.GetValidatorAddr(), startingHeight, endingHeight,
 			func(height uint64, event types.ValidatorSlashEvent) (stop bool) {
