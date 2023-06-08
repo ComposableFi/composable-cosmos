@@ -39,9 +39,9 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	banksy "github.com/notional-labs/banksy/v2/app"
-	"github.com/notional-labs/banksy/v2/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v2/app"
+	"github.com/notional-labs/centauri/v2/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -107,7 +107,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, banksy.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -257,7 +257,7 @@ func (chain *TestChain) SendMsgs(msgs ...sdk.Msg) (*sdk.Result, error) {
 	// ensure the chain has the latest time
 	chain.Coordinator.UpdateTimeForChain(chain)
 
-	_, r, err := banksy.SignAndDeliver(
+	_, r, err := centauri.SignAndDeliver(
 		chain.t,
 		chain.TxConfig,
 		chain.App.GetBaseApp(),
@@ -572,19 +572,19 @@ func (chain *TestChain) GetBankKeeper() bankkeeper.Keeper {
 	return chain.GetTestSupport().BankKeeper()
 }
 
-func (chain TestChain) GetTestSupport() *banksy.TestSupport {
+func (chain TestChain) GetTestSupport() *centauri.TestSupport {
 	return chain.App.(*TestingAppDecorator).TestSupport()
 }
 
 var _ ibctesting.TestingApp = TestingAppDecorator{}
 
 type TestingAppDecorator struct {
-	*banksy.BanksyApp
+	*centauri.CentauriApp
 	t *testing.T
 }
 
-func NewTestingAppDecorator(t *testing.T, banksy *banksy.BanksyApp) *TestingAppDecorator {
-	return &TestingAppDecorator{BanksyApp: banksy, t: t}
+func NewTestingAppDecorator(t *testing.T, centauri *centauri.CentauriApp) *TestingAppDecorator {
+	return &TestingAppDecorator{CentauriApp: centauri, t: t}
 }
 
 func (a TestingAppDecorator) GetBaseApp() *baseapp.BaseApp {
@@ -611,8 +611,8 @@ func (a TestingAppDecorator) GetTxConfig() client.TxConfig {
 	return a.TestSupport().GetTxConfig()
 }
 
-func (a TestingAppDecorator) TestSupport() *banksy.TestSupport {
-	return banksy.NewTestSupport(a.t, a.BanksyApp)
+func (a TestingAppDecorator) TestSupport() *centauri.TestSupport {
+	return centauri.NewTestSupport(a.t, a.CentauriApp)
 }
 
 func (a TestingAppDecorator) GetWasmKeeper() wasm08.Keeper {

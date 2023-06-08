@@ -28,7 +28,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	minttypes "github.com/notional-labs/banksy/v2/x/mint/types"
+	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
 	"github.com/stretchr/testify/require"
 
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"

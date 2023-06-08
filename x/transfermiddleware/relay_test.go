@@ -8,8 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
-	customibctesting "github.com/notional-labs/banksy/v2/app/ibctesting"
-
+	customibctesting "github.com/notional-labs/centauri/v2/app/ibctesting"
 	"github.com/stretchr/testify/suite"
 )
 
