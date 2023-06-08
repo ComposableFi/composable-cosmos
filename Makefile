@@ -153,7 +153,7 @@ localnet-stop:
 localnet-clean:
 	@rm -rfI $(HOME)/.centauri/
 
-localnet-state-export-init: localnet-state-export-clean localnet-state-export-build 
+localnet-state-export-init: localnet-clean localnet-state-export-build 
 
 localnet-state-export-build:
 	@chmod -R +x tests/localcentauri/
@@ -167,8 +167,6 @@ localnet-state-export-startd:
 
 localnet-state-export-stop:
 	@docker compose -f tests/localcentauri/docker-compose.yml down
-
-localnet-state-export-clean: localnet-clean
 
 ###############################################################################
 ###                             Interchain test                             ###

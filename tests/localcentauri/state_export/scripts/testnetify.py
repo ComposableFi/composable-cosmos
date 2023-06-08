@@ -204,9 +204,9 @@ def main():
     if args.quiet:
         print("🗳️ Update gov module")
         print("\tModify governance_voting_period from {} to {}".format(
-            genesis['app_state']['gov']['voting_params']['voting_period'],
+            genesis['app_state']['gov']['params']['voting_period'],
             config["governance_voting_period"]))
-    genesis['app_state']['gov']['voting_params']['voting_period'] = config["governance_voting_period"]
+    genesis['app_state']['gov']['params']['voting_period'] = config["governance_voting_period"]
 
     # Prune IBC
     if args.prune_ibc:

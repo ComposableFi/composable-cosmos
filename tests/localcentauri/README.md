@@ -60,6 +60,11 @@ make localnet-stop
 ```bash
 make localnet-clean
 ```
+Maybe you need remove as root:
+
+```bash
+sudo rm -rf ~/.centauri/
+```
 
 ## 2. Localcentauri - With Mainnet State
 
@@ -73,7 +78,7 @@ if mainnet is on v11.0.0 and you try to do this on a v12.0.0 tag or on main, you
 
 ### Create a mainnet state export
 
-1. Set up a node on mainnet (Example: http://cosmosia10.notional.ventures:11111/centauri/)
+1. Set up a node on mainnet 
 
 2. Take a state export snapshot with the following command:
 
