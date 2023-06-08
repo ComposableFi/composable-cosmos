@@ -67,6 +67,8 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 	startingPeriod := startingInfo.PreviousPeriod
 	stake := startingInfo.Stake
 
+	fmt.Printf("-----Stake: %v\n", stake)
+
 	// Iterate through slashes and withdraw with calculated staking for
 	// distribution periods. These period offsets are dependent on *when* slashes
 	// happen - namely, in BeginBlock, after rewards are allocated...
@@ -87,7 +89,10 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 
 					// Note: It is necessary to truncate so we don't allow withdrawing
 					// more rewards than owed.
+					fmt.Printf("-----Stake: %v\n", stake)
+					fmt.Printf("-----event.Fraction: %v\n", event.Fraction)
 					stake = stake.MulTruncate(math.LegacyOneDec().Sub(event.Fraction))
+					fmt.Printf("-----Stake: %v\n", stake)
 					startingPeriod = endingPeriod
 				}
 				return false
@@ -126,6 +131,7 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 		if stake.LTE(currentStake.Add(marginOfErr)) {
 			stake = currentStake
 		} else {
+			fmt.Printf("Error1")
 			panic(fmt.Sprintf("calculated final stake for delegator %s greater than current stake"+
 				"\n\tfinal stake:\t%s"+
 				"\n\tcurrent stake:\t%s",
