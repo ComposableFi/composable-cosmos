@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  osmosisd:
+  centaurid:
     image: local:centauri
     build:
       context: ../../../
@@ -15,7 +15,7 @@ services:
       - ./state_export.json:/centauri/state_export.json
       - $HOME/.centauri/:/centauri/.centauri/
     entrypoint:
-      - /osmosis/start.sh
+      - /centauri/start.sh
     environment:
       - MONIKER=val
       - CHAIN_ID=localcentauri

@@ -5,7 +5,7 @@ function add_key {
     KEY_NAME=$1
     MNEMONIC=$2
     # echo "Adding key $KEY_NAME, $MNUMONIC"
-    echo $MNEMONIC | centaurid keys add $KEY_NAME --recover --keyring-backend test 2> /dev/null
+    echo $MNEMONIC | ~/go/bin/centaurid keys add $KEY_NAME --recover --keyring-backend test 2> /dev/null
 }
 
 echo "Adding keys"
