@@ -13,7 +13,7 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banksy "github.com/notional-labs/banksy/v2/app"
+	centauri "github.com/notional-labs/centauri/v2/app"
 	"github.com/stretchr/testify/require"
 )
 
@@ -45,7 +45,7 @@ type EmptyAppOptions struct{}
 
 func (EmptyAppOptions) Get(_ string) interface{} { return nil }
 
-func NewContextForApp(app banksy.BanksyApp) sdk.Context {
+func NewContextForApp(app centauri.CentauriApp) sdk.Context {
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{
 		ChainID: fmt.Sprintf("test-chain-%s", tmrand.Str(4)),
 		Height:  1,
@@ -53,7 +53,7 @@ func NewContextForApp(app banksy.BanksyApp) sdk.Context {
 	return ctx
 }
 
-func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *banksy.BanksyApp {
+func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.CentauriApp {
 	t.Helper()
 
 	app, genesisState := setup(!isCheckTx, invCheckPeriod)
@@ -75,23 +75,23 @@ func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *banksy.BanksyApp 
 	return app
 }
 
-func setup(withGenesis bool, invCheckPeriod uint) (*banksy.BanksyApp, banksy.GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint) (*centauri.CentauriApp, centauri.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := banksy.MakeEncodingConfig()
-	app := banksy.NewBanksyApp(
+	encCdc := centauri.MakeEncodingConfig()
+	app := centauri.NewCentauriApp(
 		log.NewNopLogger(),
 		db,
 		nil,
 		true,
 		map[int64]bool{},
-		banksy.DefaultNodeHome,
+		centauri.DefaultNodeHome,
 		invCheckPeriod,
 		encCdc,
 		EmptyAppOptions{},
 	)
 	if withGenesis {
-		return app, banksy.NewDefaultGenesisState()
+		return app, centauri.NewDefaultGenesisState()
 	}
 
-	return app, banksy.GenesisState{}
+	return app, centauri.GenesisState{}
 }

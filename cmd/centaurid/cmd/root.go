@@ -33,8 +33,8 @@ import (
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
-	"github.com/notional-labs/banksy/v2/app"
-	// "github.com/notional-labs/banksy/v2/app/params"
+	"github.com/notional-labs/centauri/v2/app"
+	// "github.com/notional-labs/centauri/v2/app/params"
 	// this line is used by starport scaffolding # stargate/root/import
 )
 
@@ -56,7 +56,7 @@ func NewRootCmd() (*cobra.Command, app.EncodingConfig) {
 
 	rootCmd := &cobra.Command{
 		Use:   app.Name + "d",
-		Short: "Banksy App",
+		Short: "Centauri App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -267,7 +267,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
-	newApp := app.NewBanksyApp(
+	newApp := app.NewCentauriApp(
 		logger, db, traceStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
@@ -286,7 +286,7 @@ func (a appCreator) appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
 	appOpts servertypes.AppOptions, _ []string,
 ) (servertypes.ExportedApp, error) {
-	var anApp *app.BanksyApp
+	var anApp *app.CentauriApp
 
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
@@ -294,7 +294,7 @@ func (a appCreator) appExport(
 	}
 
 	if height != -1 {
-		anApp = app.NewBanksyApp(
+		anApp = app.NewCentauriApp(
 			logger,
 			db,
 			traceStore,
@@ -310,7 +310,7 @@ func (a appCreator) appExport(
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
-		anApp = app.NewBanksyApp(
+		anApp = app.NewCentauriApp(
 			logger,
 			db,
 			traceStore,

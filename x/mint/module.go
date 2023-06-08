@@ -14,9 +14,9 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/notional-labs/banksy/v2/x/mint/client/cli"
-	"github.com/notional-labs/banksy/v2/x/mint/keeper"
-	"github.com/notional-labs/banksy/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v2/x/mint/client/cli"
+	"github.com/notional-labs/centauri/v2/x/mint/keeper"
+	"github.com/notional-labs/centauri/v2/x/mint/types"
 )
 
 var (

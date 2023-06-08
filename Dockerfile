@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     linux-headers
 
 # Download go dependencies
-WORKDIR /banksy
+WORKDIR /centauri
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
@@ -35,22 +35,22 @@ RUN WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm | cut -d ' ' -f 2) &&
 # Copy the remaining files
 COPY . .
 
-# Build banksyd binary
+# Build centaurid binary
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
     GOWORK=off go build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="banksy" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="banksyd" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="centauri" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="centaurid" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /banksy/build/banksyd \
-        /banksy/cmd/banksyd/main.go
+        -o /centauri/build/centaurid \
+        /centauri/cmd/centaurid/main.go
 
 # --------------------------------------------------------
 # Runner
@@ -58,9 +58,9 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 FROM ${RUNNER_IMAGE}
 
-COPY --from=builder /banksy/build/banksyd /bin/banksyd
+COPY --from=builder /centauri/build/centaurid /bin/centaurid
 
-ENV HOME /banksy
+ENV HOME /centauri
 WORKDIR $HOME
 
 # rest server
@@ -71,4 +71,4 @@ EXPOSE 26656
 EXPOSE 26657
 # grpc
 EXPOSE 9090
-ENTRYPOINT ["banksyd"]
+ENTRYPOINT ["centaurid"]
