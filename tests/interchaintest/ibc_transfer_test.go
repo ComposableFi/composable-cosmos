@@ -61,8 +61,6 @@ func TestBanksyPicassoIBCTransfer(t *testing.T) {
 	// Get both chains
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			// Name:    "composable",
-			// Version: "seunlanlege/centauri-polkadot:v0.9.27,seunlanlege/centauri-parachain:v0.9.27",
 			ChainName: "composable", // Set ChainName so that a suffix with a "dash" is not appended (required for hyperspace)
 			ChainConfig: ibc.ChainConfig{
 				Type:    "polkadot",
