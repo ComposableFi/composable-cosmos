@@ -1,6 +1,8 @@
 package types
 
 import (
+	fmt "fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -96,6 +98,7 @@ func (h MultiStakingHooks) AfterDelegationModified(ctx sdk.Context, delAddr sdk.
 }
 
 func (h MultiStakingHooks) BeforeValidatorSlashed(ctx sdk.Context, valAddr sdk.ValAddress, fraction sdk.Dec) error {
+	fmt.Printf("BeforeValidatorSlashed")
 	for i := range h {
 		if err := h[i].BeforeValidatorSlashed(ctx, valAddr, fraction); err != nil {
 			return err
