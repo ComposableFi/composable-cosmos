@@ -20,7 +20,7 @@ const (
 
 func TestBanksyUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, "banksy", version, repo, "debug", "upgrade_test")
+	CosmosChainUpgradeTest(t, "banksy", version, repo, "latest", "upgrade_test")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, chainName, initialVersion, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -33,10 +33,16 @@ func CosmosChainUpgradeTest(t *testing.T, chainName, initialVersion, upgradeCont
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
 			ChainConfig: ibc.ChainConfig{
-				Type:           "cosmos",
-				Name:           "banksy",
-				ChainID:        "banksyd",
-				Images:         []ibc.DockerImage{BanksyImage},
+				Type:    "cosmos",
+				Name:    "banksy",
+				ChainID: "banksyd",
+				Images: []ibc.DockerImage{
+					{
+						Repository: "ghcr.io/notional-labs/banksy",
+						Version:    "2.3.5",
+						UidGid:     "1025:1025",
+					},
+				},
 				Bin:            "banksyd",
 				Bech32Prefix:   "banksy",
 				Denom:          "stake",
