@@ -5,8 +5,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/banksy/v2/x/mint/keeper"
-	"github.com/notional-labs/banksy/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v2/x/mint/keeper"
+	"github.com/notional-labs/centauri/v2/x/mint/types"
 )
 
 // BeginBlocker mints new tokens for the previous block.
@@ -31,7 +31,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 	// send the minted coins to the fee collector account
 	err := k.AddCollectedFees(ctx, mintedCoins)
 	if err != nil {
-		return
+		k.Logger(ctx).Info("Not enough incentive tokens in the mint pool to distribute")
 	}
 
 	if mintedCoin.Amount.IsInt64() {

@@ -14,9 +14,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/banksy/v2/x/transfermiddleware/client/cli"
-	"github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
-	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v2/x/transfermiddleware/client/cli"
+	"github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
+	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
 	"github.com/spf13/cobra"
 )
 

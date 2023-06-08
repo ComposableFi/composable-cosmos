@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
 	"github.com/spf13/cobra"
 )
 
