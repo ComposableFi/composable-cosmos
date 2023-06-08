@@ -89,10 +89,10 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 
 					// Note: It is necessary to truncate so we don't allow withdrawing
 					// more rewards than owed.
-					fmt.Printf("-----Stake: %v\n", stake)
+					fmt.Printf("-----Stake1: %v\n", stake)
 					fmt.Printf("-----event.Fraction: %v\n", event.Fraction)
 					stake = stake.MulTruncate(math.LegacyOneDec().Sub(event.Fraction))
-					fmt.Printf("-----Stake: %v\n", stake)
+					fmt.Printf("-----Stake2: %v\n", stake)
 					startingPeriod = endingPeriod
 				}
 				return false
@@ -105,6 +105,7 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 	// when multiplied by slash fractions (see above). We could only use equals if
 	// we had arbitrary-precision rationals.
 	currentStake := val.TokensFromShares(del.GetShares())
+	fmt.Printf("-----currentStake: %v\n", currentStake)
 
 	if stake.GT(currentStake) {
 		// AccountI for rounding inconsistencies between:
@@ -131,7 +132,7 @@ func (k Keeper) CalculateDelegationRewards(ctx sdk.Context, val stakingtypes.Val
 		if stake.LTE(currentStake.Add(marginOfErr)) {
 			stake = currentStake
 		} else {
-			fmt.Printf("Error1")
+			fmt.Printf("Error1\n")
 			panic(fmt.Sprintf("calculated final stake for delegator %s greater than current stake"+
 				"\n\tfinal stake:\t%s"+
 				"\n\tcurrent stake:\t%s",
