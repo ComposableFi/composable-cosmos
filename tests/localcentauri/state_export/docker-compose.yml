@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  osmosisd:
+    image: local:centauri
+    build:
+      context: ../../../
+      dockerfile: Dockerfile
+      args:
+        RUNNER_IMAGE: alpine:3.16
+        GO_VERSION: 1.19
+    volumes:
+      - ./scripts/start.sh:/centauri/start.sh
+      - ./scripts/testnetify.py:/centauri/testnetify.py
+      - ./state_export.json:/centauri/state_export.json
+      - $HOME/.centauri/:/centauri/.centauri/
+    entrypoint:
+      - /osmosis/start.sh
+    environment:
+      - MONIKER=val
+      - CHAIN_ID=localcentauri
+    ports:
+      - 26657:26657
+      - 1317:1317
+      - 9090:9090
+      - 9091:9091
+      - 6060:6060

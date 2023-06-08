@@ -5,6 +5,7 @@
 *.so
 *.dylib
 
+state_export.json
 **state.json
 **test.py
 **test.sh

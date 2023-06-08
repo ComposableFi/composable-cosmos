@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  osmosisd:
+    image: local:centauri
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+      args:
+        RUNNER_IMAGE: alpine:3.16
+        GO_VERSION: 1.19
+    volumes:
+      - ./scripts/setup.sh:/centauri/setup.sh
+      - $HOME/.centauri/:/centauri/.centauri/
+    entrypoint:
+      - /centauri/setup.sh
+    command:
+      - $STATE
+    ports:
+      - 26657:26657
+      - 1317:1317
+      - 9090:9090
+      - 9091:9091
