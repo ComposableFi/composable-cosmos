@@ -13,15 +13,15 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	routerKeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
+	routerKeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {
 	t   testing.TB
-	app *BanksyApp
+	app *CentauriApp
 }
 
-func NewTestSupport(t testing.TB, app *BanksyApp) *TestSupport {
+func NewTestSupport(t testing.TB, app *CentauriApp) *TestSupport {
 	return &TestSupport{t: t, app: app}
 }
 

@@ -8,24 +8,24 @@ import (
 )
 
 var (
-	BanksyMainRepo   = "ghcr.io/notional-labs/banksy"
-	BanksyICTestRepo = "ghcr.io/notional-labs/banksy-ictest"
+	CentauriMainRepo   = "ghcr.io/notional-labs/centauri"
+	CentauriICTestRepo = "ghcr.io/notional-labs/centauri-ictest"
 
 	repo, version = GetDockerImageInfo()
 
-	BanksyImage = ibc.DockerImage{
+	CentauriImage = ibc.DockerImage{
 		Repository: repo,
 		Version:    version,
 		UidGid:     "1025:1025",
 	}
 
-	banksyConfig = ibc.ChainConfig{
+	centauriConfig = ibc.ChainConfig{
 		Type:                "cosmos",
-		Name:                "banksy",
-		ChainID:             "banksy-2",
-		Images:              []ibc.DockerImage{BanksyImage},
-		Bin:                 "banksyd",
-		Bech32Prefix:        "banksy",
+		Name:                "centauri",
+		ChainID:             "centauri-2",
+		Images:              []ibc.DockerImage{CentauriImage},
+		Bin:                 "centaurid",
+		Bech32Prefix:        "centauri",
 		Denom:               "stake",
 		CoinType:            "118",
 		GasPrices:           "0.0stake",
@@ -42,10 +42,10 @@ var (
 // If testing locally, user should run `make docker-build-debug` and interchaintest will use the local image.
 func GetDockerImageInfo() (repo, version string) {
 	branchVersion, found := os.LookupEnv("BRANCH_CI")
-	repo = BanksyICTestRepo
+	repo = CentauriICTestRepo
 	if !found {
 		// make local-image
-		repo = "banksy"
+		repo = "centauri"
 		branchVersion = "debug"
 	}
 

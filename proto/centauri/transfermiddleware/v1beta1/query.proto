@@ -1,5 +1,5 @@
 syntax = "proto3";
-package banksy.transfermiddleware.v1beta1;
+package centauri.transfermiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -10,10 +10,10 @@ option go_package = "x/transfermiddleware/types";
 service Query {
   // ParaTokenInfo queries all token info of a native denom.
   rpc ParaTokenInfo(QueryParaTokenInfoRequest) returns (QueryParaTokenInfoResponse) {
-    option (google.api.http).get = "/banksy/paratokeninfo";
+    option (google.api.http).get = "/centauri/paratokeninfo";
   }
   rpc EscrowAddress(QueryEscrowAddressRequest) returns (QueryEscrowAddressResponse) {
-    option (google.api.http).get = "/banksy/escrowaddress";
+    option (google.api.http).get = "/centauri/escrowaddress";
   }
 }
 

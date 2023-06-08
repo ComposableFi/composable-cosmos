@@ -96,6 +96,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
+	centauriupgrade "github.com/notional-labs/centauri/v2/app/upgrade/centauri"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -106,16 +107,16 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/banksy/v2/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/banksy/v2/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/banksy/v2/x/transfermiddleware/types"
+	transfermiddleware "github.com/notional-labs/centauri/v2/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/banksy/v2/x/mint"
-	mintkeeper "github.com/notional-labs/banksy/v2/x/mint/keeper"
-	minttypes "github.com/notional-labs/banksy/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v2/x/mint"
+	mintkeeper "github.com/notional-labs/centauri/v2/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -124,8 +125,9 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "banksy"
-	Name                 = "banksy"
+	AccountAddressPrefix = "centauri"
+	Name                 = "centauri"
+	dirName              = "banksy"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -202,7 +204,7 @@ var (
 	}
 )
 
-var _ servertypes.Application = (*BanksyApp)(nil)
+var _ servertypes.Application = (*CentauriApp)(nil)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()
@@ -210,15 +212,15 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+dirName)
 	// manually update the power reduction by replacing micro (u) -> pico (p)pica
 	sdk.DefaultPowerReduction = PowerReduction
 }
 
-// BanksyApp extends an ABCI application, but with most of its parameters exported.
+// CentauriApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type BanksyApp struct {
+type CentauriApp struct {
 	*baseapp.BaseApp
 
 	cdc               *codec.LegacyAmino
@@ -267,7 +269,7 @@ type BanksyApp struct {
 
 // RUN GOSEC
 // New returns a reference to an initialized blockchain app
-func NewBanksyApp(
+func NewCentauriApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -278,7 +280,7 @@ func NewBanksyApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *BanksyApp {
+) *CentauriApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -297,7 +299,7 @@ func NewBanksyApp(
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
 
-	app := &BanksyApp{
+	app := &CentauriApp{
 		BaseApp:           bApp,
 		cdc:               cdc,
 		appCodec:          appCodec,
@@ -681,54 +683,55 @@ func NewBanksyApp(
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
+	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec))
 
 	return app
 }
 
 // Name returns the name of the App
-func (app *BanksyApp) Name() string { return app.BaseApp.Name() }
+func (app *CentauriApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app *BanksyApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app *CentauriApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *BanksyApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *CentauriApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *BanksyApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
+func (app *CentauriApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
 	return &app.TransferKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *BanksyApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *CentauriApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetScopedIBCKeeper implements the TestingApp interface.
-func (app *BanksyApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *CentauriApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *BanksyApp) GetTxConfig() client.TxConfig {
+func (app *CentauriApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
 
 // BeginBlocker application updates every begin block
-func (app *BanksyApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *BanksyApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *CentauriApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *BanksyApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *CentauriApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -738,12 +741,12 @@ func (app *BanksyApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) ab
 }
 
 // LoadHeight loads a particular height
-func (app *BanksyApp) LoadHeight(height int64) error {
+func (app *CentauriApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *BanksyApp) ModuleAccountAddrs() map[string]bool {
+func (app *CentauriApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -754,7 +757,7 @@ func (app *BanksyApp) ModuleAccountAddrs() map[string]bool {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *BanksyApp) BlacklistedModuleAccountAddrs() map[string]bool {
+func (app *CentauriApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -768,7 +771,7 @@ func (app *BanksyApp) BlacklistedModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *BanksyApp) LegacyAmino() *codec.LegacyAmino {
+func (app *CentauriApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -776,47 +779,47 @@ func (app *BanksyApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *BanksyApp) AppCodec() codec.Codec {
+func (app *CentauriApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *BanksyApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *CentauriApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // GetKey returns the KVStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *BanksyApp) GetKey(storeKey string) *storetypes.KVStoreKey {
+func (app *CentauriApp) GetKey(storeKey string) *storetypes.KVStoreKey {
 	return app.keys[storeKey]
 }
 
 // GetTKey returns the TransientStoreKey for the provided store key.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *BanksyApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
+func (app *CentauriApp) GetTKey(storeKey string) *storetypes.TransientStoreKey {
 	return app.tkeys[storeKey]
 }
 
 // GetMemKey returns the MemStoreKey for the provided mem key.
 //
 // NOTE: This is solely used for testing purposes.
-func (app *BanksyApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
+func (app *CentauriApp) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.memKeys[storeKey]
 }
 
 // GetSubspace returns a param subspace for a given module name.
 //
 // NOTE: This is solely to be used for testing purposes.
-func (app *BanksyApp) GetSubspace(moduleName string) paramstypes.Subspace {
+func (app *CentauriApp) GetSubspace(moduleName string) paramstypes.Subspace {
 	subspace, _ := app.ParamsKeeper.GetSubspace(moduleName)
 	return subspace
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *BanksyApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
+func (app *CentauriApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -827,17 +830,17 @@ func (app *BanksyApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) 
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *BanksyApp) RegisterTxService(clientCtx client.Context) {
+func (app *CentauriApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *BanksyApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *CentauriApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
 }
 
 // RegisterNodeService registers the node gRPC Query service.
-func (app *BanksyApp) RegisterNodeService(clientCtx client.Context) {
+func (app *CentauriApp) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
@@ -872,6 +875,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *BanksyApp) SimulationManager() *module.SimulationManager {
+func (app *CentauriApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
