@@ -393,7 +393,5 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndEscrowProcessWhenLaunchChai
 		balance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 		expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, chainBSupply.Amount.Sub(transferAmountFromChainBToChainA).Add(transferAmountFromChainAToChainB)))
 		suite.Require().Equal(expBalance, balance)
-
 	})
-
 }
