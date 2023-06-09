@@ -11,8 +11,8 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-// TestStartBanksy is a basic test to assert that spinning up a Banksy network with 1 validator works properly.
-func TestBasicBanksy(t *testing.T) {
+// TestStartCentauri is a basic test to assert that spinning up a Centauri network with 1 validator works properly.
+func TestBasicCentauri(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -21,14 +21,14 @@ func TestBasicBanksy(t *testing.T) {
 
 	ctx := context.Background()
 
-	// Create chain factory with Banksy
+	// Create chain factory with Centauri
 	numVals := 3
 	numFullNodes := 3
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "banksy",
-			ChainConfig:   banksyConfig,
+			Name:          "centauri",
+			ChainConfig:   centauriConfig,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},
@@ -38,13 +38,13 @@ func TestBasicBanksy(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	banksy := chains[0].(*cosmos.CosmosChain)
+	centauri := chains[0].(*cosmos.CosmosChain)
 
 	// Relayer Factory
 	client, network := interchaintest.DockerSetup(t)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(banksy)
+	ic := interchaintest.NewInterchain().AddChain(centauri)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)

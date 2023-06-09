@@ -18,12 +18,12 @@ const (
 	blocksAfterUpgrade = uint64(10)
 )
 
-func TestBanksyUpgrade(t *testing.T) {
+func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, "banksy", version, repo, "latest", "upgrade_test")
+	CosmosChainUpgradeTest(t, version, repo, "latest", "centauri")
 }
 
-func CosmosChainUpgradeTest(t *testing.T, chainName, initialVersion, upgradeContainerRepo, upgradeVersion, upgradeName string) {
+func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeContainerRepo, upgradeVersion, upgradeName string) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
