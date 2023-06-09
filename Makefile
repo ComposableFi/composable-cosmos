@@ -166,7 +166,7 @@ localnet-state-export-startd:
 	@docker compose -f tests/localcentauri/state_export/docker-compose.yml up -d
 
 localnet-state-export-stop:
-	@docker compose -f tests/localcentauri/docker-compose.yml down
+	@docker compose -f tests/localcentauri/state_export/docker-compose.yml down
 
 ###############################################################################
 ###                             Interchain test                             ###

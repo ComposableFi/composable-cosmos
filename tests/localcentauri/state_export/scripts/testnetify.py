@@ -311,7 +311,7 @@ def main():
     for balance in genesis['app_state']['bank']['balances']:
         if balance['address'] == new_account.address:
             for coin in balance['coins']:
-                if coin['denom'] == "stake":
+                if coin['denom'] == "ppica":
                     coin["amount"] = str(int(coin["amount"]) + 1000000000000000) # used to be only 1, but we removed a module so added another 1bn here
                     if args.quiet:
                         print("\tUpdate {} stake balance to {}".format(new_account.address, coin["amount"]))
@@ -323,7 +323,7 @@ def main():
         if balance['address'] == BONDED_TOKENS_POOL_MODULE_ADDRESS:
             # Find 
             for coin in balance['coins']:
-                if coin['denom'] == "stake":
+                if coin['denom'] == "ppica":
                     coin["amount"] = str(int(coin["amount"]) + 1000000000000000)
                     if not args.quiet:
                         print("\tUpdate {} (bonded_tokens_pool_module) stake balance to {}".format(BONDED_TOKENS_POOL_MODULE_ADDRESS, coin["amount"]))
@@ -331,7 +331,7 @@ def main():
             break
 
     for supply in genesis['app_state']['bank']['supply']:
-        if supply["denom"] == "stake":
+        if supply["denom"] == "ppica":
             if args.quiet:
                 print("\tUpdate total stake supply from {} to {}".format(supply["amount"], str(int(supply["amount"]) + 2000000000000000)))
             supply["amount"] = str(int(supply["amount"]) + 2000000000000000)
