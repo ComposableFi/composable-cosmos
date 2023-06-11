@@ -20,10 +20,10 @@ const (
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, version, repo, "latest", "centauri")
+	CosmosChainUpgradeTest(t, repo, version, "centauri")
 }
 
-func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeContainerRepo, upgradeVersion, upgradeName string) {
+func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
