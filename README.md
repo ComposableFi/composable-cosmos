@@ -1,5 +1,5 @@
 # Centauri
-Cosmos testnet with IBC-v7 and wasm client enable.
+Cosmos blockchain with IBC-v7 and wasm client enable.
 
 ## Hardware Recommendation
 
