@@ -44,7 +44,7 @@ func CreateUpgradeHandler(
 
 		// Gov params change: minium deposit
 		newGovParamsSet := govkeeper.GetParams(ctx)
-		newGovParamsSet.MinInitialDepositRatio = sdk.NewDecWithPrec(3, 1).String()
+		newGovParamsSet.MinInitialDepositRatio = sdk.NewDecWithPrec(1, 2).String() // this is 1%
 		govkeeper.SetParams(ctx, newGovParamsSet)
 
 		return mm.RunMigrations(ctx, configurator, vm)
