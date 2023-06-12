@@ -14,6 +14,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
+	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
+
 	bech32authmigration "github.com/notional-labs/centauri/v2/bech32-migration/auth"
 	bech32govmigration "github.com/notional-labs/centauri/v2/bech32-migration/gov"
 	bech32slashingmigration "github.com/notional-labs/centauri/v2/bech32-migration/slashing"
@@ -25,6 +27,7 @@ func CreateUpgradeHandler(
 	configurator module.Configurator,
 	keys map[string]*storetypes.KVStoreKey, codec codec.Codec,
 	slashingKeeper *slashingkeeper.Keeper,
+	govkeeper *govkeeper.Keeper,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		// Migration prefix
@@ -38,6 +41,10 @@ func CreateUpgradeHandler(
 		newParamsSet := slashingKeeper.GetParams(ctx)
 		newParamsSet.SlashFractionDowntime = math.LegacyNewDecWithPrec(1, 5)
 		slashingKeeper.SetParams(ctx, newParamsSet)
+
+		// Gov params change: minium deposit
+		newGovParamsSet := govkeeper.GetParams(ctx)
+		newGovParamsSet.MinInitialDepositRatio = sdk.NewDecWithPrec(3, 1).String()
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
