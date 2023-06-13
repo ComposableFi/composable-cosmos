@@ -167,11 +167,11 @@ def main():
 
     old_validator = Validator(
         # from ping.pub
-        moniker = "notional",
-        pubkey = "ux/IM9uD+a/4rhIurbRiudh9K+M6tH1cNfffpX48Lrw=", 
-        hex_address = "6EC804DBB72380D0AA5AC6A82650A1FA75FBABC5",
-        operator_address = "centaurivaloper1083svrca4t350mphfv9x45wq9asrs60cpqzg0y",
-        consensus_address = "centaurivalcons1dmyqfkahywqdp2j6c65zv59plf6lh279unewtr" # `centaurid q  tendermint-validator-set | grep -B 5 -A 5 ux/IM9uD`  (where ux/ was found on ping.pub)
+        moniker = "openbitlab",
+        pubkey = "2MmITUjI66YghUlPAVMvzqQcEWItCiOlBhOIEFf3qbc=", 
+        hex_address = "65992F1F2D93B110CCB636FCC18906674E564DA0",
+        operator_address = "centaurivaloper1q5f6pup4kzt37n2yxw75qyanr69mwdgajtmntm",
+        consensus_address = "centaurivalcons1707lxduzehvq33drsdd5sy0lrr6k6q2wlytefs" # `centaurid q  tendermint-validator-set | grep -B 5 -A 5 ux/IM9uD`  (where ux/ was found on ping.pub)
     )
 
     new_account = Account(
