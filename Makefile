@@ -129,6 +129,9 @@ proto-check-breaking:
 ictest-start-cosmos:
 	cd tests/interchaintest && go test -race -v -run TestStartCentauri .
 
+ictest-validator:
+	cd tests/interchaintest && go test -race -v -run TestValidator .
+
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
 	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
