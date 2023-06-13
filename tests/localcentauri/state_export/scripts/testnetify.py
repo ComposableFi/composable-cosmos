@@ -333,8 +333,8 @@ def main():
     for supply in genesis['app_state']['bank']['supply']:
         if supply["denom"] == "ppica":
             if args.quiet:
-                print("\tUpdate total stake supply from {} to {}".format(supply["amount"], str(int(supply["amount"]) + 2000000000000000)))
-            supply["amount"] = str(int(supply["amount"]) + 2000000000000000)
+                print("\tUpdate total stake supply from {} to {}".format(supply["amount"], str(int(supply["amount"]))))
+            supply["amount"] = str(int(supply["amount"]))
             break
 
     os.makedirs(os.path.dirname(args.output_genesis)  , exist_ok=True)  
