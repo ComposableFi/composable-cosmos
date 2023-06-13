@@ -57,7 +57,6 @@ func NewContextForApp(app centauri.CentauriApp) sdk.Context {
 
 func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.CentauriApp {
 	t.Helper()
-
 	app, genesisState := setup(!isCheckTx, invCheckPeriod)
 	if !isCheckTx {
 		// InitChain must be called to stop deliverState from being nil
@@ -78,7 +77,6 @@ func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.Centauri
 }
 
 func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*centauri.CentauriApp, centauri.GenesisState) {
-
 	db := dbm.NewMemDB()
 	encCdc := centauri.MakeEncodingConfig()
 	app := centauri.NewCentauriApp(
