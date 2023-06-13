@@ -36,6 +36,9 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
+
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in
@@ -57,7 +60,7 @@ var DefaultConsensusParams = &tmproto.ConsensusParams{
 	},
 }
 
-func setup(t testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, GenesisState) {
+func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*CentauriApp, GenesisState) {
 	nodeHome := t.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
 	snapshotDB, err := dbm.NewDB("metadata", dbm.MemDBBackend, snapshotDir)
@@ -70,11 +73,13 @@ func setup(t testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, G
 	db := dbm.NewMemDB()
 	app := NewCentauriApp(
 		log.NewNopLogger(),
-		db, nil, true, map[int64]bool{},
+		db, nil, true, wasmtypes.EnableAllProposals,
+		map[int64]bool{},
 		nodeHome,
 		invCheckPeriod,
 		MakeEncodingConfig(),
 		EmptyBaseAppOptions{},
+		opts,
 		baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState()
