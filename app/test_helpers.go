@@ -73,7 +73,8 @@ func setup(t testing.TB, withGenesis bool, invCheckPeriod uint, opts ...wasm.Opt
 	db := dbm.NewMemDB()
 	app := NewCentauriApp(
 		log.NewNopLogger(),
-		db, nil, true, wasmtypes.EnableAllProposals,
+		db, nil, true,
+		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
 		nodeHome,
 		invCheckPeriod,
