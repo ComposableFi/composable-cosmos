@@ -820,8 +820,13 @@ github.com/nats-io/nkeys v0.1.0/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxzi
 github.com/nats-io/nkeys v0.1.3/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxziKVo7w=
 github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OSON2c=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
+<<<<<<< HEAD
 github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230613043214-041237bb355b h1:wTnIDrLROTiKLIlzBG2SMTuPrPW6lxkZ5UruTnO4UAo=
 github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230613043214-041237bb355b/go.mod h1:hLJK59PeInGu+LIXlcp8O5TGrYigtynDUPUOkrIEZMM=
+=======
+github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230611093036-8a200a49cbc5 h1:hnpKHsPEuQbVQBebBwXhS7i4VDyon2GETEyYxhs2xkY=
+github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230611093036-8a200a49cbc5/go.mod h1:hLJK59PeInGu+LIXlcp8O5TGrYigtynDUPUOkrIEZMM=
+>>>>>>> 89d74d6fc134d112ced3016c9c3967479aa8ed87
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/nxadm/tail v1.4.8/go.mod h1:+ncqLTQzXmGhMZNUePPaPqPvBxHAIsmXswZKocGu+AU=

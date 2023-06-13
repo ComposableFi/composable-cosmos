@@ -20,10 +20,10 @@ const (
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, version, repo, "latest", "centauri")
+	CosmosChainUpgradeTest(t, repo, version, "centauri")
 }
 
-func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeContainerRepo, upgradeVersion, upgradeName string) {
+func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}
@@ -34,19 +34,19 @@ func CosmosChainUpgradeTest(t *testing.T, chainName, upgradeContainerRepo, upgra
 		{
 			ChainConfig: ibc.ChainConfig{
 				Type:    "cosmos",
-				Name:    "banksy",
-				ChainID: "banksyd",
+				Name:    "centauri",
+				ChainID: "centaurid",
 				Images: []ibc.DockerImage{
 					{
-						Repository: "ghcr.io/notional-labs/banksy",
-						Version:    "2.3.5",
+						Repository: "ghcr.io/notional-labs/centauri",
+						Version:    "3.0.1",
 						UidGid:     "1025:1025",
 					},
 				},
-				Bin:            "banksyd",
-				Bech32Prefix:   "banksy",
-				Denom:          "stake",
-				GasPrices:      "0.00stake",
+				Bin:            "centaurid",
+				Bech32Prefix:   "centauri",
+				Denom:          "ppica",
+				GasPrices:      "0.00ppica",
 				GasAdjustment:  1.3,
 				TrustingPeriod: "504h",
 				// EncodingConfig: WasmClientEncoding(),
