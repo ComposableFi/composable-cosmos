@@ -20,9 +20,6 @@ RUN apk add --no-cache \
 # Download go dependencies
 WORKDIR /centauri
 COPY go.mod go.sum ./
-RUN --mount=type=cache,target=/root/.cache/go-build \
-    --mount=type=cache,target=/root/go/pkg/mod \
-    go mod download
 
 # Cosmwasm - Download correct libwasmvm version
 RUN WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm | cut -d ' ' -f 2) && \
@@ -36,9 +33,7 @@ RUN WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm | cut -d ' ' -f 2) &&
 COPY . .
 
 # Build centaurid binary
-RUN --mount=type=cache,target=/root/.cache/go-build \
-    --mount=type=cache,target=/root/go/pkg/mod \
-    GOWORK=off go build \
+RUN GOWORK=off go build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
@@ -64,7 +59,7 @@ ENV HOME /centauri
 
 WORKDIR $HOME
 
-COPY scripts/* /centauri
+COPY scripts/* /centauri/
 # rest server
 EXPOSE 1317
 # tendermint p2p
