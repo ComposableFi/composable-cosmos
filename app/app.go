@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-	wasm "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
-	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
+	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -120,7 +120,7 @@ import (
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 )
 
@@ -179,7 +179,7 @@ var (
 		vesting.AppModuleBasic{},
 		tendermint.AppModuleBasic{},
 		mint.AppModuleBasic{},
-		wasm.AppModuleBasic{},
+		wasm08.AppModuleBasic{},
 		router.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
 		consensus.AppModuleBasic{},
@@ -252,7 +252,7 @@ type CentauriApp struct {
 	ICQKeeper        icqkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
-	Wasm08Keeper     wasm08.Keeper // TODO: use this name ?
+	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -293,7 +293,7 @@ func NewCentauriApp(
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
 		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
@@ -394,7 +394,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
+	app.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, app.keys[wasm08types.StoreKey])
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -522,7 +522,7 @@ func NewCentauriApp(
 		transferModule,
 		icqModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
-		wasm.NewAppModule(app.Wasm08Keeper),
+		wasm08.NewAppModule(app.Wasm08Keeper),
 		routerModule,
 		transfermiddlewareModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
@@ -556,7 +556,7 @@ func NewCentauriApp(
 		group.ModuleName,
 		paramstypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		wasmtypes.ModuleName,
+		wasm08types.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
@@ -584,7 +584,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		wasmtypes.ModuleName,
+		wasm08types.ModuleName,
 		alliancemoduletypes.ModuleName,
 	)
 
@@ -616,7 +616,7 @@ func NewCentauriApp(
 		feegrant.ModuleName,
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
-		wasmtypes.ModuleName,
+		wasm08types.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
