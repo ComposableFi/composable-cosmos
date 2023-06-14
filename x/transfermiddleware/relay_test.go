@@ -44,7 +44,7 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 				// Add parachain token info
 				chainBtransMiddleware := suite.chainB.TransferMiddleware()
 				expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-				err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+				err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 				suite.Require().NoError(err)
 			},
 		},
@@ -116,7 +116,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	// Add parachain token info
 	chainBtransMiddlewareKeeper := suite.chainB.TransferMiddleware()
 	expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 	suite.Require().NoError(err)
 
 	originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
@@ -198,7 +198,7 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	// Add parachain token info
 	chainBtransMiddlewareKeeper := suite.chainB.TransferMiddleware()
 	expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom)
+	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 	suite.Require().NoError(err)
 
 	originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
@@ -310,7 +310,7 @@ func (suite *TransferMiddlewareTestSuite) TestMintAndEscrowProcessWhenLaunchChai
 
 		// Add parachain token info
 		chainBtransMiddleware := suite.chainB.TransferMiddleware()
-		err = chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, path.EndpointB.ChannelID, sdk.DefaultBondDenom)
+		err = chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, path.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 		suite.Require().NoError(err)
 
 		// send coin from B to A

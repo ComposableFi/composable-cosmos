@@ -20,7 +20,7 @@ from_scratch () {
   make install
 
   # remove existing daemon.
-  rm -rf ~/.centauri/*
+  rm -rf ~/.banksy/*
 
   # juno1efd63aw40lxf3n4mhf7dzhjkr453axurv2zdzk
   echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | centaurid keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
@@ -32,7 +32,7 @@ from_scratch () {
   # Function updates the config based on a jq argument as a string
   update_test_genesis () {
     # update_test_genesis '.consensus_params["block"]["max_gas"]="100000000"'
-    cat $HOME/.centauri/config/genesis.json | jq "$1" > $HOME/.centauri/config/tmp_genesis.json && mv $HOME/.centauri/config/tmp_genesis.json $HOME/.centauri/config/genesis.json
+    cat $HOME/.banksy/config/genesis.json | jq "$1" > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
   }
 
   # Set gas limit in genesis
@@ -52,10 +52,10 @@ from_scratch () {
   update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["stake"]'
 
   # Allocate genesis accounts
-  centaurid add-genesis-account $KEY 1000000000stake,100000000000000utest --keyring-backend $KEYRING
+  centaurid add-genesis-account $KEY 10000000000000000000stake,100000000000000utest --keyring-backend $KEYRING
   centaurid add-genesis-account myaccount 1000000000stake,100000000000000utest --keyring-backend $KEYRING
 
-  centaurid gentx $KEY 1000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+  centaurid gentx $KEY 10000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
   # Collect genesis tx
   centaurid collect-gentxs
@@ -73,10 +73,10 @@ fi
 echo "Starting node..."
 
 # Opens the RPC endpoint to outside connections
-sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.centauri/config/config.toml
-sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.centauri/config/config.toml
-sed -i 's/enable = false/enable = true/g' ~/.centauri/config/app.toml
-sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.centauri/config/app.toml
+sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/.banksy/config/config.toml
+sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.banksy/config/config.toml
+sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
+sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
 
 centaurid config node tcp://0.0.0.0:2241
 centaurid start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243

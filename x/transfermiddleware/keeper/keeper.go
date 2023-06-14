@@ -43,7 +43,7 @@ func NewKeeper(
 
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
-func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom string) error {
+func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom, assetID string) error {
 	if keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.ErrDuplicateParachainIBCTokenInfo
 	}
@@ -52,6 +52,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 		IbcDenom:    ibcDenom,
 		ChannelId:   channelID,
 		NativeDenom: nativeDenom,
+		AssetId:     assetID,
 	}
 
 	bz, err := keeper.cdc.Marshal(&info)
@@ -59,10 +60,10 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 		return err
 	}
 	store := ctx.KVStore(keeper.storeKey)
-	store.Set(types.GetKeyParachainIBCTokenInfo(nativeDenom), bz)
-
+	store.Set(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom), bz)
+	store.Set(types.GetKeyParachainIBCTokenInfoByAssetId(assetID), bz)
 	// update the IBCdenom-native index
-	store.Set(types.GetKeyIBCDenomAndNativeIndex(ibcDenom), []byte(nativeDenom))
+	store.Set(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom), []byte(nativeDenom))
 	return nil
 }
 
@@ -74,33 +75,52 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	}
 
 	// get the IBCdenom
-	ibcDenom := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom).IbcDenom
+	tokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+	ibcDenom := tokenInfo.IbcDenom
+	assetId := tokenInfo.AssetId
 
 	store := ctx.KVStore(keeper.storeKey)
-	store.Delete(types.GetKeyParachainIBCTokenInfo(nativeDenom))
+	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
+	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetId(assetId))
 
 	// update the IBCdenom-native index
-	if !store.Has(types.GetKeyIBCDenomAndNativeIndex(ibcDenom)) {
+	if !store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
 		panic("broken data in state")
 	}
 
-	store.Delete(types.GetKeyIBCDenomAndNativeIndex(ibcDenom))
+	store.Delete(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return nil
 }
 
-func (keeper Keeper) HasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
+func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {
 	store := ctx.KVStore(keeper.storeKey)
-	key := types.GetKeyParachainIBCTokenInfo(nativeDenom)
+	key := types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)
+
+	return store.Has(key)
+}
+
+func (keeper Keeper) HasParachainIBCTokenInfoByAssetId(ctx sdk.Context, assetId string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyParachainIBCTokenInfoByAssetId(assetId)
 
 	return store.Has(key)
 }
 
 // TODO: testing
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
-func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
+func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfo(nativeDenom))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
+
+	keeper.cdc.Unmarshal(bz, &info)
+
+	return info
+}
+
+func (keeper Keeper) GetParachainIBCTokenInfoByAssetId(ctx sdk.Context, assetId string) (info types.ParachainIBCTokenInfo) {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetId(assetId))
 
 	keeper.cdc.Unmarshal(bz, &info)
 
@@ -109,7 +129,7 @@ func (keeper Keeper) GetParachainIBCTokenInfo(ctx sdk.Context, nativeDenom strin
 
 func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibcDenom string) string {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfo(ibcDenom))
+	bz := store.Get(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return string(bz)
 }
