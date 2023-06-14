@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
 // TODO: add init genesis logic
