@@ -11,7 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
-	customibctesting "github.com/notional-labs/centauri/v2/app/ibctesting"
+	customibctesting "github.com/notional-labs/centauri/v3/app/ibctesting"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -101,7 +101,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 	suite.coordinator.Setup(pathBtoC)
 	// Add parachain token info
 	chainBtransMiddleware := suite.chainB.TransferMiddleware()
-	err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+	err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 	suite.Require().NoError(err)
 
 	params := transfertypes.Params{
@@ -253,7 +253,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 			suite.Require().NoError(err)
 
 			testAcc := RandomAccountAddress(suite.T())
@@ -383,7 +383,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			_ = senderCOriginalBalance
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 			suite.Require().NoError(err)
 
 			// Disable receiveEnabled on chain A so it will return error ack
@@ -630,7 +630,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 			senderCOriginalBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 			suite.Require().NoError(err)
 
 			timeOut := 10 * time.Minute

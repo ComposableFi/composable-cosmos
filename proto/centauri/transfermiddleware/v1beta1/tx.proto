@@ -19,9 +19,10 @@ message MsgAddParachainIBCTokenInfo {
     // authority is the address that controls the module (defaults to x/gov unless overwritten).
     string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
 
-    string ibc_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
-    string channel_id = 3 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
-    string native_denom = 7 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string ibc_denom = 3 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string native_denom = 4 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+    string asset_id = 5 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
 }
 
 message MsgAddParachainIBCTokenInfoResponse {
