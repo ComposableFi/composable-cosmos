@@ -42,7 +42,7 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	voucherDenom := denomTrace.IBCDenom()
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
 
-	paraTokenInfo := k.GetParachainIBCTokenInfoByAssetId(ctx, data.Denom)
+	paraTokenInfo := k.GetParachainIBCTokenInfoByAssetID(ctx, data.Denom)
 
 	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()) != paraTokenInfo.NativeDenom {
 		return nil

@@ -103,9 +103,7 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 		nativeTokenSendOnChainA    = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 		nativeTokenReceiveOnChainB = sdk.NewCoin("ppica", transferAmount)
 		timeoutHeight              = clienttypes.NewHeight(1, 110)
-	)
-	var (
-		expChainABalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		expChainABalanceDiff       = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	)
 
 	suite.SetupTest() // reset

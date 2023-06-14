@@ -61,7 +61,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	}
 	store := ctx.KVStore(keeper.storeKey)
 	store.Set(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom), bz)
-	store.Set(types.GetKeyParachainIBCTokenInfoByAssetId(assetID), bz)
+	store.Set(types.GetKeyParachainIBCTokenInfoByAssetID(assetID), bz)
 	// update the IBCdenom-native index
 	store.Set(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom), []byte(nativeDenom))
 	return nil
@@ -81,7 +81,7 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
-	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetId(assetId))
+	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetId))
 
 	// update the IBCdenom-native index
 	if !store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
@@ -100,9 +100,9 @@ func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nati
 	return store.Has(key)
 }
 
-func (keeper Keeper) HasParachainIBCTokenInfoByAssetId(ctx sdk.Context, assetId string) bool {
+func (keeper Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetId string) bool {
 	store := ctx.KVStore(keeper.storeKey)
-	key := types.GetKeyParachainIBCTokenInfoByAssetId(assetId)
+	key := types.GetKeyParachainIBCTokenInfoByAssetID(assetId)
 
 	return store.Has(key)
 }
@@ -118,9 +118,9 @@ func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nati
 	return info
 }
 
-func (keeper Keeper) GetParachainIBCTokenInfoByAssetId(ctx sdk.Context, assetId string) (info types.ParachainIBCTokenInfo) {
+func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetId string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetId(assetId))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetId))
 
 	keeper.cdc.Unmarshal(bz, &info)
 
