@@ -1,4 +1,4 @@
-module github.com/notional-labs/centauri/v2
+module github.com/notional-labs/centauri/v3
 
 go 1.19
 
