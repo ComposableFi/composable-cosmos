@@ -77,11 +77,11 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	// get the IBCdenom
 	tokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 	ibcDenom := tokenInfo.IbcDenom
-	assetId := tokenInfo.AssetId
+	assetID := tokenInfo.AssetId
 
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
-	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetId))
+	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 
 	// update the IBCdenom-native index
 	if !store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
@@ -100,9 +100,9 @@ func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nati
 	return store.Has(key)
 }
 
-func (keeper Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetId string) bool {
+func (keeper Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) bool {
 	store := ctx.KVStore(keeper.storeKey)
-	key := types.GetKeyParachainIBCTokenInfoByAssetID(assetId)
+	key := types.GetKeyParachainIBCTokenInfoByAssetID(assetID)
 
 	return store.Has(key)
 }
@@ -118,9 +118,9 @@ func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nati
 	return info
 }
 
-func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetId string) (info types.ParachainIBCTokenInfo) {
+func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetId))
+	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 
 	keeper.cdc.Unmarshal(bz, &info)
 
