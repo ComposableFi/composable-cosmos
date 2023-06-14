@@ -27,8 +27,8 @@ func GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom string) []byte {
 	return append(KeyParachainIBCTokenInfoByNativeDenom, []byte(nativeDenom)...)
 }
 
-func GetKeyParachainIBCTokenInfoByAssetID(assetId string) []byte {
-	return append(KeyParachainIBCTokenInfoByAssetID, []byte(assetId)...)
+func GetKeyParachainIBCTokenInfoByAssetID(assetID string) []byte {
+	return append(KeyParachainIBCTokenInfoByAssetID, []byte(assetID)...)
 }
 
 func GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom string) []byte {
