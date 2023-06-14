@@ -100,11 +100,11 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
-		nativeToken   = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-		timeoutHeight = clienttypes.NewHeight(1, 110)
+		nativeTokenSendOnChainA    = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		nativeTokenReceiveOnChainB = sdk.NewCoin("ppica", transferAmount)
+		timeoutHeight              = clienttypes.NewHeight(1, 110)
 	)
 	var (
-		expChainBBalanceDiff sdk.Coin
 		expChainABalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	)
 
@@ -115,14 +115,13 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 
 	// Add parachain token info
 	chainBtransMiddlewareKeeper := suite.chainB.TransferMiddleware()
-	expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", path.EndpointB.ChannelID, "ppica", sdk.DefaultBondDenom)
 	suite.Require().NoError(err)
 
 	originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 	originalChainBBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 
-	msg := ibctransfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, nativeToken, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+	msg := ibctransfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, nativeTokenSendOnChainA, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
 	_, err = suite.chainA.SendMsgs(msg)
 	suite.Require().NoError(err)
 	suite.Require().NoError(err, path.EndpointB.UpdateClient())
@@ -144,12 +143,12 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	suite.Require().Equal(originalChainABalance.Sub(expChainABalanceDiff), newChainABalance)
 
 	// and dest chain balance contains voucher
-	expBalance := originalChainBBalance.Add(expChainBBalanceDiff)
+	expBalance := originalChainBBalance.Add(nativeTokenReceiveOnChainB)
 	gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 	suite.Require().Equal(expBalance, gotBalance)
 
 	// send token back
-	msg = ibctransfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeToken, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+	msg = ibctransfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeTokenReceiveOnChainB, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
 	_, err = suite.chainB.SendMsgs(msg)
 	suite.Require().NoError(err)
 	suite.Require().NoError(err, path.EndpointA.UpdateClient())
@@ -175,6 +174,10 @@ func (suite *TransferMiddlewareTestSuite) TestSendPacket() {
 	// equal chain A sender address balances
 	chainASenderBalances := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 	suite.Require().Equal(originalChainABalance, chainASenderBalances)
+
+	// equal chain A sender address balances
+	chainBReceiverBalances := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+	suite.Require().Equal(originalChainBBalance, chainBReceiverBalances)
 }
 
 // TODO: use testsuite here.
