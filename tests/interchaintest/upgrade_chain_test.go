@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	haltHeightDelta    = uint64(25) // will propose upgrade this many blocks in the future
+	haltHeightDelta    = uint64(20)
 	blocksAfterUpgrade = uint64(10)
 )
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, repo, version, "centauri")
+	CosmosChainUpgradeTest(t, repo, version, "test")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -102,7 +102,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 	err = chain.VoteOnProposalAllValidators(ctx, upgradeTx.ProposalID, cosmos.ProposalVoteYes)
 	require.NoError(t, err, "failed to submit votes")
 
-	_, err = cosmos.PollForProposalStatus(ctx, chain, height, height+haltHeightDelta, upgradeTx.ProposalID, cosmos.ProposalStatusPassed)
+	_, err = cosmos.PollForProposalStatus(ctx, chain, height, haltHeight, upgradeTx.ProposalID, cosmos.ProposalStatusPassed)
 	require.NoError(t, err, "proposal status did not change to passed in expected number of blocks")
 
 	timeoutCtx, timeoutCtxCancel := context.WithTimeout(ctx, time.Second*45)
