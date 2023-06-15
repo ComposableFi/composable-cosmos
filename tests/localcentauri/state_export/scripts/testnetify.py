@@ -19,8 +19,8 @@ class Account:
     address: str
 
 # /cosmos.auth.v1beta1.ModuleAccount in genesis state export "distribution" & "bonded_tokens_pool"
-DISTRIBUTION_MODULE_ADDRESS = "centauri1jv65s3grqf6v6jl3dp4t6c9t9rk99cd83d88wr"
-BONDED_TOKENS_POOL_MODULE_ADDRESS = "centauri1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3rf257t"
+DISTRIBUTION_MODULE_ADDRESS = "centauri1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8r4fqdv"
+BONDED_TOKENS_POOL_MODULE_ADDRESS = "centauri1fl48vsnmsdzcv85q5d2q4z5ajdha8yu333ynay"
 
 config = {
     "governance_voting_period": "180s",
@@ -167,10 +167,10 @@ def main():
 
     old_validator = Validator(
         # from ping.pub
-        moniker = "openbitlab",
-        pubkey = "2MmITUjI66YghUlPAVMvzqQcEWItCiOlBhOIEFf3qbc=", 
-        hex_address = "65992F1F2D93B110CCB636FCC18906674E564DA0",
-        operator_address = "centaurivaloper1q5f6pup4kzt37n2yxw75qyanr69mwdgajtmntm",
+        moniker = "⚡NodeX Validator⚡",
+        pubkey = "sb6DaxDNdLKOIgV9RswSiP2F8YwXIUcpILpx/PCTyxA==", 
+        hex_address = "F3FDF33782CDD808C5A3835B4811FF18F56D014E",
+        operator_address = "centaurivaloper1y3uqpev4ksgvpdcfyheyuqydpwxxzca75zemth",
         consensus_address = "centaurivalcons1707lxduzehvq33drsdd5sy0lrr6k6q2wlytefs" # `centaurid q  tendermint-validator-set | grep -B 5 -A 5 ux/IM9uD`  (where ux/ was found on ping.pub)
     )
 
@@ -180,8 +180,8 @@ def main():
     )
 
     old_account = Account(
-        pubkey = "Ah8/EMTRW6D+Gk3xZghbcoRkKeRA43S8Qo9J+lzf2HnK", # centaurid q  account centauri1083svrca4t350mphfv9x45wq9asrs60c7a585a        
-        address = "centauri1083svrca4t350mphfv9x45wq9asrs60c7a585a"  # validators account
+        pubkey = "A/bCCNWzYi1XzTmQqRh/eHUAZzX3D/Vbc1D09uO+AHjh=", # centaurid q  account centauri1083svrca4t350mphfv9x45wq9asrs60c7a585a        
+        address = "centauri1y3uqpev4ksgvpdcfyheyuqydpwxxzca7w9nrkw"  # validators account
     )   
 
 
@@ -333,8 +333,8 @@ def main():
     for supply in genesis['app_state']['bank']['supply']:
         if supply["denom"] == "ppica":
             if args.quiet:
-                print("\tUpdate total stake supply from {} to {}".format(supply["amount"], str(int(supply["amount"]))))
-            supply["amount"] = str(int(supply["amount"]))
+                print("\tUpdate total stake supply from {} to {}".format(supply["amount"], str(int(supply["amount"]) + 2000000000000000)))
+            supply["amount"] = str(int(supply["amount"]) + 2000000000000000)
             break
 
     os.makedirs(os.path.dirname(args.output_genesis)  , exist_ok=True)  

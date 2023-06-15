@@ -151,7 +151,7 @@ localnet-stop:
 	@STATE="" docker compose -f tests/localcentauri/docker-compose.yml down
 
 localnet-clean:
-	@rm -rfI $(HOME)/.centauri/
+	@rm -rfI $(HOME)/.banksy/
 
 localnet-state-export-init: localnet-clean localnet-state-export-build 
 
