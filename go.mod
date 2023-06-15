@@ -180,7 +180,8 @@ replace (
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230410223156-8c202c556f82
 
-	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230614215530-986f283e0073
+	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230615054050-5523db83e69a
+
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01
 )
