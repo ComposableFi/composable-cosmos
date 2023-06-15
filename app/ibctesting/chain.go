@@ -39,9 +39,9 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	centauri "github.com/notional-labs/centauri/v2/app"
-	"github.com/notional-labs/centauri/v2/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v3/app"
+	"github.com/notional-labs/centauri/v3/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 )
 

@@ -5,7 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
@@ -42,7 +42,7 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	voucherDenom := denomTrace.IBCDenom()
 	voucher := sdk.NewCoin(voucherDenom, transferAmount)
 
-	paraTokenInfo := k.GetParachainIBCTokenInfo(ctx, data.Denom)
+	paraTokenInfo := k.GetParachainIBCTokenInfoByAssetID(ctx, data.Denom)
 
 	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()) != paraTokenInfo.NativeDenom {
 		return nil
