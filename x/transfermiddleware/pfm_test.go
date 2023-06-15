@@ -91,7 +91,10 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 		timeoutHeight  = clienttypes.NewHeight(1, 110)
 		pathAtoB       *customibctesting.Path
 		pathBtoC       *customibctesting.Path
+		nativeDenom    = "ppica"
 		ibcDenom       = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		assetID        = sdk.DefaultBondDenom
+		// expDenom       = "ibc/3262D378E1636BE287EC355990D229DCEB828F0C60ED5049729575E235C60E8B"
 	)
 
 	suite.SetupTest()
@@ -101,7 +104,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 	suite.coordinator.Setup(pathBtoC)
 	// Add parachain token info
 	chainBtransMiddleware := suite.chainB.TransferMiddleware()
-	err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+	err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, nativeDenom, assetID)
 	suite.Require().NoError(err)
 
 	params := transfertypes.Params{
@@ -133,7 +136,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 	msg := transfertypes.NewMsgTransfer(
 		pathAtoB.EndpointA.ChannelConfig.PortID,
 		pathAtoB.EndpointA.ChannelID,
-		sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+		sdk.NewCoin(assetID, transferAmount),
 		suite.chainA.SenderAccount.GetAddress().String(),
 		testAcc.String(),
 		timeoutHeight,
@@ -160,7 +163,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 
 	// Check after first Hop
 	senderABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
-	suite.Require().Equal(senderAOriginalBalance.Sub(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)), senderABalance)
+	suite.Require().Equal(senderAOriginalBalance.Sub(sdk.NewCoin(assetID, transferAmount)), senderABalance)
 
 	escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
 	escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
@@ -168,7 +171,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 
 	escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
 	escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
-	suite.Require().Equal(sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)), escrowNativeDenomAddressBalance)
+	suite.Require().Equal(sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount)), escrowNativeDenomAddressBalance)
 
 	// then should have a packet from B to C
 	suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
@@ -234,6 +237,10 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
 		pathBtoC      *customibctesting.Path
+		nativeDenom   = "ppica"
+		ibcDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		assetID       = sdk.DefaultBondDenom
+		expDenom      = "ibc/3262D378E1636BE287EC355990D229DCEB828F0C60ED5049729575E235C60E8B"
 	)
 
 	testCases := []struct {
@@ -252,8 +259,9 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			suite.coordinator.Setup(pathBtoC)
 
 			// Add parachain token info
+			senderAOriginalBalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, nativeDenom, assetID)
 			suite.Require().NoError(err)
 
 			testAcc := RandomAccountAddress(suite.T())
@@ -278,7 +286,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			msg := transfertypes.NewMsgTransfer(
 				pathAtoB.EndpointA.ChannelConfig.PortID,
 				pathAtoB.EndpointA.ChannelID,
-				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				sdk.NewCoin(assetID, transferAmount),
 				suite.chainA.SenderAccount.GetAddress().String(),
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
@@ -317,6 +325,17 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			suite.Require().NoError(err)
 			suite.chainB.PendingSendPackets = nil
 
+			// Check escrow address
+			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expectBalance := sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
+			suite.Require().Equal(expectBalance, escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expectBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
+			suite.Require().Equal(expectBalance, escrowNativeDenomAddressBalance)
+
 			// relay ack C to B
 			suite.Require().Equal(1, len(suite.chainC.PendingAckPackets))
 			ack := suite.chainC.PendingAckPackets[0]
@@ -341,9 +360,23 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 			suite.Require().NoError(err)
 			suite.chainB.PendingAckPackets = nil
 
+			// Check escrow address
+			escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expectBalance = sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
+			suite.Require().Equal(expectBalance, escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expectBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
+			suite.Require().Equal(expectBalance, escrowNativeDenomAddressBalance)
+
 			intermediaryBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 			suite.Require().Equal(intermediaryOriginalBalance, intermediaryBalance)
-			expDenom := "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+
+			senderABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			suite.Require().Equal(senderAOriginalBalance.Sub(sdk.NewCoin(assetID, transferAmount)), senderABalance)
+
 			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
 			balance := suite.chainC.AllBalances(testAcc)
 			suite.Require().Equal(expBalance, balance)
@@ -358,14 +391,17 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
 		pathBtoC      *customibctesting.Path
-		expDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		nativeDenom   = "ppica"
+		ibcDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		assetID       = sdk.DefaultBondDenom
+		expDenom      = "ibc/3262D378E1636BE287EC355990D229DCEB828F0C60ED5049729575E235C60E8B"
 	)
 
 	testCases := []struct {
 		name string
 	}{
 		{
-			"Success case Picasso -> Composable -> Osmosis and reverse from Osmosis -> Composable -> Picasso",
+			"Success transfer from Picasso -> Composable -> Osmosis and error reverse from Osmosis -> Composable -> Picasso",
 		},
 	}
 	for _, tc := range testCases {
@@ -383,7 +419,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			_ = senderCOriginalBalance
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, nativeDenom, assetID)
 			suite.Require().NoError(err)
 
 			// Disable receiveEnabled on chain A so it will return error ack
@@ -413,7 +449,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			msg := transfertypes.NewMsgTransfer(
 				pathAtoB.EndpointA.ChannelConfig.PortID,
 				pathAtoB.EndpointA.ChannelID,
-				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				sdk.NewCoin(assetID, transferAmount),
 				suite.chainA.SenderAccount.GetAddress().String(),
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
@@ -437,6 +473,17 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			err = pathAtoB.EndpointB.RecvPacket(sendingPacket)
 			suite.Require().NoError(err)
 			suite.chainA.PendingSendPackets = nil
+			// Check escrow address
+			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expBalance := sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
+
 			// then should have a packet from B to C
 			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
@@ -479,14 +526,14 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			senderBCurrentBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 			suite.Require().Equal(senderBOriginalBalance, senderBCurrentBalance)
 
-			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
-			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
-			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
 
-			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
-			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount))
+			escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
 
 			balance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
@@ -539,6 +586,14 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			err = pathBtoC.EndpointA.RecvPacket(sendingPacket)
 			suite.Require().NoError(err)
 			suite.chainC.PendingSendPackets = nil
+			// Check escrow address
+			escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+			suite.Require().Empty(escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+			suite.Require().Empty(escrowNativeDenomAddressBalance)
 
 			// then should have a packet from B to A
 			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
@@ -590,12 +645,12 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 
 			escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
 			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			expBalance = sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
 
 			escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
 			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount))
+			expBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
 		})
 	}
@@ -608,7 +663,10 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
 		pathBtoC      *customibctesting.Path
-		expDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		nativeDenom   = "ppica"
+		ibcDenom      = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		assetID       = sdk.DefaultBondDenom
+		expDenom      = "ibc/3262D378E1636BE287EC355990D229DCEB828F0C60ED5049729575E235C60E8B"
 	)
 
 	testCases := []struct {
@@ -630,7 +688,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 			senderCOriginalBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
 			// Add parachain token info
 			chainBtransMiddleware := suite.chainB.TransferMiddleware()
-			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), expDenom, pathAtoB.EndpointB.ChannelID, sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+			err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, pathAtoB.EndpointB.ChannelID, nativeDenom, assetID)
 			suite.Require().NoError(err)
 
 			timeOut := 10 * time.Minute
@@ -652,7 +710,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 			msg := transfertypes.NewMsgTransfer(
 				pathAtoB.EndpointA.ChannelConfig.PortID,
 				pathAtoB.EndpointA.ChannelID,
-				sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+				sdk.NewCoin(assetID, transferAmount),
 				suite.chainA.SenderAccount.GetAddress().String(),
 				suite.chainB.SenderAccount.GetAddress().String(),
 				timeoutHeight,
@@ -676,6 +734,17 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 			err = pathAtoB.EndpointB.RecvPacket(sendingPacket)
 			suite.Require().NoError(err)
 			suite.chainA.PendingSendPackets = nil
+			// Check escrow address
+			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expBalance := sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
+
+			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
+			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
+
 			// then should have a packet from B to C
 			suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
@@ -718,14 +787,14 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 			senderBCurrentBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 			suite.Require().Equal(senderBOriginalBalance, senderBCurrentBalance)
 
-			escrowIbcDenomAddress := transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
-			escrowIbcDenomAddressBalance := suite.chainB.AllBalances(escrowIbcDenomAddress)
-			expBalance := sdk.NewCoins(sdk.NewCoin(expDenom, transferAmount))
+			escrowIbcDenomAddress = transfertypes.GetEscrowAddress(pathAtoB.EndpointB.ChannelConfig.PortID, pathAtoB.EndpointB.ChannelID)
+			escrowIbcDenomAddressBalance = suite.chainB.AllBalances(escrowIbcDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(ibcDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowIbcDenomAddressBalance)
 
-			escrowNativeDenomAddress := transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
-			escrowNativeDenomAddressBalance := suite.chainB.AllBalances(escrowNativeDenomAddress)
-			expBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount))
+			escrowNativeDenomAddress = transfertypes.GetEscrowAddress(pathBtoC.EndpointA.ChannelConfig.PortID, pathBtoC.EndpointA.ChannelID)
+			escrowNativeDenomAddressBalance = suite.chainB.AllBalances(escrowNativeDenomAddress)
+			expBalance = sdk.NewCoins(sdk.NewCoin(nativeDenom, transferAmount))
 			suite.Require().Equal(expBalance, escrowNativeDenomAddressBalance)
 
 			balance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
