@@ -39,7 +39,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 				Images: []ibc.DockerImage{
 					{
 						Repository: "ghcr.io/notional-labs/centauri",
-						Version:    "3.0.1",
+						Version:    "3.0.2",
 						UidGid:     "1025:1025",
 					},
 				},
