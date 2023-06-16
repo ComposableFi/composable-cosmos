@@ -180,7 +180,7 @@ def main():
     )
 
     old_account = Account(
-        pubkey = "A/bCCNWzYi1XzTmQqRh/eHUAZzX3D/Vbc1D09uO+AHjh=", # centaurid q  account centauri1083svrca4t350mphfv9x45wq9asrs60c7a585a        
+        pubkey = "A/bCCNWzYi1XzTmQqRh/eHUAZzX3D/Vbc1D09uO+AHjh", # centaurid q  account centauri1083svrca4t350mphfv9x45wq9asrs60c7a585a        
         address = "centauri1y3uqpev4ksgvpdcfyheyuqydpwxxzca7w9nrkw"  # validators account
     )   
 

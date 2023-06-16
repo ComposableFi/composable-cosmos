@@ -52,7 +52,7 @@ then
     ACCOUNT_ADDRESS=$(centaurid keys show -a --keyring-backend test my-key --bech acc)
     ACCOUNT_ADDRESS_JSON=$(centaurid keys show --keyring-backend test my-key --output json | dasel -r json '.pubkey' --plain)
     echo "Account pubkey:  $ACCOUNT_PUBKEY"
-    echo "Account address: $ACCOUNT_ADDRESS"
+    echo "Account address: $ACCOUNT_ADDRESS" 
 
     ACCOUNT_HEX_ADDRESS=$(centaurid debug pubkey $ACCOUNT_ADDRESS_JSON --home $CENTAURI_HOME | grep Address | cut -d " " -f 2)    
     ACCOUNT_OPERATOR_ADDRESS=$(centaurid debug addr $ACCOUNT_HEX_ADDRESS --home $CENTAURI_HOME | grep Val | cut -d " " -f 3)    
@@ -74,7 +74,7 @@ then
         --output $CONFIG_FOLDER/genesis.json \
         -c $CHAIN_ID \
         --validator-hex-address $VALIDATOR_HEX_ADDRESS \
-        --validator-operator-address $ACCOUNT_OPERATOR_ADDRESS \
+        --validator-operator-address $VALIDATOR_OPERATOR_ADDRESS \
         --validator-consensus-address $VALIDATOR_CONSENSUS_ADDRESS \
         --validator-pubkey $VALIDATOR_PUBKEY \
         --account-pubkey $ACCOUNT_PUBKEY \
