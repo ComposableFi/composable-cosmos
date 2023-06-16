@@ -12,7 +12,8 @@ func DefaultGenesisState() *GenesisState {
 // ValidateGenesis validates the provided genesis state to ensure the
 // expected invariants holds.
 func ValidateGenesis(data GenesisState) error {
-	if err := validateTokenInfos(data.TokenInfos); err != nil {
+	err := validateTokenInfos(data.TokenInfos)
+	if err != nil {
 		return err
 	}
 
