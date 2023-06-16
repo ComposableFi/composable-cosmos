@@ -47,7 +47,8 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 	}
 
 	// validate ibcDenom
-	if err := ibctransfertypes.ValidateIBCDenom(msg.IbcDenom); err != nil {
+	err := ibctransfertypes.ValidateIBCDenom(msg.IbcDenom)
+	if err != nil {
 		return err
 	}
 
