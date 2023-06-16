@@ -26,7 +26,7 @@ make localnet-init
 The command:
 
 - Builds a local docker image with the latest changes
-- Cleans the `$HOME/.centauri` folder
+- Cleans the `$HOME/.banksy` folder
 
 3. Start Localcentauri:
 
@@ -63,7 +63,7 @@ make localnet-clean
 Maybe you need remove as root:
 
 ```bash
-sudo rm -rf ~/.centauri/
+sudo rm -rf ~/.banksy/
 ```
 
 ## 2. Localcentauri - With Mainnet State
@@ -106,7 +106,7 @@ make localnet-state-export-init
 The command:
 
 - Builds a local docker image with the latest changes
-- Cleans the `$HOME/.centauri` folder
+- Cleans the `$HOME/.banksy` folder
 
 4. Start Localcentauri:
 

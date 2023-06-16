@@ -13,7 +13,7 @@ services:
       - ./scripts/start.sh:/centauri/start.sh
       - ./scripts/testnetify.py:/centauri/testnetify.py
       - ./state_export.json:/centauri/state_export.json
-      - $HOME/.centauri/:/centauri/.centauri/
+      - $HOME/.banksy/:/centauri/.banksy/
     entrypoint:
       - /centauri/start.sh
     environment:

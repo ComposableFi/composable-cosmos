@@ -3,7 +3,7 @@
 # set -o pipefail
 
 # Home path in the docker container
-CENTAURI_HOME=/centauri/.centauri
+CENTAURI_HOME=/centauri/.banksy
 CONFIG_FOLDER=$CENTAURI_HOME/config
 
 # val - centauri1jxa3ksucx7ter57xyuczvmk6qkeqmqvj37g237

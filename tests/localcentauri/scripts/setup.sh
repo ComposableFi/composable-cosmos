@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CHAIN_ID=localcentauri
-CENTAURI_HOME=$HOME/.centauri
+CENTAURI_HOME=$HOME/.banksy
 CONFIG_FOLDER=$CENTAURI_HOME/config
 MONIKER=val
 STATE='false'
