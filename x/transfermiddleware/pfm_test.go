@@ -3,6 +3,7 @@ package transfermiddleware_test
 import (
 	"encoding/binary"
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 
@@ -556,7 +557,9 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 			}
 
 			memoMarshalled, err = json.Marshal(&memo)
+			fmt.Printf("MEMO: %s\n", memoMarshalled)
 			suite.Require().NoError(err)
+			suite.Require().True(false)
 
 			msg = transfertypes.NewMsgTransfer(
 				pathBtoC.EndpointB.ChannelConfig.PortID,

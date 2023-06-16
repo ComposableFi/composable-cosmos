@@ -109,6 +109,8 @@ func (keeper Keeper) SendPacket(
 		return 0, err
 	}
 
+	fmt.Printf("----------------------SendPacket: %v\n", fungibleTokenPacketData)
+
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
 	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
