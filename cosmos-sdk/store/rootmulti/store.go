@@ -256,9 +256,9 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		itr := types.KVStore(store).Iterator(nil, nil)
 		for itr.Valid() {
 			if strings.Contains(string(itr.Key()), "banksy") {
-				fmt.Println(itr.Key(), itr.Value())
+				fmt.Println(string(itr.Key()), string(itr.Value()))
 			} else if strings.Contains(string(itr.Value()), "banksy") {
-				fmt.Println(itr.Key(), itr.Value())
+				fmt.Println(string(itr.Key()), string(itr.Value()))
 			}
 
 			itr.Next()
