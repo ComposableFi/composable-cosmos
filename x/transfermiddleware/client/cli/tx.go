@@ -17,12 +17,13 @@ func GetTxCmd() *cobra.Command {
 		Use:                        "transfermiddleware",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
-		Short:                      "Registry and remove IBC dotsama chain infomation",
-		Long:                       "Registry and remove IBC dotsama chain infomation",
+		Short:                      "Registry and remove IBC dotsama chain information",
+		Long:                       "Registry and remove IBC dotsama chain information",
 	}
 
 	txCmd.AddCommand(
 		RegistryDotSamaChain(),
+		RemoveDotSamaChain(),
 	)
 
 	return txCmd
@@ -32,8 +33,8 @@ func GetTxCmd() *cobra.Command {
 func RegistryDotSamaChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "registry",
-		Short:   "registry dotsama chain infomation",
-		Long:    "registry dotsama chain infomation",
+		Short:   "registry dotsama chain information",
+		Long:    "registry dotsama chain information",
 		Args:    cobra.MatchAll(cobra.ExactArgs(4), cobra.OnlyValidArgs),
 		Example: fmt.Sprintf("%s tx transfermiddleware registry [ibc_denom] [native_denom] [asset_id] [channel_id]", version.AppName),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -65,6 +66,38 @@ func RegistryDotSamaChain() *cobra.Command {
 		},
 	}
 
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func RemoveDotSamaChain() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "remove",
+		Short:   "remove dotsama chain information",
+		Args:    cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
+		Example: fmt.Sprintf("%s tx transfermiddleware remove [native_denom]", version.AppName),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			nativeDenom := args[0]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			fromAddress := clientCtx.GetFromAddress().String()
+
+			msg := types.NewMsgRemoveParachainIBCTokenInfo(
+				fromAddress,
+				nativeDenom,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
