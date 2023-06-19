@@ -252,6 +252,19 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 			return errors.Wrap(err, "failed to load store")
 		}
 
+		// we read from one and write to another
+		itr := types.KVStore(store).Iterator(nil, nil)
+		for itr.Valid() {
+			if strings.Contains(string(itr.Key()), "banksy") {
+				fmt.Println(itr.Key(), itr.Value())
+			} else if strings.Contains(string(itr.Value()), "banksy") {
+				fmt.Println(itr.Key(), itr.Value())
+			}
+
+			itr.Next()
+		}
+		itr.Close()
+
 		newStores[key] = store
 
 		// If it was deleted, remove all data
