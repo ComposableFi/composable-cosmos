@@ -253,7 +253,7 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		}
 
 		// we read from one and write to another
-		if key.Name() == "stake" {
+		if key.Name() == "staking" {
 			itr := types.KVStore(store).Iterator(nil, nil)
 
 			for itr.Valid() {
