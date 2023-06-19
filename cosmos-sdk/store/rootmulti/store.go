@@ -262,26 +262,24 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		prefix := map[string]bool{}
 		for itr.Valid() {
 			if strings.Contains(string(itr.Key()), "banksy") && !strings.Contains(string(itr.Key()), "banksy-testnet-3") {
-				if ok, _ := prefix[string(itr.Key()[0])]; ok {
-					continue
+				if ok, _ := prefix[string(itr.Key()[0])]; !ok {
+					prefix[string(itr.Key()[0])] = true
+
+					fmt.Println("key: ", string(itr.Key()))
+					fmt.Printf("key in bz: %X \n", itr.Key())
+
+					fmt.Println("value: ", string(itr.Value()))
 				}
-				prefix[string(itr.Key()[0])] = true
 
-				fmt.Println("key: ", string(itr.Key()))
-				fmt.Printf("key in bz: %X \n", itr.Key())
-
-				fmt.Println("value: ", string(itr.Value()))
 			} else if strings.Contains(string(itr.Value()), "banksy") && !strings.Contains(string(itr.Value()), "banksy-testnet-3") {
-				if ok, _ := prefix[string(itr.Key()[0])]; ok {
-					continue
+				if ok, _ := prefix[string(itr.Key()[0])]; !ok {
+					prefix[string(itr.Key()[0])] = true
+
+					fmt.Println("key: ", string(itr.Key()))
+					fmt.Printf("key in bz: %X \n", itr.Key())
+
+					fmt.Println("value: ", string(itr.Value()))
 				}
-				prefix[string(itr.Key()[0])] = true
-
-				fmt.Println("key: ", string(itr.Key()))
-				fmt.Printf("key in bz: %X \n", itr.Key())
-
-				fmt.Println("value: ", string(itr.Value()))
-
 			}
 
 			itr.Next()
