@@ -59,6 +59,16 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 
 var _ sdk.Msg = &MsgRemoveParachainIBCTokenInfo{}
 
+func NewMsgRemoveParachainIBCTokenInfo(
+	authority string,
+	nativeDenom string,
+) *MsgRemoveParachainIBCTokenInfo {
+	return &MsgRemoveParachainIBCTokenInfo{
+		Authority:   authority,
+		NativeDenom: nativeDenom,
+	}
+}
+
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgRemoveParachainIBCTokenInfo) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
