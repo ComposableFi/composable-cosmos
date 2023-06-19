@@ -259,17 +259,21 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		// we read from one and write to another
 		itr := types.KVStore(store).Iterator(nil, nil)
 
-		// sameKeys := map[string]bool
+		// prefix := map[string]bool{}
 		for itr.Valid() {
 			if strings.Contains(string(itr.Key()), "banksy") && !strings.Contains(string(itr.Key()), "banksy-testnet-3") {
+				// if prefix[itr.Key()[0]] {
+
+				// }
+
 				fmt.Println("key: ", string(itr.Key()))
-				fmt.Println("key in bz: ", itr.Key())
+				fmt.Printf("key in bz: %X \n", itr.Key())
 
 				fmt.Println("value: ", string(itr.Value()))
 			} else if strings.Contains(string(itr.Value()), "banksy") && !strings.Contains(string(itr.Value()), "banksy-testnet-3") {
 
-				fmt.Println("key in bz: ", itr.Key())
 				fmt.Println("key: ", string(itr.Key()))
+				fmt.Printf("key in bz: %X \n", itr.Key())
 
 				fmt.Println("value: ", string(itr.Value()))
 
