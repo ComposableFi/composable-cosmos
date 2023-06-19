@@ -305,6 +305,7 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		return err
 	}
 
+	panic("vn")
 	return nil
 }
 
