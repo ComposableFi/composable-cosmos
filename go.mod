@@ -177,6 +177,8 @@ require (
 replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
+
+	github.com/cosmos/cosmos-sdk => ./cosmos-sdk
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230619104904-925194e0fb70
 
