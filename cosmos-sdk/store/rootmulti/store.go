@@ -252,6 +252,10 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 			return errors.Wrap(err, "failed to load store")
 		}
 
+		if key.Name() == "08-wasm" || key.Name() == "genutil" {
+			continue
+		}
+
 		// we read from one and write to another
 		itr := types.KVStore(store).Iterator(nil, nil)
 
