@@ -19,7 +19,7 @@ var (
 		NativeDenom: "native-2",
 		AssetId:     "2",
 	}
-	invalidAssetId = ParachainIBCTokenInfo{
+	invalidAssetID = ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-3",
 		ChannelId:   "channel-3",
 		NativeDenom: "native-3",
@@ -43,11 +43,11 @@ func TestGenesisState_Validate(t *testing.T) {
 			info2,
 		}
 		singleInvalid = []ParachainIBCTokenInfo{
-			invalidAssetId,
+			invalidAssetID,
 		}
 		mixedInvalid = []ParachainIBCTokenInfo{
 			info1,
-			invalidAssetId,
+			invalidAssetID,
 		}
 		duplicateInfos = []ParachainIBCTokenInfo{
 			info1,
