@@ -12,14 +12,16 @@ var _ sdk.Msg = &MsgAddParachainIBCTokenInfo{}
 func NewMsgAddParachainIBCTokenInfo(
 	authority string,
 	ibcDenom string,
-	channelID string,
 	nativeDenom string,
+	assetID string,
+	channelID string,
 ) *MsgAddParachainIBCTokenInfo {
 	return &MsgAddParachainIBCTokenInfo{
 		Authority:   authority,
 		IbcDenom:    ibcDenom,
-		ChannelId:   channelID,
 		NativeDenom: nativeDenom,
+		AssetId:     assetID,
+		ChannelId:   channelID,
 	}
 }
 
