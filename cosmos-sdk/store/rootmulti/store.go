@@ -252,7 +252,7 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 			return errors.Wrap(err, "failed to load store")
 		}
 
-		if key.Name() == "08-wasm" || key.Name() == "genutil" || key.Name() == "ibc" {
+		if key.Name() == "08-wasm" || key.Name() == "genutil" || key.Name() == "ibc" || key.Name() == "gov" {
 			continue
 		}
 
