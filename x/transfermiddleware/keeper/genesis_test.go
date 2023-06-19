@@ -36,7 +36,6 @@ func TestTFMExportGenesis(t *testing.T) {
 	app := helpers.SetupCentauriAppWithValSet(t)
 	ctx := helpers.NewContextForApp(*app)
 
-	// default params
 	err := app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test", "channel-0", "pica", "1")
 	require.NoError(t, err)
 	err = app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test2", "channel-1", "poke", "2")
@@ -52,4 +51,31 @@ func TestTFMExportGenesis(t *testing.T) {
 	require.Equal(t, "poke", genesis.TokenInfos[1].NativeDenom)
 	require.Equal(t, "channel-1", genesis.TokenInfos[1].ChannelId)
 	require.Equal(t, "ibc-test2", genesis.TokenInfos[1].IbcDenom)
+}
+
+func TestIterateParaTokenInfos(t *testing.T) {
+	app := helpers.SetupCentauriAppWithValSet(t)
+	ctx := helpers.NewContextForApp(*app)
+
+	err := app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test", "channel-0", "pica", "1")
+	require.NoError(t, err)
+	err = app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test2", "channel-1", "poke", "2")
+	require.NoError(t, err)
+
+	infos := []types.ParachainIBCTokenInfo{}
+
+	app.TransferMiddlewareKeeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
+		infos = append(infos, info)
+		return false
+	})
+
+	require.Equal(t, "1", infos[0].AssetId)
+	require.Equal(t, "pica", infos[0].NativeDenom)
+	require.Equal(t, "channel-0", infos[0].ChannelId)
+	require.Equal(t, "ibc-test", infos[0].IbcDenom)
+
+	require.Equal(t, "2", infos[1].AssetId)
+	require.Equal(t, "poke", infos[1].NativeDenom)
+	require.Equal(t, "channel-1", infos[1].ChannelId)
+	require.Equal(t, "ibc-test2", infos[1].IbcDenom)
 }
