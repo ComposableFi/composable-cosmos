@@ -253,22 +253,23 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		}
 
 		// we read from one and write to another
-		if key.Name() == "staking" {
-			itr := types.KVStore(store).Iterator(nil, nil)
+		itr := types.KVStore(store).Iterator(nil, nil)
 
-			for itr.Valid() {
-				if strings.Contains(string(itr.Key()), "banksy") {
-					fmt.Println(string(itr.Key()))
-					fmt.Println(string(itr.Value()))
-				} else if strings.Contains(string(itr.Value()), "banksy-testnet-3") && !strings.Contains(string(itr.Value()), "banksy-") {
-					fmt.Println(string(itr.Key()))
-					fmt.Println(string(itr.Value()))
-				}
+		// sameKeys := map[string]bool
+		for itr.Valid() {
+			if strings.Contains(string(itr.Key()), "banksy") {
+				fmt.Println(string(itr.Key()))
+				fmt.Println(string(itr.Value()))
+			} else if strings.Contains(string(itr.Value()), "banksy") && !strings.Contains(string(itr.Value()), "banksy-testnet-3") {
 
-				itr.Next()
+				fmt.Println(string(itr.Key()))
+				fmt.Println(string(itr.Value()))
+
 			}
-			itr.Close()
+
+			itr.Next()
 		}
+		itr.Close()
 
 		newStores[key] = store
 
