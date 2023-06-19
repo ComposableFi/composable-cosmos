@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/CosmWasm/wasmd/x/wasm"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
@@ -107,7 +106,7 @@ func setup(withGenesis bool, invCheckPeriod uint) (*centauri.CentauriApp, centau
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
 // of one consensus engine unit (10^6) in the default token of the CentauriApp from first genesis
 // account. A Nop logger is set in CentauriApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *centauri.CentauriApp {
+func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, balances ...banktypes.Balance) *centauri.CentauriApp {
 	t.Helper()
 	app, genesisState := setup(true, 5)
 	genesisState, err := simtestutil.GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, genAccs, balances...)
@@ -166,6 +165,6 @@ func SetupCentauriAppWithValSet(t *testing.T) *centauri.CentauriApp {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	centauriApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", nil, balance)
+	centauriApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", balance)
 	return centauriApp
 }

@@ -5,7 +5,6 @@ go 1.19
 require (
 	cosmossdk.io/math v1.0.1
 	cosmossdk.io/simapp v0.0.0-20230608160436-666c345ad23d
-	github.com/CosmWasm/wasmd v0.40.0
 	github.com/cometbft/cometbft v0.37.1
 	github.com/cometbft/cometbft-db v0.7.0
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2
@@ -39,11 +38,9 @@ require (
 	github.com/cockroachdb/apd/v2 v2.0.2 // indirect
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0 // indirect
 	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
-	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
@@ -57,7 +54,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
-	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
