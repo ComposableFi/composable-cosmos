@@ -262,12 +262,16 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 		// sameKeys := map[string]bool
 		for itr.Valid() {
 			if strings.Contains(string(itr.Key()), "banksy") && !strings.Contains(string(itr.Key()), "banksy-testnet-3") {
-				fmt.Println(string(itr.Key()))
-				fmt.Println(string(itr.Value()))
+				fmt.Println("key: ", string(itr.Key()))
+				fmt.Println("key in bz: ", itr.Key())
+
+				fmt.Println("value: ", string(itr.Value()))
 			} else if strings.Contains(string(itr.Value()), "banksy") && !strings.Contains(string(itr.Value()), "banksy-testnet-3") {
 
-				fmt.Println(string(itr.Key()))
-				fmt.Println(string(itr.Value()))
+				fmt.Println("key in bz: ", itr.Key())
+				fmt.Println("key: ", string(itr.Key()))
+
+				fmt.Println("value: ", string(itr.Value()))
 
 			}
 
