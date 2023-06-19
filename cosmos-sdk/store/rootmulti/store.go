@@ -263,8 +263,6 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 				} else if strings.Contains(string(itr.Value()), "banksy") {
 					fmt.Println(string(itr.Key()))
 					fmt.Println(string(itr.Value()))
-
-					panic("toi van")
 				}
 
 				itr.Next()
