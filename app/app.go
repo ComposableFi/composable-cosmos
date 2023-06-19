@@ -129,6 +129,7 @@ const (
 	AccountAddressPrefix = "centauri"
 	Name                 = "centauri"
 	dirName              = "banksy"
+	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -395,7 +396,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
+	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey], authorityAddress)
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -403,7 +404,7 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.TransferKeeper,
 		app.BankKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		authorityAddress,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(

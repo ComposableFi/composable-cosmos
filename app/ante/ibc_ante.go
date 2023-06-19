@@ -65,10 +65,13 @@ func (g IBCPermissionDecorator) ValidateIBCUpdateClientMsg(ctx sdk.Context, msgs
 
 func (g IBCPermissionDecorator) validMsg(m sdk.Msg) error {
 	if msg, ok := m.(*clienttypes.MsgUpdateClient); ok {
+		if msg.ClientMessage.TypeUrl != "/ibc.lightclients.wasm.v1.Header" {
+			return nil
+		}
+
 		if !allowedRelayAddress[msg.Signer] {
 			return fmt.Errorf("permission denied, address %s don't have relay permission", msg.Signer)
 		}
-		// prevent messages with insufficient initial deposit amount
 	}
 
 	return nil
