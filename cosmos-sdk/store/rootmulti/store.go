@@ -260,7 +260,7 @@ func (rs *Store) loadVersion(ver int64, upgrades *types.StoreUpgrades) error {
 				if strings.Contains(string(itr.Key()), "banksy") {
 					fmt.Println(string(itr.Key()))
 					fmt.Println(string(itr.Value()))
-				} else if strings.Contains(string(itr.Value()), "banksy") {
+				} else if strings.Contains(string(itr.Value()), "banksy-testnet-3") && !strings.Contains(string(itr.Value()), "banksy-") {
 					fmt.Println(string(itr.Key()))
 					fmt.Println(string(itr.Value()))
 				}
