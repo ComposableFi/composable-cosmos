@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -45,10 +46,16 @@ func NewKeeper(
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
 func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom, assetID string) error {
 	store := ctx.KVStore(keeper.storeKey)
-	if store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) ||
-		store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) ||
-		store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
-		return types.ErrMultipleMapping
+	if store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate assetID")
+	}
+
+	if store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate IBC denom")
+	}
+
+	if store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate native denom")
 	}
 
 	info := types.ParachainIBCTokenInfo{
@@ -83,16 +90,7 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
-
-	if !store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) {
-		panic("broken data in state")
-	}
 	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
-
-	// update the IBCdenom-native index
-	if !store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
-		panic("broken data in state")
-	}
 	store.Delete(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return nil
