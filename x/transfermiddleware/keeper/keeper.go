@@ -49,11 +49,9 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	if store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) {
 		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate assetID")
 	}
-
 	if store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
 		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate IBC denom")
 	}
-
 	if store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
 		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate native denom")
 	}
