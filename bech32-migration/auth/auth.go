@@ -15,7 +15,8 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 	ctx.Logger().Info("Migration of address bech32 for auth module begin")
 	migratedAccountCount := uint64(0)
 	migratedAccountTypesStat := map[string]uint64{}
-	utils.IterateStoreByPrefix(ctx, storeKey, types.AddressStoreKeyPrefix, func(bz []byte) []byte {
+	authStore := ctx.KVStore(storeKey)
+	utils.IterateStoreByPrefix(authStore, types.AddressStoreKeyPrefix, func(bz []byte) []byte {
 		var accountI types.AccountI
 		err := cdc.UnmarshalInterface(bz, &accountI)
 		if err != nil {

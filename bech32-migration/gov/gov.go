@@ -15,7 +15,8 @@ import (
 func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
 	ctx.Logger().Info("Migration of address bech32 for gov module begin")
 	voteCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.VotesKeyPrefix, func(bz []byte) []byte {
+	govStore := ctx.KVStore(storeKey)
+	utils.IterateStoreByPrefix(govStore, types.VotesKeyPrefix, func(bz []byte) []byte {
 		vote := v1beta1.Vote{}
 		err := cdc.Unmarshal(bz, &vote)
 		if err != nil {
@@ -30,7 +31,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		return cdc.MustMarshal(&vote)
 	})
 	depositCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.DepositsKeyPrefix, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(govStore, types.DepositsKeyPrefix, func(bz []byte) []byte {
 		deposit := v1beta1.Deposit{}
 		err := cdc.Unmarshal(bz, &deposit)
 		if err != nil {

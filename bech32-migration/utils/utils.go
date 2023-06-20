@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strings"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -51,10 +50,9 @@ func ConvertConsAddr(consAddr string) string {
 }
 
 func IterateStoreByPrefix(
-	ctx sdk.Context, storeKey storetypes.StoreKey, prefix []byte,
+	store sdk.KVStore, prefix []byte,
 	fn func(value []byte) (newValue []byte),
 ) {
-	store := ctx.KVStore(storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, prefix)
 	defer iterator.Close()
 

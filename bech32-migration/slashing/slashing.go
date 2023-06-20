@@ -11,7 +11,8 @@ import (
 func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
 	ctx.Logger().Info("Migration of address bech32 for slashing module begin")
 	validatorSigningInfoCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.ValidatorSigningInfoKeyPrefix, func(bz []byte) []byte {
+	slashingStore := ctx.KVStore(storeKey)
+	utils.IterateStoreByPrefix(slashingStore, types.ValidatorSigningInfoKeyPrefix, func(bz []byte) []byte {
 		validatorSigningInfo := types.ValidatorSigningInfo{}
 		cdc.MustUnmarshal(bz, &validatorSigningInfo)
 		validatorSigningInfo.Address = utils.ConvertConsAddr(validatorSigningInfo.Address)

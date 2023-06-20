@@ -11,14 +11,16 @@ import (
 func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
 	ctx.Logger().Info("Migration of address bech32 for staking module begin")
 	validatorCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.ValidatorsKey, func(bz []byte) []byte {
+
+	stakingStore := ctx.KVStore(storeKey)
+	utils.IterateStoreByPrefix(stakingStore, types.ValidatorsKey, func(bz []byte) []byte {
 		validator := types.MustUnmarshalValidator(cdc, bz)
 		validator.OperatorAddress = utils.ConvertValAddr(validator.OperatorAddress)
 		validatorCount++
 		return types.MustMarshalValidator(cdc, &validator)
 	})
 	delegationCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.DelegationKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.DelegationKey, func(bz []byte) []byte {
 		delegation := types.MustUnmarshalDelegation(cdc, bz)
 		delegation.DelegatorAddress = utils.ConvertAccAddr(delegation.DelegatorAddress)
 		delegation.ValidatorAddress = utils.ConvertValAddr(delegation.ValidatorAddress)
@@ -26,7 +28,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		return types.MustMarshalDelegation(cdc, delegation)
 	})
 	redelegationCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.RedelegationKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.RedelegationKey, func(bz []byte) []byte {
 		redelegation := types.MustUnmarshalRED(cdc, bz)
 		redelegation.DelegatorAddress = utils.ConvertAccAddr(redelegation.DelegatorAddress)
 		redelegation.ValidatorSrcAddress = utils.ConvertValAddr(redelegation.ValidatorSrcAddress)
@@ -35,7 +37,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		return types.MustMarshalRED(cdc, redelegation)
 	})
 	unbondingDelegationCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.UnbondingDelegationKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.UnbondingDelegationKey, func(bz []byte) []byte {
 		unbonding := types.MustUnmarshalUBD(cdc, bz)
 		unbonding.DelegatorAddress = utils.ConvertAccAddr(unbonding.DelegatorAddress)
 		unbonding.ValidatorAddress = utils.ConvertValAddr(unbonding.ValidatorAddress)
@@ -43,7 +45,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		return types.MustMarshalUBD(cdc, unbonding)
 	})
 	historicalInfoCount := uint64(0)
-	utils.IterateStoreByPrefix(ctx, storeKey, types.HistoricalInfoKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.HistoricalInfoKey, func(bz []byte) []byte {
 		historicalInfo := types.MustUnmarshalHistoricalInfo(cdc, bz)
 		for i := range historicalInfo.Valset {
 			historicalInfo.Valset[i].OperatorAddress = utils.ConvertValAddr(historicalInfo.Valset[i].OperatorAddress)
@@ -51,7 +53,19 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		historicalInfoCount++
 		return cdc.MustMarshal(&historicalInfo)
 	})
-	utils.IterateStoreByPrefix(ctx, storeKey, types.UnbondingQueueKey, func(bz []byte) []byte {
+	ctx.Logger().Info(
+		"Migration of address bech32 for staking module done",
+		"validator_count", validatorCount,
+		"delegation_count", delegationCount,
+		"redelegation_count", redelegationCount,
+		"unbonding_delegation_count", unbondingDelegationCount,
+		"historical_info_count", historicalInfoCount,
+	)
+}
+
+// This func is used to migrate all the data that we didn't take into account in the last migrate
+func MigrateMissedData(stakingStore sdk.KVStore, cdc codec.BinaryCodec) {
+	utils.IterateStoreByPrefix(stakingStore, types.UnbondingQueueKey, func(bz []byte) []byte {
 		pairs := types.DVPairs{}
 		cdc.MustUnmarshal(bz, &pairs)
 		for i, pair := range pairs.Pairs {
@@ -60,7 +74,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		}
 		return cdc.MustMarshal(&pairs)
 	})
-	utils.IterateStoreByPrefix(ctx, storeKey, types.RedelegationQueueKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.RedelegationQueueKey, func(bz []byte) []byte {
 		triplets := types.DVVTriplets{}
 		cdc.MustUnmarshal(bz, &triplets)
 
@@ -71,7 +85,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		}
 		return cdc.MustMarshal(&triplets)
 	})
-	utils.IterateStoreByPrefix(ctx, storeKey, types.ValidatorQueueKey, func(bz []byte) []byte {
+	utils.IterateStoreByPrefix(stakingStore, types.ValidatorQueueKey, func(bz []byte) []byte {
 		addrs := types.ValAddresses{}
 		cdc.MustUnmarshal(bz, &addrs)
 
@@ -80,12 +94,4 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		}
 		return cdc.MustMarshal(&addrs)
 	})
-	ctx.Logger().Info(
-		"Migration of address bech32 for staking module done",
-		"validator_count", validatorCount,
-		"delegation_count", delegationCount,
-		"redelegation_count", redelegationCount,
-		"unbonding_delegation_count", unbondingDelegationCount,
-		"historical_info_count", historicalInfoCount,
-	)
 }

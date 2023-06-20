@@ -97,6 +97,7 @@ import (
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	centauriupgrade "github.com/notional-labs/centauri/v3/app/upgrade/centauri"
+	bech32stakingmigration "github.com/notional-labs/centauri/v3/bech32-migration/staking"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -682,6 +683,12 @@ func NewCentauriApp(
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
 	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec, &app.SlashingKeeper, &app.GovKeeper))
 
+	app.SetStoreLoader(CreateStoreLoaderWithMigrateFn(9999999999999,
+		func() error {
+			bech32stakingmigration.MigrateMissedData(app.CommitMultiStore().GetKVStore(app.keys[stakingtypes.StoreKey]), app.appCodec)
+			return nil
+		}),
+	)
 	return app
 }
 
