@@ -11,12 +11,10 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 )
 
-var (
-	allowedRelayAddress = map[string]bool{
-		"centauri1eqv3xl0vk0md74qukfghfff4z3axsp29rr9c85": true,
-		"centauri1av6x9sll0yx4anske424jtgxejnrgqv6j6tjjt": true,
-	}
-)
+var allowedRelayAddress = map[string]bool{
+	"centauri1eqv3xl0vk0md74qukfghfff4z3axsp29rr9c85": true,
+	"centauri1av6x9sll0yx4anske424jtgxejnrgqv6j6tjjt": true,
+}
 
 type IBCPermissionDecorator struct {
 	cdc codec.BinaryCodec
