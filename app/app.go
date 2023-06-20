@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -722,7 +721,6 @@ func (app *CentauriApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	fmt.Println("Begin Block :", ctx.BlockHeight())
 	if ctx.BlockHeight() == ForkHeight {
 		bech32stakingmigration.MigrateUnbonding(ctx, app.keys[stakingtypes.StoreKey], app.appCodec)
 	}
