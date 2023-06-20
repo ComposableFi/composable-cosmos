@@ -72,7 +72,13 @@ func AccAddressFromOldBech32(address, prefix string) (addr sdk.AccAddress, err e
 
 	bz, err := sdk.GetFromBech32(address, prefix)
 	if err != nil {
-		return nil, err
+		var err2 error
+		bz, err2 = sdk.AccAddressFromBech32(address)
+		if err2 != nil {
+			return nil, err
+		}
+
+		return bz, nil
 	}
 
 	err = sdk.VerifyAddressFormat(bz)
