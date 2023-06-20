@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
+	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -26,7 +27,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -98,7 +98,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	centauriupgrade "github.com/notional-labs/centauri/v2/app/upgrade/centauri"
+	centauriupgrade "github.com/notional-labs/centauri/v3/app/upgrade/centauri"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -109,16 +109,17 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/centauri/v2/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v2/x/mint"
-	mintkeeper "github.com/notional-labs/centauri/v2/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v3/x/mint"
+	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -134,6 +135,7 @@ const (
 	AccountAddressPrefix = "centauri"
 	Name                 = "centauri"
 	dirName              = "banksy"
+	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 )
 
 var (
@@ -441,7 +443,7 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.TransferKeeper,
 		app.BankKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		authorityAddress,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
@@ -738,20 +740,14 @@ func NewCentauriApp(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
-			AccountKeeper:   app.AccountKeeper,
-			BankKeeper:      app.BankKeeper,
-			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-			FeegrantKeeper:  app.FeeGrantKeeper,
-			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	app.SetAnteHandler(anteHandler)
+	app.SetAnteHandler(ante.NewAnteHandler(
+		appOpts,
+		app.AccountKeeper,
+		authante.DefaultSigVerificationGasConsumer,
+		encodingConfig.TxConfig.SignModeHandler(),
+		app.IBCKeeper,
+		appCodec,
+	))
 	app.SetEndBlocker(app.EndBlocker)
 
 	if manager := app.SnapshotManager(); manager != nil {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v2/x/mint/keeper"
-	"github.com/notional-labs/centauri/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v3/x/mint/keeper"
+	"github.com/notional-labs/centauri/v3/x/mint/types"
 )
 
 // BeginBlocker mints new tokens for the previous block.

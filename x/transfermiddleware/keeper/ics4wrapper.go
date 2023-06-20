@@ -11,12 +11,12 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
 func (keeper Keeper) hasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
 	store := ctx.KVStore(keeper.storeKey)
-	return store.Has(types.GetKeyParachainIBCTokenInfo(nativeDenom))
+	return store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 }
 
 func (keeper Keeper) handleOverrideSendPacketTransferLogic(
@@ -39,7 +39,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	// burn native token in escrow address
 	transferAmount, ok := sdk.NewIntFromString(fungibleTokenPacketData.Amount)
@@ -110,7 +110,7 @@ func (keeper Keeper) SendPacket(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfo(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	if parachainInfo.ChannelId != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
 		return keeper.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
@@ -180,7 +180,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		return nil
 	}
 	nativeDenom := keeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
-	paraTokenInfo := keeper.GetParachainIBCTokenInfo(ctx, nativeDenom)
+	paraTokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 
 	// only trigger if source channel is from parachain.
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {

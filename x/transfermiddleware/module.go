@@ -14,9 +14,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/client/cli"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/client/cli"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 	"github.com/spf13/cobra"
 )
 
@@ -58,7 +58,7 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 
 // GetTxCmd implements AppModuleBasic interface
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	return cli.NewTxCmd()
+	return cli.GetTxCmd()
 }
 
 // GetQueryCmd implements AppModuleBasic interface

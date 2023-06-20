@@ -7,7 +7,7 @@ import (
 
 	"cosmossdk.io/errors"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
 var _ types.MsgServer = msgServer{}
@@ -31,10 +31,20 @@ func (ms msgServer) AddParachainIBCTokenInfo(goCtx context.Context, req *types.M
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
 	}
 
-	err := ms.AddParachainIBCInfo(ctx, req.IbcDenom, req.ChannelId, req.NativeDenom)
+	err := ms.AddParachainIBCInfo(ctx, req.IbcDenom, req.ChannelId, req.NativeDenom, req.AssetId)
 	if err != nil {
 		return nil, err
 	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventAddParachainIBCTokenInfo,
+			sdk.NewAttribute(types.AttributeKeyNativeDenom, req.NativeDenom),
+			sdk.NewAttribute(types.AttributeKeyIbcDenom, req.IbcDenom),
+			sdk.NewAttribute(types.AttributeKeyAssetID, req.AssetId),
+		),
+	})
+
 	return &types.MsgAddParachainIBCTokenInfoResponse{}, nil
 }
 
@@ -48,6 +58,13 @@ func (ms msgServer) RemoveParachainIBCTokenInfo(goCtx context.Context, req *type
 	if err != nil {
 		return nil, err
 	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventRemoveParachainIBCTokenInfo,
+			sdk.NewAttribute(types.AttributeKeyNativeDenom, req.NativeDenom),
+		),
+	})
 
 	return &types.MsgRemoveParachainIBCTokenInfoResponse{}, nil
 }

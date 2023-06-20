@@ -15,7 +15,7 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	centauri "github.com/notional-labs/centauri/v2/app"
+	centauri "github.com/notional-labs/centauri/v3/app"
 	"github.com/stretchr/testify/require"
 )
 
