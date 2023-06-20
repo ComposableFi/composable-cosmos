@@ -9,6 +9,11 @@ import (
 
 var _ sdk.Msg = &MsgAddParachainIBCTokenInfo{}
 
+const (
+	TypeMsgAddParachainIBCTokenInfo    = "add_para"
+	TypeMsgRemoveParachainIBCTokenInfo = "remove_para"
+)
+
 func NewMsgAddParachainIBCTokenInfo(
 	authority string,
 	ibcDenom string,
@@ -24,6 +29,12 @@ func NewMsgAddParachainIBCTokenInfo(
 		ChannelId:   channelID,
 	}
 }
+
+// Route Implements Msg.
+func (msg MsgAddParachainIBCTokenInfo) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (msg MsgAddParachainIBCTokenInfo) Type() string { return TypeMsgAddParachainIBCTokenInfo }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgAddParachainIBCTokenInfo) GetSignBytes() []byte {
@@ -43,7 +54,7 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelId
+	// validate channelIds
 	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
 		return err
 	}
@@ -68,6 +79,12 @@ func NewMsgRemoveParachainIBCTokenInfo(
 		NativeDenom: nativeDenom,
 	}
 }
+
+// Route Implements Msg.
+func (msg MsgRemoveParachainIBCTokenInfo) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (msg MsgRemoveParachainIBCTokenInfo) Type() string { return TypeMsgRemoveParachainIBCTokenInfo }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgRemoveParachainIBCTokenInfo) GetSignBytes() []byte {
