@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
@@ -203,6 +204,11 @@ var (
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
+	}
+
+	// module accounts that are allowed to receive tokens
+	allowedReceivingModAcc = map[string]bool{
+		minttypes.ModuleName: true,
 	}
 )
 
@@ -755,13 +761,19 @@ func (app *CentauriApp) ModuleAccountAddrs() map[string]bool {
 
 // ModuleAccountAddrs returns all the app's module account addresses.
 func (app *CentauriApp) BlacklistedModuleAccountAddrs() map[string]bool {
-	modAccAddrs := make(map[string]bool)
-	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
-	for acc := range maccPerms {
-		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+	blockedAddrs := make(map[string]bool)
+
+	accs := make([]string, 0, len(maccPerms))
+	for k := range maccPerms {
+		accs = append(accs, k)
+	}
+	sort.Strings(accs)
+
+	for _, acc := range accs {
+		blockedAddrs[authtypes.NewModuleAddress(acc).String()] = !allowedReceivingModAcc[acc]
 	}
 
-	return modAccAddrs
+	return blockedAddrs
 }
 
 // LegacyAmino returns SimApp's amino codec.
