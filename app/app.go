@@ -435,7 +435,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, app.keys[wasm08types.StoreKey])
+	app.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, app.keys[wasm08types.StoreKey], authorityAddress)
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
