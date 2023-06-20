@@ -1,0 +1,45 @@
+package types
+
+import (
+	"github.com/cosmos/cosmos-sdk/codec/legacy"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
+
+var _ sdk.Msg = &MsgFundModuleAccount{}
+
+// Route Implements Msg.
+func (m MsgFundModuleAccount) Route() string { return sdk.MsgTypeURL(&m) }
+
+// Type Implements Msg.
+func (m MsgFundModuleAccount) Type() string { return sdk.MsgTypeURL(&m) }
+
+// GetSigners returns the expected signers for a MsgMintAndAllocateExp .
+func (m MsgFundModuleAccount) GetSigners() []sdk.AccAddress {
+	daoAccount, err := sdk.AccAddressFromBech32(m.FromAddress)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{daoAccount}
+}
+
+// GetSignBytes Implements Msg.
+func (m MsgFundModuleAccount) GetSignBytes() []byte {
+	return sdk.MustSortJSON(legacy.Cdc.MustMarshalJSON(&m))
+}
+
+// ValidateBasic does a sanity check on the provided data.
+func (m MsgFundModuleAccount) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(m.FromAddress)
+	if err != nil {
+		return sdkerrors.Wrap(err, "from address must be valid address")
+	}
+	return nil
+}
+
+func NewMsgFundModuleAccount(fromAddr sdk.AccAddress, amount sdk.Coins) *MsgFundModuleAccount {
+	return &MsgFundModuleAccount{
+		FromAddress: fromAddr.String(),
+		Amount:      amount,
+	}
+}
