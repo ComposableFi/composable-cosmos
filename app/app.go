@@ -132,7 +132,7 @@ const (
 	Name                 = "centauri"
 	dirName              = "banksy"
 	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
-	ForkHeight           = 308257
+	ForkHeight           = 244008
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
