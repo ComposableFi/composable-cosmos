@@ -3,10 +3,27 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 )
 
 var _ sdk.Msg = &MsgAddParachainIBCTokenInfo{}
+
+func NewMsgAddParachainIBCTokenInfo(
+	authority string,
+	ibcDenom string,
+	nativeDenom string,
+	assetID string,
+	channelID string,
+) *MsgAddParachainIBCTokenInfo {
+	return &MsgAddParachainIBCTokenInfo{
+		Authority:   authority,
+		IbcDenom:    ibcDenom,
+		NativeDenom: nativeDenom,
+		AssetId:     assetID,
+		ChannelId:   channelID,
+	}
+}
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgAddParachainIBCTokenInfo) GetSignBytes() []byte {
@@ -21,12 +38,18 @@ func (msg *MsgAddParachainIBCTokenInfo) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
+	// validate authority
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return sdkerrors.Wrap(err, "invalid authority address")
 	}
 
 	// validate channelId
-	err := host.ChannelIdentifierValidator(msg.ChannelId)
+	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+		return err
+	}
+
+	// validate ibcDenom
+	err := ibctransfertypes.ValidateIBCDenom(msg.IbcDenom)
 	if err != nil {
 		return err
 	}
@@ -35,6 +58,16 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 }
 
 var _ sdk.Msg = &MsgRemoveParachainIBCTokenInfo{}
+
+func NewMsgRemoveParachainIBCTokenInfo(
+	authority string,
+	nativeDenom string,
+) *MsgRemoveParachainIBCTokenInfo {
+	return &MsgRemoveParachainIBCTokenInfo{
+		Authority:   authority,
+		NativeDenom: nativeDenom,
+	}
+}
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgRemoveParachainIBCTokenInfo) GetSignBytes() []byte {
@@ -54,18 +87,4 @@ func (msg *MsgRemoveParachainIBCTokenInfo) ValidateBasic() error {
 	}
 
 	return nil
-}
-
-func NewMsgAddParachainIBCTokenInfo(
-	authority string,
-	ibcDenom string,
-	channelID string,
-	nativeDenom string,
-) *MsgAddParachainIBCTokenInfo {
-	return &MsgAddParachainIBCTokenInfo{
-		Authority:   authority,
-		IbcDenom:    ibcDenom,
-		ChannelId:   channelID,
-		NativeDenom: nativeDenom,
-	}
 }

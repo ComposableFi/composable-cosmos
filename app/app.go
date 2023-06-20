@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
+	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -24,7 +25,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -107,6 +107,7 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
+	"github.com/notional-labs/centauri/v3/app/ante"
 	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
@@ -128,6 +129,7 @@ const (
 	AccountAddressPrefix = "centauri"
 	Name                 = "centauri"
 	dirName              = "banksy"
+	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -394,7 +396,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
+	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey], authorityAddress)
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -402,7 +404,7 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.TransferKeeper,
 		app.BankKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		authorityAddress,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
@@ -659,20 +661,14 @@ func NewCentauriApp(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
-			AccountKeeper:   app.AccountKeeper,
-			BankKeeper:      app.BankKeeper,
-			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-			FeegrantKeeper:  app.FeeGrantKeeper,
-			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	app.SetAnteHandler(anteHandler)
+	app.SetAnteHandler(ante.NewAnteHandler(
+		appOpts,
+		app.AccountKeeper,
+		authante.DefaultSigVerificationGasConsumer,
+		encodingConfig.TxConfig.SignModeHandler(),
+		app.IBCKeeper,
+		appCodec,
+	))
 	app.SetEndBlocker(app.EndBlocker)
 
 	if loadLatest {
