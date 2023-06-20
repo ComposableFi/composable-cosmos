@@ -52,11 +52,6 @@ issues:
   max-same-issues: 10000
 
 linters-settings:
-  gofumpt:
-    # Choose whether to use the extra rules.
-    module-path: github.com/notional-labs/composable-centauri
-    # Default: false
-    extra-rules: false
   dogsled:
     max-blank-identifiers: 3
   maligned:
