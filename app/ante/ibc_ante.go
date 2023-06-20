@@ -11,6 +11,13 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 )
 
+var ( //nolint:staticcheck
+	allowedRelayAddress = map[string]bool{
+		"centauri1eqv3xl0vk0md74qukfghfff4z3axsp29rr9c85": true,
+		"centauri1av6x9sll0yx4anske424jtgxejnrgqv6j6tjjt": true,
+	}
+)
+
 type IBCPermissionDecorator struct {
 	cdc codec.BinaryCodec
 }
@@ -57,12 +64,6 @@ func (g IBCPermissionDecorator) ValidateIBCUpdateClientMsg(_ sdk.Context, msgs [
 }
 
 func (g IBCPermissionDecorator) validMsg(m sdk.Msg) error {
-	var (
-		allowedRelayAddress = map[string]bool{
-			"centauri1eqv3xl0vk0md74qukfghfff4z3axsp29rr9c85": true,
-			"centauri1av6x9sll0yx4anske424jtgxejnrgqv6j6tjjt": true,
-		}
-	)
 	if msg, ok := m.(*clienttypes.MsgUpdateClient); ok {
 		if msg.ClientMessage.TypeUrl != "/ibc.lightclients.wasm.v1.Header" {
 			return nil
