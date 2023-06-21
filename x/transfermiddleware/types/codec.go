@@ -17,6 +17,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "centauri/MsgAddParachainInfo")
 	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "centauri/MsgRemoveParachainInfo")
+	legacy.RegisterAminoMsg(cdc, &MsgAddRlyAddress{}, "centauri/MsgAddRlyAddress")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
@@ -24,6 +25,7 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		(*sdk.Msg)(nil),
 		&MsgAddParachainIBCTokenInfo{},
 		&MsgRemoveParachainIBCTokenInfo{},
+		&MsgAddRlyAddress{},
 	)
 }
 
