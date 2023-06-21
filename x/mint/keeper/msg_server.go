@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/notional-labs/centauri/v3/x/mint/types"
 )
@@ -28,6 +29,12 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 	sender, err := sdk.AccAddressFromBech32(req.FromAddress)
 	if err != nil {
 		return nil, err
+	}
+
+	params := ms.GetParams(ctx)
+
+	if len(req.Amount.Denoms()) > 1 || req.Amount[0].Denom != params.MintDenom {
+		return nil, errorsmod.Wrapf(types.ErrInvalidCoin, "Invalid fund")
 	}
 
 	// Send Fund to account module
