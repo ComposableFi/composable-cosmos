@@ -1,9 +1,9 @@
 package types
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var _ sdk.Msg = &MsgFundModuleAccount{}
@@ -32,7 +32,7 @@ func (m MsgFundModuleAccount) GetSignBytes() []byte {
 func (m MsgFundModuleAccount) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.FromAddress)
 	if err != nil {
-		return sdkerrors.Wrap(err, "from address must be valid address")
+		return errorsmod.Wrap(err, "from address must be valid address")
 	}
 	return nil
 }
@@ -70,12 +70,12 @@ func (m MsgAddAccountToFundModuleSet) GetSignBytes() []byte {
 func (m MsgAddAccountToFundModuleSet) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(m.AllowedAddress)
 	if err != nil {
-		return sdkerrors.Wrap(err, "from address must be valid address")
+		return errorsmod.Wrap(err, "from address must be valid address")
 	}
 
 	_, err = sdk.AccAddressFromBech32(m.AllowedAddress)
 	if err != nil {
-		return sdkerrors.Wrap(err, "from address must be valid address")
+		return errorsmod.Wrap(err, "from address must be valid address")
 	}
 
 	return nil
