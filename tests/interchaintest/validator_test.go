@@ -28,19 +28,6 @@ func TestValidator(t *testing.T) {
 	numVals := 5
 	numFullNodes := 3
 
-	consensusOverrides := make(testutil.Toml)
-	blockTime := 5 // seconds, parachain is 12 second blocks, don't make relayer work harder than needed
-	blockT := (time.Duration(blockTime) * time.Second).String()
-	consensusOverrides["timeout_commit"] = blockT
-	consensusOverrides["timeout_propose"] = blockT
-
-	configTomlOverrides := make(testutil.Toml)
-	configTomlOverrides["consensus"] = consensusOverrides
-
-	configFileOverrides := make(map[string]any)
-	configFileOverrides["config/config.toml"] = configTomlOverrides
-	centauriConfig.ConfigFileOverrides = configFileOverrides
-
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
 			Name:          "centauri",
