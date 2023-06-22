@@ -31,6 +31,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
+	bech32stakingmigration "github.com/notional-labs/centauri/v3/bech32-migration/staking"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -130,6 +131,7 @@ const (
 	Name                 = "centauri"
 	dirName              = "banksy"
 	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+	ForkHeight           = 244008
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -719,6 +721,10 @@ func (app *CentauriApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+	if ctx.BlockHeight() == ForkHeight {
+		bech32stakingmigration.MigrateUnbonding(ctx, app.keys[stakingtypes.StoreKey], app.appCodec)
+	}
+
 	return app.mm.BeginBlock(ctx, req)
 }
 
