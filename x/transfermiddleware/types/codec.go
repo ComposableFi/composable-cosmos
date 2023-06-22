@@ -5,6 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	authzcodec "github.com/cosmos/cosmos-sdk/x/authz/codec"
 	govcodec "github.com/cosmos/cosmos-sdk/x/gov/codec"
 	groupcodec "github.com/cosmos/cosmos-sdk/x/group/codec"
@@ -27,6 +28,7 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		&MsgRemoveParachainIBCTokenInfo{},
 		&MsgAddRlyAddress{},
 	)
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
 var (
