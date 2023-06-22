@@ -38,7 +38,8 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 	}
 
 	// Send Fund to account module
-	err = ms.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, req.Amount)
+	moduleAccountAccAddress := ms.GetModuleAccountAccAddress(ctx)
+	err = ms.bankKeeper.SendCoins(ctx, sender, moduleAccountAccAddress, req.Amount)
 	if err != nil {
 		return nil, err
 	}

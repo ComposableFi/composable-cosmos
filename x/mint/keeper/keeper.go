@@ -16,6 +16,7 @@ import (
 type Keeper struct {
 	cdc              codec.BinaryCodec
 	storeKey         storetypes.StoreKey
+	accountKeeper    types.AccountKeeper
 	stakingKeeper    types.StakingKeeper
 	bankKeeper       types.BankKeeper
 	feeCollectorName string
@@ -48,6 +49,11 @@ func NewKeeper(
 		feeCollectorName: feeCollectorName,
 		authority:        authority,
 	}
+}
+
+func (k Keeper) GetModuleAccountAccAddress(ctx sdk.Context) sdk.AccAddress {
+	moduleAccount := k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
+	return moduleAccount.GetAddress()
 }
 
 // GetAuthority returns the x/mint module's authority.
