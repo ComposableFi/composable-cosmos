@@ -85,6 +85,20 @@ func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
 	store.Set(types.MinterKey, bz)
 }
 
+// SetAllowedAddress sets fund allowed address to state.
+func (k Keeper) SetAllowedAddress(ctx sdk.Context, address string) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetAllowedAddressStoreKey(address)
+	store.Set(key, []byte{1})
+}
+
+// IsAllowedAddress return true if has address in store
+func (k Keeper) IsAllowedAddress(ctx sdk.Context, address string) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetAllowedAddressStoreKey(address)
+	return store.Has(key)
+}
+
 // SetParams sets the x/mint module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	if err := p.Validate(); err != nil {

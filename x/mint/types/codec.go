@@ -14,13 +14,14 @@ var (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgFundModuleAccount{}, "feeabs/FundModuleAccount", nil)
-	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgFundModuleAccount{}, "centauri/FundModuleAccount", nil)
+	cdc.RegisterConcrete(&MsgAddAccountToFundModuleSet{}, "centauri/MsgAddAccountToFundModuleSet", nil)
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgFundModuleAccount{},
+		&MsgAddAccountToFundModuleSet{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

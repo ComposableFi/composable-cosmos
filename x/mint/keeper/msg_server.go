@@ -5,6 +5,7 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/notional-labs/centauri/v3/x/mint/types"
 )
 
@@ -31,6 +32,10 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 		return nil, err
 	}
 
+	if !ms.IsAllowedAddress(ctx, req.FromAddress) {
+		return nil, errorsmod.Wrapf(types.ErrInvalidAddress, "Invalid send address")
+	}
+
 	params := ms.GetParams(ctx)
 
 	if len(req.Amount.Denoms()) > 1 || req.Amount[0].Denom != params.MintDenom {
@@ -45,4 +50,27 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 	}
 
 	return &types.MsgFundModuleAccountResponse{}, nil
+}
+
+func (ms msgServer) AddAccountToFundModuleSet(goCtx context.Context, req *types.MsgAddAccountToFundModuleSet) (*types.MsgAddAccountToFundModuleSetResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	err := req.ValidateBasic()
+	if err != nil {
+		return nil, errorsmod.Wrapf(types.ErrValidationMsg, "invalid req msg %v - err %v", req, err)
+	}
+
+	if ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
+	}
+
+	ms.SetAllowedAddress(ctx, req.AllowedAddress)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventAddAllowedFundAddress,
+			sdk.NewAttribute(types.AttributeKeyAllowedAddress, req.AllowedAddress),
+		),
+	})
+
+	return &types.MsgAddAccountToFundModuleSetResponse{}, nil
 }

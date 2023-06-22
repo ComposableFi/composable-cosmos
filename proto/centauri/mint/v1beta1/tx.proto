@@ -9,6 +9,7 @@ option go_package = "x/mint/types";
 // Msg defines the mint module Msg service.
 service Msg {
     rpc FundModuleAccount(MsgFundModuleAccount) returns (MsgFundModuleAccountResponse);
+    rpc AddAccountToFundModuleSet(MsgAddAccountToFundModuleSet) returns (MsgAddAccountToFundModuleSetResponse);
 }
 
 message MsgFundModuleAccount {
@@ -21,3 +22,12 @@ message MsgFundModuleAccount {
 }
 
 message MsgFundModuleAccountResponse {}
+
+// MsgAddAccountToFundModuleSet add account in to allowed fund module set
+message MsgAddAccountToFundModuleSet {
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];
+    string allowed_address = 2 [ (gogoproto.moretags) = "yaml:\"allowed_address\"" ];
+}
+
+message MsgAddAccountToFundModuleSetResponse {}
