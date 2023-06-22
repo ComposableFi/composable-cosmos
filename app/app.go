@@ -204,11 +204,6 @@ var (
 		alliancemoduletypes.RewardsPoolName: nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
-
-	// module accounts that are allowed to receive tokens
-	allowedReceivingModAcc = map[string]bool{
-		minttypes.ModuleName: true,
-	}
 )
 
 var _ servertypes.Application = (*CentauriApp)(nil)
