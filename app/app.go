@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
+	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -24,13 +25,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
+	bech32stakingmigration "github.com/notional-labs/centauri/v3/bech32-migration/staking"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -96,7 +97,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	centauriupgrade "github.com/notional-labs/centauri/v2/app/upgrade/centauri"
+	centauriupgrade "github.com/notional-labs/centauri/v3/app/upgrade/centauri"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -107,16 +108,17 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/centauri/v2/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v3/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v2/x/mint"
-	mintkeeper "github.com/notional-labs/centauri/v2/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v3/x/mint"
+	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -128,6 +130,8 @@ const (
 	AccountAddressPrefix = "centauri"
 	Name                 = "centauri"
 	dirName              = "banksy"
+	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+	ForkHeight           = 244008
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -238,7 +242,7 @@ type CentauriApp struct {
 	AccountKeeper    authkeeper.AccountKeeper
 	BankKeeper       custombankkeeper.Keeper
 	CapabilityKeeper *capabilitykeeper.Keeper
-	StakingKeeper    stakingkeeper.Keeper
+	StakingKeeper    *stakingkeeper.Keeper
 	SlashingKeeper   slashingkeeper.Keeper
 	MintKeeper       mintkeeper.Keeper
 	DistrKeeper      distrkeeper.Keeper
@@ -288,6 +292,7 @@ func NewCentauriApp(
 	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
+	bApp.SetTxEncoder(encodingConfig.TxConfig.TxEncoder())
 
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
@@ -333,7 +338,7 @@ func NewCentauriApp(
 	app.BankKeeper = custombankkeeper.NewBaseKeeper(
 		appCodec, keys[banktypes.StoreKey], app.AccountKeeper, app.BlacklistedModuleAccountAddrs(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-	app.StakingKeeper = *stakingkeeper.NewKeeper(
+	app.StakingKeeper = stakingkeeper.NewKeeper(
 		appCodec, keys[stakingtypes.StoreKey], app.AccountKeeper, app.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
@@ -393,7 +398,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey])
+	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey], authorityAddress)
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -401,7 +406,7 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 		&app.TransferKeeper,
 		app.BankKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		authorityAddress,
 	)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
@@ -454,7 +459,7 @@ func NewCentauriApp(
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
-		appCodec, keys[evidencetypes.StoreKey], &app.StakingKeeper, app.SlashingKeeper,
+		appCodec, keys[evidencetypes.StoreKey], app.StakingKeeper, app.SlashingKeeper,
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
@@ -513,7 +518,7 @@ func NewCentauriApp(
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
-		staking.NewAppModule(appCodec, &app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
@@ -658,20 +663,14 @@ func NewCentauriApp(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
-			AccountKeeper:   app.AccountKeeper,
-			BankKeeper:      app.BankKeeper,
-			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-			FeegrantKeeper:  app.FeeGrantKeeper,
-			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
-		},
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	app.SetAnteHandler(anteHandler)
+	app.SetAnteHandler(ante.NewAnteHandler(
+		appOpts,
+		app.AccountKeeper,
+		authante.DefaultSigVerificationGasConsumer,
+		encodingConfig.TxConfig.SignModeHandler(),
+		app.IBCKeeper,
+		appCodec,
+	))
 	app.SetEndBlocker(app.EndBlocker)
 
 	if loadLatest {
@@ -683,7 +682,7 @@ func NewCentauriApp(
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
-	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec))
+	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec, &app.SlashingKeeper, &app.GovKeeper))
 
 	return app
 }
@@ -722,6 +721,10 @@ func (app *CentauriApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+	if ctx.BlockHeight() == ForkHeight {
+		bech32stakingmigration.MigrateUnbonding(ctx, app.keys[stakingtypes.StoreKey], app.appCodec)
+	}
+
 	return app.mm.BeginBlock(ctx, req)
 }
 

@@ -13,7 +13,7 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	routerKeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
+	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {
@@ -41,7 +41,7 @@ func (s TestSupport) ScopedTransferKeeper() capabilitykeeper.ScopedKeeper {
 	return s.app.ScopedTransferKeeper
 }
 
-func (s TestSupport) StakingKeeper() stakingkeeper.Keeper {
+func (s TestSupport) StakingKeeper() *stakingkeeper.Keeper {
 	return s.app.StakingKeeper
 }
 
