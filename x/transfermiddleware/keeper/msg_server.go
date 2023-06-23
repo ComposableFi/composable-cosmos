@@ -35,6 +35,16 @@ func (ms msgServer) AddParachainIBCTokenInfo(goCtx context.Context, req *types.M
 	if err != nil {
 		return nil, err
 	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventAddParachainIBCTokenInfo,
+			sdk.NewAttribute(types.AttributeKeyNativeDenom, req.NativeDenom),
+			sdk.NewAttribute(types.AttributeKeyIbcDenom, req.IbcDenom),
+			sdk.NewAttribute(types.AttributeKeyAssetID, req.AssetId),
+		),
+	})
+
 	return &types.MsgAddParachainIBCTokenInfoResponse{}, nil
 }
 
@@ -48,6 +58,13 @@ func (ms msgServer) RemoveParachainIBCTokenInfo(goCtx context.Context, req *type
 	if err != nil {
 		return nil, err
 	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventRemoveParachainIBCTokenInfo,
+			sdk.NewAttribute(types.AttributeKeyNativeDenom, req.NativeDenom),
+		),
+	})
 
 	return &types.MsgRemoveParachainIBCTokenInfoResponse{}, nil
 }

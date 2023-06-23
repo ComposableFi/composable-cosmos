@@ -78,7 +78,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 // RemoveParachainIBCTokenInfo remove parachain token information from chain state.
 func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
-		return types.ErrDuplicateParachainIBCTokenInfo
+		return types.NotRegisteredNativeDenom
 	}
 
 	// get the IBCdenom
