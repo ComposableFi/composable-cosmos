@@ -13,13 +13,13 @@ import (
 )
 
 const (
-	Precision         = 2
-	InflationRate     = 13 // inflation rate per year
-	DesiredRatio      = 67 // the distance from the desired ratio (67%)
-	MaxTokenPerYear   = 1000000000000000
-	MinTokenPerYear   = 800000000000000
-	BlockTime         = 5 // assuming 5 second block times
-	Incentives_Supply = 100000000000
+	Precision        = 2
+	InflationRate    = 13 // inflation rate per year
+	DesiredRatio     = 67 // the distance from the desired ratio (67%)
+	MaxTokenPerYear  = 1000000000000000
+	MinTokenPerYear  = 800000000000000
+	BlockTime        = 5 // assuming 5 second block times
+	IncentivesSupply = 100000000000
 )
 
 // Parameter store keys
