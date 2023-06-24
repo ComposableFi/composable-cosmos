@@ -29,7 +29,7 @@ func (g IBCPermissionDecorator) AnteHandle(
 	simulate bool, next sdk.AnteHandler,
 ) (newCtx sdk.Context, err error) {
 	// run checks only on CheckTx or simulate
-	if !ctx.IsCheckTx() || simulate {
+	if simulate {
 		return next(ctx, tx, simulate)
 	}
 
