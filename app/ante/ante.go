@@ -15,7 +15,7 @@ import (
 // Link to default ante handler used by cosmos sdk:
 // https://github.com/cosmos/cosmos-sdk/blob/v0.43.0/x/auth/ante/ante.go#L41
 func NewAnteHandler(
-	appOpts servertypes.AppOptions,
+	_ servertypes.AppOptions,
 	ak ante.AccountKeeper,
 	sigGasConsumer ante.SignatureVerificationGasConsumer,
 	signModeHandler signing.SignModeHandler,

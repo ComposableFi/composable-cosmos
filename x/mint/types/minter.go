@@ -25,10 +25,12 @@ func InitialMinter(inflation sdk.Dec) Minter {
 }
 
 // DefaultInitialMinter returns a default initial Minter object for a new chain
-// which uses an inflation rate of 13%.
+// which uses an inflation rate of 13% per year.
 func DefaultInitialMinter() Minter {
 	return InitialMinter(
-		sdk.NewDecWithPrec(13, 2),
+		// Create a new Dec from integer with decimal place at prec
+		// CONTRACT: prec <= Precision
+		sdk.NewDecWithPrec(INFLATION_RATE, PRECISION),
 	)
 }
 
@@ -44,6 +46,9 @@ func ValidateMinter(minter Minter) error {
 // NextInflationRate returns the new inflation rate for the next hour.
 func (m Minter) NextInflationRate(params Params, bondedRatio sdk.Dec, totalStakingSupply math.Int) sdk.Dec {
 	totalStakingSupplyDec := sdk.NewDecFromInt(totalStakingSupply)
+	if totalStakingSupplyDec.LT(math.LegacySmallestDec()) {
+		return m.Inflation // assert if totalStakingSupplyDec = 0
+	}
 
 	// The target annual inflation rate is recalculated for each previsions cycle. The
 	// inflation is also subject to a rate change (positive or negative) depending on

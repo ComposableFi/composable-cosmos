@@ -66,7 +66,7 @@ func TestTransferTestSuite(t *testing.T) {
 	suite.Run(t, new(TransferTestSuite))
 }
 
-func (suite *TransferTestSuite) TestCreateClient() {
+func (suite *TransferTestSuite) TestIbcAnte() {
 	suite.SetupTest()
 	path := customibctesting.NewPath(suite.chainA, suite.chainB)
 	suite.coordinator.SetupClients(path)

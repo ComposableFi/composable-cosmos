@@ -1,0 +1,10 @@
+{
+    "forward": {
+        "receiver": "osmo....",
+        "port": "transfer",
+        "channel": "channel-123",
+        "timeout": "10m",
+        "retries": 2,
+        "next": {}
+    }
+}
