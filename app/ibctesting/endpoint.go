@@ -12,6 +12,7 @@ import (
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
+	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
@@ -76,7 +77,29 @@ func (endpoint *Endpoint) CreateClient() (err error) {
 		//		solo := NewSolomachine(chain.t, endpoint.Chain.Codec, clientID, "", 1)
 		//		clientState = solo.ClientState()
 		//		consensusState = solo.ConsensusState()
+	case exported.Wasm:
+		tmConfig, ok := endpoint.ClientConfig.(*ibctesting.TendermintConfig)
+		require.True(endpoint.Chain.t, ok)
 
+		height := endpoint.Counterparty.Chain.LastHeader.GetHeight().(clienttypes.Height)
+		tmClientState := ibctmtypes.NewClientState(
+			endpoint.Counterparty.Chain.ChainID, tmConfig.TrustLevel, tmConfig.TrustingPeriod, tmConfig.UnbondingPeriod, tmConfig.MaxClockDrift,
+			height, commitmenttypes.GetSDKSpecs(), UpgradePath)
+		tmConsensusState := endpoint.Counterparty.Chain.LastHeader.ConsensusState()
+		wasmClientState, err := endpoint.Chain.Codec.MarshalInterface(tmClientState)
+		if err != nil {
+			return err
+		}
+		clientState = wasmtypes.NewClientState(wasmClientState, endpoint.Chain.Coordinator.CodeID, height)
+
+		wasmConsensusState, err := endpoint.Chain.Codec.MarshalInterface(tmConsensusState)
+		if err != nil {
+			return err
+		}
+		consensusState = &wasmtypes.ConsensusState{
+			Data:      wasmConsensusState,
+			Timestamp: tmConsensusState.GetTimestamp(),
+		}
 	default:
 		err = fmt.Errorf("client type %s is not supported", endpoint.ClientConfig.GetClientType())
 	}
@@ -111,7 +134,8 @@ func (endpoint *Endpoint) UpdateClient() (err error) {
 	switch endpoint.ClientConfig.GetClientType() {
 	case exported.Tendermint:
 		header, err = endpoint.Chain.ConstructUpdateTMClientHeader(endpoint.Counterparty.Chain, endpoint.ClientID)
-
+	case exported.Wasm:
+		header, err = endpoint.Chain.ConstructUpdateWasmClientHeader(endpoint.Counterparty.Chain, endpoint.ClientID)
 	default:
 		err = fmt.Errorf("client type %s is not supported", endpoint.ClientConfig.GetClientType())
 	}
@@ -373,4 +397,30 @@ func (endpoint *Endpoint) AcknowledgePacket(packet channeltypes.Packet, ack []by
 	ackMsg := channeltypes.NewMsgAcknowledgement(packet, ack, proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String())
 
 	return endpoint.Chain.sendMsgs(ackMsg)
+}
+
+// TimeoutPacket sends a MsgTimeout to the channel associated with the endpoint.
+func (endpoint *Endpoint) TimeoutPacket(packet channeltypes.Packet) error {
+	// get proof for timeout based on channel order
+	var packetKey []byte
+
+	switch endpoint.ChannelConfig.Order {
+	case channeltypes.ORDERED:
+		packetKey = host.NextSequenceRecvKey(packet.GetDestPort(), packet.GetDestChannel())
+	case channeltypes.UNORDERED:
+		packetKey = host.PacketReceiptKey(packet.GetDestPort(), packet.GetDestChannel(), packet.GetSequence())
+	default:
+		return fmt.Errorf("unsupported order type %s", endpoint.ChannelConfig.Order)
+	}
+
+	proof, proofHeight := endpoint.Counterparty.QueryProof(packetKey)
+	nextSeqRecv, found := endpoint.Counterparty.Chain.App.GetIBCKeeper().ChannelKeeper.GetNextSequenceRecv(endpoint.Counterparty.Chain.GetContext(), endpoint.ChannelConfig.PortID, endpoint.ChannelID)
+	require.True(endpoint.Chain.t, found)
+
+	timeoutMsg := channeltypes.NewMsgTimeout(
+		packet, nextSeqRecv,
+		proof, proofHeight, endpoint.Chain.SenderAccount.GetAddress().String(),
+	)
+
+	return endpoint.Chain.sendMsgs(timeoutMsg)
 }
