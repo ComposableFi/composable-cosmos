@@ -669,6 +669,7 @@ func NewCentauriApp(
 		authante.DefaultSigVerificationGasConsumer,
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
+		app.TransferMiddlewareKeeper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)

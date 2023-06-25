@@ -94,6 +94,18 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	return nil
 }
 
+func (keeper Keeper) SetAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
+	store := ctx.KVStore(keeper.storeKey)
+	store.Set(types.GetKeyByRlyAddress(rlyAddress), []byte{1})
+}
+
+func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyByRlyAddress(rlyAddress)
+
+	return store.Has(key)
+}
+
 func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {
 	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)

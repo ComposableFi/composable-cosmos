@@ -27,6 +27,7 @@ type Coordinator struct {
 
 	CurrentTime time.Time
 	Chains      map[string]*TestChain
+	CodeID      []byte
 }
 
 // NewCoordinator initializes Coordinator with N TestChain's
