@@ -13,13 +13,13 @@ import (
 )
 
 const (
-	PRECISION          = 2
-	INFLATION_RATE     = 13 // inflation rate per year
-	DESIRED_RATIO      = 67 // the distance from the desired ratio (67%)
-	MAX_TOKEN_PER_YEAR = 1000000000000000
-	MIN_TOKEN_PER_YEAR = 800000000000000
-	BLOCKTIME          = 5 // assuming 5 second block times
-	INCENTIVES_SUPPLY  = 100000000000
+	Precision        = 2
+	InflationRate    = 13 // inflation rate per year
+	DesiredRatio     = 67 // the distance from the desired ratio (67%)
+	MaxTokenPerYear  = 1000000000000000
+	MinTokenPerYear  = 800000000000000
+	BlockTime        = 5 // assuming 5 second block times
+	IncentivesSupply = 100000000000
 )
 
 // Parameter store keys
@@ -55,11 +55,11 @@ func NewParams(
 func DefaultParams() Params {
 	return Params{
 		MintDenom:           sdk.DefaultBondDenom,
-		InflationRateChange: sdk.NewDecWithPrec(INFLATION_RATE, PRECISION),
-		GoalBonded:          sdk.NewDecWithPrec(DESIRED_RATIO, PRECISION),
-		BlocksPerYear:       uint64(60 * 60 * 8766 / BLOCKTIME),
-		MaxTokenPerYear:     sdk.NewIntFromUint64(MAX_TOKEN_PER_YEAR),
-		MinTokenPerYear:     sdk.NewIntFromUint64(MIN_TOKEN_PER_YEAR),
+		InflationRateChange: sdk.NewDecWithPrec(InflationRate, Precision),
+		GoalBonded:          sdk.NewDecWithPrec(DesiredRatio, Precision),
+		BlocksPerYear:       uint64(60 * 60 * 8766 / BlockTime),
+		MaxTokenPerYear:     sdk.NewIntFromUint64(MaxTokenPerYear),
+		MinTokenPerYear:     sdk.NewIntFromUint64(MinTokenPerYear),
 	}
 }
 
