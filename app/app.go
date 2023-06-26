@@ -767,7 +767,6 @@ func (app *CentauriApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
 	}
-
 	return modAccAddrs
 }
 
