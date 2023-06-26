@@ -32,7 +32,7 @@ RUN set -eux; \
       wget -O /lib/libwasmvm_muslc.a https://github.com/CosmWasm/wasmvm/releases/download/${WASM_VERSION}/libwasmvm_muslc.${ARCH}.a; \      
     fi; \
     go mod download;
-
+    
 # Copy the remaining files
 COPY . .
 

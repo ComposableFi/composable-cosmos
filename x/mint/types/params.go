@@ -12,6 +12,16 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
+const (
+	Precision        = 2
+	InflationRate    = 13 // inflation rate per year
+	DesiredRatio     = 67 // the distance from the desired ratio (67%)
+	MaxTokenPerYear  = 1000000000000000
+	MinTokenPerYear  = 800000000000000
+	BlockTime        = 5 // assuming 5 second block times
+	IncentivesSupply = 100000000000
+)
+
 // Parameter store keys
 var (
 	KeyMintDenom           = []byte("MintDenom")
@@ -45,11 +55,11 @@ func NewParams(
 func DefaultParams() Params {
 	return Params{
 		MintDenom:           sdk.DefaultBondDenom,
-		InflationRateChange: sdk.NewDecWithPrec(13, 2),
-		GoalBonded:          sdk.NewDecWithPrec(67, 2),
-		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 second block times
-		MaxTokenPerYear:     sdk.NewIntFromUint64(1000000000000000),
-		MinTokenPerYear:     sdk.NewIntFromUint64(800000000000000),
+		InflationRateChange: sdk.NewDecWithPrec(InflationRate, Precision),
+		GoalBonded:          sdk.NewDecWithPrec(DesiredRatio, Precision),
+		BlocksPerYear:       uint64(60 * 60 * 8766 / BlockTime),
+		MaxTokenPerYear:     sdk.NewIntFromUint64(MaxTokenPerYear),
+		MinTokenPerYear:     sdk.NewIntFromUint64(MinTokenPerYear),
 	}
 }
 

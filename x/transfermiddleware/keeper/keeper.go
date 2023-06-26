@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -44,8 +45,15 @@ func NewKeeper(
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
 func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom, assetID string) error {
-	if keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
-		return types.ErrDuplicateParachainIBCTokenInfo
+	store := ctx.KVStore(keeper.storeKey)
+	if store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate assetID")
+	}
+	if store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate IBC denom")
+	}
+	if store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate native denom")
 	}
 
 	info := types.ParachainIBCTokenInfo{
@@ -59,10 +67,9 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	if err != nil {
 		return err
 	}
-	store := ctx.KVStore(keeper.storeKey)
+
 	store.Set(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom), bz)
 	store.Set(types.GetKeyParachainIBCTokenInfoByAssetID(assetID), bz)
-	// update the IBCdenom-native index
 	store.Set(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom), []byte(nativeDenom))
 	return nil
 }
@@ -71,7 +78,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 // RemoveParachainIBCTokenInfo remove parachain token information from chain state.
 func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
-		return types.ErrDuplicateParachainIBCTokenInfo
+		return types.NotRegisteredNativeDenom
 	}
 
 	// get the IBCdenom
@@ -82,15 +89,21 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
-
-	// update the IBCdenom-native index
-	if !store.Has(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom)) {
-		panic("broken data in state")
-	}
-
 	store.Delete(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return nil
+}
+
+func (keeper Keeper) SetAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
+	store := ctx.KVStore(keeper.storeKey)
+	store.Set(types.GetKeyByRlyAddress(rlyAddress), []byte{1})
+}
+
+func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool {
+	store := ctx.KVStore(keeper.storeKey)
+	key := types.GetKeyByRlyAddress(rlyAddress)
+
+	return store.Has(key)
 }
 
 func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {
