@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	authzcodec "github.com/cosmos/cosmos-sdk/x/authz/codec"
 	govcodec "github.com/cosmos/cosmos-sdk/x/gov/codec"
-	groupcodec "github.com/cosmos/cosmos-sdk/x/group/codec"
 )
 
 var (
@@ -20,17 +19,18 @@ var (
 func init() {
 	RegisterLegacyAminoCodec(amino)
 	cryptocodec.RegisterCrypto(amino)
-	sdk.RegisterLegacyAminoCodec(amino)
 
 	RegisterLegacyAminoCodec(authzcodec.Amino)
 	RegisterLegacyAminoCodec(govcodec.Amino)
-	RegisterLegacyAminoCodec(groupcodec.Amino)
+	amino.Seal()
 }
 
 // RegisterLegacyAminoCodec registers concrete types on the LegacyAmino codec
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(Params{}, "centauri/x/mintParams", nil)
-	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "centauri/x/mint/MsgUpdateParams")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "centauri/MsgUpdateParams")
+	cdc.RegisterConcrete(&MsgFundModuleAccount{}, "centauri/FundModuleAccount", nil)
+	cdc.RegisterConcrete(&MsgAddAccountToFundModuleSet{}, "centauri/MsgAddAccountToFundModuleSet", nil)
 }
 
 // RegisterInterfaces registers the interfaces types with the interface registry.

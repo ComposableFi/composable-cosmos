@@ -12,6 +12,7 @@ var _ sdk.Msg = &MsgAddParachainIBCTokenInfo{}
 const (
 	TypeMsgAddParachainIBCTokenInfo    = "add_para"
 	TypeMsgRemoveParachainIBCTokenInfo = "remove_para"
+	TypeMsgAddRlyAddress               = "add_rly_address"
 )
 
 func NewMsgAddParachainIBCTokenInfo(
@@ -100,6 +101,48 @@ func (msg *MsgRemoveParachainIBCTokenInfo) GetSigners() []sdk.AccAddress {
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgRemoveParachainIBCTokenInfo) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(err, "invalid authority address")
+	}
+
+	return nil
+}
+
+var _ sdk.Msg = &MsgAddRlyAddress{}
+
+func NewMsgAddRlyAddress(
+	authority string,
+	rlyAdress string,
+) *MsgAddRlyAddress {
+	return &MsgAddRlyAddress{
+		Authority:  authority,
+		RlyAddress: rlyAdress,
+	}
+}
+
+// Route Implements Msg.
+func (msg MsgAddRlyAddress) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (msg MsgAddRlyAddress) Type() string { return TypeMsgAddRlyAddress }
+
+// GetSignBytes implements the LegacyMsg interface.
+func (msg MsgAddRlyAddress) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
+}
+
+// GetSigners returns the expected signers for a MsgRemoveParachainIBCTokenInfo message.
+func (msg *MsgAddRlyAddress) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
+	return []sdk.AccAddress{addr}
+}
+
+// ValidateBasic does a sanity check on the provided data.
+func (msg *MsgAddRlyAddress) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return sdkerrors.Wrap(err, "invalid authority address")
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.RlyAddress); err != nil {
 		return sdkerrors.Wrap(err, "invalid authority address")
 	}
 

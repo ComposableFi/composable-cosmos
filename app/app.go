@@ -669,6 +669,7 @@ func NewCentauriApp(
 		authante.DefaultSigVerificationGasConsumer,
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
+		app.TransferMiddlewareKeeper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
@@ -766,7 +767,6 @@ func (app *CentauriApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
 	}
-
 	return modAccAddrs
 }
 
