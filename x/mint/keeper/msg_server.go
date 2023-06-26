@@ -36,7 +36,6 @@ func (ms msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdatePara
 	}
 
 	return &types.MsgUpdateParamsResponse{}, nil
-
 }
 
 func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundModuleAccount) (*types.MsgFundModuleAccountResponse, error) {

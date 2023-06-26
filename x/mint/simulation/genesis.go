@@ -6,6 +6,7 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/notional-labs/centauri/v3/x/mint/types"
 )
@@ -32,22 +33,22 @@ func GenInflationRateChange(r *rand.Rand) math.LegacyDec {
 
 // GenInflationMax randomized InflationMax
 func GenInflationMax(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(20, 2)
+	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 10, 30)), 2)
 }
 
 // GenAnnualProvisions randomized AnnualProvisions
 func GenAnnualProvisions(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(7, 2)
+	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
 }
 
 // GenInflationMin randomized InflationMin
 func GenInflationMin(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(7, 2)
+	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
 }
 
 // GenGoalBonded randomized GoalBonded
 func GenGoalBonded(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(67, 2)
+	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 50, 100)), 2)
 }
 
 // RandomizeGenState generates a random GenesisState for wasm

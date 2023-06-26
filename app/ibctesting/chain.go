@@ -260,7 +260,7 @@ func (chain *TestChain) sendMsgs(msgs ...sdk.Msg) error {
 }
 
 // sendMsgs delivers a transaction through the application without returning the result.
-func (chain *TestChain) sendMsgsWithExpPass(expPass bool, msgs ...sdk.Msg) error {
+func (chain *TestChain) sendMsgsWithExpPass(_ bool, msgs ...sdk.Msg) error {
 	_, err := chain.SendMsgs(msgs...)
 	return err
 }
