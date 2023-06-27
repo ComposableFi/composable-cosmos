@@ -97,7 +97,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	v4upgrade "github.com/notional-labs/centauri/v3/app/upgrade/v4"
+	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -683,7 +683,7 @@ func NewCentauriApp(
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
-	app.UpgradeKeeper.SetUpgradeHandler(v4upgrade.UpgradeName, v4upgrade.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper))
+	app.UpgradeKeeper.SetUpgradeHandler(reward.UpgradeName, reward.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper, app.MintKeeper))
 
 	return app
 }
