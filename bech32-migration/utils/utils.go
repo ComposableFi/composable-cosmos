@@ -29,7 +29,7 @@ const (
 func ConvertValAddr(valAddr string) string {
 	parsedValAddr, err := ValAddressFromOldBech32(valAddr, OldBech32PrefixValAddr)
 	if err != nil {
-		panic(err)
+		return valAddr
 	}
 	return parsedValAddr.String()
 }
@@ -37,7 +37,7 @@ func ConvertValAddr(valAddr string) string {
 func ConvertAccAddr(accAddr string) string {
 	parsedAccAddr, err := AccAddressFromOldBech32(accAddr, OldBech32PrefixAccAddr)
 	if err != nil {
-		panic(err)
+		return accAddr
 	}
 	return parsedAccAddr.String()
 }
@@ -45,7 +45,7 @@ func ConvertAccAddr(accAddr string) string {
 func ConvertConsAddr(consAddr string) string {
 	parsedConsAddr, err := ConsAddressFromOldBech32(consAddr, OldBech32PrefixConsAddr)
 	if err != nil {
-		panic(err)
+		return consAddr
 	}
 	return parsedConsAddr.String()
 }

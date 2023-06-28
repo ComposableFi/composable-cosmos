@@ -13,7 +13,7 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	routerKeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
+	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {

@@ -90,9 +90,9 @@ import (
 	"github.com/gorilla/mux"
 
 	// TODO: mint module not complete yet,
-	"github.com/notional-labs/centauri/v2/x/mint"
-	mintkeeper "github.com/notional-labs/centauri/v2/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v3/x/mint"
+	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
@@ -123,13 +123,13 @@ import (
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibcmock "github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	simappparams "github.com/notional-labs/centauri/v2/app/ibctesting/simapp/params"
-	simappupgrades "github.com/notional-labs/centauri/v2/app/ibctesting/simapp/upgrades"
-	v6 "github.com/notional-labs/centauri/v2/app/ibctesting/simapp/upgrades/v6"
-	v7 "github.com/notional-labs/centauri/v2/app/ibctesting/simapp/upgrades/v7"
-	transfermiddleware "github.com/notional-labs/centauri/v2/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v2/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v2/x/transfermiddleware/types"
+	simappparams "github.com/notional-labs/centauri/v3/app/ibctesting/simapp/params"
+	simappupgrades "github.com/notional-labs/centauri/v3/app/ibctesting/simapp/upgrades"
+	v6 "github.com/notional-labs/centauri/v3/app/ibctesting/simapp/upgrades/v6"
+	v7 "github.com/notional-labs/centauri/v3/app/ibctesting/simapp/upgrades/v7"
+	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
 const appName = "SimApp"

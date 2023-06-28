@@ -10,6 +10,7 @@ option go_package = "x/transfermiddleware/types";
 service Msg {
     rpc AddParachainIBCTokenInfo(MsgAddParachainIBCTokenInfo) returns (MsgAddParachainIBCTokenInfoResponse);
     rpc RemoveParachainIBCTokenInfo(MsgRemoveParachainIBCTokenInfo) returns (MsgRemoveParachainIBCTokenInfoResponse);
+    rpc AddRlyAddress(MsgAddRlyAddress) returns (MsgAddRlyAddressResponse);
 }
 
 // MsgAddParachainInfo represents a message to add new parachain info.
@@ -19,9 +20,10 @@ message MsgAddParachainIBCTokenInfo {
     // authority is the address that controls the module (defaults to x/gov unless overwritten).
     string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
 
-    string ibc_denom = 2 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
-    string channel_id = 3 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
-    string native_denom = 7 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+    string ibc_denom = 3 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+    string native_denom = 4 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+    string asset_id = 5 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
 }
 
 message MsgAddParachainIBCTokenInfoResponse {
@@ -39,4 +41,17 @@ message MsgRemoveParachainIBCTokenInfo {
 }
 
 message MsgRemoveParachainIBCTokenInfoResponse {
+}
+
+// MsgAddRlyAddress represents a message to add new rly address to allow list
+message MsgAddRlyAddress {
+    option (cosmos.msg.v1.signer) = "authority";
+
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
+
+    string rly_address = 2 [ (gogoproto.moretags) = "yaml:\"rly_address\"" ];
+}
+
+message MsgAddRlyAddressResponse {
 }

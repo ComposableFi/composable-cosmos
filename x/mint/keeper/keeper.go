@@ -9,13 +9,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v2/x/mint/types"
+	"github.com/notional-labs/centauri/v3/x/mint/types"
 )
 
 // Keeper of the mint store
 type Keeper struct {
 	cdc              codec.BinaryCodec
 	storeKey         storetypes.StoreKey
+	accountKeeper    types.AccountKeeper
 	stakingKeeper    types.StakingKeeper
 	bankKeeper       types.BankKeeper
 	feeCollectorName string
@@ -50,6 +51,11 @@ func NewKeeper(
 	}
 }
 
+func (k Keeper) GetModuleAccountAccAddress(ctx sdk.Context) sdk.AccAddress {
+	moduleAccount := k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
+	return moduleAccount.GetAddress()
+}
+
 // GetAuthority returns the x/mint module's authority.
 func (k Keeper) GetAuthority() string {
 	return k.authority
@@ -77,6 +83,20 @@ func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&minter)
 	store.Set(types.MinterKey, bz)
+}
+
+// SetAllowedAddress sets fund allowed address to state.
+func (k Keeper) SetAllowedAddress(ctx sdk.Context, address string) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetAllowedAddressStoreKey(address)
+	store.Set(key, []byte{1})
+}
+
+// IsAllowedAddress return true if has address in store
+func (k Keeper) IsAllowedAddress(ctx sdk.Context, address string) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetAllowedAddressStoreKey(address)
+	return store.Has(key)
 }
 
 // SetParams sets the x/mint module parameters.
