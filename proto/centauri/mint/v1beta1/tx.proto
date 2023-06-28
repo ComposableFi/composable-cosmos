@@ -1,0 +1,33 @@
+syntax = "proto3";
+package centauri.mint.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "x/mint/types";
+
+// Msg defines the mint module Msg service.
+service Msg {
+    rpc FundModuleAccount(MsgFundModuleAccount) returns (MsgFundModuleAccountResponse);
+    rpc AddAccountToFundModuleSet(MsgAddAccountToFundModuleSet) returns (MsgAddAccountToFundModuleSetResponse);
+}
+
+message MsgFundModuleAccount {
+    string from_address = 1;
+    repeated cosmos.base.v1beta1.Coin amount = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\"",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+
+message MsgFundModuleAccountResponse {}
+
+// MsgAddAccountToFundModuleSet add account in to allowed fund module set
+message MsgAddAccountToFundModuleSet {
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];
+    string allowed_address = 2 [ (gogoproto.moretags) = "yaml:\"allowed_address\"" ];
+}
+
+message MsgAddAccountToFundModuleSetResponse {}

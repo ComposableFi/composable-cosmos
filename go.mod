@@ -10,15 +10,15 @@ require (
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2
 	github.com/cosmos/cosmos-sdk v0.47.3
 	github.com/cosmos/gogoproto v1.4.10
-	github.com/cosmos/ibc-go/v7 v7.0.0
+	github.com/cosmos/ibc-go/v7 v7.0.1
 	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/spf13/cast v1.5.0
+	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897
 	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230412224111-136e94e98861
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
 	google.golang.org/grpc v1.55.0
@@ -31,7 +31,7 @@ require (
 	cloud.google.com/go/iam v0.12.0 // indirect
 	cloud.google.com/go/storage v1.29.0 // indirect
 	cosmossdk.io/log v1.1.0 // indirect
-	github.com/CosmWasm/wasmvm v1.2.1 // indirect
+	github.com/CosmWasm/wasmvm v1.2.3 // indirect
 	github.com/aws/aws-sdk-go v1.44.203 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/chzyer/readline v1.5.1 // indirect
@@ -142,7 +142,7 @@ require (
 	github.com/petermattis/goid v0.0.0-20230317030725-371a4b8eda08 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.14.0 // indirect
+	github.com/prometheus/client_golang v1.15.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
