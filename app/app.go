@@ -120,6 +120,11 @@ import (
 	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
 	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
+	ratelimitmodule "github.com/Stride-Labs/stride/v11/x/ratelimit"
+	ratelimitclient "github.com/Stride-Labs/stride/v11/x/ratelimit/client"
+	ratelimitmodulekeeper "github.com/Stride-Labs/stride/v11/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/Stride-Labs/stride/v11/x/ratelimit/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
@@ -149,6 +154,10 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		alliancemoduleclient.CreateAllianceProposalHandler,
 		alliancemoduleclient.UpdateAllianceProposalHandler,
 		alliancemoduleclient.DeleteAllianceProposalHandler,
+		ratelimitclient.AddRateLimitProposalHandler,
+		ratelimitclient.UpdateRateLimitProposalHandler,
+		ratelimitclient.RemoveRateLimitProposalHandler,
+		ratelimitclient.ResetRateLimitProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -188,6 +197,7 @@ var (
 		transfermiddleware.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
+		ratelimitmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -265,6 +275,9 @@ type CentauriApp struct {
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
+
+	ScopedratelimitKeeper capabilitykeeper.ScopedKeeper
+	RatelimitKeeper       ratelimitmodulekeeper.Keeper
 
 	mm           *module.Manager
 	sm           *module.SimulationManager
@@ -412,7 +425,7 @@ func NewCentauriApp(
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],
 		app.GetSubspace(ibctransfertypes.ModuleName),
-		&app.TransferMiddlewareKeeper, // ICS4Wrapper
+		app.RatelimitKeeper, // ICS4Wrapper
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -432,6 +445,20 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 	)
 
+	// Create Ratelimit Keeper
+	scopedratelimitKeeper := app.CapabilityKeeper.ScopeToModule(ratelimitmoduletypes.ModuleName)
+	app.ScopedratelimitKeeper = scopedratelimitKeeper
+	app.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
+		appCodec,
+		keys[ratelimitmoduletypes.StoreKey],
+		app.GetSubspace(ratelimitmoduletypes.ModuleName),
+		app.BankKeeper,
+		app.IBCKeeper.ChannelKeeper,
+		// TODO: Implement ICS4Wrapper in Records and pass records keeper here
+		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+	)
+	ratelimitModule := ratelimitmodule.NewAppModule(appCodec, app.RatelimitKeeper)
+
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
@@ -449,8 +476,10 @@ func NewCentauriApp(
 		app.TransferMiddlewareKeeper,
 	)
 
+	transferStack := ratelimitmodule.NewIBCMiddleware(app.RatelimitKeeper, transfermiddlewareStack) // TODO: confirm that this is equivalent to https://github.com/Stride-Labs/stride/blob/main/app/app.go#L631C1-L632C1
+
 	ibcMiddlewareStack := router.NewIBCMiddleware(
-		transfermiddlewareStack,
+		transferStack,
 		app.RouterKeeper,
 		0,
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
@@ -530,6 +559,7 @@ func NewCentauriApp(
 		routerModule,
 		transfermiddlewareModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
+		ratelimitModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
