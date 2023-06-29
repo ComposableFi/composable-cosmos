@@ -15,6 +15,6 @@ func ConvertBech32Prefix(address, prefix string) (string, error) {
 	convertedAddress, err := bech32.ConvertAndEncode(prefix, bz)
 	if err != nil {
 		return "", fmt.Errorf("cannot convert %s address: %s", address, err)
-	}g
+	}
 	return convertedAddress, nil
 }
