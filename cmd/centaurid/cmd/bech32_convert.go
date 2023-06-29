@@ -25,7 +25,6 @@ Example:
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			bech32prefix, err := cmd.Flags().GetString(flagBech32Prefix)
-			bech32prefix = "centauri"
 			if err != nil {
 				return err
 			}
@@ -42,7 +41,7 @@ Example:
 		},
 	}
 
-	cmd.Flags().StringP(flagBech32Prefix, "p", "cosmos", "Bech32 Prefix to encode to")
+	cmd.Flags().StringP(flagBech32Prefix, "p", "centauri", "Bech32 Prefix to encode to")
 
 	return cmd
 }
