@@ -176,6 +176,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 		genutilcli.ValidateGenesisCmd(app.ModuleBasics),
 		AddGenesisAccountCmd(app.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
+		addDebugCommands(debug.Cmd()),
 		debug.Cmd(),
 		config.Cmd(),
 		CovertPrefixAddr(),
