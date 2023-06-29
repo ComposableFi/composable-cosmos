@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-
-	addressutil "github.com/notional-labs/centauri/v3/addressutil"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 
 	"github.com/spf13/cobra"
 )
@@ -29,13 +27,17 @@ Example:
 				return err
 			}
 
-			address := args[0]
-			convertedAddress, err := addressutil.ConvertBech32Prefix(address, bech32prefix)
+			_, bz, err := bech32.DecodeAndConvert(args[0])
 			if err != nil {
-				return fmt.Errorf("convertation failed: %s", err)
+				return err
 			}
 
-			cmd.Println(convertedAddress)
+			bech32Addr, err := bech32.ConvertAndEncode(bech32prefix, bz)
+			if err != nil {
+				panic(err)
+			}
+
+			cmd.Println(bech32Addr)
 
 			return nil
 		},
