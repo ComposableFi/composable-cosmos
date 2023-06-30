@@ -30,7 +30,7 @@ func DefaultInitialMinter() Minter {
 	return InitialMinter(
 		// Create a new Dec from integer with decimal place at prec
 		// CONTRACT: prec <= Precision
-		sdk.NewDecWithPrec(INFLATION_RATE, PRECISION),
+		sdk.NewDecWithPrec(InflationRate, PRECISION),
 	)
 }
 
