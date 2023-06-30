@@ -81,8 +81,9 @@ func RandomAccountAddress(_ testing.TB) sdk.AccAddress {
 	return addr
 }
 
-func RandomBech32AccountAddress(t testing.TB) string {
-	return RandomAccountAddress(t).String()
+func RandomBech32AccountAddress(tb testing.TB) string {
+	tb.Helper()
+	return RandomAccountAddress(tb).String()
 }
 
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
