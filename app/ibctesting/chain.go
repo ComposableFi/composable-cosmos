@@ -259,12 +259,6 @@ func (chain *TestChain) sendMsgs(msgs ...sdk.Msg) error {
 	return err
 }
 
-// sendMsgs delivers a transaction through the application without returning the result.
-func (chain *TestChain) sendMsgsWithExpPass(expPass bool, msgs ...sdk.Msg) error {
-	_, err := chain.SendMsgs(msgs...)
-	return err
-}
-
 // SendMsgs delivers a transaction through the application. It updates the senders sequence
 // number and updates the TestChain's headers. It returns the result and error if one
 // occurred.
