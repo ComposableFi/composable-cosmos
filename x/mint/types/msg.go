@@ -81,7 +81,7 @@ func (m MsgAddAccountToFundModuleSet) ValidateBasic() error {
 	return nil
 }
 
-func NewMsgAddAccountToFundModuleSet(authority string, allowedAddress string) *MsgAddAccountToFundModuleSet {
+func NewMsgAddAccountToFundModuleSet(authority, allowedAddress string) *MsgAddAccountToFundModuleSet {
 	return &MsgAddAccountToFundModuleSet{
 		Authority:      authority,
 		AllowedAddress: allowedAddress,

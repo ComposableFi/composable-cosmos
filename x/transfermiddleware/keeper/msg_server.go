@@ -78,7 +78,7 @@ func (ms msgServer) AddRlyAddress(goCtx context.Context, req *types.MsgAddRlyAdd
 
 	found := ms.HasAllowRlyAddress(ctx, req.RlyAddress)
 	if found {
-		return nil, fmt.Errorf("Address %v already registry in allow list", req.RlyAddress)
+		return nil, fmt.Errorf("address %v already registry in allow list", req.RlyAddress)
 	}
 
 	ms.SetAllowRlyAddress(ctx, req.RlyAddress)

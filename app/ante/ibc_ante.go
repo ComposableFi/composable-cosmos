@@ -64,7 +64,6 @@ func (g IBCPermissionDecorator) validMsg(ctx sdk.Context, m sdk.Msg) error {
 		if msg.ClientMessage.TypeUrl == "/ibc.lightclients.wasm.v1.Header" && !g.tfmwKeeper.HasAllowRlyAddress(ctx, msg.Signer) {
 			return fmt.Errorf("permission denied, address %s don't have relay permission", msg.Signer)
 		}
-
 	}
 
 	return nil
