@@ -27,10 +27,12 @@ type Coordinator struct {
 
 	CurrentTime time.Time
 	Chains      map[string]*TestChain
+	CodeID      []byte
 }
 
 // NewCoordinator initializes Coordinator with N TestChain's
 func NewCoordinator(t *testing.T, n int) *Coordinator {
+	t.Helper()
 	chains := make(map[string]*TestChain)
 	coord := &Coordinator{
 		t:           t,

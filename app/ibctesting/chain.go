@@ -70,6 +70,9 @@ type TestChain struct {
 
 	PendingSendPackets []channeltypes.Packet
 	PendingAckPackets  []PacketAck
+
+	// Use wasm client if true
+	UseWasmClient bool
 }
 
 type PacketAck struct {
@@ -86,6 +89,7 @@ type PacketAck struct {
 // Time management is handled by the Coordinator in order to ensure synchrony between chains.
 // Each update of any chain increments the block header time for all chains by 5 seconds.
 func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
+	t.Helper()
 	// generate validator private/public key
 	privVal := mock.NewPV()
 	pubKey, err := privVal.GetPubKey()
@@ -136,6 +140,12 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 	baseapp.SetChainID(chain.ChainID)(chain.App.GetBaseApp())
 	coord.CommitBlock(chain)
 
+	return chain
+}
+
+// SetWasm
+func (chain *TestChain) SetWasm(wasm bool) *TestChain {
+	chain.UseWasmClient = wasm
 	return chain
 }
 
@@ -267,6 +277,41 @@ func (chain *TestChain) SendMsgs(msgs ...sdk.Msg) (*sdk.Result, error) {
 		[]uint64{chain.SenderAccount.GetAccountNumber()},
 		[]uint64{chain.SenderAccount.GetSequence()},
 		true, true, chain.senderPrivKey,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// SignAndDeliver calls app.Commit()
+	chain.NextBlock()
+
+	// increment sequence for successful transaction execution
+	err = chain.SenderAccount.SetSequence(chain.SenderAccount.GetSequence() + 1)
+	if err != nil {
+		return nil, err
+	}
+
+	chain.Coordinator.IncrementTime()
+
+	chain.captureIBCEvents(r)
+
+	return r, nil
+}
+
+func (chain *TestChain) SendMsgsWithExpPass(expPass bool, msgs ...sdk.Msg) (*sdk.Result, error) {
+	// ensure the chain has the latest time
+	chain.Coordinator.UpdateTimeForChain(chain)
+
+	_, r, err := centauri.SignAndDeliver(
+		chain.t,
+		chain.TxConfig,
+		chain.App.GetBaseApp(),
+		chain.GetContext().BlockHeader(),
+		msgs,
+		chain.ChainID,
+		[]uint64{chain.SenderAccount.GetAccountNumber()},
+		[]uint64{chain.SenderAccount.GetSequence()},
+		true, expPass, chain.senderPrivKey,
 	)
 	if err != nil {
 		return nil, err
@@ -584,6 +629,7 @@ type TestingAppDecorator struct {
 }
 
 func NewTestingAppDecorator(t *testing.T, centauri *centauri.CentauriApp) *TestingAppDecorator {
+	t.Helper()
 	return &TestingAppDecorator{CentauriApp: centauri, t: t}
 }
 

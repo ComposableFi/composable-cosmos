@@ -9,20 +9,18 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	tfmwKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 )
 
-var allowedRelayAddress = map[string]bool{
-	"centauri1eqv3xl0vk0md74qukfghfff4z3axsp29rr9c85": true,
-	"centauri1av6x9sll0yx4anske424jtgxejnrgqv6j6tjjt": true,
-}
-
 type IBCPermissionDecorator struct {
-	cdc codec.BinaryCodec
+	cdc        codec.BinaryCodec
+	tfmwKeeper tfmwKeeper.Keeper
 }
 
-func NewIBCPermissionDecorator(cdc codec.BinaryCodec) IBCPermissionDecorator {
+func NewIBCPermissionDecorator(cdc codec.BinaryCodec, keeper tfmwKeeper.Keeper) IBCPermissionDecorator {
 	return IBCPermissionDecorator{
-		cdc: cdc,
+		cdc:        cdc,
+		tfmwKeeper: keeper,
 	}
 }
 
@@ -31,7 +29,7 @@ func (g IBCPermissionDecorator) AnteHandle(
 	simulate bool, next sdk.AnteHandler,
 ) (newCtx sdk.Context, err error) {
 	// run checks only on CheckTx or simulate
-	if !ctx.IsCheckTx() || simulate {
+	if simulate {
 		return next(ctx, tx, simulate)
 	}
 
@@ -44,30 +42,26 @@ func (g IBCPermissionDecorator) AnteHandle(
 }
 
 // ValidateIBCUpdateClientMsg validate
-func (g IBCPermissionDecorator) ValidateIBCUpdateClientMsg(_ sdk.Context, msgs []sdk.Msg) error {
+func (g IBCPermissionDecorator) ValidateIBCUpdateClientMsg(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, m := range msgs {
 		if msg, ok := m.(*authz.MsgExec); ok {
-			if err := g.validAuthz(msg); err != nil {
+			if err := g.validAuthz(ctx, msg); err != nil {
 				return err
 			}
 			continue
 		}
 
 		// validate normal msgs
-		if err := g.validMsg(m); err != nil {
+		if err := g.validMsg(ctx, m); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (g IBCPermissionDecorator) validMsg(m sdk.Msg) error {
+func (g IBCPermissionDecorator) validMsg(ctx sdk.Context, m sdk.Msg) error {
 	if msg, ok := m.(*clienttypes.MsgUpdateClient); ok {
-		if msg.ClientMessage.TypeUrl != "/ibc.lightclients.wasm.v1.Header" {
-			return nil
-		}
-
-		if !allowedRelayAddress[msg.Signer] {
+		if msg.ClientMessage.TypeUrl == "/ibc.lightclients.wasm.v1.Header" && !g.tfmwKeeper.HasAllowRlyAddress(ctx, msg.Signer) {
 			return fmt.Errorf("permission denied, address %s don't have relay permission", msg.Signer)
 		}
 	}
@@ -75,13 +69,13 @@ func (g IBCPermissionDecorator) validMsg(m sdk.Msg) error {
 	return nil
 }
 
-func (g IBCPermissionDecorator) validAuthz(execMsg *authz.MsgExec) error {
+func (g IBCPermissionDecorator) validAuthz(ctx sdk.Context, execMsg *authz.MsgExec) error {
 	for _, v := range execMsg.Msgs {
 		var innerMsg sdk.Msg
 		if err := g.cdc.UnpackAny(v, &innerMsg); err != nil {
 			return errorsmod.Wrap(err, "cannot unmarshal authz exec msgs")
 		}
-		if err := g.validMsg(innerMsg); err != nil {
+		if err := g.validMsg(ctx, innerMsg); err != nil {
 			return err
 		}
 	}

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -179,6 +178,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 		tmcli.NewCompletionCmd(rootCmd, true),
 		debug.Cmd(),
 		config.Cmd(),
+		CovertPrefixAddr(),
 		// this line is used by starport scaffolding # stargate/root/commands
 	)
 
@@ -277,7 +277,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		baseappOptions...,
 	)
 
-	fmt.Println("new app", newApp.BaseApp)
 	return newApp
 }
 

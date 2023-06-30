@@ -10,6 +10,7 @@ option go_package = "x/transfermiddleware/types";
 service Msg {
     rpc AddParachainIBCTokenInfo(MsgAddParachainIBCTokenInfo) returns (MsgAddParachainIBCTokenInfoResponse);
     rpc RemoveParachainIBCTokenInfo(MsgRemoveParachainIBCTokenInfo) returns (MsgRemoveParachainIBCTokenInfoResponse);
+    rpc AddRlyAddress(MsgAddRlyAddress) returns (MsgAddRlyAddressResponse);
 }
 
 // MsgAddParachainInfo represents a message to add new parachain info.
@@ -40,4 +41,17 @@ message MsgRemoveParachainIBCTokenInfo {
 }
 
 message MsgRemoveParachainIBCTokenInfoResponse {
+}
+
+// MsgAddRlyAddress represents a message to add new rly address to allow list
+message MsgAddRlyAddress {
+    option (cosmos.msg.v1.signer) = "authority";
+
+    // authority is the address that controls the module (defaults to x/gov unless overwritten).
+    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];;
+
+    string rly_address = 2 [ (gogoproto.moretags) = "yaml:\"rly_address\"" ];
+}
+
+message MsgAddRlyAddressResponse {
 }

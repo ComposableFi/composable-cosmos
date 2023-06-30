@@ -97,7 +97,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	centauriupgrade "github.com/notional-labs/centauri/v3/app/upgrade/centauri"
+	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -669,6 +669,7 @@ func NewCentauriApp(
 		authante.DefaultSigVerificationGasConsumer,
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
+		app.TransferMiddlewareKeeper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
@@ -682,7 +683,7 @@ func NewCentauriApp(
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
-	app.UpgradeKeeper.SetUpgradeHandler(centauriupgrade.UpgradeName, centauriupgrade.CreateUpgradeHandler(app.mm, app.configurator, app.keys, app.appCodec, &app.SlashingKeeper, &app.GovKeeper))
+	app.UpgradeKeeper.SetUpgradeHandler(reward.UpgradeName, reward.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper, app.MintKeeper))
 
 	return app
 }
@@ -766,7 +767,6 @@ func (app *CentauriApp) BlacklistedModuleAccountAddrs() map[string]bool {
 	for acc := range maccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
 	}
-
 	return modAccAddrs
 }
 

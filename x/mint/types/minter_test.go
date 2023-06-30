@@ -1,5 +1,13 @@
 package types
 
+import (
+	"math/rand"
+	"testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+)
+
 // func TestNextInflation(t *testing.T) {
 // 	minter := DefaultInitialMinter()
 // 	params := DefaultParams()
@@ -125,3 +133,32 @@ package types
 // 		minter.NextAnnualProvisions(params, totalSupply)
 // 	}
 // }
+
+func TestSimulateMint(t *testing.T) {
+	minter := DefaultInitialMinter()
+	params := DefaultParams()
+	totalSupply := sdk.NewInt(1_000_000_000_000_000_000)
+	totalStaked := sdk.NewInt(0)
+	tokenMinted := sdk.NewCoin("stake", sdk.NewInt(0))
+
+	for i := 1; i <= int(params.BlocksPerYear); i++ {
+
+		stakingDiff := sdk.NewDec(int64(rand.Intn(10))).QuoInt(sdk.NewInt(1_000_000)).MulInt(totalSupply)
+		if (rand.Float32() > 0.5 || totalStaked.Add(stakingDiff.RoundInt()).GT(totalSupply)) && !totalStaked.Sub(stakingDiff.RoundInt()).IsNegative() {
+			stakingDiff = stakingDiff.Neg()
+		}
+		totalStaked = totalStaked.Add(stakingDiff.RoundInt())
+		bondedRatio := sdk.NewDecFromInt(totalStaked).Quo(sdk.NewDecFromInt(totalSupply))
+		minter.Inflation = minter.NextInflationRate(params, bondedRatio, totalStaked)
+		minter.AnnualProvisions = minter.NextAnnualProvisions(params, totalStaked)
+
+		// mint coins, update supply
+		mintedCoin := minter.BlockProvision(params)
+		tokenMinted = tokenMinted.Add(mintedCoin)
+		// if i%100000 == 0 {
+		// 	fmt.Println(i, bondedRatio, tokenMinted, mintedCoin, minter.Inflation, minter.AnnualProvisions)
+		// }
+	}
+	require.True(t, params.MaxTokenPerYear.GTE(tokenMinted.Amount))
+	require.True(t, params.MinTokenPerYear.LTE(tokenMinted.Amount))
+}
