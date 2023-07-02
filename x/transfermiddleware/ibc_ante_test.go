@@ -15,7 +15,7 @@ import (
 	customibctesting "github.com/notional-labs/centauri/v6/app/ibctesting"
 )
 
-var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+var govAuthorityAddress = "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq"
 
 type TransferTestSuite struct {
 	suite.Suite

@@ -133,9 +133,10 @@ import (
 )
 
 const (
-	Name       = "centauri"
-	dirName    = "banksy"
-	ForkHeight = 244008
+	Name             = "centauri"
+	dirName          = "centauri"
+	ForkHeight       = 244008
+	authorityAddress = "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq"
 )
 
 var (

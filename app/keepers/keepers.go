@@ -110,7 +110,7 @@ import (
 
 const (
 	AccountAddressPrefix = "centauri"
-	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+	authorityAddress     = "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq"
 )
 
 type AppKeepers struct {
