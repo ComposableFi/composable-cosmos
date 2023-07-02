@@ -1,8 +1,12 @@
 package keeper
 
 import (
+	"fmt"
+
+	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
@@ -19,3 +23,25 @@ type (
 		ics4Wrapper   porttypes.ICS4Wrapper
 	}
 )
+
+func NewKeeper(
+	cdc codec.BinaryCodec,
+	key storetypes.StoreKey,
+	ps paramtypes.Subspace,
+	bankKeeper types.BankKeeper,
+	channelKeeper types.ChannelKeeper,
+	ics4Wrapper porttypes.ICS4Wrapper,
+) *Keeper {
+	return &Keeper{
+		cdc:           cdc,
+		storeKey:      key,
+		paramstore:    ps,
+		bankKeeper:    bankKeeper,
+		channelKeeper: channelKeeper,
+		ics4Wrapper:   ics4Wrapper,
+	}
+}
+
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
