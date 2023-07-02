@@ -33,5 +33,5 @@ func (k Keeper) RemoveRateLimit(goCtx context.Context, msg *types.MsgRemoveRateL
 }
 
 func (k Keeper) ResetRateLimit(goCtx context.Context, msg *types.MsgResetRateLimit) (*types.MsgResetRateLimitResponse, error) {
-
+	return &types.MsgResetRateLimitResponse{}, nil
 }
