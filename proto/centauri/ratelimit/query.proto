@@ -9,7 +9,8 @@ option go_package = "x/ratelimit/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  rpc AllRateLimits(QueryAllRateLimitsRequest) returns (QueryAllRateLimitsResponse) {
+  rpc AllRateLimits(QueryAllRateLimitsRequest)
+      returns (QueryAllRateLimitsResponse) {
     option (google.api.http).get = "/centauri/ratelimit/ratelimits";
   }
   rpc RateLimit(QueryRateLimitRequest) returns (QueryRateLimitResponse) {
@@ -18,8 +19,7 @@ service Query {
   }
   rpc RateLimitsByChainId(QueryRateLimitsByChainIdRequest)
       returns (QueryRateLimitsByChainIdResponse) {
-    option (google.api.http).get =
-        "/centauri/ratelimit/ratelimits/{chain_id}";
+    option (google.api.http).get = "/centauri/ratelimit/ratelimits/{chain_id}";
   }
   rpc RateLimitsByChannelId(QueryRateLimitsByChannelIdRequest)
       returns (QueryRateLimitsByChannelIdResponse) {
@@ -28,13 +28,11 @@ service Query {
   }
   rpc AllBlacklistedDenoms(QueryAllBlacklistedDenomsRequest)
       returns (QueryAllBlacklistedDenomsResponse) {
-    option (google.api.http).get =
-        "/centauri/ratelimit/blacklisted_denoms";
+    option (google.api.http).get = "/centauri/ratelimit/blacklisted_denoms";
   }
   rpc AllWhitelistedAddresses(QueryAllWhitelistedAddressesRequest)
       returns (QueryAllWhitelistedAddressesResponse) {
-    option (google.api.http).get =
-        "/centauri/ratelimit/whitelisted_addresses";
+    option (google.api.http).get = "/centauri/ratelimit/whitelisted_addresses";
   }
 }
 

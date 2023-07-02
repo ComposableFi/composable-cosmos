@@ -69,9 +69,11 @@ func (m *GenesisState) GetTokenInfos() []ParachainIBCTokenInfo {
 	return nil
 }
 
-// ParachainIBCTokenInfo represents information about transferable IBC tokens from Parachain.
+// ParachainIBCTokenInfo represents information about transferable IBC tokens
+// from Parachain.
 type ParachainIBCTokenInfo struct {
-	// ibc_denom is the denomination of the ibced token transferred from the dotsama chain.
+	// ibc_denom is the denomination of the ibced token transferred from the
+	// dotsama chain.
 	IbcDenom string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
 	// channel_id is source channel in IBC connection from centauri chain
 	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`

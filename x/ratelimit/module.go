@@ -15,8 +15,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/notional-labs/centauri/v3/x/ratelimit/client/cli"
+	"github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
 	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	"github.com/spf13/cobra"
 )
 
@@ -82,6 +82,11 @@ func NewAppModule(k *keeper.Keeper) AppModule {
 		AppModuleBasic: AppModuleBasic{},
 		keeper:         k,
 	}
+}
+
+// Name returns the capability module's name.
+func (am AppModule) Name() string {
+	return am.AppModuleBasic.Name()
 }
 
 // QuerierRoute implements the AppModule interface
