@@ -64,7 +64,6 @@ message MsgRemoveRateLimit {
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
   string denom = 2;
   string channel_id = 3;
-  string deposit = 4 [ (gogoproto.moretags) = "yaml:\"deposit\"" ];
 }
 
 message MsgRemoveRateLimitResponse {}
