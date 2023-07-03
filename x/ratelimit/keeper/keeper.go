@@ -12,17 +12,19 @@ import (
 	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
 )
 
-type (
-	Keeper struct {
-		storeKey   storetypes.StoreKey
-		cdc        codec.BinaryCodec
-		paramstore paramtypes.Subspace
+type Keeper struct {
+	storeKey   storetypes.StoreKey
+	cdc        codec.BinaryCodec
+	paramstore paramtypes.Subspace
 
-		bankKeeper    types.BankKeeper
-		channelKeeper types.ChannelKeeper
-		ics4Wrapper   porttypes.ICS4Wrapper
-	}
-)
+	bankKeeper    types.BankKeeper
+	channelKeeper types.ChannelKeeper
+	ics4Wrapper   porttypes.ICS4Wrapper
+
+	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
+	// should be the x/gov module account.
+	authority string
+}
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
@@ -31,6 +33,7 @@ func NewKeeper(
 	bankKeeper types.BankKeeper,
 	channelKeeper types.ChannelKeeper,
 	ics4Wrapper porttypes.ICS4Wrapper,
+	authority string,
 ) *Keeper {
 	return &Keeper{
 		cdc:           cdc,
@@ -39,9 +42,20 @@ func NewKeeper(
 		bankKeeper:    bankKeeper,
 		channelKeeper: channelKeeper,
 		ics4Wrapper:   ics4Wrapper,
+		authority:     authority,
 	}
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetParams get all parameters as types.Params
+func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+	return types.NewParams()
+}
+
+// SetParams set the params
+func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
+	k.paramstore.SetParamSet(ctx, &params)
 }
