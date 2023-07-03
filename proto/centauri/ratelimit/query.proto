@@ -26,10 +26,6 @@ service Query {
     option (google.api.http).get =
         "/centauri/ratelimit/ratelimits/{channel_id}";
   }
-  rpc AllBlacklistedDenoms(QueryAllBlacklistedDenomsRequest)
-      returns (QueryAllBlacklistedDenomsResponse) {
-    option (google.api.http).get = "/centauri/ratelimit/blacklisted_denoms";
-  }
   rpc AllWhitelistedAddresses(QueryAllWhitelistedAddressesRequest)
       returns (QueryAllWhitelistedAddressesResponse) {
     option (google.api.http).get = "/centauri/ratelimit/whitelisted_addresses";
@@ -56,9 +52,6 @@ message QueryRateLimitsByChannelIdRequest { string channel_id = 1; }
 message QueryRateLimitsByChannelIdResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }
-
-message QueryAllBlacklistedDenomsRequest {}
-message QueryAllBlacklistedDenomsResponse { repeated string denoms = 1; }
 
 message QueryAllWhitelistedAddressesRequest {}
 message QueryAllWhitelistedAddressesResponse {
