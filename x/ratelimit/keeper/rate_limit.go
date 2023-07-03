@@ -110,7 +110,7 @@ func (k Keeper) UndoSendPacket(ctx sdk.Context, channelId string, sequence uint6
 // Reset the rate limit after expiration
 // The inflow and outflow should get reset to 0, the channelValue should be updated,
 // and all pending send packet sequence numbers should be removed
-func (k Keeper) resetRateLimit(ctx sdk.Context, denom string, channelId string) error {
+func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) error {
 	rateLimit, found := k.GetRateLimit(ctx, denom, channelId)
 	if !found {
 		return types.ErrRateLimitNotFound
@@ -139,10 +139,17 @@ func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 }
 
 // Removes a rate limit object from the store using denom and channel-id
-func (k Keeper) removeRateLimit(ctx sdk.Context, denom string, channelId string) {
+func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelId string) error {
+	_, found := k.GetRateLimit(ctx, denom, channelId)
+	if !found {
+		return errorsmod.Wrap(types.ErrRateLimitNotFound, "rate limit not found")
+	}
+
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 	rateLimitKey := GetRateLimitItemKey(denom, channelId)
 	store.Delete(rateLimitKey)
+
+	return nil
 }
 
 // Grabs and returns a rate limit object from the store using denom and channel-id
@@ -158,6 +165,79 @@ func (k Keeper) GetRateLimit(ctx sdk.Context, denom string, channelId string) (r
 
 	k.cdc.MustUnmarshal(rateLimitValue, &rateLimit)
 	return rateLimit, true
+}
+
+// AddRateLimit
+func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error {
+	// Confirm the channel value is not zero
+	channelValue := k.GetChannelValue(ctx, msg.Denom)
+	if channelValue.IsZero() {
+		return errorsmod.Wrap(types.ErrZeroChannelValue, "zero channel value")
+	}
+
+	// Confirm the rate limit does not already exist
+	_, found := k.GetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	if found {
+		return errorsmod.Wrap(types.ErrRateLimitAlreadyExists, "rate limit already exists")
+	}
+
+	// Create and store the rate limit object
+	path := types.Path{
+		Denom:     msg.Denom,
+		ChannelId: msg.ChannelId,
+	}
+	quota := types.Quota{
+		MaxPercentSend: msg.MaxPercentSend,
+		MaxPercentRecv: msg.MaxPercentRecv,
+		DurationHours:  msg.DurationHours,
+	}
+	flow := types.Flow{
+		Inflow:       math.ZeroInt(),
+		Outflow:      math.ZeroInt(),
+		ChannelValue: channelValue,
+	}
+
+	k.SetRateLimit(ctx, types.RateLimit{
+		Path:  &path,
+		Quota: &quota,
+		Flow:  &flow,
+	})
+
+	return nil
+}
+
+// UpdateRateLimit
+func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) error {
+	// Confirm the rate limit exists
+	_, found := k.GetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	if !found {
+		return errorsmod.Wrap(types.ErrRateLimitNotFound, "rate limit not found")
+	}
+
+	// Update the rate limit object with the new quota information
+	// The flow should also get reset to 0
+	path := types.Path{
+		Denom:     msg.Denom,
+		ChannelId: msg.ChannelId,
+	}
+	quota := types.Quota{
+		MaxPercentSend: msg.MaxPercentSend,
+		MaxPercentRecv: msg.MaxPercentRecv,
+		DurationHours:  msg.DurationHours,
+	}
+	flow := types.Flow{
+		Inflow:       math.ZeroInt(),
+		Outflow:      math.ZeroInt(),
+		ChannelValue: k.GetChannelValue(ctx, msg.Denom),
+	}
+
+	k.SetRateLimit(ctx, types.RateLimit{
+		Path:  &path,
+		Quota: &quota,
+		Flow:  &flow,
+	})
+
+	return nil
 }
 
 // Returns all rate limits stored

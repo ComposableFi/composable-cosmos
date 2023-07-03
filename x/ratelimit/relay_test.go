@@ -42,7 +42,7 @@ func TestKeeperTestSuite(t *testing.T) {
 	suite.Run(t, new(RateLimitTestSuite))
 }
 
-func (suite *RateLimitTestSuite) TestSendPacket() {
+func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
