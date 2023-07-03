@@ -8,9 +8,13 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
+	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
 	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
 )
 
@@ -207,12 +211,72 @@ func (k Keeper) AcknowledgeRateLimitedPacket(ctx sdk.Context, packet channeltype
 		if len(response.Result) == 0 {
 			return errorsmod.Wrapf(channeltypes.ErrInvalidAcknowledgement, "acknowledgement result cannot be empty")
 		}
-
-	case *channeltypes.Acknowledgement_Error:
-		k.Logger(ctx).Error(fmt.Sprintf("acknowledgement error: %s", response.Error))
-		logger.Error()
-		return &types.AcknowledgementResponse{Status: types.AckResponseStatus_FAILURE, Error: response.Error}, nil
+		// If the ack was successful, remove the pending packet
+		k.RemovePendingSendPacket(ctx, packetInfo.ChannelID, packet.Sequence)
+		return nil
 	default:
-		return nil, errorsmod.Wrapf(channeltypes.ErrInvalidAcknowledgement, "unsupported acknowledgement response field type %T", response)
+		// If the ack failed, undo the change to the rate limit Outflow
+		return k.UndoSendPacket(ctx, packetInfo.ChannelID, packet.Sequence, packetInfo.Denom, packetInfo.Amount)
 	}
+}
+
+// Middleware implementation for OnAckPacket with rate limiting
+// The Outflow should be decremented from the failed packet
+func (k Keeper) TimeoutRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet) error {
+	packetInfo, err := ParsePacketInfo(packet, types.PACKET_SEND)
+	if err != nil {
+		return err
+	}
+
+	return k.UndoSendPacket(ctx, packetInfo.ChannelID, packet.Sequence, packetInfo.Denom, packetInfo.Amount)
+}
+
+// SendPacket wraps IBC ChannelKeeper's SendPacket function
+// If the packet does not get rate limited, it passes the packet to the IBC Channel keeper
+func (k Keeper) SendPacket(
+	ctx sdk.Context,
+	channelCap *capabilitytypes.Capability,
+	sourcePort string,
+	sourceChannel string,
+	timeoutHeight clienttypes.Height,
+	timeoutTimestamp uint64,
+	data []byte,
+) (sequence uint64, err error) {
+	// The packet must first be sent up the stack to get the sequence number from the channel keeper
+	sequence, err = k.ics4Wrapper.SendPacket(
+		ctx,
+		channelCap,
+		sourcePort,
+		sourceChannel,
+		timeoutHeight,
+		timeoutTimestamp,
+		data,
+	)
+	if err != nil {
+		return sequence, err
+	}
+
+	err = k.SendRateLimitedPacket(ctx, channeltypes.Packet{
+		Sequence:         sequence,
+		SourceChannel:    sourceChannel,
+		SourcePort:       sourcePort,
+		TimeoutHeight:    timeoutHeight,
+		TimeoutTimestamp: timeoutTimestamp,
+		Data:             data,
+	})
+	if err != nil {
+		k.Logger(ctx).Error(fmt.Sprintf("ICS20 packet send was denied: %s", err.Error()))
+		return 0, err
+	}
+	return sequence, err
+}
+
+// WriteAcknowledgement wraps IBC ChannelKeeper's WriteAcknowledgement function
+func (k Keeper) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, acknowledgement ibcexported.Acknowledgement) error {
+	return k.ics4Wrapper.WriteAcknowledgement(ctx, chanCap, packet, acknowledgement)
+}
+
+// GetAppVersion wraps IBC ChannelKeeper's GetAppVersion function
+func (k Keeper) GetAppVersion(ctx sdk.Context, portID, channelID string) (string, bool) {
+	return k.ics4Wrapper.GetAppVersion(ctx, portID, channelID)
 }
