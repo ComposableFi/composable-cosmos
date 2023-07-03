@@ -2,6 +2,7 @@ package types
 
 import (
 	errorsmod "cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
@@ -20,8 +21,8 @@ func NewMsgAddRateLimit(
 	authority string,
 	denom string,
 	channelID string,
-	maxPercentSend sdk.Int,
-	maxPercentRecv sdk.Int,
+	maxPercentSend math.Int,
+	maxPercentRecv math.Int,
 	durationHours uint64,
 ) *MsgAddRateLimit {
 	return &MsgAddRateLimit{
@@ -63,11 +64,11 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 		return err
 	}
 
-	if msg.MaxPercentSend.GT(sdk.NewInt(100)) || msg.MaxPercentSend.LT(sdk.ZeroInt()) {
+	if msg.MaxPercentSend.GT(math.NewInt(100)) || msg.MaxPercentSend.LT(math.ZeroInt()) {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "max-percent-send percent must be between 0 and 100 (inclusively), Provided: %v", msg.MaxPercentSend)
 	}
 
-	if msg.MaxPercentRecv.GT(sdk.NewInt(100)) || msg.MaxPercentRecv.LT(sdk.ZeroInt()) {
+	if msg.MaxPercentRecv.GT(math.NewInt(100)) || msg.MaxPercentRecv.LT(math.ZeroInt()) {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "max-percent-recv percent must be between 0 and 100 (inclusively), Provided: %v", msg.MaxPercentRecv)
 	}
 
@@ -88,8 +89,8 @@ func NewMsgUpdateRateLimit(
 	authority string,
 	denom string,
 	channelID string,
-	maxPercentSend sdk.Int,
-	maxPercentRecv sdk.Int,
+	maxPercentSend math.Int,
+	maxPercentRecv math.Int,
 	durationHours uint64,
 ) *MsgUpdateRateLimit {
 	return &MsgUpdateRateLimit{
@@ -131,11 +132,11 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 		return err
 	}
 
-	if msg.MaxPercentSend.GT(sdk.NewInt(100)) || msg.MaxPercentSend.LT(sdk.ZeroInt()) {
+	if msg.MaxPercentSend.GT(math.NewInt(100)) || msg.MaxPercentSend.LT(math.ZeroInt()) {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "max-percent-send percent must be between 0 and 100 (inclusively), Provided: %v", msg.MaxPercentSend)
 	}
 
-	if msg.MaxPercentRecv.GT(sdk.NewInt(100)) || msg.MaxPercentRecv.LT(sdk.ZeroInt()) {
+	if msg.MaxPercentRecv.GT(math.NewInt(100)) || msg.MaxPercentRecv.LT(math.ZeroInt()) {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "max-percent-recv percent must be between 0 and 100 (inclusively), Provided: %v", msg.MaxPercentRecv)
 	}
 
