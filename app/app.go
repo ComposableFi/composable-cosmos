@@ -113,6 +113,10 @@ import (
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
+	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
@@ -186,6 +190,7 @@ var (
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
+		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -261,9 +266,11 @@ type CentauriApp struct {
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
+	ScopedratelimitKeeper capabilitykeeper.ScopedKeeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
+	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
 
 	mm           *module.Manager
@@ -299,6 +306,7 @@ func NewCentauriApp(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasmtypes.StoreKey,
 		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey,
+		ratelimitmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -328,6 +336,7 @@ func NewCentauriApp(
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedICQKeeper := app.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
+	scopedratelimitKeeper := app.CapabilityKeeper.ScopeToModule(ratelimitmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/scopedKeeper
 
 	// add keepers
@@ -432,10 +441,22 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 	)
 
+	app.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
+		appCodec,
+		keys[ratelimitmoduletypes.StoreKey],
+		app.GetSubspace(ratelimitmoduletypes.ModuleName),
+		app.BankKeeper,
+		app.IBCKeeper.ChannelKeeper,
+		// TODO: Implement ICS4Wrapper in Records and pass records keeper here
+		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
+	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 
 	app.ICQKeeper = icqkeeper.NewKeeper(
 		appCodec, keys[icqtypes.StoreKey], app.GetSubspace(icqtypes.ModuleName),
@@ -456,6 +477,8 @@ func NewCentauriApp(
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
+
+	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(app.RatelimitKeeper, ibcMiddlewareStack)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -487,7 +510,7 @@ func NewCentauriApp(
 	)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ratelimitMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
@@ -529,6 +552,7 @@ func NewCentauriApp(
 		wasm.NewAppModule(app.Wasm08Keeper),
 		routerModule,
 		transfermiddlewareModule,
+		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -550,6 +574,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -585,6 +610,7 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -617,6 +643,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -682,6 +709,7 @@ func NewCentauriApp(
 
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper
+	app.ScopedratelimitKeeper = scopedratelimitKeeper
 	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
 	app.UpgradeKeeper.SetUpgradeHandler(reward.UpgradeName, reward.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper, app.MintKeeper))
 
@@ -870,6 +898,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(minttypes.ModuleName).WithKeyTable(minttypes.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
+	paramsKeeper.Subspace(ratelimitmoduletypes.ModuleName)
 	paramsKeeper.Subspace(icqtypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
