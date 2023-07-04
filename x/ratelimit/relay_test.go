@@ -92,9 +92,63 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	// and dest chain balance contains voucher
 	expBalance := originalChainBBalance.Add(nativeTokenReceiveOnChainB)
 	gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+
 	suite.Require().Equal(expBalance, gotBalance)
 
 	// add rate limit
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
-	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &ratelimittypes.MsgAddRateLimit{})
+	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
+		Denom:          nativeDenom,
+		ChannelId:      path.EndpointB.ChannelID,
+		MaxPercentSend: sdk.NewInt(5),
+		MaxPercentRecv: sdk.NewInt(5),
+		DurationHours:  1,
+	}
+	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &msgAddRateLimit)
+	suite.Require().NoError(err)
+
+	// send from A to B
+	transferAmount = transferAmount.Mul(sdk.NewInt(5)).Quo(sdk.NewInt(100))
+	nativeTokenSendOnChainA = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+	msg = transfertypes.NewMsgTransfer(path.EndpointA.ChannelConfig.PortID, path.EndpointA.ChannelID, nativeTokenSendOnChainA, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+	_, err = suite.chainA.SendMsgs(msg)
+	suite.Require().NoError(err)
+	suite.Require().NoError(err, path.EndpointB.UpdateClient())
+
+	// then
+	suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// and when relay to chain B and handle Ack on chain A
+	err = suite.coordinator.RelayAndAckPendingPackets(path)
+	suite.Require().NoError(err)
+
+	// then
+	suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	expBalance = expBalance.Add(sdk.NewCoin(nativeDenom, transferAmount))
+	gotBalance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+	suite.Require().Equal(expBalance, gotBalance)
+
+	// send 1 more time
+	_, err = suite.chainA.SendMsgs(msg)
+	suite.Require().NoError(err)
+	suite.Require().NoError(err, path.EndpointB.UpdateClient())
+
+	// then
+	suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// and when relay to chain B and handle Ack on chain A
+	err = suite.coordinator.RelayAndAckPendingPackets(path)
+	suite.Require().NoError(err)
+
+	// then
+	suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+	// not receive token because catch the threshold => balances have no change
+	gotBalance = suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+	suite.Require().Equal(expBalance, gotBalance)
 }
