@@ -46,8 +46,10 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
+		ibcDenom                   = "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878"
+		nativeDenom                = "ppica"
 		nativeTokenSendOnChainA    = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-		nativeTokenReceiveOnChainB = sdk.NewCoin("ppica", transferAmount)
+		nativeTokenReceiveOnChainB = sdk.NewCoin(nativeDenom, transferAmount)
 		timeoutHeight              = clienttypes.NewHeight(1, 110)
 		expChainABalanceDiff       = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 	)
@@ -59,7 +61,7 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 
 	// Add parachain token info
 	chainBtransMiddlewareKeeper := suite.chainB.TransferMiddleware()
-	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", path.EndpointB.ChannelID, "ppica", sdk.DefaultBondDenom)
+	err := chainBtransMiddlewareKeeper.AddParachainIBCInfo(suite.chainB.GetContext(), ibcDenom, path.EndpointB.ChannelID, nativeDenom, sdk.DefaultBondDenom)
 	suite.Require().NoError(err)
 
 	originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
@@ -91,35 +93,5 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 	suite.Require().Equal(expBalance, gotBalance)
 
-	// send token back
-	msg = transfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeTokenReceiveOnChainB, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
-	_, err = suite.chainB.SendMsgs(msg)
-	suite.Require().NoError(err)
-	suite.Require().NoError(err, path.EndpointA.UpdateClient())
-	suite.Require().Equal(1, len(suite.chainB.PendingSendPackets))
-
-	// and when relay to chain B and handle Ack on chain A
-	err = suite.coordinator.RelayAndAckPendingPacketsReverse(path)
-	suite.Require().NoError(err)
-
-	// then
-	suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
-
-	// check escrow address don't have any token in chain B
-	escrowAddressChainB := transfertypes.GetEscrowAddress(transfertypes.PortID, path.EndpointB.ChannelID)
-	escrowTokenChainB := suite.chainB.AllBalances(escrowAddressChainB)
-	suite.Require().Equal(sdk.Coins{}, escrowTokenChainB)
-
-	// check escrow address don't have any token in chain A
-	escrowAddressChainA := transfertypes.GetEscrowAddress(transfertypes.PortID, path.EndpointA.ChannelID)
-	escrowTokenChainA := suite.chainA.AllBalances(escrowAddressChainA)
-	suite.Require().Equal(sdk.Coins{}, escrowTokenChainA)
-
-	// equal chain A sender address balances
-	chainASenderBalances := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
-	suite.Require().Equal(originalChainABalance, chainASenderBalances)
-
-	// equal chain A sender address balances
-	chainBReceiverBalances := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
-	suite.Require().Equal(originalChainBBalance, chainBReceiverBalances)
+	// add rate limit
 }

@@ -449,6 +449,7 @@ func NewCentauriApp(
 		app.IBCKeeper.ChannelKeeper,
 		// TODO: Implement ICS4Wrapper in Records and pass records keeper here
 		app.IBCKeeper.ChannelKeeper, // ICS4Wrapper
+		app.TransferMiddlewareKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
