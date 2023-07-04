@@ -1,7 +1,7 @@
 syntax = "proto3";
 package centauri.ratelimit.v1beta1;
 
-import "centauri/ratelimit/ratelimit.proto";
+import "centauri/ratelimit/v1beta1/ratelimit.proto";
 import "google/api/annotations.proto";
 import "gogoproto/gogo.proto";
 
