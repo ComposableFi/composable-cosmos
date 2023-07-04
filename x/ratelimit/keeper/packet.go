@@ -161,13 +161,11 @@ func (k Keeper) SendRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packe
 	if err != nil {
 		return err
 	}
-
 	// Check if the packet would exceed the outflow rate limit
 	updatedFlow, err := k.CheckRateLimitAndUpdateFlow(ctx, types.PACKET_SEND, packetInfo)
 	if err != nil {
 		return err
 	}
-
 	// Store the sequence number of the packet so that if the transfer fails,
 	// we can identify if it was sent during this quota and can revert the outflow
 	if updatedFlow {
@@ -254,7 +252,6 @@ func (k Keeper) SendPacket(
 	if err != nil {
 		return sequence, err
 	}
-
 	err = k.SendRateLimitedPacket(ctx, channeltypes.Packet{
 		Sequence:         sequence,
 		SourceChannel:    sourceChannel,
@@ -267,6 +264,7 @@ func (k Keeper) SendPacket(
 		k.Logger(ctx).Error(fmt.Sprintf("ICS20 packet send was denied: %s", err.Error()))
 		return 0, err
 	}
+
 	return sequence, err
 }
 

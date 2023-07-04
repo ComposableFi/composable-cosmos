@@ -68,20 +68,17 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 	if !found {
 		return false, nil
 	}
-
 	// Check if the sender/receiver pair is whitelisted
 	// If so, return a success without modifying the quota
 	if k.IsAddressPairWhitelisted(ctx, packetInfo.Sender, packetInfo.Receiver) {
 		return false, nil
 	}
-
 	// Update the flow object with the change in amount
 	if err := k.UpdateFlow(rateLimit, direction, amount); err != nil {
 		// If the rate limit was exceeded, emit an event
 		EmitTransferDeniedEvent(ctx, types.EventRateLimitExceeded, denom, channelId, direction, amount, err)
 		return false, err
 	}
-
 	// If there's no quota error, update the rate limit object in the store with the new flow
 	k.SetRateLimit(ctx, rateLimit)
 
