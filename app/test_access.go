@@ -13,7 +13,8 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	ratelimitKeeper "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
+	tfmdKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {
@@ -66,6 +67,10 @@ func (s TestSupport) GetTxConfig() client.TxConfig {
 	return s.app.GetTxConfig()
 }
 
-func (s TestSupport) TransferMiddleware() routerKeeper.Keeper {
+func (s TestSupport) TransferMiddleware() tfmdKeeper.Keeper {
 	return s.app.TransferMiddlewareKeeper
+}
+
+func (s TestSupport) RateLimit() ratelimitKeeper.Keeper {
+	return s.app.RatelimitKeeper
 }

@@ -41,6 +41,7 @@ import (
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 	centauri "github.com/notional-labs/centauri/v3/app"
 	"github.com/notional-labs/centauri/v3/app/ibctesting/simapp"
+	ratelimit "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
 	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 )
@@ -603,6 +604,10 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 
 func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
+}
+
+func (chain *TestChain) RateLimit() ratelimit.Keeper {
+	return chain.GetTestSupport().RateLimit()
 }
 
 func (chain *TestChain) Balance(acc sdk.AccAddress, denom string) sdk.Coin {

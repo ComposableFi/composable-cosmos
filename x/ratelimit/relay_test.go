@@ -7,6 +7,7 @@ import (
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/centauri/v3/app/ibctesting"
+	ratelimittypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -94,4 +95,6 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	suite.Require().Equal(expBalance, gotBalance)
 
 	// add rate limit
+	chainBRateLimitKeeper := suite.chainB.RateLimit()
+	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &ratelimittypes.MsgAddRateLimit{})
 }
