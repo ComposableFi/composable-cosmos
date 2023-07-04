@@ -10,6 +10,7 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	tfmwkeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 )
 
 type Keeper struct {
@@ -20,6 +21,7 @@ type Keeper struct {
 	bankKeeper    types.BankKeeper
 	channelKeeper types.ChannelKeeper
 	ics4Wrapper   porttypes.ICS4Wrapper
+	tfmwKeeper    tfmwkeeper.Keeper
 
 	// the address capable of executing a AddParachainIBCTokenInfo and RemoveParachainIBCTokenInfo message. Typically, this
 	// should be the x/gov module account.
@@ -33,6 +35,7 @@ func NewKeeper(
 	bankKeeper types.BankKeeper,
 	channelKeeper types.ChannelKeeper,
 	ics4Wrapper porttypes.ICS4Wrapper,
+	tfmwKeeper tfmwkeeper.Keeper,
 	authority string,
 ) *Keeper {
 	return &Keeper{
@@ -42,6 +45,7 @@ func NewKeeper(
 		bankKeeper:    bankKeeper,
 		channelKeeper: channelKeeper,
 		ics4Wrapper:   ics4Wrapper,
+		tfmwKeeper:    tfmwKeeper,
 		authority:     authority,
 	}
 }

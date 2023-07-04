@@ -111,6 +111,13 @@ func (k Keeper) UndoSendPacket(ctx sdk.Context, channelId string, sequence uint6
 // The inflow and outflow should get reset to 0, the channelValue should be updated,
 // and all pending send packet sequence numbers should be removed
 func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) error {
+	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
+		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		if channelId == tokenInfo.ChannelId {
+			denom = tokenInfo.IbcDenom
+		}
+	}
+
 	rateLimit, found := k.GetRateLimit(ctx, denom, channelId)
 	if !found {
 		return types.ErrRateLimitNotFound
@@ -140,9 +147,16 @@ func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 
 // Removes a rate limit object from the store using denom and channel-id
 func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelId string) error {
+	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
+		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		if channelId == tokenInfo.ChannelId {
+			denom = tokenInfo.IbcDenom
+		}
+	}
+
 	_, found := k.GetRateLimit(ctx, denom, channelId)
 	if !found {
-		return errorsmod.Wrap(types.ErrRateLimitNotFound, "rate limit not found")
+		return types.ErrRateLimitNotFound
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
@@ -169,21 +183,29 @@ func (k Keeper) GetRateLimit(ctx sdk.Context, denom string, channelId string) (r
 
 // AddRateLimit
 func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error {
+	// Check if this is denom - channel transfer from Picasso
+	denom := msg.Denom
+	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
+		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		if msg.ChannelId == tokenInfo.ChannelId {
+			denom = tokenInfo.IbcDenom
+		}
+	}
 	// Confirm the channel value is not zero
-	channelValue := k.GetChannelValue(ctx, msg.Denom)
+	channelValue := k.GetChannelValue(ctx, denom)
 	if channelValue.IsZero() {
 		return errorsmod.Wrap(types.ErrZeroChannelValue, "zero channel value")
 	}
 
 	// Confirm the rate limit does not already exist
-	_, found := k.GetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	_, found := k.GetRateLimit(ctx, denom, msg.ChannelId)
 	if found {
 		return errorsmod.Wrap(types.ErrRateLimitAlreadyExists, "rate limit already exists")
 	}
 
 	// Create and store the rate limit object
 	path := types.Path{
-		Denom:     msg.Denom,
+		Denom:     denom,
 		ChannelId: msg.ChannelId,
 	}
 	quota := types.Quota{
@@ -208,8 +230,17 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 
 // UpdateRateLimit
 func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) error {
+	// Check if this is denom - channel transfer from Picasso
+	denom := msg.Denom
+	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
+		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		if msg.ChannelId == tokenInfo.ChannelId {
+			denom = tokenInfo.IbcDenom
+		}
+	}
+
 	// Confirm the rate limit exists
-	_, found := k.GetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	_, found := k.GetRateLimit(ctx, denom, msg.ChannelId)
 	if !found {
 		return errorsmod.Wrap(types.ErrRateLimitNotFound, "rate limit not found")
 	}
@@ -217,7 +248,7 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	// Update the rate limit object with the new quota information
 	// The flow should also get reset to 0
 	path := types.Path{
-		Denom:     msg.Denom,
+		Denom:     denom,
 		ChannelId: msg.ChannelId,
 	}
 	quota := types.Quota{
@@ -228,7 +259,7 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	flow := types.Flow{
 		Inflow:       math.ZeroInt(),
 		Outflow:      math.ZeroInt(),
-		ChannelValue: k.GetChannelValue(ctx, msg.Denom),
+		ChannelValue: k.GetChannelValue(ctx, denom),
 	}
 
 	k.SetRateLimit(ctx, types.RateLimit{

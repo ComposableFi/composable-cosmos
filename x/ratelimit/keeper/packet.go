@@ -35,7 +35,7 @@ type RateLimitedPacketInfo struct {
 //
 // For NATIVE denoms, return as is (e.g. ustrd)
 // For NON-NATIVE denoms, take the ibc hash (e.g. hash "transfer/channel-2/usoms" into "ibc/...")
-func ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
+func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
 	// Determine the denom by looking at the denom trace path
 	denomTrace := transfertypes.ParseDenomTrace(packet.Denom)
 
@@ -82,7 +82,7 @@ func ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (den
 //	       Packet Denom:      transfer/channel-X/transfer/channel-Z/ujuno
 //	        -> Remove Prefix: transfer/channel-Z/ujuno
 //	        -> Hash:          ibc/...
-func ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
+func (k Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
 	// To determine the denom, first check whether Stride is acting as source
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), packetData.Denom) {
 		// Remove the source prefix (e.g. transfer/channel-X/transfer/channel-Z/ujuno -> transfer/channel-Z/ujuno)
@@ -122,7 +122,7 @@ func ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertyp
 // and the "Destination" will be the Host Channel
 // And, when a receive packet lands on a Stride, the "Source" will be the host zone's channel,
 // and the "Destination" will be the Stride Channel
-func ParsePacketInfo(packet channeltypes.Packet, direction types.PacketDirection) (RateLimitedPacketInfo, error) {
+func (k Keeper) ParsePacketInfo(packet channeltypes.Packet, direction types.PacketDirection) (RateLimitedPacketInfo, error) {
 	var packetData transfertypes.FungibleTokenPacketData
 	if err := json.Unmarshal(packet.GetData(), &packetData); err != nil {
 		return RateLimitedPacketInfo{}, err
@@ -131,10 +131,10 @@ func ParsePacketInfo(packet channeltypes.Packet, direction types.PacketDirection
 	var channelID, denom string
 	if direction == types.PACKET_SEND {
 		channelID = packet.GetSourceChannel()
-		denom = ParseDenomFromSendPacket(packetData)
+		denom = k.ParseDenomFromSendPacket(packetData)
 	} else {
 		channelID = packet.GetDestChannel()
-		denom = ParseDenomFromRecvPacket(packet, packetData)
+		denom = k.ParseDenomFromRecvPacket(packet, packetData)
 	}
 
 	amount, ok := sdk.NewIntFromString(packetData.Amount)
@@ -157,7 +157,7 @@ func ParsePacketInfo(packet channeltypes.Packet, direction types.PacketDirection
 // Middleware implementation for SendPacket with rate limiting
 // Checks whether the rate limit has been exceeded - and if it hasn't, sends the packet
 func (k Keeper) SendRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet) error {
-	packetInfo, err := ParsePacketInfo(packet, types.PACKET_SEND)
+	packetInfo, err := k.ParsePacketInfo(packet, types.PACKET_SEND)
 	if err != nil {
 		return err
 	}
@@ -180,7 +180,7 @@ func (k Keeper) SendRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packe
 // Middleware implementation for RecvPacket with rate limiting
 // Checks whether the rate limit has been exceeded - and if it hasn't, allows the packet
 func (k Keeper) ReceiveRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet) error {
-	packetInfo, err := ParsePacketInfo(packet, types.PACKET_RECV)
+	packetInfo, err := k.ParsePacketInfo(packet, types.PACKET_RECV)
 	if err != nil {
 		return err
 	}
@@ -193,7 +193,7 @@ func (k Keeper) ReceiveRateLimitedPacket(ctx sdk.Context, packet channeltypes.Pa
 // If the packet failed, we should decrement the Outflow
 func (k Keeper) AcknowledgeRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet, ack []byte) error {
 	// Parse the denom, channelId, and amount from the packet
-	packetInfo, err := ParsePacketInfo(packet, types.PACKET_SEND)
+	packetInfo, err := k.ParsePacketInfo(packet, types.PACKET_SEND)
 	if err != nil {
 		return err
 	}
@@ -222,7 +222,7 @@ func (k Keeper) AcknowledgeRateLimitedPacket(ctx sdk.Context, packet channeltype
 // Middleware implementation for OnAckPacket with rate limiting
 // The Outflow should be decremented from the failed packet
 func (k Keeper) TimeoutRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet) error {
-	packetInfo, err := ParsePacketInfo(packet, types.PACKET_SEND)
+	packetInfo, err := k.ParsePacketInfo(packet, types.PACKET_SEND)
 	if err != nil {
 		return err
 	}
