@@ -98,11 +98,11 @@ import (
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
+	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
+	custombankkeeper "github.com/notional-labs/centauri/v3/custom/bank/keeper"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
-	custombankmodule "github.com/terra-money/alliance/custom/bank"
-	custombankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"

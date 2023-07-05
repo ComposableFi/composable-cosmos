@@ -75,6 +75,11 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		); err != nil {
 			return errorsmod.Wrapf(err, "failed to send coins to receiver %s", receiver.String())
 		}
+
+		// Add total transfered tokens
+		if err := k.IncreaseTotalTokenTransfered(ctx, voucher); err != nil {
+			return errorsmod.Wrapf(err, "failed to increase total token transfered")
+		}
 	}
 
 	return nil

@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"encoding/json"
+
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -145,6 +147,59 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibc
 	bz := store.Get(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return string(bz)
+}
+
+func (keeper Keeper) IncreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin) error {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.KeyTotalTransfered)
+
+	// Get old amount
+	var oldCoins sdk.Coins
+	err := json.Unmarshal(bz, &oldCoins)
+	if err != nil {
+		return err
+	}
+
+	newCoins := oldCoins.Add(coin)
+	bz, err = json.Marshal(newCoins)
+	if err != nil {
+		return err
+	}
+
+	store.Set(types.KeyTotalTransfered, bz)
+
+	return nil
+}
+
+func (keeper Keeper) DecreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin) error {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.KeyTotalTransfered)
+
+	// Get old amount
+	var oldCoins sdk.Coins
+	err := json.Unmarshal(bz, &oldCoins)
+	if err != nil {
+		return err
+	}
+
+	newCoins := oldCoins.Sub(coin)
+	bz, err = json.Marshal(newCoins)
+	if err != nil {
+		return err
+	}
+
+	store.Set(types.KeyTotalTransfered, bz)
+
+	return nil
+}
+
+func (keeper Keeper) GetTotalTokenTransfered(ctx sdk.Context) (coins sdk.Coins) {
+	store := ctx.KVStore(keeper.storeKey)
+	bz := store.Get(types.KeyTotalTransfered)
+
+	json.Unmarshal([]byte(bz), &coins)
+
+	return coins
 }
 
 func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {

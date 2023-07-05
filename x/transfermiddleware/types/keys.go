@@ -22,6 +22,7 @@ var (
 	KeyParachainIBCTokenInfoByAssetID     = []byte{0x02}
 	KeyIBCDenomAndNativeIndex             = []byte{0x03}
 	KeyRlyAddress                         = []byte{0x04}
+	KeyTotalTransfered                    = []byte{0x05}
 )
 
 func GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom string) []byte {
