@@ -25,6 +25,7 @@ var (
 	PendingSendPacketPrefix   = KeyPrefix("pending-send-packet")
 	DenomBlacklistKeyPrefix   = KeyPrefix("denom-blacklist")
 	AddressWhitelistKeyPrefix = KeyPrefix("address-blacklist")
+	EpochKeyPrefix            = KeyPrefix("epoch")
 
 	PendingSendPacketChannelLength int = 16
 )
