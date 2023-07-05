@@ -203,11 +203,6 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		if err := keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(nativeToken)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from module to account despite previously minting coins to module account: %v", err))
 		}
-
-		// Sub total transferred tokens
-		if err := keeper.DecreaseTotalTokenTransferred(ctx, token); err != nil {
-			panic(fmt.Sprintf("failed to increase total token transferred: %v", err))
-		}
 	}
 
 	return nil

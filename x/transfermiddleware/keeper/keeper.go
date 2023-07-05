@@ -1,13 +1,12 @@
 package keeper
 
 import (
-	"encoding/json"
-
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
@@ -149,55 +148,17 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibc
 	return string(bz)
 }
 
-func (keeper Keeper) IncreaseTotalTokenTransferred(ctx sdk.Context, coin sdk.Coin) error {
-	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.KeyTotalTransfered)
-
-	// Get old amount
-	var oldCoins sdk.Coins
-	err := json.Unmarshal(bz, &oldCoins)
-	if err != nil {
-		return err
-	}
-
-	newCoins := oldCoins.Add(coin)
-	bz, err = json.Marshal(newCoins)
-	if err != nil {
-		return err
-	}
-
-	store.Set(types.KeyTotalTransfered, bz)
-
-	return nil
-}
-
-func (keeper Keeper) DecreaseTotalTokenTransferred(ctx sdk.Context, coin sdk.Coin) error {
-	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.KeyTotalTransfered)
-
-	// Get old amount
-	var oldCoins sdk.Coins
-	err := json.Unmarshal(bz, &oldCoins)
-	if err != nil {
-		return err
-	}
-
-	newCoins := oldCoins.Sub(coin)
-	bz, err = json.Marshal(newCoins)
-	if err != nil {
-		return err
-	}
-
-	store.Set(types.KeyTotalTransfered, bz)
-
-	return nil
-}
-
 func (keeper Keeper) GetTotalTokenTransferred(ctx sdk.Context) (coins sdk.Coins) {
-	store := ctx.KVStore(keeper.storeKey)
-	bz := store.Get(types.KeyTotalTransfered)
+	infos := []types.ParachainIBCTokenInfo{}
+	keeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
+		infos = append(infos, info)
+		transfertypes.GetEscrowAddress("transfer", info.ChannelId)
+		return false
+	})
 
-	json.Unmarshal(bz, &coins)
+	for _, info := range infos {
+		coins = append(coins, keeper.bankKeeper.GetAllBalances(ctx, transfertypes.GetEscrowAddress("transfer", info.ChannelId))...)
+	}
 
 	return coins
 }
