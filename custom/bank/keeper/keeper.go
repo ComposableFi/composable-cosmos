@@ -87,7 +87,7 @@ func (k Keeper) TotalSupply(ctx context.Context, req *types.QueryTotalSupplyRequ
 	}
 
 	// Get duplicate token from transfermiddeware
-	duplicateCoins := k.tfmk.GetTotalTokenTransfered(sdkCtx)
+	duplicateCoins := k.tfmk.GetTotalTokenTransferred(sdkCtx)
 	totalSupply = totalSupply.Sub(duplicateCoins...)
 
 	allianceBonded := k.ak.GetAllianceBondedAmount(sdkCtx, k.acck.GetModuleAddress(alliancetypes.ModuleName))

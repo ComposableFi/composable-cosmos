@@ -149,7 +149,7 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibc
 	return string(bz)
 }
 
-func (keeper Keeper) IncreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin) error {
+func (keeper Keeper) IncreaseTotalTokenTransferred(ctx sdk.Context, coin sdk.Coin) error {
 	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.KeyTotalTransfered)
 
@@ -171,7 +171,7 @@ func (keeper Keeper) IncreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin
 	return nil
 }
 
-func (keeper Keeper) DecreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin) error {
+func (keeper Keeper) DecreaseTotalTokenTransferred(ctx sdk.Context, coin sdk.Coin) error {
 	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.KeyTotalTransfered)
 
@@ -193,11 +193,11 @@ func (keeper Keeper) DecreaseTotalTokenTransfered(ctx sdk.Context, coin sdk.Coin
 	return nil
 }
 
-func (keeper Keeper) GetTotalTokenTransfered(ctx sdk.Context) (coins sdk.Coins) {
+func (keeper Keeper) GetTotalTokenTransferred(ctx sdk.Context) (coins sdk.Coins) {
 	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.KeyTotalTransfered)
 
-	json.Unmarshal([]byte(bz), &coins)
+	json.Unmarshal(bz, &coins)
 
 	return coins
 }
