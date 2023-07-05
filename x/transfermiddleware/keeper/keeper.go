@@ -152,11 +152,11 @@ func (keeper Keeper) GetTotalTokenTransferred(ctx sdk.Context) (coins sdk.Coins)
 	infos := []types.ParachainIBCTokenInfo{}
 	keeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
 		infos = append(infos, info)
-		transfertypes.GetEscrowAddress("transfer", info.ChannelId)
 		return false
 	})
 
 	for _, info := range infos {
+		// TODO: should not hard-code
 		coins = append(coins, keeper.bankKeeper.GetAllBalances(ctx, transfertypes.GetEscrowAddress("transfer", info.ChannelId))...)
 	}
 
