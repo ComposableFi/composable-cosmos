@@ -204,7 +204,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 			panic(fmt.Sprintf("unable to send coins from module to account despite previously minting coins to module account: %v", err))
 		}
 
-		// Add total transfered tokens
+		// Sub total transfered tokens
 		if err := keeper.DecreaseTotalTokenTransfered(ctx, token); err != nil {
 			panic(fmt.Sprintf("failed to increase total token transfered: %v", err))
 		}
