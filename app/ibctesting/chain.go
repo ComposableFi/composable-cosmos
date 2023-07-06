@@ -89,6 +89,7 @@ type PacketAck struct {
 // Time management is handled by the Coordinator in order to ensure synchrony between chains.
 // Each update of any chain increments the block header time for all chains by 5 seconds.
 func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
+	t.Helper()
 	// generate validator private/public key
 	privVal := mock.NewPV()
 	pubKey, err := privVal.GetPubKey()
@@ -255,12 +256,6 @@ func (chain *TestChain) NextBlock() {
 
 // sendMsgs delivers a transaction through the application without returning the result.
 func (chain *TestChain) sendMsgs(msgs ...sdk.Msg) error {
-	_, err := chain.SendMsgs(msgs...)
-	return err
-}
-
-// sendMsgs delivers a transaction through the application without returning the result.
-func (chain *TestChain) sendMsgsWithExpPass(expPass bool, msgs ...sdk.Msg) error {
 	_, err := chain.SendMsgs(msgs...)
 	return err
 }
@@ -634,6 +629,7 @@ type TestingAppDecorator struct {
 }
 
 func NewTestingAppDecorator(t *testing.T, centauri *centauri.CentauriApp) *TestingAppDecorator {
+	t.Helper()
 	return &TestingAppDecorator{CentauriApp: centauri, t: t}
 }
 

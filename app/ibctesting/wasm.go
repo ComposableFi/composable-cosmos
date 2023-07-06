@@ -42,7 +42,7 @@ func (chain *TestChain) ConstructUpdateWasmClientHeaderWithTrustedHeight(counter
 	return &wasmHeader, nil
 }
 
-func (chain *TestChain) CreateWasmClientHeader(chainID string, blockHeight int64, trustedHeight clienttypes.Height, timestamp time.Time, tmValSet, nextVals, tmTrustedVals *tmtypes.ValidatorSet, signers []tmtypes.PrivValidator) *wasmtypes.Header {
+func (chain *TestChain) CreateWasmClientHeader(chainID string, blockHeight int64, trustedHeight clienttypes.Height, timestamp time.Time, tmValSet, _, tmTrustedVals *tmtypes.ValidatorSet, signers []tmtypes.PrivValidator) *wasmtypes.Header {
 	tmHeader := chain.CreateTMClientHeader(chainID, blockHeight, trustedHeight, timestamp, tmValSet, tmTrustedVals, signers)
 	tmWasmHeaderData, err := chain.Codec.MarshalInterface(tmHeader)
 	require.NoError(chain.t, err)

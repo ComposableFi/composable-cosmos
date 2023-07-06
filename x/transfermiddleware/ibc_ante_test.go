@@ -14,9 +14,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-var (
-	govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
-)
+var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 
 type TransferTestSuite struct {
 	suite.Suite
@@ -66,7 +64,7 @@ func TestTransferTestSuite(t *testing.T) {
 	suite.Run(t, new(TransferTestSuite))
 }
 
-func (suite *TransferTestSuite) TestIbcAnte() {
+func (suite *TransferTestSuite) TestIbcAnteWithWasmUpdateClient() {
 	suite.SetupTest()
 	path := customibctesting.NewPath(suite.chainA, suite.chainB)
 	suite.coordinator.SetupClients(path)
@@ -77,6 +75,26 @@ func (suite *TransferTestSuite) TestIbcAnte() {
 	var header exported.ClientMessage
 	header, err := suite.chainB.ConstructUpdateWasmClientHeader(suite.chainA, path.EndpointB.ClientID)
 	suite.Require().NoError(err)
+
+	msg, err := clienttypes.NewMsgUpdateClient(
+		path.EndpointB.ClientID, header,
+		suite.chainB.SenderAccount.GetAddress().String(),
+	)
+	suite.Require().NoError(err)
+
+	_, err = suite.chainB.SendMsgsWithExpPass(false, msg)
+	suite.Require().Error(err)
+}
+
+func (suite *TransferTestSuite) TestIbcAnteWithTenderMintUpdateClient() {
+	suite.SetupTest()
+	path := customibctesting.NewPath(suite.chainA, suite.chainB)
+	suite.coordinator.SetupClients(path)
+
+	// ensure counterparty has committed state
+	suite.chainA.Coordinator.CommitBlock(suite.chainA)
+
+	header := suite.chainA.CurrentTMClientHeader()
 
 	msg, err := clienttypes.NewMsgUpdateClient(
 		path.EndpointB.ClientID, header,
