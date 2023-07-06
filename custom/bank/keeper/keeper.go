@@ -42,6 +42,7 @@ func NewBaseKeeper(
 		BaseKeeper: bankkeeper.NewBaseKeeper(cdc, storeKey, ak, blockedAddrs, authority), // TODO: how to set authority?
 		ak:         alliancekeeper.Keeper{},
 		sk:         stakingkeeper.Keeper{},
+		tfmk:       transfermiddlewarekeeper.Keeper{},
 		acck:       ak,
 	}
 	return keeper
