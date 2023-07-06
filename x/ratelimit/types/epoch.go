@@ -7,7 +7,7 @@ import (
 
 var (
 	HOUR_EPOCH                    = "hour"
-	EpochHourPeriod time.Duration = time.Hour
+	EpochHourPeriod time.Duration = time.Minute * 60
 )
 
 // Validate also validates epoch info.

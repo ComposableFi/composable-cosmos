@@ -68,6 +68,7 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 	if !found {
 		return false, nil
 	}
+
 	// Check if the sender/receiver pair is whitelisted
 	// If so, return a success without modifying the quota
 	if k.IsAddressPairWhitelisted(ctx, packetInfo.Sender, packetInfo.Receiver) {
