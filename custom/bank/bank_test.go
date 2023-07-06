@@ -132,3 +132,129 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 		})
 	}
 }
+
+func (suite *CustomBankTestSuite) TestTotalSupply2() {
+	var (
+		transferAmount  = sdk.NewInt(1000000000)
+		transferAmount2 = sdk.NewInt(3500000000)
+		// when transfer via sdk transfer from A (module) -> B (contract)
+		coinChainASendToB = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		coinChainCSentToB = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2)
+		timeoutHeight     = clienttypes.NewHeight(1, 110)
+	)
+	var (
+		expChainBBalanceDiff sdk.Coins
+		pathAB               = NewTransferPath(suite.chainA, suite.chainB)
+		pathCB               = NewTransferPath(suite.chainC, suite.chainB)
+	)
+
+	testCases := []struct {
+		name                 string
+		expChainABalanceDiff sdk.Coin
+		expChainCBalanceDiff sdk.Coin
+		expTotalSupplyDiff   sdk.Coins
+		malleate             func()
+	}{
+		{
+			"Total supply with no transfermiddleware setup",
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2),
+			sdk.Coins{sdk.NewCoin("ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", transferAmount)},
+			func() {
+				transferCoinFromA := ibctransfertypes.GetTransferCoin(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, coinChainASendToB.Denom, transferAmount)
+				transferCoinFromC := ibctransfertypes.GetTransferCoin(pathCB.EndpointB.ChannelConfig.PortID, pathCB.EndpointB.ChannelID, coinChainASendToB.Denom, transferAmount2)
+
+				expChainBBalanceDiff = sdk.NewCoins(transferCoinFromA, transferCoinFromC)
+			},
+		},
+		{
+			"Total supply with transfermiddleware setup",
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2),
+			sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)),
+			func() {
+				// Add parachain token info
+				chainBtransMiddleware := suite.chainB.TransferMiddleware()
+
+				transferCoinFromA := sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+				transferCoinFromC := ibctransfertypes.GetTransferCoin(pathCB.EndpointB.ChannelConfig.PortID, pathCB.EndpointB.ChannelID, coinChainASendToB.Denom, transferAmount2)
+				expChainBBalanceDiff = sdk.NewCoins(transferCoinFromA, transferCoinFromC)
+
+				err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+				suite.Require().NoError(err)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			suite.SetupTest() // reset
+
+			pathAB := NewTransferPath(suite.chainA, suite.chainB)
+			pathCB := NewTransferPath(suite.chainC, suite.chainB)
+			suite.coordinator.Setup(pathAB)
+			suite.coordinator.Setup(pathCB)
+
+			tc.malleate()
+
+			originalChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			// chainB.SenderAccount: 10000000000000000000stake
+			originalChainBBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			originalChainCBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+			originalChainBTotalSupply, err := suite.chainB.GetBankKeeper().TotalSupply(suite.chainB.GetContext(), &banktypes.QueryTotalSupplyRequest{})
+			suite.Require().NoError(err)
+
+			// Send from A to B
+			msg := ibctransfertypes.NewMsgTransfer(pathAB.EndpointA.ChannelConfig.PortID, pathAB.EndpointA.ChannelID, coinChainASendToB, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+			_, err = suite.chainA.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, pathAB.EndpointB.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// and when relay to chain B and handle Ack on chain A
+			err = suite.coordinator.RelayAndAckPendingPackets(pathAB)
+			suite.Require().NoError(err)
+
+			// then
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// Send from C to B
+			msg = ibctransfertypes.NewMsgTransfer(pathCB.EndpointA.ChannelConfig.PortID, pathCB.EndpointA.ChannelID, coinChainCSentToB, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+			_, err = suite.chainA.SendMsgs(msg)
+			suite.Require().NoError(err)
+			suite.Require().NoError(err, pathCB.EndpointB.UpdateClient())
+
+			// then
+			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// and when relay to chain B and handle Ack on chain C
+			err = suite.coordinator.RelayAndAckPendingPackets(pathCB)
+			suite.Require().NoError(err)
+
+			// then
+			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
+
+			// and source chain balance was decreased
+			newChainABalance := suite.chainA.AllBalances(suite.chainA.SenderAccount.GetAddress())
+			suite.Require().Equal(originalChainABalance.Sub(tc.expChainABalanceDiff), newChainABalance)
+
+			newChainCBalance := suite.chainC.AllBalances(suite.chainC.SenderAccount.GetAddress())
+			suite.Require().Equal(originalChainCBalance.Sub(tc.expChainCBalanceDiff), newChainCBalance)
+
+			// and dest chain balance contains voucher
+			expBalance := originalChainBBalance.Add(expChainBBalanceDiff...)
+			gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
+			suite.Require().Equal(expBalance, gotBalance)
+			suite.Require().NoError(err)
+
+			totalSupply, err := suite.chainB.GetBankKeeper().TotalSupply(suite.chainB.GetContext(), &banktypes.QueryTotalSupplyRequest{})
+			suite.Require().NoError(err)
+			suite.Require().Equal(totalSupply.Supply, originalChainBTotalSupply.Supply.Add(tc.expTotalSupplyDiff...))
+		})
+	}
+}
