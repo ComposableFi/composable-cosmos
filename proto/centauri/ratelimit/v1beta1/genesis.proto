@@ -4,6 +4,7 @@ package centauri.ratelimit.v1beta1;
 import "gogoproto/gogo.proto";
 import "centauri/ratelimit/v1beta1/params.proto";
 import "centauri/ratelimit/v1beta1/ratelimit.proto";
+import "centauri/ratelimit/v1beta1/epoch.proto";
 
 option go_package = "x/ratelimit/types";
 
@@ -25,4 +26,6 @@ message GenesisState {
   ];
 
   repeated string pending_send_packet_sequence_numbers = 4;
+
+  repeated EpochInfo epochs = 5 [ (gogoproto.nullable) = false ];
 }

@@ -28,7 +28,12 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 		}
 		k.SetPendingSendPacket(ctx, channelId, sequence)
 	}
-
+	for _, epoch := range genState.Epochs {
+		err := k.AddEpochInfo(ctx, epoch)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
