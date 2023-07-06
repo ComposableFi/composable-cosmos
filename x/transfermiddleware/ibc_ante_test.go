@@ -14,9 +14,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-var (
-	govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
-)
+var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 
 type TransferTestSuite struct {
 	suite.Suite

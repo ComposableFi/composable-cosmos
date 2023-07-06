@@ -176,6 +176,9 @@ localnet-state-export-stop:
 ictest-start-cosmos:
 	cd tests/interchaintest && go test -race -v -run TestStartCentauri .
 
+ictest-validator:
+	cd tests/interchaintest && go test -race -v -run TestValidator .
+
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
 	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
@@ -185,6 +188,11 @@ ictest-ibc:
 	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriPicassoIBCTransfer .
 
 # Executes all tests via interchaintest after compling a local image as centauri:debug
+# Executes Basic Upgrade Chain tests via interchaintest
+ictest-upgrade:
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriUpgrade .
+
+# Executes all tests via interchaintest after compling a local image as centauri:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 
 # Executes push wasm client tests via interchaintest

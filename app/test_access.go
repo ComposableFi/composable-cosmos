@@ -17,12 +17,13 @@ import (
 )
 
 type TestSupport struct {
-	t   testing.TB
+	tb  testing.TB
 	app *CentauriApp
 }
 
-func NewTestSupport(t testing.TB, app *CentauriApp) *TestSupport {
-	return &TestSupport{t: t, app: app}
+func NewTestSupport(tb testing.TB, app *CentauriApp) *TestSupport {
+	tb.Helper()
+	return &TestSupport{tb: tb, app: app}
 }
 
 func (s TestSupport) IBCKeeper() *ibckeeper.Keeper {

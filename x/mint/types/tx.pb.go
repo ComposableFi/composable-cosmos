@@ -6,8 +6,11 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/cosmos/cosmos-sdk/types/msgservice"
+	_ "github.com/cosmos/cosmos-sdk/types/tx/amino"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
 	proto "github.com/cosmos/gogoproto/proto"
@@ -30,6 +33,105 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+type MsgUpdateParams struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// params defines the x/mint parameters to update.
+	//
+	// NOTE: All parameters must be supplied.
+	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+}
+
+func (m *MsgUpdateParams) Reset()         { *m = MsgUpdateParams{} }
+func (m *MsgUpdateParams) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParams) ProtoMessage()    {}
+func (*MsgUpdateParams) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c8af29bb20a4d0, []int{0}
+}
+func (m *MsgUpdateParams) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParams.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParams.Merge(m, src)
+}
+func (m *MsgUpdateParams) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParams.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParams proto.InternalMessageInfo
+
+func (m *MsgUpdateParams) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgUpdateParams) GetParams() Params {
+	if m != nil {
+		return m.Params
+	}
+	return Params{}
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+type MsgUpdateParamsResponse struct {
+}
+
+func (m *MsgUpdateParamsResponse) Reset()         { *m = MsgUpdateParamsResponse{} }
+func (m *MsgUpdateParamsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParamsResponse) ProtoMessage()    {}
+func (*MsgUpdateParamsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c8af29bb20a4d0, []int{1}
+}
+func (m *MsgUpdateParamsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParamsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParamsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParamsResponse.Merge(m, src)
+}
+func (m *MsgUpdateParamsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParamsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
+
 type MsgFundModuleAccount struct {
 	FromAddress string                                   `protobuf:"bytes,1,opt,name=from_address,json=fromAddress,proto3" json:"from_address,omitempty"`
 	Amount      github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,2,rep,name=amount,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"amount" yaml:"amount"`
@@ -39,7 +141,7 @@ func (m *MsgFundModuleAccount) Reset()         { *m = MsgFundModuleAccount{} }
 func (m *MsgFundModuleAccount) String() string { return proto.CompactTextString(m) }
 func (*MsgFundModuleAccount) ProtoMessage()    {}
 func (*MsgFundModuleAccount) Descriptor() ([]byte, []int) {
-	return fileDescriptor_80c8af29bb20a4d0, []int{0}
+	return fileDescriptor_80c8af29bb20a4d0, []int{2}
 }
 func (m *MsgFundModuleAccount) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -89,7 +191,7 @@ func (m *MsgFundModuleAccountResponse) Reset()         { *m = MsgFundModuleAccou
 func (m *MsgFundModuleAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgFundModuleAccountResponse) ProtoMessage()    {}
 func (*MsgFundModuleAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_80c8af29bb20a4d0, []int{1}
+	return fileDescriptor_80c8af29bb20a4d0, []int{3}
 }
 func (m *MsgFundModuleAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -129,7 +231,7 @@ func (m *MsgAddAccountToFundModuleSet) Reset()         { *m = MsgAddAccountToFun
 func (m *MsgAddAccountToFundModuleSet) String() string { return proto.CompactTextString(m) }
 func (*MsgAddAccountToFundModuleSet) ProtoMessage()    {}
 func (*MsgAddAccountToFundModuleSet) Descriptor() ([]byte, []int) {
-	return fileDescriptor_80c8af29bb20a4d0, []int{2}
+	return fileDescriptor_80c8af29bb20a4d0, []int{4}
 }
 func (m *MsgAddAccountToFundModuleSet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -179,7 +281,7 @@ func (m *MsgAddAccountToFundModuleSetResponse) Reset()         { *m = MsgAddAcco
 func (m *MsgAddAccountToFundModuleSetResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddAccountToFundModuleSetResponse) ProtoMessage()    {}
 func (*MsgAddAccountToFundModuleSetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_80c8af29bb20a4d0, []int{3}
+	return fileDescriptor_80c8af29bb20a4d0, []int{5}
 }
 func (m *MsgAddAccountToFundModuleSetResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -209,6 +311,8 @@ func (m *MsgAddAccountToFundModuleSetResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgAddAccountToFundModuleSetResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*MsgUpdateParams)(nil), "centauri.mint.v1beta1.MsgUpdateParams")
+	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "centauri.mint.v1beta1.MsgUpdateParamsResponse")
 	proto.RegisterType((*MsgFundModuleAccount)(nil), "centauri.mint.v1beta1.MsgFundModuleAccount")
 	proto.RegisterType((*MsgFundModuleAccountResponse)(nil), "centauri.mint.v1beta1.MsgFundModuleAccountResponse")
 	proto.RegisterType((*MsgAddAccountToFundModuleSet)(nil), "centauri.mint.v1beta1.MsgAddAccountToFundModuleSet")
@@ -218,34 +322,44 @@ func init() {
 func init() { proto.RegisterFile("centauri/mint/v1beta1/tx.proto", fileDescriptor_80c8af29bb20a4d0) }
 
 var fileDescriptor_80c8af29bb20a4d0 = []byte{
-	// 426 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x53, 0xcb, 0x6e, 0xd4, 0x30,
-	0x14, 0x8d, 0xa7, 0x52, 0xa5, 0xba, 0xe5, 0x15, 0x0d, 0xa8, 0x8d, 0x90, 0x53, 0x2c, 0x54, 0x8d,
-	0x84, 0x70, 0xd4, 0xe9, 0x0e, 0x56, 0x99, 0x4a, 0xec, 0x66, 0x13, 0x58, 0xb1, 0x41, 0x4e, 0x6c,
-	0xd2, 0x88, 0x24, 0x77, 0x14, 0x3b, 0xd0, 0xf9, 0x07, 0x90, 0xd8, 0xf1, 0x0f, 0x6c, 0xf8, 0x8d,
-	0x2e, 0xbb, 0x64, 0x15, 0xd0, 0xcc, 0x1f, 0xcc, 0x17, 0xa0, 0xc4, 0x4e, 0x2b, 0xc4, 0x74, 0x24,
-	0xba, 0x4a, 0x74, 0xcf, 0x39, 0xf7, 0x1e, 0x1f, 0x5f, 0x63, 0x92, 0xc8, 0x52, 0xf3, 0xba, 0xca,
-	0x82, 0x22, 0x2b, 0x75, 0xf0, 0xf1, 0x38, 0x96, 0x9a, 0x1f, 0x07, 0xfa, 0x9c, 0xcd, 0x2a, 0xd0,
-	0xe0, 0x3e, 0xec, 0x71, 0xd6, 0xe2, 0xcc, 0xe2, 0xde, 0x30, 0x85, 0x14, 0x3a, 0x46, 0xd0, 0xfe,
-	0x19, 0xb2, 0x47, 0x12, 0x50, 0x05, 0xa8, 0x20, 0xe6, 0x4a, 0x5e, 0xb5, 0x4a, 0x20, 0x2b, 0x0d,
-	0x4e, 0x7f, 0x20, 0x3c, 0x9c, 0xaa, 0xf4, 0x55, 0x5d, 0x8a, 0x29, 0x88, 0x3a, 0x97, 0x61, 0x92,
-	0x40, 0x5d, 0x6a, 0xf7, 0x09, 0xde, 0x7b, 0x5f, 0x41, 0xf1, 0x8e, 0x0b, 0x51, 0x49, 0xa5, 0xf6,
-	0xd1, 0x21, 0x1a, 0xed, 0x44, 0xbb, 0x6d, 0x2d, 0x34, 0x25, 0x57, 0xe3, 0x6d, 0x5e, 0xb4, 0xe4,
-	0xfd, 0xc1, 0xe1, 0xd6, 0x68, 0x77, 0x7c, 0xc0, 0xcc, 0x30, 0xd6, 0x0e, 0xeb, 0x7d, 0xb1, 0x53,
-	0xc8, 0xca, 0x49, 0x78, 0xd1, 0xf8, 0xce, 0xaa, 0xf1, 0xef, 0xcc, 0x79, 0x91, 0xbf, 0xa0, 0x46,
-	0x46, 0xbf, 0xff, 0xf2, 0x47, 0x69, 0xa6, 0xcf, 0xea, 0x98, 0x25, 0x50, 0x04, 0xd6, 0xaa, 0xf9,
-	0x3c, 0x57, 0xe2, 0x43, 0xa0, 0xe7, 0x33, 0xa9, 0xba, 0x0e, 0x2a, 0xb2, 0xb3, 0x28, 0xc1, 0x8f,
-	0xd7, 0x19, 0x8e, 0xa4, 0x9a, 0x41, 0xa9, 0x24, 0xfd, 0x86, 0x3a, 0x42, 0x28, 0x84, 0x45, 0xde,
-	0xc0, 0x35, 0xf9, 0xb5, 0xd4, 0xee, 0x18, 0xef, 0xf0, 0x5a, 0x9f, 0x41, 0x95, 0xe9, 0xb9, 0x39,
-	0xd6, 0x64, 0xb8, 0x6a, 0xfc, 0xfb, 0xd6, 0x5a, 0x0f, 0xd1, 0xe8, 0x9a, 0xe6, 0x9e, 0xe2, 0x7b,
-	0x3c, 0xcf, 0xe1, 0x93, 0x14, 0x57, 0x81, 0x0c, 0x3a, 0xa5, 0xb7, 0x6a, 0xfc, 0x47, 0x56, 0xf9,
-	0x37, 0x81, 0x46, 0x77, 0x6d, 0xc5, 0xe6, 0x45, 0x8f, 0xf0, 0xd3, 0x4d, 0xc6, 0xfa, 0x13, 0x8c,
-	0x3f, 0x0f, 0xf0, 0xd6, 0x54, 0xa5, 0x6e, 0x8d, 0x1f, 0xfc, 0x7b, 0x2f, 0xcf, 0xd8, 0xda, 0xeb,
-	0x67, 0xeb, 0x32, 0xf1, 0x4e, 0xfe, 0x83, 0xdc, 0x8f, 0x77, 0xbf, 0x20, 0x7c, 0x70, 0x73, 0x7a,
-	0x1b, 0x5a, 0xde, 0x28, 0xf2, 0x5e, 0xde, 0x42, 0xd4, 0xfb, 0x99, 0x1c, 0x5d, 0x2c, 0x08, 0xba,
-	0x5c, 0x10, 0xf4, 0x7b, 0x41, 0xd0, 0xd7, 0x25, 0x71, 0x2e, 0x97, 0xc4, 0xf9, 0xb9, 0x24, 0xce,
-	0xdb, 0xbd, 0x73, 0xf3, 0x44, 0xba, 0x35, 0x89, 0xb7, 0xbb, 0x8d, 0x3e, 0xf9, 0x13, 0x00, 0x00,
-	0xff, 0xff, 0xc0, 0x8a, 0x38, 0x7f, 0x40, 0x03, 0x00, 0x00,
+	// 580 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0xbf, 0x6f, 0xd3, 0x40,
+	0x14, 0xce, 0xa5, 0xa2, 0x52, 0x2e, 0x81, 0x52, 0x2b, 0xd0, 0xc4, 0x02, 0x3b, 0x58, 0x28, 0x8a,
+	0x82, 0x6a, 0x2b, 0xa9, 0xc4, 0x50, 0x16, 0x92, 0x4a, 0x6c, 0x91, 0x90, 0x0b, 0x0b, 0x4b, 0x75,
+	0xb1, 0xaf, 0xae, 0x45, 0xec, 0x8b, 0x7c, 0xe7, 0xd2, 0x6c, 0x88, 0x11, 0x09, 0x89, 0x8d, 0x7f,
+	0x01, 0xb1, 0x90, 0x81, 0x9d, 0xb5, 0x63, 0xc5, 0xc4, 0x14, 0x50, 0x32, 0x64, 0xcf, 0xca, 0x82,
+	0xec, 0x3b, 0x3b, 0x34, 0x3f, 0x2a, 0x60, 0x89, 0x9d, 0xf7, 0x7d, 0xef, 0xbd, 0xef, 0x7b, 0xef,
+	0xce, 0x50, 0xb1, 0xb0, 0xcf, 0x50, 0x18, 0xb8, 0x86, 0xe7, 0xfa, 0xcc, 0x38, 0x6d, 0x74, 0x31,
+	0x43, 0x0d, 0x83, 0x9d, 0xe9, 0xfd, 0x80, 0x30, 0x22, 0xdd, 0x4a, 0x70, 0x3d, 0xc2, 0x75, 0x81,
+	0xcb, 0x3b, 0x16, 0xa1, 0x1e, 0xa1, 0x86, 0x47, 0x1d, 0xe3, 0xb4, 0x11, 0x3d, 0x38, 0x5f, 0xde,
+	0x46, 0x9e, 0xeb, 0x13, 0x23, 0xfe, 0x15, 0xa1, 0xa2, 0x43, 0x1c, 0x12, 0xbf, 0x1a, 0xd1, 0x9b,
+	0x88, 0x96, 0x79, 0x85, 0x23, 0x0e, 0xf0, 0x3f, 0x02, 0xaa, 0xac, 0xd6, 0x14, 0x0b, 0xe0, 0x0c,
+	0x45, 0xb4, 0xef, 0x22, 0x8a, 0x53, 0xdc, 0x22, 0xae, 0xcf, 0x71, 0xed, 0x2b, 0x80, 0x5b, 0x1d,
+	0xea, 0x3c, 0xef, 0xdb, 0x88, 0xe1, 0xa7, 0x28, 0x40, 0x1e, 0x95, 0x1e, 0xc2, 0x1c, 0x0a, 0xd9,
+	0x09, 0x09, 0x5c, 0x36, 0x28, 0x81, 0x0a, 0xa8, 0xe5, 0xda, 0xa5, 0x6f, 0x5f, 0x76, 0x8b, 0xa2,
+	0x75, 0xcb, 0xb6, 0x03, 0x4c, 0xe9, 0x21, 0x0b, 0x5c, 0xdf, 0x31, 0xe7, 0x54, 0xe9, 0x31, 0xdc,
+	0xec, 0xc7, 0x15, 0x4a, 0xd9, 0x0a, 0xa8, 0xe5, 0x9b, 0x77, 0xf5, 0x95, 0x23, 0xd1, 0x79, 0x9b,
+	0x76, 0xee, 0x7c, 0xa4, 0x66, 0x3e, 0x4e, 0x87, 0x75, 0x60, 0x8a, 0xbc, 0xfd, 0xe6, 0x9b, 0xe9,
+	0xb0, 0x3e, 0xaf, 0xf8, 0x76, 0x3a, 0xac, 0xab, 0xa9, 0xc5, 0x33, 0x6e, 0x72, 0x41, 0xad, 0x56,
+	0x86, 0x3b, 0x0b, 0x21, 0x13, 0xd3, 0x3e, 0xf1, 0x29, 0xd6, 0x3e, 0x03, 0x58, 0xec, 0x50, 0xe7,
+	0x49, 0xe8, 0xdb, 0x1d, 0x62, 0x87, 0x3d, 0xdc, 0xb2, 0x2c, 0x12, 0xfa, 0x4c, 0xba, 0x07, 0x0b,
+	0xc7, 0x01, 0xf1, 0x8e, 0x10, 0xb7, 0xc2, 0x4d, 0x9a, 0xf9, 0x28, 0x26, 0xdc, 0x49, 0x0c, 0x6e,
+	0x22, 0x2f, 0x22, 0x97, 0xb2, 0x95, 0x8d, 0x5a, 0xbe, 0x59, 0xd6, 0x85, 0xfd, 0x68, 0x92, 0xa9,
+	0x95, 0x03, 0xe2, 0xfa, 0xed, 0x56, 0x64, 0x64, 0x36, 0x52, 0xaf, 0x0f, 0x90, 0xd7, 0xdb, 0xd7,
+	0x78, 0x9a, 0xf6, 0xe9, 0x87, 0x5a, 0x73, 0x5c, 0x76, 0x12, 0x76, 0x75, 0x8b, 0x78, 0x62, 0x6f,
+	0xe2, 0xb1, 0x4b, 0xed, 0x97, 0x06, 0x1b, 0xf4, 0x31, 0x8d, 0x2b, 0x50, 0x53, 0xf4, 0xd2, 0x14,
+	0x78, 0x67, 0x95, 0xe0, 0xd4, 0xd1, 0x07, 0x10, 0x13, 0x5a, 0xb6, 0x2d, 0x90, 0x67, 0x64, 0x4e,
+	0x3e, 0xc4, 0x4c, 0x6a, 0x2e, 0xef, 0xae, 0x38, 0x1b, 0xa9, 0x37, 0x85, 0xb4, 0x04, 0xd2, 0xfe,
+	0xdc, 0xdb, 0x01, 0xdc, 0x42, 0xbd, 0x1e, 0x79, 0x85, 0xed, 0x74, 0x20, 0xd9, 0x38, 0x53, 0x9e,
+	0x8d, 0xd4, 0xdb, 0x22, 0xf3, 0x32, 0x41, 0x33, 0x6f, 0x88, 0x88, 0x98, 0x97, 0x56, 0x85, 0xf7,
+	0xaf, 0x12, 0x96, 0x38, 0x68, 0xfe, 0xca, 0xc2, 0x8d, 0x0e, 0x75, 0xa4, 0x63, 0x58, 0xb8, 0x74,
+	0xe8, 0xaa, 0x6b, 0x0e, 0xcb, 0xc2, 0x6e, 0x65, 0xfd, 0xef, 0x78, 0x49, 0x3f, 0x29, 0x84, 0xdb,
+	0xcb, 0xfb, 0x7f, 0xb0, 0xbe, 0xc8, 0x12, 0x59, 0xde, 0xfb, 0x07, 0x72, 0xda, 0xf6, 0x1d, 0x80,
+	0xe5, 0xf5, 0x5b, 0xba, 0xa2, 0xe4, 0xda, 0x24, 0xf9, 0xd1, 0x7f, 0x24, 0x25, 0x7a, 0xe4, 0x6b,
+	0xaf, 0xa3, 0x8b, 0xd6, 0xae, 0x9e, 0x8f, 0x15, 0x70, 0x31, 0x56, 0xc0, 0xcf, 0xb1, 0x02, 0xde,
+	0x4f, 0x94, 0xcc, 0xc5, 0x44, 0xc9, 0x7c, 0x9f, 0x28, 0x99, 0x17, 0x05, 0x71, 0xbd, 0xe2, 0x53,
+	0xd9, 0xdd, 0x8c, 0xbf, 0x0e, 0x7b, 0xbf, 0x03, 0x00, 0x00, 0xff, 0xff, 0xcd, 0xee, 0x30, 0xe9,
+	0xf5, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -260,6 +374,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
 	FundModuleAccount(ctx context.Context, in *MsgFundModuleAccount, opts ...grpc.CallOption) (*MsgFundModuleAccountResponse, error)
 	AddAccountToFundModuleSet(ctx context.Context, in *MsgAddAccountToFundModuleSet, opts ...grpc.CallOption) (*MsgAddAccountToFundModuleSetResponse, error)
 }
@@ -270,6 +385,15 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
+	out := new(MsgUpdateParamsResponse)
+	err := c.cc.Invoke(ctx, "/centauri.mint.v1beta1.Msg/UpdateParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) FundModuleAccount(ctx context.Context, in *MsgFundModuleAccount, opts ...grpc.CallOption) (*MsgFundModuleAccountResponse, error) {
@@ -292,6 +416,7 @@ func (c *msgClient) AddAccountToFundModuleSet(ctx context.Context, in *MsgAddAcc
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
 	FundModuleAccount(context.Context, *MsgFundModuleAccount) (*MsgFundModuleAccountResponse, error)
 	AddAccountToFundModuleSet(context.Context, *MsgAddAccountToFundModuleSet) (*MsgAddAccountToFundModuleSetResponse, error)
 }
@@ -300,6 +425,9 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
 func (*UnimplementedMsgServer) FundModuleAccount(ctx context.Context, req *MsgFundModuleAccount) (*MsgFundModuleAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FundModuleAccount not implemented")
 }
@@ -309,6 +437,24 @@ func (*UnimplementedMsgServer) AddAccountToFundModuleSet(ctx context.Context, re
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/centauri.mint.v1beta1.Msg/UpdateParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateParams(ctx, req.(*MsgUpdateParams))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_FundModuleAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -352,6 +498,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UpdateParams",
+			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
 			MethodName: "FundModuleAccount",
 			Handler:    _Msg_FundModuleAccount_Handler,
 		},
@@ -362,6 +512,69 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "centauri/mint/v1beta1/tx.proto",
+}
+
+func (m *MsgUpdateParams) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParams) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateParamsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParamsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgFundModuleAccount) Marshal() (dAtA []byte, err error) {
@@ -502,6 +715,30 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgUpdateParams) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Params.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
 func (m *MsgFundModuleAccount) Size() (n int) {
 	if m == nil {
 		return 0
@@ -561,6 +798,171 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgUpdateParams) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParams: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParams: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgFundModuleAccount) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

@@ -24,6 +24,7 @@ func GetTxCmd() *cobra.Command {
 	txCmd.AddCommand(
 		RegistryDotSamaChain(),
 		RemoveDotSamaChain(),
+		AddRlyAddress(),
 	)
 
 	return txCmd
@@ -90,6 +91,38 @@ func RemoveDotSamaChain() *cobra.Command {
 			msg := types.NewMsgRemoveParachainIBCTokenInfo(
 				fromAddress,
 				nativeDenom,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func AddRlyAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "add-rly [addr ]",
+		Short:   "add address to whitelist relayer",
+		Args:    cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
+		Example: fmt.Sprintf("%s tx transfermiddleware add-rly [allowed_addr]", version.AppName),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			allowedAddress := args[0]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			fromAddress := clientCtx.GetFromAddress().String()
+
+			msg := types.NewMsgAddRlyAddress(
+				fromAddress,
+				allowedAddress,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
