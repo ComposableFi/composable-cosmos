@@ -384,7 +384,6 @@ func NewCentauriApp(
 		app.DistrKeeper,
 	)
 
-	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, app.StakingKeeper)
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	app.StakingKeeper.SetHooks(
@@ -408,6 +407,8 @@ func NewCentauriApp(
 		app.BankKeeper,
 		authorityAddress,
 	)
+
+	app.BankKeeper.RegisterKeepers(app.AllianceKeeper, app.StakingKeeper, app.TransferMiddlewareKeeper)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey],

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -47,9 +48,10 @@ func NewBaseKeeper(
 	return keeper
 }
 
-func (k *Keeper) RegisterKeepers(ak alliancekeeper.Keeper, sk banktypes.StakingKeeper) {
+func (k *Keeper) RegisterKeepers(ak alliancekeeper.Keeper, sk banktypes.StakingKeeper, tfmk transfermiddlewarekeeper.Keeper) {
 	k.ak = ak
 	k.sk = sk
+	k.tfmk = tfmk
 }
 
 // SupplyOf implements the Query/SupplyOf gRPC method
@@ -86,6 +88,7 @@ func (k Keeper) TotalSupply(ctx context.Context, req *types.QueryTotalSupplyRequ
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	fmt.Println()
 	// Get duplicate token from transfermiddeware
 	duplicateCoins := k.tfmk.GetTotalEscrowedToken(sdkCtx)
 	totalSupply = totalSupply.Sub(duplicateCoins...)
