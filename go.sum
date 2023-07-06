@@ -766,8 +766,8 @@ github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OS
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc1NGpU8TntXwM/s7Z/whsKNDVPiLim35HLBAzA=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
-github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230704001546-9b29206c5b77 h1:ld2+Gi8eiigtKwgK3TZZ1S7+jZffToGPQijnbiQbyl4=
-github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230704001546-9b29206c5b77/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
+github.com/notional-labs/ibc-go/v7 v7.0.0-wasm-client h1:oQxReLXp48oCIW1zYL+YYg7Nr3L5ginxzJjWXSk1zHM=
+github.com/notional-labs/ibc-go/v7 v7.0.0-wasm-client/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230615054050-5523db83e69a h1:MMb5U1UydbPHdQGmvLBy5/KgX9NUb8tY6H5aJvXXKjI=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230615054050-5523db83e69a/go.mod h1:9C/cvYi6C0YqCc7sh0Eyv+pRYCXnt1DkJ1AN9q555Hw=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
