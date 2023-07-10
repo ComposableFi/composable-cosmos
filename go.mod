@@ -33,7 +33,7 @@ require (
 	cloud.google.com/go/iam v0.12.0 // indirect
 	cloud.google.com/go/storage v1.29.0 // indirect
 	cosmossdk.io/log v1.1.0 // indirect
-	github.com/CosmWasm/wasmvm v1.2.3 // indirect
+	github.com/CosmWasm/wasmvm v1.2.1 // indirect
 	github.com/aws/aws-sdk-go v1.44.203 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/chzyer/readline v1.5.1 // indirect
@@ -179,10 +179,10 @@ replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
 	// ibc-go with wasm client
-	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-rc0.0.20230620222307-3a59af3e2fef
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-wasm-client
 
 	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230615054050-5523db83e69a
 
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-
+	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01
 )

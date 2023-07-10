@@ -98,11 +98,11 @@ import (
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
+	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
+	custombankkeeper "github.com/notional-labs/centauri/v3/custom/bank/keeper"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
-	custombankmodule "github.com/terra-money/alliance/custom/bank"
-	custombankkeeper "github.com/terra-money/alliance/custom/bank/keeper"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
@@ -407,7 +407,7 @@ func NewCentauriApp(
 		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
-	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey], authorityAddress)
+	app.Wasm08Keeper = wasm08.NewKeeper(appCodec, app.keys[wasmtypes.StoreKey], authorityAddress, homePath)
 	// Create Transfer Keepers
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
@@ -857,6 +857,8 @@ func (app *CentauriApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 	// Register new tendermint queries routes from grpc-gateway.
 	tmservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
+
+	nodeservice.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 
 	ModuleBasics.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
 }
