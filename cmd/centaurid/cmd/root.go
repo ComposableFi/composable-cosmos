@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
 	dbm "github.com/cometbft/cometbft-db"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cometbft/cometbft/libs/log"
@@ -268,13 +269,17 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
+	var emptyWasmOpts []wasm.Option
 	newApp := app.NewCentauriApp(
-		logger, db, traceStore, true, skipUpgradeHeights,
+		logger, db, traceStore, true,
+		app.GetEnabledProposals(),
+		skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
 		a.encCfg,
 		// this line is used by starport scaffolding # stargate/root/appArgument
 		appOpts,
+		emptyWasmOpts,
 		baseappOptions...,
 	)
 
@@ -292,6 +297,7 @@ func (a appCreator) appExport(
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
+	var emptyWasmOpts []wasm.Option
 
 	if height != -1 {
 		anApp = app.NewCentauriApp(
@@ -299,11 +305,13 @@ func (a appCreator) appExport(
 			db,
 			traceStore,
 			false,
+			app.GetEnabledProposals(),
 			map[int64]bool{},
 			homePath,
 			uint(1),
 			a.encCfg,
 			appOpts,
+			emptyWasmOpts,
 		)
 
 		if err := anApp.LoadHeight(height); err != nil {
@@ -315,11 +323,13 @@ func (a appCreator) appExport(
 			db,
 			traceStore,
 			true,
+			app.GetEnabledProposals(),
 			map[int64]bool{},
 			homePath,
 			uint(1),
 			a.encCfg,
 			appOpts,
+			emptyWasmOpts,
 		)
 	}
 
