@@ -490,7 +490,7 @@ func NewCentauriApp(
 		&app.DistrKeeper,
 		app.BankKeeper,
 		app.TransferMiddlewareKeeper,
-		app.IBCKeeper.ChannelKeeper,
+		app.HooksICS4Wrapper,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
