@@ -464,7 +464,7 @@ func NewCentauriApp(
 	app.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
 		appCodec,
-		app.IBCKeeper.ChannelKeeper,
+		&app.HooksICS4Wrapper,
 		&app.TransferKeeper,
 		app.BankKeeper,
 		authorityAddress,

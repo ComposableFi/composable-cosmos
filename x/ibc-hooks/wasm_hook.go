@@ -118,11 +118,10 @@ func (h WasmHooks) OnRecvPacketOverride(im IBCMiddleware, ctx sdk.Context, packe
 	if err != nil {
 		return NewEmitErrorAcknowledgement(ctx, types.ErrBadResponse, err.Error())
 	}
-
 	return channeltypes.NewResultAcknowledgement(bz)
 }
 
-func (h WasmHooks) SendPacketOverrideSendPacketOverride(
+func (h WasmHooks) SendPacketOverride(
 	i ICS4Middleware,
 	ctx sdk.Context,
 	chanCap *capabilitytypes.Capability,
@@ -179,7 +178,6 @@ func (h WasmHooks) SendPacketOverrideSendPacketOverride(
 	if err != nil {
 		return seq, nil
 	}
-
 	h.ibcHooksKeeper.StorePacketCallback(ctx, sourceChannel, seq, contract)
 	return seq, nil
 }
@@ -227,6 +225,7 @@ func (h WasmHooks) OnAcknowledgementPacketOverride(im IBCMiddleware, ctx sdk.Con
 		// ToDo: Open Question: Should we also delete the callback here?
 		return errorsmod.Wrap(err, "Ack callback error")
 	}
+
 	h.ibcHooksKeeper.DeletePacketCallback(ctx, packet.GetSourceChannel(), packet.GetSequence())
 	return nil
 }
