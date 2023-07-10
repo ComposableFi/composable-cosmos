@@ -19,6 +19,13 @@ type IBCMiddleware struct {
 	ICS4Middleware *ICS4Middleware
 }
 
+func NewIBCMiddleware(app porttypes.IBCModule, ics4 *ICS4Middleware) IBCMiddleware {
+	return IBCMiddleware{
+		App:            app,
+		ICS4Middleware: ics4,
+	}
+}
+
 // OnChanOpenInit implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanOpenInit(
 	ctx sdk.Context,
