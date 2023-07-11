@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/centauri/v3/app/ibctesting"
 	"github.com/stretchr/testify/suite"
@@ -27,8 +26,8 @@ func NewTransferPath(chainA, chainB *customibctesting.TestChain) *customibctesti
 	path := customibctesting.NewPath(chainA, chainB)
 	path.EndpointA.ChannelConfig.PortID = customibctesting.TransferPort
 	path.EndpointB.ChannelConfig.PortID = customibctesting.TransferPort
-	path.EndpointA.ChannelConfig.Version = transfertypes.Version
-	path.EndpointB.ChannelConfig.Version = transfertypes.Version
+	path.EndpointA.ChannelConfig.Version = ibctransfertypes.Version
+	path.EndpointB.ChannelConfig.Version = ibctransfertypes.Version
 
 	return path
 }
