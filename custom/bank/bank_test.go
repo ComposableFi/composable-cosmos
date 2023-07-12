@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/centauri/v3/app/ibctesting"
 	"github.com/stretchr/testify/suite"
@@ -27,8 +26,8 @@ func NewTransferPath(chainA, chainB *customibctesting.TestChain) *customibctesti
 	path := customibctesting.NewPath(chainA, chainB)
 	path.EndpointA.ChannelConfig.PortID = customibctesting.TransferPort
 	path.EndpointB.ChannelConfig.PortID = customibctesting.TransferPort
-	path.EndpointA.ChannelConfig.Version = transfertypes.Version
-	path.EndpointB.ChannelConfig.Version = transfertypes.Version
+	path.EndpointA.ChannelConfig.Version = ibctransfertypes.Version
+	path.EndpointB.ChannelConfig.Version = ibctransfertypes.Version
 
 	return path
 }
@@ -159,11 +158,10 @@ func (suite *CustomBankTestSuite) TestTotalSupply2() {
 			"Total supply with no transfermiddleware setup",
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2),
-			sdk.Coins{sdk.NewCoin("ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", transferAmount)},
+			sdk.Coins{sdk.NewCoin("ibc/3C3D7B3BE4ECC85A0E5B52A3AEC3B7DFC2AA9CA47C37821E57020D6807043BE9", transferAmount2), sdk.NewCoin("ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", transferAmount)},
 			func() {
 				transferCoinFromA := ibctransfertypes.GetTransferCoin(pathAB.EndpointB.ChannelConfig.PortID, pathAB.EndpointB.ChannelID, coinChainASendToB.Denom, transferAmount)
-				transferCoinFromC := ibctransfertypes.GetTransferCoin(pathCB.EndpointB.ChannelConfig.PortID, pathCB.EndpointB.ChannelID, coinChainASendToB.Denom, transferAmount2)
-
+				transferCoinFromC := ibctransfertypes.GetTransferCoin(pathCB.EndpointB.ChannelConfig.PortID, pathCB.EndpointB.ChannelID, coinChainCSentToB.Denom, transferAmount2)
 				expChainBBalanceDiff = sdk.NewCoins(transferCoinFromA, transferCoinFromC)
 			},
 		},
@@ -171,7 +169,7 @@ func (suite *CustomBankTestSuite) TestTotalSupply2() {
 			"Total supply with transfermiddleware setup",
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2),
-			sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)),
+			sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount), sdk.NewCoin("ibc/3C3D7B3BE4ECC85A0E5B52A3AEC3B7DFC2AA9CA47C37821E57020D6807043BE9", transferAmount2)),
 			func() {
 				// Add parachain token info
 				chainBtransMiddleware := suite.chainB.TransferMiddleware()
@@ -189,8 +187,8 @@ func (suite *CustomBankTestSuite) TestTotalSupply2() {
 		suite.Run(tc.name, func() {
 			suite.SetupTest() // reset
 
-			pathAB := NewTransferPath(suite.chainA, suite.chainB)
-			pathCB := NewTransferPath(suite.chainC, suite.chainB)
+			pathAB = NewTransferPath(suite.chainA, suite.chainB)
+			pathCB = NewTransferPath(suite.chainC, suite.chainB)
 			suite.coordinator.Setup(pathAB)
 			suite.coordinator.Setup(pathCB)
 
@@ -222,13 +220,13 @@ func (suite *CustomBankTestSuite) TestTotalSupply2() {
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			// Send from C to B
-			msg = ibctransfertypes.NewMsgTransfer(pathCB.EndpointA.ChannelConfig.PortID, pathCB.EndpointA.ChannelID, coinChainCSentToB, suite.chainA.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
-			_, err = suite.chainA.SendMsgs(msg)
+			msg = ibctransfertypes.NewMsgTransfer(pathCB.EndpointA.ChannelConfig.PortID, pathCB.EndpointA.ChannelID, coinChainCSentToB, suite.chainC.SenderAccount.GetAddress().String(), suite.chainB.SenderAccount.GetAddress().String(), timeoutHeight, 0, "")
+			_, err = suite.chainC.SendMsgs(msg)
 			suite.Require().NoError(err)
 			suite.Require().NoError(err, pathCB.EndpointB.UpdateClient())
 
 			// then
-			suite.Require().Equal(1, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(1, len(suite.chainC.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			// and when relay to chain B and handle Ack on chain C
@@ -236,7 +234,7 @@ func (suite *CustomBankTestSuite) TestTotalSupply2() {
 			suite.Require().NoError(err)
 
 			// then
-			suite.Require().Equal(0, len(suite.chainA.PendingSendPackets))
+			suite.Require().Equal(0, len(suite.chainC.PendingSendPackets))
 			suite.Require().Equal(0, len(suite.chainB.PendingSendPackets))
 
 			// and source chain balance was decreased
