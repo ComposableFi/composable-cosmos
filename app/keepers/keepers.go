@@ -1,6 +1,10 @@
 package keepers
 
 import (
+	"fmt"
+	"path/filepath"
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -46,7 +50,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	
+
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -65,9 +69,9 @@ import (
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
-	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
-	
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+
 	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
@@ -79,8 +83,10 @@ import (
 	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 )
 
 const (
@@ -89,38 +95,40 @@ const (
 )
 
 type AppKeepers struct {
-		// keys to access the substores
-		keys    map[string]*storetypes.KVStoreKey
-		tkeys   map[string]*storetypes.TransientStoreKey
-		memKeys map[string]*storetypes.MemoryStoreKey
-	
-		// keepers
-		AccountKeeper    authkeeper.AccountKeeper
-		BankKeeper       custombankkeeper.Keeper
-		CapabilityKeeper *capabilitykeeper.Keeper
-		StakingKeeper    *stakingkeeper.Keeper
-		SlashingKeeper   slashingkeeper.Keeper
-		MintKeeper       mintkeeper.Keeper
-		DistrKeeper      distrkeeper.Keeper
-		GovKeeper        govkeeper.Keeper
-		CrisisKeeper     *crisiskeeper.Keeper
-		UpgradeKeeper    *upgradekeeper.Keeper
-		ParamsKeeper     paramskeeper.Keeper
-		IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-		EvidenceKeeper   evidencekeeper.Keeper
-		TransferKeeper   ibctransferkeeper.Keeper
-		ICQKeeper        icqkeeper.Keeper
-		FeeGrantKeeper   feegrantkeeper.Keeper
-		GroupKeeper      groupkeeper.Keeper
-		Wasm08Keeper     wasm08.Keeper // TODO: use this name ?
-		// make scoped keepers public for test purposes
-		ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
-		ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
-		ConsensusParamsKeeper consensusparamkeeper.Keeper
-		// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-		TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
-		RouterKeeper             *routerkeeper.Keeper
-		AllianceKeeper           alliancemodulekeeper.Keeper
+	// keys to access the substores
+	keys    map[string]*storetypes.KVStoreKey
+	tkeys   map[string]*storetypes.TransientStoreKey
+	memKeys map[string]*storetypes.MemoryStoreKey
+
+	// keepers
+	AccountKeeper    authkeeper.AccountKeeper
+	BankKeeper       custombankkeeper.Keeper
+	CapabilityKeeper *capabilitykeeper.Keeper
+	StakingKeeper    *stakingkeeper.Keeper
+	SlashingKeeper   slashingkeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	DistrKeeper      distrkeeper.Keeper
+	GovKeeper        govkeeper.Keeper
+	CrisisKeeper     *crisiskeeper.Keeper
+	UpgradeKeeper    *upgradekeeper.Keeper
+	ParamsKeeper     paramskeeper.Keeper
+	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	EvidenceKeeper   evidencekeeper.Keeper
+	TransferKeeper   ibctransferkeeper.Keeper
+	ICQKeeper        icqkeeper.Keeper
+	FeeGrantKeeper   feegrantkeeper.Keeper
+	GroupKeeper      groupkeeper.Keeper
+	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
+	WasmKeeper       wasm.Keeper
+	// make scoped keepers public for test purposes
+	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
+	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
+	ScopedWasmKeeper      capabilitykeeper.ScopedKeeper
+	ConsensusParamsKeeper consensusparamkeeper.Keeper
+	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
+	RouterKeeper             *routerkeeper.Keeper
+	AllianceKeeper           alliancemodulekeeper.Keeper
 }
 
 // InitNormalKeepers initializes all 'normal' keepers.
@@ -132,6 +140,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	invCheckPeriod uint,
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
+	appOpts servertypes.AppOptions,
+	wasmOpts []wasm.Option,
+	enabledProposals []wasm.ProposalType,
 ) {
 	// add keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -139,7 +150,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	appKeepers.BankKeeper = custombankkeeper.NewBaseKeeper(
-		appCodec, appKeepers.keys[banktypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BlacklistedModuleAccountAddrs(maccPerms), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appCodec, appKeepers.keys[banktypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BlacklistedModuleAccountAddrs(maccPerms), &appKeepers.TransferMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	appKeepers.StakingKeeper = stakingkeeper.NewKeeper(
 		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
@@ -157,7 +168,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.SlashingKeeper = slashingkeeper.NewKeeper(
 		appCodec, cdc, appKeepers.keys[slashingtypes.StoreKey], appKeepers.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-	
+
 	appKeepers.CrisisKeeper = crisiskeeper.NewKeeper(appCodec, appKeepers.keys[crisistypes.StoreKey],
 		invCheckPeriod, appKeepers.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
@@ -202,7 +213,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
 	// Create Transfer Keepers
 	appKeepers.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
@@ -237,7 +248,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
-	
+
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
@@ -267,6 +278,36 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	appKeepers.EvidenceKeeper = *evidenceKeeper
 
+	wasmDir := filepath.Join(homePath, "wasm")
+	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
+	if err != nil {
+		panic(fmt.Sprintf("error while reading wasm config: %s", err))
+	}
+
+	// The last arguments can contain custom message handlers, and custom query handlers,
+	// if we want to allow any custom callbacks
+	availableCapabilities := strings.Join(AllCapabilities(), ",")
+	appKeepers.WasmKeeper = wasm.NewKeeper(
+		appCodec,
+		appKeepers.keys[wasm.StoreKey],
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.StakingKeeper,
+		distrkeeper.NewQuerier(appKeepers.DistrKeeper),
+		appKeepers.IBCKeeper.ChannelKeeper, // ISC4 Wrapper: fee IBC middleware
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedWasmKeeper,
+		appKeepers.TransferKeeper,
+		bApp.MsgServiceRouter(),
+		bApp.GRPCQueryRouter(),
+		wasmDir,
+		wasmConfig,
+		availableCapabilities,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		wasmOpts...,
+	)
+
 	// Register Gov (must be registered after stakeibc)
 	govRouter := govtypesv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govtypesv1beta1.ProposalHandler).
@@ -275,6 +316,11 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(appKeepers.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper)).
 		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(appKeepers.AllianceKeeper))
+
+	// The gov proposal types can be individually enabled
+	if len(enabledProposals) != 0 {
+		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(appKeepers.WasmKeeper, enabledProposals))
+	}
 
 	govKeeper := *govkeeper.NewKeeper(
 		appCodec, appKeepers.keys[govtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
@@ -292,6 +338,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
+	ibcRouter.AddRoute(wasm.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
 
 	// this line is used by starport scaffolding # ibc/app/router
 	appKeepers.IBCKeeper.SetRouter(ibcRouter)
@@ -317,6 +364,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	// grant capabilities for the ibc and ibc-transfer modules
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
+	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasm.ModuleName)
 
 	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, appKeepers.keys[upgradetypes.StoreKey], appCodec, homePath, bApp, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 }
@@ -338,6 +386,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(icqtypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
+	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
 }
