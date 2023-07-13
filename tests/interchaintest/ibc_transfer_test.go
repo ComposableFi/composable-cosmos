@@ -69,12 +69,12 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 				Images: []ibc.DockerImage{
 					{
 						Repository: "parity/polkadot",
-						Version:    "v0.9.43",
+						Version:    "v0.9.39",
 						UidGid:     "1000:1000",
 					},
 					{
 						Repository: "composablefi/parachain-node",
-						Version:    "3a4a0e61-1687295077",
+						Version:    "13f3db34-1688755040",
 						// UidGid: "1025:1025",
 					},
 				},
