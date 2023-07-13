@@ -144,6 +144,9 @@ ictest-ibc:
 ictest-upgrade:
 	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriUpgrade .
 
+ictest-ibc-hooks:
+	cd tests/interchaintest && go test -race -v -run TestIBCHooks .
+
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 
@@ -151,4 +154,4 @@ ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
-.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
+.PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all ictest-ibc-hooks

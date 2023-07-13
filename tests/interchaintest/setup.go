@@ -13,7 +13,9 @@ var (
 
 	repo, version = GetDockerImageInfo()
 
-	CentauriImage = ibc.DockerImage{
+	IBCRelayerImage   = "ghcr.io/cosmos/relayer"
+	IBCRelayerVersion = "justin-localhost-ibc"
+	CentauriImage     = ibc.DockerImage{
 		Repository: repo,
 		Version:    version,
 		UidGid:     "1025:1025",
@@ -35,6 +37,7 @@ var (
 		ModifyGenesis:       nil,
 		ConfigFileOverrides: nil,
 	}
+	genesisWalletAmount = int64(10_000_000)
 )
 
 // GetDockerImageInfo returns the appropriate repo and branch version string for integration with the CI pipeline.
