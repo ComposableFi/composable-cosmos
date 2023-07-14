@@ -82,7 +82,7 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
+	reward "github.com/notional-labs/centauri/v3/app/upgrades/reward"
 	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -104,12 +104,14 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+
+	upgrades "github.com/notional-labs/centauri/v3/app/upgrades"
 )
 
 const (
-	Name                 = "centauri"
-	dirName              = "banksy"
-	ForkHeight           = 244008
+	Name       = "centauri"
+	dirName    = "banksy"
+	ForkHeight = 244008
 )
 
 var (
@@ -120,6 +122,8 @@ var (
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
+
+	Upgrades = []upgrades.Upgrade{}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -287,7 +291,7 @@ func NewCentauriApp(
 		skipUpgradeHeights,
 		homePath,
 	)
-
+	app.setupUpgradeStoreLoaders()
 	app.InitNormalKeepers(
 		appCodec,
 		cdc,
@@ -444,6 +448,8 @@ func NewCentauriApp(
 	app.mm.RegisterInvariants(app.CrisisKeeper)
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
+
+	app.setupUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	// app.sm = module.NewSimulationManager(
@@ -645,4 +651,48 @@ func GetMaccPerms() map[string][]string {
 // SimulationManager implements the SimulationApp interface
 func (app *CentauriApp) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+// configure store loader that checks if version == upgradeHeight and applies store upgrades
+func (app *CentauriApp) setupUpgradeStoreLoaders() {
+	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
+	if err != nil {
+		panic(fmt.Sprintf("failed to read upgrade info from disk %s", err))
+	}
+
+	if app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		return
+	}
+
+	currentHeight := app.CommitMultiStore().LastCommitID().Version
+
+	if upgradeInfo.Height == currentHeight+1 {
+		app.customPreUpgradeHandler(upgradeInfo)
+	}
+
+	for _, upgrade := range Upgrades {
+		if upgradeInfo.Name == upgrade.UpgradeName {
+			app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades))
+		}
+	}
+}
+
+func (app *CentauriApp) customPreUpgradeHandler(upgradeInfo upgradetypes.Plan) {
+	switch upgradeInfo.Name {
+	default:
+	}
+}
+
+func (app *CentauriApp) setupUpgradeHandlers() {
+	for _, upgrade := range Upgrades {
+		app.UpgradeKeeper.SetUpgradeHandler(
+			upgrade.UpgradeName,
+			upgrade.CreateUpgradeHandler(
+				app.mm,
+				app.configurator,
+				app.BaseApp,
+				&app.AppKeepers,
+			),
+		)
+	}
 }
