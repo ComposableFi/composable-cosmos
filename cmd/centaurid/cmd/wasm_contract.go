@@ -1,16 +1,16 @@
 package cmd
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"io"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/CosmWasm/wasmd/x/wasm/ioutils"
+	wasmtypes "github.com/CosmWasm/wasmvm/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -19,6 +19,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
+
+type Checksum = wasmtypes.Checksum
 
 // AddGenesisAccountCmd returns add-genesis-account cobra Command.
 func AddWasmContractCmd(defaultNodeHome string) *cobra.Command {
@@ -50,17 +52,12 @@ func AddWasmContractCmd(defaultNodeHome string) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to unmarshal genesis state: %w", err)
 			}
-			f, err := os.Open(args[0])
+			codeHash, err := CreateChecksum(wasm)
 			if err != nil {
-				log.Fatal(err)
-			}
-			defer f.Close()
-			h := sha256.New()
-			if _, err := io.Copy(h, f); err != nil {
-				log.Fatal(err)
+				return err
 			}
 			contract := wasm08types.GenesisContract{
-				CodeHash:     h.Sum(nil),
+				CodeHash:     codeHash,
 				ContractCode: wasm,
 			}
 
@@ -101,4 +98,20 @@ func GetGenesisStateFromAppState(cdc codec.JSONCodec, appState map[string]json.R
 	}
 
 	return &genesisState
+}
+
+func CreateChecksum(wasm []byte) (Checksum, error) {
+	if len(wasm) == 0 {
+		return Checksum{}, fmt.Errorf("wasm bytes nil or empty")
+	}
+	if len(wasm) < 4 {
+		return Checksum{}, fmt.Errorf("wasm bytes shorter than 4 bytes")
+	}
+	// magic number for Wasm is "\0asm"
+	// See https://webassembly.github.io/spec/core/binary/modules.html#binary-module
+	if !bytes.Equal(wasm[:4], []byte("\x00\x61\x73\x6D")) {
+		return Checksum{}, fmt.Errorf("wasm bytes do not not start with Wasm magic number")
+	}
+	hash := sha256.Sum256(wasm)
+	return Checksum(hash[:]), nil
 }
