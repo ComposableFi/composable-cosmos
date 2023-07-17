@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
@@ -61,7 +63,6 @@ func NewContextForApp(app centauri.CentauriApp) sdk.Context {
 
 func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.CentauriApp {
 	t.Helper()
-
 	app, genesisState := setup(!isCheckTx, invCheckPeriod)
 	if !isCheckTx {
 		// InitChain must be called to stop deliverState from being nil
@@ -81,7 +82,7 @@ func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.Centauri
 	return app
 }
 
-func setup(withGenesis bool, invCheckPeriod uint) (*centauri.CentauriApp, centauri.GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*centauri.CentauriApp, centauri.GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := centauri.MakeEncodingConfig()
 	app := centauri.NewCentauriApp(
@@ -89,11 +90,13 @@ func setup(withGenesis bool, invCheckPeriod uint) (*centauri.CentauriApp, centau
 		db,
 		nil,
 		true,
+		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
 		centauri.DefaultNodeHome,
 		invCheckPeriod,
 		encCdc,
 		EmptyAppOptions{},
+		opts,
 	)
 	if withGenesis {
 		return app, centauri.NewDefaultGenesisState()

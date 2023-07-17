@@ -3,12 +3,15 @@ package app
 import (
 	"testing"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
+	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
@@ -47,8 +50,16 @@ func (s TestSupport) StakingKeeper() *stakingkeeper.Keeper {
 	return s.app.StakingKeeper
 }
 
+func (s TestSupport) AccountKeeper() authkeeper.AccountKeeper {
+	return s.app.AccountKeeper
+}
+
 func (s TestSupport) BankKeeper() bankkeeper.Keeper {
 	return s.app.BankKeeper
+}
+
+func (s TestSupport) GovKeeper() govkeeper.Keeper {
+	return s.app.GovKeeper
 }
 
 func (s TestSupport) TransferKeeper() ibctransferkeeper.Keeper {
@@ -57,6 +68,10 @@ func (s TestSupport) TransferKeeper() ibctransferkeeper.Keeper {
 
 func (s TestSupport) Wasm08Keeper() wasm08.Keeper {
 	return s.app.Wasm08Keeper
+}
+
+func (s TestSupport) WasmdKeeper() wasm.Keeper {
+	return s.app.WasmKeeper
 }
 
 func (s TestSupport) GetBaseApp() *baseapp.BaseApp {

@@ -150,12 +150,12 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibc
 
 func (keeper Keeper) GetTotalEscrowedToken(ctx sdk.Context) (coins sdk.Coins) {
 	keeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
-		escrowCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelId), info.NativeDenom)
-		coins.Add(escrowCoin)
+		escrowCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelId), info.IbcDenom)
+		coins = append(coins, escrowCoin)
 		return false
 	})
 
-	return
+	return coins
 }
 
 func (keeper Keeper) Logger(ctx sdk.Context) log.Logger {
