@@ -110,6 +110,20 @@ func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDeno
 	return removeTime, nil
 }
 
+func (keeper Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool)) {
+	store := ctx.KVStore(keeper.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyParachainIBCTokenRemoveListByNativeDenom)
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var removeInfo types.RemoveParachainIBCTokenInfo
+		keeper.cdc.MustUnmarshal(iterator.Value(), &removeInfo)
+		if cb(removeInfo) {
+			break
+		}
+	}
+}
+
 // TODO: testing
 // RemoveParachainIBCTokenInfo remove parachain token information from chain state.
 func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
