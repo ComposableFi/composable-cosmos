@@ -1,11 +1,14 @@
 package keeper
 
 import (
+	"time"
+
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -82,6 +85,29 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	store.Set(types.GetKeyParachainIBCTokenInfoByAssetID(assetID), bz)
 	store.Set(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom), []byte(nativeDenom))
 	return nil
+}
+
+func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
+	params := keeper.GetParams(ctx)
+	store := ctx.KVStore(keeper.storeKey)
+	if store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+		return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
+	}
+
+	// Add to remove list
+	removeTime := ctx.BlockTime().Add(params.Duration)
+	removeToken := types.RemoveParachainIBCTokenInfo{
+		NativeDenom: nativeDenom,
+		RemoveTime:  removeTime,
+	}
+
+	bz, err := keeper.cdc.Marshal(&removeToken)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	store.Set(types.GetKeyParachainIBCTokenRemoveListByNativeDenom(nativeDenom), bz)
+	return removeTime, nil
 }
 
 // TODO: testing
