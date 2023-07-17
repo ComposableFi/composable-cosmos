@@ -379,6 +379,7 @@ func NewSimApp(
 	app.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, keys[upgradetypes.StoreKey], appCodec, homePath, app.BaseApp, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 	app.TransferMiddlewarekeeper = transfermiddlewarekeeper.NewKeeper(
 		keys[transfermiddlewaretypes.StoreKey],
+		app.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
 		app.IBCKeeper.ChannelKeeper,
 		app.TransferKeeper,
