@@ -5,7 +5,7 @@ func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Params:     DefaultParams(),
 		RateLimits: []RateLimit{},
-		Epochs:     []EpochInfo{NewGenesisEpochInfo(HOUR_EPOCH, EpochHourPeriod)},
+		Epochs:     []EpochInfo{NewGenesisEpochInfo(DAY_EPOCH, EpochHourPeriod)},
 	}
 }
 

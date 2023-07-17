@@ -117,7 +117,7 @@ func (k Keeper) NumBlocksSinceEpochStart(ctx sdk.Context, identifier string) (in
 }
 
 func (k Keeper) AfterEpochEnd(ctx sdk.Context, epochInfo types.EpochInfo) {
-	if epochInfo.Identifier == types.HOUR_EPOCH {
+	if epochInfo.Identifier == types.DAY_EPOCH {
 		epochHour := uint64(epochInfo.CurrentEpoch)
 
 		for _, rateLimit := range k.GetAllRateLimits(ctx) {

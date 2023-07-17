@@ -123,7 +123,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
