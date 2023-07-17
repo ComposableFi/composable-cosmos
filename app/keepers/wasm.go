@@ -1,4 +1,4 @@
-package app
+package keepers
 
 // AllCapabilities returns all capabilities available with the current wasmvm
 // See https://github.com/CosmWasm/cosmwasm/blob/main/docs/CAPABILITIES-BUILT-IN.md
