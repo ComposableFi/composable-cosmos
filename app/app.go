@@ -82,7 +82,6 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	reward "github.com/notional-labs/centauri/v3/app/upgrades/reward"
 	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
@@ -510,9 +509,6 @@ func NewCentauriApp(
 			tmos.Exit(err.Error())
 		}
 	}
-
-	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
-	app.UpgradeKeeper.SetUpgradeHandler(reward.UpgradeName, reward.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper, app.MintKeeper))
 
 	return app
 }
