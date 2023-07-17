@@ -101,15 +101,18 @@ import (
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
+	ibc_hooks "github.com/notional-labs/centauri/v3/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
 const (
-	Name                 = "centauri"
-	dirName              = "banksy"
-	ForkHeight           = 244008
+	Name       = "centauri"
+	dirName    = "banksy"
+	ForkHeight = 244008
 )
 
 var (
@@ -191,6 +194,7 @@ var (
 		wasm08.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
+		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
@@ -305,6 +309,7 @@ func NewCentauriApp(
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
+	ibcHooksModule := ibc_hooks.NewAppModule()
 	/****  Module Options ****/
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
@@ -337,6 +342,7 @@ func NewCentauriApp(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icqModule,
+		ibcHooksModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		wasm08.NewAppModule(app.Wasm08Keeper),
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
@@ -363,6 +369,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -399,6 +406,7 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
@@ -432,6 +440,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
