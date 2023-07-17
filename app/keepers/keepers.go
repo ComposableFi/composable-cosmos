@@ -82,11 +82,11 @@ import (
 	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
 	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
-	"github.com/CosmWasm/wasmd/x/wasm"
-	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 )
 
 const (
@@ -217,6 +217,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	// Create Transfer Keepers
 	appKeepers.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
+		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.TransferKeeper,
@@ -387,6 +388,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
 
 	return paramsKeeper
 }
