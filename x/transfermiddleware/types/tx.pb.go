@@ -31,7 +31,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgAddParachainInfo represents a message to add new parachain info.
 type MsgAddParachainIBCTokenInfo struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	IbcDenom    string `protobuf:"bytes,3,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
@@ -143,9 +144,11 @@ func (m *MsgAddParachainIBCTokenInfoResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse proto.InternalMessageInfo
 
-// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain info.
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain
+// info.
 type MsgRemoveParachainIBCTokenInfo struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	NativeDenom string `protobuf:"bytes,2,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"ibc_denom"`
 }
@@ -237,7 +240,8 @@ var xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse proto.InternalMessage
 
 // MsgAddRlyAddress represents a message to add new rly address to allow list
 type MsgAddRlyAddress struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority  string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	RlyAddress string `protobuf:"bytes,2,opt,name=rly_address,json=rlyAddress,proto3" json:"rly_address,omitempty" yaml:"rly_address"`
 }
