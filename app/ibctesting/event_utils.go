@@ -1,10 +1,12 @@
 package ibctesting
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 )
@@ -54,6 +56,64 @@ func parsePacketFromEvent(evt abci.Event) channeltypes.Packet {
 		TimeoutHeight:      parseTimeoutHeight(getField(evt, "packet_timeout_height")),
 		TimeoutTimestamp:   getUintField(evt, "packet_timeout_timestamp"),
 	}
+}
+
+// ParsePacketFromEvents parses events emitted from a MsgRecvPacket and returns the
+// acknowledgement.
+func ParsePacketFromEvents(events sdk.Events) (channeltypes.Packet, error) {
+	for _, ev := range events {
+		if ev.Type == channeltypes.EventTypeSendPacket {
+			packet := channeltypes.Packet{}
+			for _, attr := range ev.Attributes {
+				switch string(attr.Key) {
+				case channeltypes.AttributeKeyData:
+					packet.Data = []byte(attr.Value)
+
+				case channeltypes.AttributeKeySequence:
+					seq, err := strconv.ParseUint(string(attr.Value), 10, 64)
+					if err != nil {
+						return channeltypes.Packet{}, err
+					}
+
+					packet.Sequence = seq
+
+				case channeltypes.AttributeKeySrcPort:
+					packet.SourcePort = string(attr.Value)
+
+				case channeltypes.AttributeKeySrcChannel:
+					packet.SourceChannel = string(attr.Value)
+
+				case channeltypes.AttributeKeyDstPort:
+					packet.DestinationPort = string(attr.Value)
+
+				case channeltypes.AttributeKeyDstChannel:
+					packet.DestinationChannel = string(attr.Value)
+
+				case channeltypes.AttributeKeyTimeoutHeight:
+					height, err := clienttypes.ParseHeight(string(attr.Value))
+					if err != nil {
+						return channeltypes.Packet{}, err
+					}
+
+					packet.TimeoutHeight = height
+
+				case channeltypes.AttributeKeyTimeoutTimestamp:
+					timestamp, err := strconv.ParseUint(string(attr.Value), 10, 64)
+					if err != nil {
+						return channeltypes.Packet{}, err
+					}
+
+					packet.TimeoutTimestamp = timestamp
+
+				default:
+					continue
+				}
+			}
+
+			return packet, nil
+		}
+	}
+	return channeltypes.Packet{}, fmt.Errorf("acknowledgement event attribute not found")
 }
 
 // return the value for the attribute with the given name
