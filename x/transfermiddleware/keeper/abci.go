@@ -10,7 +10,7 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) {
 	// Iterate over remove list
 	k.IterateRemoveListInfo(ctx, func(removeList types.RemoveParachainIBCTokenInfo) (stop bool) {
 		// If pass the duration, remove parachain token info
-		if removeList.RemoveTime.After(ctx.BlockTime()) {
+		if ctx.BlockTime().After(removeList.RemoveTime) {
 			k.RemoveParachainIBCInfo(ctx, removeList.NativeDenom)
 		}
 

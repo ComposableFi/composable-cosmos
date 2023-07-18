@@ -87,6 +87,8 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	return nil
 }
 
+// TODO: testing
+// AddParachainIBCInfoToRemoveList add parachain token information token to remove list.
 func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
 	params := keeper.GetParams(ctx)
 	store := ctx.KVStore(keeper.storeKey)
@@ -110,6 +112,8 @@ func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDeno
 	return removeTime, nil
 }
 
+// TODO: testing
+// IterateRemoveListInfo iterate all parachain token in remove list.
 func (keeper Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool)) {
 	store := ctx.KVStore(keeper.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.KeyParachainIBCTokenRemoveListByNativeDenom)
