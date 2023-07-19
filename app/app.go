@@ -34,6 +34,8 @@ import (
 	bech32stakingmigration "github.com/notional-labs/centauri/v4/bech32-migration/staking"
 
 	"github.com/notional-labs/centauri/v4/app/keepers"
+	v4 "github.com/notional-labs/centauri/v4/app/upgrades/v4"
+
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
@@ -125,7 +127,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
