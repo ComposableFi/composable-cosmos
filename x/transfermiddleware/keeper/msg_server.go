@@ -55,7 +55,7 @@ func (ms msgServer) RemoveParachainIBCTokenInfo(goCtx context.Context, req *type
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
 	}
 
-	err := ms.RemoveParachainIBCInfo(ctx, req.NativeDenom)
+	removeTime, err := ms.AddParachainIBCInfoToRemoveList(ctx, req.NativeDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -64,6 +64,7 @@ func (ms msgServer) RemoveParachainIBCTokenInfo(goCtx context.Context, req *type
 		sdk.NewEvent(
 			types.EventRemoveParachainIBCTokenInfo,
 			sdk.NewAttribute(types.AttributeKeyNativeDenom, req.NativeDenom),
+			sdk.NewAttribute(types.AttributeKeyRemoveTime, removeTime.String()),
 		),
 	})
 

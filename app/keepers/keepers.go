@@ -250,6 +250,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	appKeepers.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
+		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
 		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper,
@@ -437,6 +438,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
 
 	return paramsKeeper
 }

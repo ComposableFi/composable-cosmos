@@ -18,10 +18,11 @@ const (
 )
 
 var (
-	KeyParachainIBCTokenInfoByNativeDenom = []byte{0x01}
-	KeyParachainIBCTokenInfoByAssetID     = []byte{0x02}
-	KeyIBCDenomAndNativeIndex             = []byte{0x03}
-	KeyRlyAddress                         = []byte{0x04}
+	KeyParachainIBCTokenInfoByNativeDenom       = []byte{0x01}
+	KeyParachainIBCTokenInfoByAssetID           = []byte{0x02}
+	KeyIBCDenomAndNativeIndex                   = []byte{0x03}
+	KeyRlyAddress                               = []byte{0x04}
+	KeyParachainIBCTokenRemoveListByNativeDenom = []byte{0x05}
 )
 
 func GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom string) []byte {
@@ -38,4 +39,8 @@ func GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom string) []byte {
 
 func GetKeyByRlyAddress(rlyAddress string) []byte {
 	return append(KeyRlyAddress, []byte(rlyAddress)...)
+}
+
+func GetKeyParachainIBCTokenRemoveListByNativeDenom(nativeDenom string) []byte {
+	return append(KeyParachainIBCTokenRemoveListByNativeDenom, []byte(nativeDenom)...)
 }
