@@ -94,6 +94,9 @@ import (
 	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
+	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	"github.com/notional-labs/centauri/v3/x/mint"
@@ -196,6 +199,7 @@ var (
 		router.AppModuleBasic{},
 		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
+		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -308,6 +312,7 @@ func NewCentauriApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
+	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
 	/****  Module Options ****/
@@ -348,6 +353,7 @@ func NewCentauriApp(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		routerModule,
 		transfermiddlewareModule,
+		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -369,6 +375,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
@@ -406,6 +413,7 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
@@ -440,6 +448,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,

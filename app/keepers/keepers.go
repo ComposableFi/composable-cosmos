@@ -77,6 +77,10 @@ import (
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
+	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
@@ -132,10 +136,12 @@ type AppKeepers struct {
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
 	ScopedWasmKeeper      capabilitykeeper.ScopedKeeper
+	ScopedRateLimitKeeper capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
+	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
 }
 
@@ -224,6 +230,11 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
 
 	// Create Transfer Keepers
+	// * SendPacket. Originates from the transferKeeper and goes up the stack:
+	// transferKeeper.SendPacket -> transfermiddleware.SendPacket -> ibc_rate_limit.SendPacket -> ibc_hooks.SendPacket -> channel.SendPacket
+	// * RecvPacket, message that originates from core IBC and goes down to app, the flow is the other way
+	// channel.RecvPacket -> ibc_hooks.OnRecvPacket -> ibc_rate_limit.OnRecvPacket -> forward.OnRecvPacket -> transfermiddleware_OnRecvPacket -> transfer.OnRecvPacket
+	//
 	hooksKeeper := ibchookskeeper.NewKeeper(
 		appKeepers.keys[ibchookstypes.StoreKey],
 	)
@@ -241,7 +252,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
 		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
-		&appKeepers.HooksICS4Wrapper,
+		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
 		authorityAddress,
@@ -270,8 +281,19 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.IBCKeeper.ChannelKeeper,
 	)
 
-	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
+	appKeepers.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[ratelimitmoduletypes.StoreKey],
+		appKeepers.GetSubspace(ratelimitmoduletypes.ModuleName),
+		appKeepers.BankKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		// TODO: Implement ICS4Wrapper in Records and pass records keeper here
+		&appKeepers.HooksICS4Wrapper, // ICS4Wrapper
+		appKeepers.TransferMiddlewareKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
 
+	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
@@ -293,8 +315,8 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
-
-	hooksTransferMiddleware := ibc_hooks.NewIBCMiddleware(ibcMiddlewareStack, &appKeepers.HooksICS4Wrapper)
+	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
+	hooksTransferMiddleware := ibc_hooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -392,6 +414,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasm.ModuleName)
+	appKeepers.ScopedRateLimitKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ratelimitmoduletypes.ModuleName)
 
 	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, appKeepers.keys[upgradetypes.StoreKey], appCodec, homePath, bApp, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 }
@@ -410,6 +433,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(minttypes.ModuleName).WithKeyTable(minttypes.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
+	paramsKeeper.Subspace(ratelimitmoduletypes.ModuleName)
 	paramsKeeper.Subspace(icqtypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
