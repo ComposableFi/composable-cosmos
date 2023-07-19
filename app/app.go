@@ -73,6 +73,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
+	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -202,6 +204,7 @@ var (
 		wasm08.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
+		ica.AppModuleBasic{},
 		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
@@ -223,6 +226,7 @@ var (
 		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
+		icatypes.ModuleName:                 nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -320,6 +324,7 @@ func NewCentauriApp(
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
+	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
 	/****  Module Options ****/
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
@@ -358,6 +363,7 @@ func NewCentauriApp(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		routerModule,
 		transfermiddlewareModule,
+		icaModule,
 		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
@@ -393,6 +399,7 @@ func NewCentauriApp(
 		paramstypes.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
@@ -424,6 +431,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 	)
@@ -459,6 +467,7 @@ func NewCentauriApp(
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
