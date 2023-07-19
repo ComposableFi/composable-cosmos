@@ -1,28 +1,33 @@
-module github.com/notional-labs/centauri/v3
+module github.com/notional-labs/centauri/v4
 
 go 1.19
 
 require (
 	cosmossdk.io/math v1.0.1
 	cosmossdk.io/simapp v0.0.0-20230608160436-666c345ad23d
+	github.com/CosmWasm/wasmd v0.40.1
 	github.com/cometbft/cometbft v0.37.1
-	github.com/cometbft/cometbft-db v0.7.0
+	github.com/cometbft/cometbft-db v0.8.0
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2
 	github.com/cosmos/cosmos-sdk v0.47.3
 	github.com/cosmos/gogoproto v1.4.10
-	github.com/cosmos/ibc-go/v7 v7.0.0
+	github.com/cosmos/ibc-go/v7 v7.0.1
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/spf13/cast v1.5.0
+	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897
 	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230412224111-136e94e98861
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
 	google.golang.org/grpc v1.55.0
+	gotest.tools/v3 v3.4.0
 )
+
+require github.com/linxGnu/grocksdb v1.7.16 // indirect
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
@@ -31,16 +36,17 @@ require (
 	cloud.google.com/go/iam v0.12.0 // indirect
 	cloud.google.com/go/storage v1.29.0 // indirect
 	cosmossdk.io/log v1.1.0 // indirect
-	github.com/CosmWasm/wasmvm v1.2.1 // indirect
+	github.com/CosmWasm/wasmvm v1.2.4 // indirect; indirect // safe because we're using permissioned cosmwasm
 	github.com/aws/aws-sdk-go v1.44.203 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/cockroachdb/apd/v2 v2.0.2 // indirect
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0 // indirect
 	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
+	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
@@ -54,9 +60,9 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
+	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -142,7 +148,7 @@ require (
 	github.com/petermattis/goid v0.0.0-20230317030725-371a4b8eda08 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.14.0 // indirect
+	github.com/prometheus/client_golang v1.15.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.42.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
@@ -166,7 +172,7 @@ require (
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/term v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	google.golang.org/protobuf v1.30.0 // indirect
+	google.golang.org/protobuf v1.30.0
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.6 // indirect
@@ -177,11 +183,13 @@ require (
 replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
+	// lock wasmvm so we do not break the grandpa contract
+	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.2
 	// ibc-go with wasm client
-	github.com/cosmos/ibc-go/v7 => github.com/strangelove-ventures/ibc-go/v7 v7.0.0-20230410223156-8c202c556f82
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-wasm-client
 
-	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230615054050-5523db83e69a
+	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3
 
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-
+	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01
 )

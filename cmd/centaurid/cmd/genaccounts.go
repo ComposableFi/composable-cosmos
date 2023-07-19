@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/notional-labs/centauri/v4/bech32-migration/utils"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -193,5 +194,20 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 	cmd.Flags().Int64(flagVestingEnd, 0, "schedule end time (unix epoch) for vesting accounts")
 	flags.AddQueryFlagsToCmd(cmd)
 
+	return cmd
+}
+
+func CovertPrefixAddr() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "convert [address]",
+		Short: "Convert prefix from banksy to centauri",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			newAddr := utils.ConvertAccAddr(args[0])
+			fmt.Println(newAddr)
+
+			return nil
+		},
+	}
 	return cmd
 }

@@ -5,7 +5,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/notional-labs/centauri/v3/bech32-migration/utils"
+	"github.com/notional-labs/centauri/v4/bech32-migration/utils"
 )
 
 func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
@@ -58,5 +58,52 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		"redelegation_count", redelegationCount,
 		"unbonding_delegation_count", unbondingDelegationCount,
 		"historical_info_count", historicalInfoCount,
+	)
+}
+
+func MigrateUnbonding(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
+	unbondingQueueKeyCount := uint64(0)
+	utils.IterateStoreByPrefix(ctx, storeKey, types.UnbondingQueueKey, func(bz []byte) []byte {
+		pairs := types.DVPairs{}
+		cdc.MustUnmarshal(bz, &pairs)
+		for i, pair := range pairs.Pairs {
+			pairs.Pairs[i].DelegatorAddress = utils.ConvertAccAddr(pair.DelegatorAddress)
+			pairs.Pairs[i].ValidatorAddress = utils.ConvertValAddr(pair.ValidatorAddress)
+		}
+		unbondingQueueKeyCount++
+		return cdc.MustMarshal(&pairs)
+	})
+
+	redelegationQueueKeyCount := uint64(0)
+	utils.IterateStoreByPrefix(ctx, storeKey, types.RedelegationQueueKey, func(bz []byte) []byte {
+		triplets := types.DVVTriplets{}
+		cdc.MustUnmarshal(bz, &triplets)
+
+		for i, triplet := range triplets.Triplets {
+			triplets.Triplets[i].DelegatorAddress = utils.ConvertAccAddr(triplet.DelegatorAddress)
+			triplets.Triplets[i].ValidatorDstAddress = utils.ConvertValAddr(triplet.ValidatorDstAddress)
+			triplets.Triplets[i].ValidatorSrcAddress = utils.ConvertValAddr(triplet.ValidatorSrcAddress)
+		}
+		redelegationQueueKeyCount++
+		return cdc.MustMarshal(&triplets)
+	})
+
+	validatorQueueKeyCount := uint(0)
+	utils.IterateStoreByPrefix(ctx, storeKey, types.ValidatorQueueKey, func(bz []byte) []byte {
+		addrs := types.ValAddresses{}
+		cdc.MustUnmarshal(bz, &addrs)
+
+		for i, valAddress := range addrs.Addresses {
+			addrs.Addresses[i] = utils.ConvertValAddr(valAddress)
+		}
+		validatorQueueKeyCount++
+		return cdc.MustMarshal(&addrs)
+	})
+
+	ctx.Logger().Info(
+		"Migration of address bech32 for staking unboding done",
+		"unbondingQueueKeyCount", unbondingQueueKeyCount,
+		"redelegationQueueKeyCount", redelegationQueueKeyCount,
+		"validatorQueueKeyCount", validatorQueueKeyCount,
 	)
 }

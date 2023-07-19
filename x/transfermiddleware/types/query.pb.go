@@ -119,7 +119,8 @@ func (m *QueryEscrowAddressResponse) GetEscrowAddress() string {
 	return ""
 }
 
-// QueryParaTokenInfoRequest is the request type for the Query/Params RPC method.
+// QueryParaTokenInfoRequest is the request type for the Query/Params RPC
+// method.
 type QueryParaTokenInfoRequest struct {
 	NativeDenom string `protobuf:"bytes,1,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 }
@@ -164,7 +165,8 @@ func (m *QueryParaTokenInfoRequest) GetNativeDenom() string {
 	return ""
 }
 
-// QueryParaTokenInfoResponse is the response type for the Query/ParaTokenInfo RPC method.
+// QueryParaTokenInfoResponse is the response type for the Query/ParaTokenInfo
+// RPC method.
 type QueryParaTokenInfoResponse struct {
 	IbcDenom    string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
 	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`

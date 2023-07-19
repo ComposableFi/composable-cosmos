@@ -34,7 +34,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/StirlingMarketingGroup/go-namecase v1.0.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
-	github.com/avast/retry-go/v4 v4.3.3 // indirect
+	github.com/avast/retry-go/v4 v4.3.4 // indirect
 	github.com/aws/aws-sdk-go v1.44.213 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -46,15 +46,15 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/coinbase/rosetta-sdk-go/types v1.0.0 // indirect
-	github.com/cometbft/cometbft v0.37.0 // indirect
+	github.com/cometbft/cometbft v0.37.1 // indirect
 	github.com/cometbft/cometbft-db v0.7.0 // indirect
 	github.com/confio/ics23/go v0.9.0 // indirect
 	github.com/cosmos/btcutil v1.0.5 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2 // indirect
-	github.com/cosmos/cosmos-sdk v0.47.1 // indirect
+	github.com/cosmos/cosmos-sdk v0.47.2 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gogogateway v1.2.0 // indirect
-	github.com/cosmos/gogoproto v1.4.7 // indirect
+	github.com/cosmos/gogoproto v1.4.8 // indirect
 	github.com/cosmos/iavl v0.20.0 // indirect
 	github.com/cosmos/ics23/go v0.9.1-0.20221207100636-b1abd8678aab // indirect
 	github.com/cosmos/ledger-cosmos-go v0.13.0 // indirect
@@ -71,7 +71,7 @@ require (
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.1 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
-	github.com/docker/distribution v2.8.1+incompatible // indirect
+	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker v20.10.19+incompatible // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -108,7 +108,7 @@ require (
 	github.com/gtank/merlin v0.1.1 // indirect
 	github.com/gtank/ristretto255 v0.1.2 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-getter v1.7.0 // indirect
+	github.com/hashicorp/go-getter v1.7.1 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
@@ -168,7 +168,7 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/afero v1.9.4 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
-	github.com/spf13/cobra v1.6.1 // indirect
+	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.15.0 // indirect
@@ -186,16 +186,16 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
-	golang.org/x/crypto v0.7.0 // indirect
+	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
-	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.5.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/term v0.6.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/sys v0.8.0 // indirect
+	golang.org/x/term v0.8.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/tools v0.8.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.111.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -210,11 +210,11 @@ require (
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.40.0 // indirect
 	modernc.org/ccgo/v3 v3.16.13 // indirect
-	modernc.org/libc v1.22.3 // indirect
+	modernc.org/libc v1.22.5 // indirect
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
 	modernc.org/opt v0.1.3 // indirect
-	modernc.org/sqlite v1.21.1 // indirect
+	modernc.org/sqlite v1.22.1 // indirect
 	modernc.org/strutil v1.1.3 // indirect
 	modernc.org/token v1.1.0 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
@@ -229,9 +229,7 @@ replace (
 	//  Use notional lab version of async-icq
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
 
-	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.1.2
-	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-
+	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230614031803-d1462d548734
 	github.com/vedhavyas/go-subkey => github.com/strangelove-ventures/go-subkey v1.0.7
 )
 

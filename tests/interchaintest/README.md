@@ -9,8 +9,8 @@ It allows users to quickly spin up custom testnets and dev environments to test 
 - Deployable as CI tests in production workflows
 
 ## Test Case
-- [Banksy Chain Start](./chain_start_test.go)
-- [IBC Transfer between Osmosis <> Banksy <> Picasso](./ibc_transfer_test.go)
+- [Centauri Chain Start](./chain_start_test.go)
+- [IBC Transfer between Osmosis <> Centauri <> Picasso](./ibc_transfer_test.go)
 - [Push wasm-client](./push_wasm_client_code_test.go)
 - [Picasso Chain Start](./polkadot_chain_test.go)
 <br/>

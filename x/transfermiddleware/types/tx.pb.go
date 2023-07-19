@@ -31,7 +31,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgAddParachainInfo represents a message to add new parachain info.
 type MsgAddParachainIBCTokenInfo struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	IbcDenom    string `protobuf:"bytes,3,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
@@ -143,9 +144,11 @@ func (m *MsgAddParachainIBCTokenInfoResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgAddParachainIBCTokenInfoResponse proto.InternalMessageInfo
 
-// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain info.
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain
+// info.
 type MsgRemoveParachainIBCTokenInfo struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	NativeDenom string `protobuf:"bytes,2,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"ibc_denom"`
 }
@@ -235,11 +238,104 @@ func (m *MsgRemoveParachainIBCTokenInfoResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRemoveParachainIBCTokenInfoResponse proto.InternalMessageInfo
 
+// MsgAddRlyAddress represents a message to add new rly address to allow list
+type MsgAddRlyAddress struct {
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
+	Authority  string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	RlyAddress string `protobuf:"bytes,2,opt,name=rly_address,json=rlyAddress,proto3" json:"rly_address,omitempty" yaml:"rly_address"`
+}
+
+func (m *MsgAddRlyAddress) Reset()         { *m = MsgAddRlyAddress{} }
+func (m *MsgAddRlyAddress) String() string { return proto.CompactTextString(m) }
+func (*MsgAddRlyAddress) ProtoMessage()    {}
+func (*MsgAddRlyAddress) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2768943d6d1340b4, []int{4}
+}
+func (m *MsgAddRlyAddress) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddRlyAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddRlyAddress.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddRlyAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddRlyAddress.Merge(m, src)
+}
+func (m *MsgAddRlyAddress) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddRlyAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddRlyAddress.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddRlyAddress proto.InternalMessageInfo
+
+func (m *MsgAddRlyAddress) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgAddRlyAddress) GetRlyAddress() string {
+	if m != nil {
+		return m.RlyAddress
+	}
+	return ""
+}
+
+type MsgAddRlyAddressResponse struct {
+}
+
+func (m *MsgAddRlyAddressResponse) Reset()         { *m = MsgAddRlyAddressResponse{} }
+func (m *MsgAddRlyAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddRlyAddressResponse) ProtoMessage()    {}
+func (*MsgAddRlyAddressResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2768943d6d1340b4, []int{5}
+}
+func (m *MsgAddRlyAddressResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddRlyAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddRlyAddressResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddRlyAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddRlyAddressResponse.Merge(m, src)
+}
+func (m *MsgAddRlyAddressResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddRlyAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddRlyAddressResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddRlyAddressResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgAddParachainIBCTokenInfo)(nil), "centauri.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfo")
 	proto.RegisterType((*MsgAddParachainIBCTokenInfoResponse)(nil), "centauri.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfoResponse")
 	proto.RegisterType((*MsgRemoveParachainIBCTokenInfo)(nil), "centauri.transfermiddleware.v1beta1.MsgRemoveParachainIBCTokenInfo")
 	proto.RegisterType((*MsgRemoveParachainIBCTokenInfoResponse)(nil), "centauri.transfermiddleware.v1beta1.MsgRemoveParachainIBCTokenInfoResponse")
+	proto.RegisterType((*MsgAddRlyAddress)(nil), "centauri.transfermiddleware.v1beta1.MsgAddRlyAddress")
+	proto.RegisterType((*MsgAddRlyAddressResponse)(nil), "centauri.transfermiddleware.v1beta1.MsgAddRlyAddressResponse")
 }
 
 func init() {
@@ -247,36 +343,40 @@ func init() {
 }
 
 var fileDescriptor_2768943d6d1340b4 = []byte{
-	// 458 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xd2, 0x49, 0x4e, 0xcd, 0x2b,
-	0x49, 0x2c, 0x2d, 0xca, 0xd4, 0x2f, 0x29, 0x4a, 0xcc, 0x2b, 0x4e, 0x4b, 0x2d, 0xca, 0xcd, 0x4c,
-	0x49, 0xc9, 0x49, 0x2d, 0x4f, 0x2c, 0x4a, 0xd5, 0x2f, 0x33, 0x4c, 0x4a, 0x2d, 0x49, 0x34, 0xd4,
-	0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x52, 0x86, 0xa9, 0xd6, 0xc3, 0x54, 0xad,
-	0x07, 0x55, 0x2d, 0x25, 0x92, 0x9e, 0x9f, 0x9e, 0x0f, 0x56, 0xaf, 0x0f, 0x62, 0x41, 0xb4, 0x4a,
-	0x89, 0x27, 0xe7, 0x17, 0xe7, 0xe6, 0x17, 0xeb, 0xe7, 0x16, 0xa7, 0xeb, 0x97, 0x19, 0x82, 0x28,
-	0x88, 0x84, 0xd2, 0x36, 0x26, 0x2e, 0x69, 0xdf, 0xe2, 0x74, 0xc7, 0x94, 0x94, 0x80, 0xc4, 0xa2,
-	0xc4, 0xe4, 0x8c, 0xc4, 0xcc, 0x3c, 0x4f, 0x27, 0xe7, 0x90, 0xfc, 0xec, 0xd4, 0x3c, 0xcf, 0xbc,
-	0xb4, 0x7c, 0x21, 0x23, 0x2e, 0xce, 0xc4, 0xd2, 0x92, 0x8c, 0xfc, 0xa2, 0xcc, 0x92, 0x4a, 0x09,
-	0x46, 0x05, 0x46, 0x0d, 0x4e, 0x27, 0x91, 0x4f, 0xf7, 0xe4, 0x05, 0x2a, 0x13, 0x73, 0x73, 0xac,
-	0x94, 0xe0, 0x52, 0x4a, 0x41, 0x08, 0x65, 0x42, 0x26, 0x5c, 0x5c, 0xc9, 0x19, 0x89, 0x79, 0x79,
-	0xa9, 0x39, 0xf1, 0x99, 0x29, 0x12, 0x4c, 0x60, 0x4d, 0xa2, 0x9f, 0xee, 0xc9, 0x0b, 0x42, 0x34,
-	0x21, 0xe4, 0x94, 0x82, 0x38, 0xa1, 0x1c, 0xcf, 0x14, 0x21, 0x43, 0x2e, 0xce, 0xcc, 0xa4, 0xe4,
-	0xf8, 0x94, 0xd4, 0xbc, 0xfc, 0x5c, 0x09, 0x66, 0x74, 0x9b, 0xe0, 0x52, 0x4a, 0x41, 0x1c, 0x99,
-	0x49, 0xc9, 0x2e, 0x20, 0xa6, 0x90, 0x15, 0x17, 0x4f, 0x5e, 0x62, 0x49, 0x66, 0x59, 0x2a, 0x54,
-	0x17, 0x0b, 0x58, 0x97, 0xf8, 0xa7, 0x7b, 0xf2, 0xc2, 0x10, 0x5d, 0xc8, 0xb2, 0x4a, 0x41, 0xdc,
-	0x10, 0x2e, 0x44, 0xaf, 0x1e, 0x17, 0x47, 0x62, 0x71, 0x71, 0x6a, 0x09, 0xc8, 0x89, 0xac, 0x60,
-	0x7d, 0xc2, 0x9f, 0xee, 0xc9, 0xf3, 0x43, 0xfd, 0x05, 0x95, 0x51, 0x0a, 0x62, 0x07, 0x33, 0x3d,
-	0x53, 0xac, 0xf8, 0x9a, 0x9e, 0x6f, 0xd0, 0x42, 0x78, 0x52, 0x49, 0x95, 0x4b, 0x19, 0x4f, 0xb8,
-	0x05, 0xa5, 0x16, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x2a, 0xcd, 0x65, 0xe4, 0x92, 0xf3, 0x2d, 0x4e,
-	0x0f, 0x4a, 0xcd, 0xcd, 0x2f, 0x4b, 0xa5, 0x5e, 0x10, 0x9b, 0xa3, 0xf9, 0x9c, 0x09, 0x4f, 0x78,
-	0x21, 0x7b, 0x1b, 0xc3, 0x1b, 0x1a, 0x5c, 0x6a, 0xf8, 0x9d, 0x07, 0xf3, 0x89, 0xd1, 0x03, 0x26,
-	0x2e, 0x66, 0xdf, 0xe2, 0x74, 0xa1, 0x65, 0x8c, 0x5c, 0x12, 0x38, 0x93, 0x8b, 0x83, 0x1e, 0x11,
-	0x69, 0x54, 0x0f, 0x4f, 0xc0, 0x49, 0x79, 0x50, 0x6a, 0x02, 0xcc, 0xc1, 0x42, 0xeb, 0x19, 0xb9,
-	0xa4, 0xf1, 0x85, 0xbb, 0x33, 0xb1, 0x36, 0xe1, 0x31, 0x44, 0xca, 0x9b, 0x0a, 0x86, 0xc0, 0x5c,
-	0xec, 0x64, 0x72, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e,
-	0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x52, 0x15, 0xd8,
-	0x4a, 0x88, 0x92, 0xca, 0x82, 0xd4, 0xe2, 0x24, 0x36, 0x70, 0x4e, 0x36, 0x06, 0x04, 0x00, 0x00,
-	0xff, 0xff, 0xa8, 0xb3, 0x07, 0x38, 0x4d, 0x04, 0x00, 0x00,
+	// 528 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0x4f, 0x6f, 0xd3, 0x4e,
+	0x10, 0xcd, 0x26, 0xbf, 0x1f, 0x34, 0x5b, 0xfe, 0x14, 0xb7, 0xd0, 0xc8, 0x95, 0x1c, 0xb4, 0x15,
+	0xa8, 0x42, 0xc8, 0x56, 0x4a, 0x11, 0x52, 0x24, 0x24, 0x9a, 0x72, 0x20, 0x42, 0x91, 0x90, 0xc5,
+	0x89, 0x4b, 0xb4, 0xf1, 0x6e, 0x1d, 0x0b, 0x7b, 0x37, 0xda, 0xdd, 0x86, 0xfa, 0x8a, 0xc4, 0x19,
+	0xbe, 0x00, 0x57, 0xae, 0x70, 0xe2, 0x33, 0x70, 0xec, 0x91, 0x93, 0x85, 0x92, 0x03, 0x9c, 0xfd,
+	0x09, 0x50, 0x6c, 0xc7, 0x09, 0x09, 0x58, 0xa5, 0xf4, 0xe4, 0x59, 0xbd, 0x79, 0x33, 0xef, 0x8d,
+	0x67, 0x17, 0xde, 0x75, 0x28, 0x53, 0xf8, 0x48, 0x78, 0x96, 0x12, 0x98, 0xc9, 0x43, 0x2a, 0x02,
+	0x8f, 0x10, 0x9f, 0xbe, 0xc2, 0x82, 0x5a, 0xc3, 0x46, 0x8f, 0x2a, 0xdc, 0xb0, 0xd4, 0xb1, 0x39,
+	0x10, 0x5c, 0x71, 0x6d, 0x7b, 0x9a, 0x6d, 0x2e, 0x67, 0x9b, 0x59, 0xb6, 0xbe, 0xe1, 0x72, 0x97,
+	0x27, 0xf9, 0xd6, 0x24, 0x4a, 0xa9, 0xfa, 0xa6, 0xc3, 0x65, 0xc0, 0xa5, 0x15, 0x48, 0xd7, 0x1a,
+	0x36, 0x26, 0x9f, 0x14, 0x40, 0x9f, 0xcb, 0x70, 0xab, 0x23, 0xdd, 0x7d, 0x42, 0x9e, 0x61, 0x81,
+	0x9d, 0x3e, 0xf6, 0x58, 0xbb, 0x75, 0xf0, 0x9c, 0xbf, 0xa4, 0xac, 0xcd, 0x0e, 0xb9, 0xb6, 0x0b,
+	0xab, 0xf8, 0x48, 0xf5, 0xb9, 0xf0, 0x54, 0x58, 0x03, 0x37, 0xc1, 0x4e, 0xb5, 0xb5, 0x11, 0x47,
+	0xf5, 0xb5, 0x10, 0x07, 0x7e, 0x13, 0xe5, 0x10, 0xb2, 0x67, 0x69, 0xda, 0x1e, 0x84, 0x4e, 0x1f,
+	0x33, 0x46, 0xfd, 0xae, 0x47, 0x6a, 0xe5, 0x84, 0x74, 0x3d, 0x8e, 0xea, 0xd7, 0x52, 0xd2, 0x0c,
+	0x43, 0x76, 0x35, 0x3b, 0xb4, 0x89, 0xd6, 0x80, 0x55, 0xaf, 0xe7, 0x74, 0x09, 0x65, 0x3c, 0xa8,
+	0x55, 0x16, 0x3b, 0xe5, 0x10, 0xb2, 0x57, 0xbc, 0x9e, 0xf3, 0x78, 0x12, 0x6a, 0x4d, 0x78, 0x89,
+	0x61, 0xe5, 0x0d, 0x69, 0xc6, 0xfa, 0x2f, 0x61, 0x6d, 0xc6, 0x51, 0x7d, 0x3d, 0x65, 0xcd, 0xa3,
+	0xc8, 0x5e, 0x4d, 0x8f, 0x29, 0xd7, 0x84, 0x2b, 0x58, 0x4a, 0xaa, 0x26, 0x12, 0xff, 0x4f, 0x78,
+	0xeb, 0x71, 0x54, 0xbf, 0x9a, 0xf9, 0xca, 0x10, 0x64, 0x5f, 0x4c, 0xc2, 0x36, 0x69, 0x5e, 0x79,
+	0xfd, 0xfd, 0xd3, 0x9d, 0x99, 0x49, 0x74, 0x0b, 0x6e, 0x17, 0xcc, 0xcd, 0xa6, 0x72, 0xc0, 0x99,
+	0xa4, 0xe8, 0x3d, 0x80, 0x46, 0x47, 0xba, 0x36, 0x0d, 0xf8, 0x90, 0x9e, 0xdf, 0x88, 0x1f, 0x2c,
+	0x38, 0x2f, 0x17, 0xcc, 0x6b, 0xde, 0xf6, 0x92, 0x8d, 0x1d, 0x78, 0xbb, 0x58, 0x5e, 0xee, 0xe4,
+	0x2d, 0x80, 0x6b, 0xa9, 0x63, 0xdb, 0x0f, 0xf7, 0x09, 0x11, 0x54, 0xca, 0x33, 0x6a, 0x5f, 0x15,
+	0x7e, 0xd8, 0xc5, 0x69, 0x89, 0x4c, 0xfa, 0x8d, 0x38, 0xaa, 0x6b, 0x29, 0x6b, 0x0e, 0x44, 0x36,
+	0x14, 0x79, 0xb3, 0x25, 0xed, 0x3a, 0xac, 0x2d, 0x0a, 0x9a, 0xaa, 0xdd, 0xfd, 0x51, 0x81, 0x95,
+	0x8e, 0x74, 0xb5, 0x0f, 0x00, 0xd6, 0xfe, 0xb8, 0xdc, 0x8f, 0xcc, 0x53, 0xdc, 0x28, 0xb3, 0xe0,
+	0x37, 0xeb, 0x4f, 0xfe, 0xb5, 0xc2, 0x54, 0xb0, 0xf6, 0x11, 0xc0, 0xad, 0xa2, 0x2d, 0x39, 0x38,
+	0x6d, 0xa7, 0x82, 0x22, 0xfa, 0xd3, 0x73, 0x28, 0x92, 0x2b, 0x7e, 0x03, 0xe0, 0xe5, 0x5f, 0xb7,
+	0xe1, 0xfe, 0x5f, 0x4c, 0x63, 0x46, 0xd3, 0x1f, 0x9e, 0x89, 0x36, 0xd5, 0xd1, 0xda, 0xfb, 0x32,
+	0x32, 0xc0, 0xc9, 0xc8, 0x00, 0xdf, 0x46, 0x06, 0x78, 0x37, 0x36, 0x4a, 0x27, 0x63, 0xa3, 0xf4,
+	0x75, 0x6c, 0x94, 0x5e, 0xe8, 0xc7, 0xbf, 0x7b, 0x57, 0x55, 0x38, 0xa0, 0xb2, 0x77, 0x21, 0x79,
+	0xff, 0xee, 0xfd, 0x0c, 0x00, 0x00, 0xff, 0xff, 0x8d, 0x79, 0x27, 0x5d, 0x83, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -293,6 +393,7 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	AddParachainIBCTokenInfo(ctx context.Context, in *MsgAddParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgAddParachainIBCTokenInfoResponse, error)
 	RemoveParachainIBCTokenInfo(ctx context.Context, in *MsgRemoveParachainIBCTokenInfo, opts ...grpc.CallOption) (*MsgRemoveParachainIBCTokenInfoResponse, error)
+	AddRlyAddress(ctx context.Context, in *MsgAddRlyAddress, opts ...grpc.CallOption) (*MsgAddRlyAddressResponse, error)
 }
 
 type msgClient struct {
@@ -321,10 +422,20 @@ func (c *msgClient) RemoveParachainIBCTokenInfo(ctx context.Context, in *MsgRemo
 	return out, nil
 }
 
+func (c *msgClient) AddRlyAddress(ctx context.Context, in *MsgAddRlyAddress, opts ...grpc.CallOption) (*MsgAddRlyAddressResponse, error) {
+	out := new(MsgAddRlyAddressResponse)
+	err := c.cc.Invoke(ctx, "/centauri.transfermiddleware.v1beta1.Msg/AddRlyAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	AddParachainIBCTokenInfo(context.Context, *MsgAddParachainIBCTokenInfo) (*MsgAddParachainIBCTokenInfoResponse, error)
 	RemoveParachainIBCTokenInfo(context.Context, *MsgRemoveParachainIBCTokenInfo) (*MsgRemoveParachainIBCTokenInfoResponse, error)
+	AddRlyAddress(context.Context, *MsgAddRlyAddress) (*MsgAddRlyAddressResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -336,6 +447,9 @@ func (*UnimplementedMsgServer) AddParachainIBCTokenInfo(ctx context.Context, req
 }
 func (*UnimplementedMsgServer) RemoveParachainIBCTokenInfo(ctx context.Context, req *MsgRemoveParachainIBCTokenInfo) (*MsgRemoveParachainIBCTokenInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveParachainIBCTokenInfo not implemented")
+}
+func (*UnimplementedMsgServer) AddRlyAddress(ctx context.Context, req *MsgAddRlyAddress) (*MsgAddRlyAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddRlyAddress not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -378,6 +492,24 @@ func _Msg_RemoveParachainIBCTokenInfo_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_AddRlyAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddRlyAddress)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AddRlyAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/centauri.transfermiddleware.v1beta1.Msg/AddRlyAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AddRlyAddress(ctx, req.(*MsgAddRlyAddress))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "centauri.transfermiddleware.v1beta1.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -389,6 +521,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveParachainIBCTokenInfo",
 			Handler:    _Msg_RemoveParachainIBCTokenInfo_Handler,
+		},
+		{
+			MethodName: "AddRlyAddress",
+			Handler:    _Msg_AddRlyAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -536,6 +672,66 @@ func (m *MsgRemoveParachainIBCTokenInfoResponse) MarshalToSizedBuffer(dAtA []byt
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgAddRlyAddress) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddRlyAddress) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddRlyAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.RlyAddress) > 0 {
+		i -= len(m.RlyAddress)
+		copy(dAtA[i:], m.RlyAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RlyAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddRlyAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddRlyAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddRlyAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -603,6 +799,32 @@ func (m *MsgRemoveParachainIBCTokenInfo) Size() (n int) {
 }
 
 func (m *MsgRemoveParachainIBCTokenInfoResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAddRlyAddress) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RlyAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgAddRlyAddressResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1018,6 +1240,170 @@ func (m *MsgRemoveParachainIBCTokenInfoResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgRemoveParachainIBCTokenInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddRlyAddress) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddRlyAddress: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddRlyAddress: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RlyAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RlyAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddRlyAddressResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddRlyAddressResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddRlyAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
