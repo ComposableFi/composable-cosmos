@@ -11,14 +11,12 @@ import (
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
-	fmt.Printf("-------------------------test1\n")
 	// decode the receiver address
 	receiver, err := sdk.AccAddressFromBech32(data.Receiver)
 	if err != nil {
 		return errorsmod.Wrapf(err, "failed to decode receiver address: %s", data.Receiver)
 	}
 
-	fmt.Printf("-------------------------test2\n")
 	// parse the transfer amount
 	transferAmount, ok := sdk.NewIntFromString(data.Amount)
 	if !ok {
@@ -30,7 +28,6 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		return nil
 	}
 
-	fmt.Printf("-------------------------test3\n")
 	// since SendPacket did not prefix the denomination, we must prefix denomination here
 	sourcePrefix := transfertypes.GetDenomPrefix(packet.GetDestPort(), packet.GetDestChannel())
 	// NOTE: sourcePrefix contains the trailing "/"
@@ -49,17 +46,14 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 
 	paraTokenInfo := k.GetParachainIBCTokenInfoByAssetID(ctx, data.Denom)
 
-	fmt.Printf("-------------------------test4\n")
 	fmt.Printf("k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()): %v\n", k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()))
 	fmt.Printf("paraTokenInfo.NativeDenom: %v\n", paraTokenInfo.NativeDenom)
 	if k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, denomTrace.IBCDenom()) != paraTokenInfo.NativeDenom {
 		return nil
 	}
 
-	fmt.Printf("-------------------------test5\n")
 	// lock ibc token if dstChannel is paraChannel
 	if packet.GetDestChannel() == paraTokenInfo.ChannelId {
-		fmt.Printf("-------------------------test2\n")
 		// escrow ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
 
@@ -78,7 +72,6 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 		); err != nil {
 			return errorsmod.Wrap(err, "failed to mint IBC tokens")
 		}
-		fmt.Printf("-------------------------test2: %v\n", nativeCoin)
 		// send to receiver
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
 			ctx, types.ModuleName, receiver, sdk.NewCoins(nativeCoin),

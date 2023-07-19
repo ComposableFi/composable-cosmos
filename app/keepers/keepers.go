@@ -255,7 +255,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
-		authorityAddress,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(

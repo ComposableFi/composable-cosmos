@@ -7,4 +7,9 @@ hermes --config scripts/relayer_hermes/config_compose_osmosis.toml create channe
 centaurid tx gov submit-proposal "scripts/proposalAddToken.json" --from myaccount --keyring-backend test --chain-id centaurid-t1 --yes
 centaurid tx gov vote 1 yes --from test --keyring-backend test --chain-id centaurid-t1 --yes
 
-gaiad tx ibc-transfer transfer transfer channel-0 centauri1efd63aw40lxf3n4mhf7dzhjkr453axur7jv2pe 10000000stake --from gnad --keyring-backend test --chain-id gaiad-t1 --yes --fees 5000stake --memo "$MEMO"
+centaurid tx gov submit-proposal "scripts/proposalRateLimit.json" --from myaccount --keyring-backend test --chain-id centaurid-t1 --yes
+centaurid tx gov vote 2 yes --from test --keyring-backend test --chain-id centaurid-t1 --yes
+
+gaiad tx ibc-transfer transfer transfer channel-0 centauri1efd63aw40lxf3n4mhf7dzhjkr453axur7jv2pe 100000000stake --from gnad --keyring-backend test --chain-id gaiad-t1 --yes --fees 5000stake --memo "$MEMO"
+
+gaiad tx ibc-transfer transfer transfer channel-0 centauri1efd63aw40lxf3n4mhf7dzhjkr453axur7jv2pe 5000000stake --from gnad --keyring-backend test --chain-id gaiad-t1 --yes --fees 5000stake
