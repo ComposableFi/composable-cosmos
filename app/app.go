@@ -31,9 +31,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	bech32stakingmigration "github.com/notional-labs/centauri/v3/bech32-migration/staking"
+	bech32stakingmigration "github.com/notional-labs/centauri/v4/bech32-migration/staking"
 
-	"github.com/notional-labs/centauri/v3/app/keepers"
+	"github.com/notional-labs/centauri/v4/app/keepers"
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
@@ -82,32 +82,32 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
+	custombankmodule "github.com/notional-labs/centauri/v4/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	"github.com/notional-labs/centauri/v3/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v3/x/mint"
-	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
+	"github.com/notional-labs/centauri/v4/x/mint"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v3/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v4/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	upgrades "github.com/notional-labs/centauri/v3/app/upgrades"
+	upgrades "github.com/notional-labs/centauri/v4/app/upgrades"
 )
 
 const (
