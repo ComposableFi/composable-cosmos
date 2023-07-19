@@ -73,15 +73,15 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddlewaretypes "ggithub.com/notional-labs/centauri/v4x/transfermiddleware/types"
 	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	minttypes "ggithub.com/notional-labs/centauri/v4x/mint/types"
 	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
