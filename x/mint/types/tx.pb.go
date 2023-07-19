@@ -37,7 +37,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 //
 // Since: cosmos-sdk 0.47
 type MsgUpdateParams struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
 	// params defines the x/mint parameters to update.
 	//
@@ -222,7 +223,8 @@ var xxx_messageInfo_MsgFundModuleAccountResponse proto.InternalMessageInfo
 
 // MsgAddAccountToFundModuleSet add account in to allowed fund module set
 type MsgAddAccountToFundModuleSet struct {
-	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
 	Authority      string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	AllowedAddress string `protobuf:"bytes,2,opt,name=allowed_address,json=allowedAddress,proto3" json:"allowed_address,omitempty" yaml:"allowed_address"`
 }
