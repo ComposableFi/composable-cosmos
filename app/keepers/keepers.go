@@ -63,7 +63,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankkeeper "github.com/notional-labs/centauri/v3/custom/bank/keeper"
+	custombankkeeper "github.com/notional-labs/centauri/v4/custom/bank/keeper"
 
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
@@ -73,19 +73,19 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	mintkeeper "github.com/notional-labs/centauri/v3/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
+	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -93,9 +93,9 @@ import (
 	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v3/x/ibc-hooks"
-	ibchookskeeper "github.com/notional-labs/centauri/v3/x/ibc-hooks/keeper"
-	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v4/x/ibc-hooks"
+	ibchookskeeper "github.com/notional-labs/centauri/v4/x/ibc-hooks/keeper"
+	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 )
 
 const (

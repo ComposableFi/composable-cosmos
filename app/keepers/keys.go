@@ -26,14 +26,14 @@ import (
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"

@@ -14,9 +14,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/centauri/v3/x/ratelimit/client/cli"
-	"github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
-	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/client/cli"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 	"github.com/spf13/cobra"
 )
 

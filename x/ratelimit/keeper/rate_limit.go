@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 )
 
 // Get the rate limit byte key built from the denom and channelId

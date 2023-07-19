@@ -10,7 +10,7 @@ import (
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	wasmkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
-	customibctesting "github.com/notional-labs/centauri/v3/app/ibctesting"
+	customibctesting "github.com/notional-labs/centauri/v4/app/ibctesting"
 	"github.com/stretchr/testify/suite"
 )
 

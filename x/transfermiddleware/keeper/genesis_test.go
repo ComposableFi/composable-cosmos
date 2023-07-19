@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	helpers "github.com/notional-labs/centauri/v3/app/helpers"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	helpers "github.com/notional-labs/centauri/v4/app/helpers"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/stretchr/testify/require"
 )
 

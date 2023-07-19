@@ -10,8 +10,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	"github.com/notional-labs/centauri/v3/x/ibc-hooks/keeper"
-	"github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+	"github.com/notional-labs/centauri/v4/x/ibc-hooks/keeper"
+	"github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"

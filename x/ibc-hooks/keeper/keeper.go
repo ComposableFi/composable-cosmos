@@ -7,7 +7,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
-	"github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+	"github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 )
 
 type (

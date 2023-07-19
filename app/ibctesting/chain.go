@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
@@ -49,10 +51,9 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	centauri "github.com/notional-labs/centauri/v3/app"
-	"github.com/notional-labs/centauri/v3/app/ibctesting/simapp"
-	ratelimit "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
-	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v4/app"
+	"github.com/notional-labs/centauri/v4/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -617,7 +618,7 @@ func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 
-func (chain *TestChain) RateLimit() ratelimit.Keeper {
+func (chain *TestChain) RateLimit() ratelimitmodulekeeper.Keeper {
 	return chain.GetTestSupport().RateLimit()
 }
 
