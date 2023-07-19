@@ -6,6 +6,7 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/notional-labs/centauri/v4/app/keepers"
 	"github.com/notional-labs/centauri/v4/app/upgrades"
+	tfmdtypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
@@ -15,6 +16,9 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
+		transmiddlewareParams := tfmdtypes.DefaultParams()
+		keepers.TransferMiddlewareKeeper.SetParams(ctx, transmiddlewareParams)
+
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
