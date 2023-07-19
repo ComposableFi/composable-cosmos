@@ -12,8 +12,8 @@ import (
 	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/cosmos/cosmos-sdk/x/group"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
+	"github.com/cosmos/cosmos-sdk/x/group"
 
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
@@ -26,12 +26,13 @@ import (
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
+	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
@@ -45,7 +46,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey,
 	)
 
 	// Define transient store keys
