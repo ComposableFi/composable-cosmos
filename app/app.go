@@ -95,8 +95,8 @@ import (
 	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 

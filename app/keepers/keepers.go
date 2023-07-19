@@ -77,9 +77,9 @@ import (
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v3/x/ratelimit"
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"

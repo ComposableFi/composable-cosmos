@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
@@ -616,7 +618,7 @@ func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 
-func (chain *TestChain) RateLimit() ratelimit.Keeper {
+func (chain *TestChain) RateLimit() ratelimitmodulekeeper.Keeper {
 	return chain.GetTestSupport().RateLimit()
 }
 

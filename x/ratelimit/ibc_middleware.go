@@ -3,7 +3,7 @@ package ratelimit
 import (
 	"fmt"
 
-	"github.com/notional-labs/centauri/v3/x/ratelimit/keeper"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 

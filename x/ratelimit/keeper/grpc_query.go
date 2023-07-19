@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 )
 
 var _ types.QueryServer = Keeper{}

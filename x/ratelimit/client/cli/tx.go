@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/notional-labs/centauri/v3/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 	"github.com/spf13/cobra"
 )
 
