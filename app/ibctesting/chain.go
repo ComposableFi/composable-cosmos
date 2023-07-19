@@ -122,7 +122,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -614,6 +614,10 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 
 func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
+}
+
+func (chain *TestChain) RateLimit() ratelimit.Keeper {
+	return chain.GetTestSupport().RateLimit()
 }
 
 func (chain *TestChain) Balance(acc sdk.AccAddress, denom string) sdk.Coin {

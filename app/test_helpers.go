@@ -96,6 +96,7 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, 
 // account. A Nop logger is set in FeeAbs.
 func SetupWithGenesisValSet(
 	t *testing.T,
+	ctxTime time.Time,
 	valSet *tmtypes.ValidatorSet,
 	genAccs []authtypes.GenesisAccount,
 	balances ...banktypes.Balance,
@@ -159,6 +160,7 @@ func SetupWithGenesisValSet(
 	// init chain will set the validator set and initialize the genesis accounts
 	app.InitChain(
 		abci.RequestInitChain{
+			Time:            ctxTime,
 			Validators:      []abci.ValidatorUpdate{},
 			ConsensusParams: DefaultConsensusParams,
 			AppStateBytes:   stateBytes,
