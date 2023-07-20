@@ -66,7 +66,7 @@ func ParsePacketFromEvents(events sdk.Events) (channeltypes.Packet, error) {
 			packet := channeltypes.Packet{}
 			for _, attr := range ev.Attributes {
 				switch attr.Key {
-				case channeltypes.AttributeKeyDataHex:
+				case channeltypes.AttributeKeyData: //nolint: staticcheck
 					packet.Data = []byte(attr.Value)
 
 				case channeltypes.AttributeKeySequence:
