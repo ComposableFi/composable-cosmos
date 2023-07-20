@@ -1,18 +1,12 @@
 package keeper_test
 
 import (
-	"testing"
-
-	helpers "github.com/notional-labs/centauri/v3/app/helpers"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	"github.com/stretchr/testify/require"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 )
 
-func TestParaTokenInfo(t *testing.T) {
-	app := helpers.SetupCentauriAppWithValSet(t)
-	ctx := helpers.NewContextForApp(*app)
-
+func (suite *TransferMiddlewareKeeperTestSuite) TestParaTokenInfo() {
+	suite.SetupTest()
 	tokenInfos := make([]types.ParachainIBCTokenInfo, 1)
 	tokenInfos[0] = types.ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test",
@@ -20,22 +14,21 @@ func TestParaTokenInfo(t *testing.T) {
 		NativeDenom: "pica",
 		AssetId:     "1",
 	}
-	app.TransferMiddlewareKeeper.InitGenesis(ctx, types.GenesisState{
+	suite.app.TransferMiddlewareKeeper.InitGenesis(suite.ctx, types.GenesisState{
 		TokenInfos: tokenInfos,
 	})
 
-	info, err := app.TransferMiddlewareKeeper.ParaTokenInfo(ctx, &types.QueryParaTokenInfoRequest{NativeDenom: "pica"})
+	info, err := suite.app.TransferMiddlewareKeeper.ParaTokenInfo(suite.ctx, &types.QueryParaTokenInfoRequest{NativeDenom: "pica"})
 
-	require.NoError(t, err)
-	require.Equal(t, "1", info.AssetId)
-	require.Equal(t, "pica", info.NativeDenom)
-	require.Equal(t, "ibc-test", info.IbcDenom)
-	require.Equal(t, "channel-0", info.ChannelId)
+	suite.Require().NoError(err)
+	suite.Require().Equal("1", info.AssetId)
+	suite.Require().Equal("pica", info.NativeDenom)
+	suite.Require().Equal("ibc-test", info.IbcDenom)
+	suite.Require().Equal("channel-0", info.ChannelId)
 }
 
-func TestEscrowAddress(t *testing.T) {
-	app := helpers.SetupCentauriAppWithValSet(t)
-	ctx := helpers.NewContextForApp(*app)
+func (suite *TransferMiddlewareKeeperTestSuite) TestEscrowAddress() {
+	suite.SetupTest()
 
 	tokenInfos := make([]types.ParachainIBCTokenInfo, 1)
 	tokenInfos[0] = types.ParachainIBCTokenInfo{
@@ -44,11 +37,11 @@ func TestEscrowAddress(t *testing.T) {
 		NativeDenom: "pica",
 		AssetId:     "1",
 	}
-	app.TransferMiddlewareKeeper.InitGenesis(ctx, types.GenesisState{
+	suite.app.TransferMiddlewareKeeper.InitGenesis(suite.ctx, types.GenesisState{
 		TokenInfos: tokenInfos,
 	})
 
-	escrowResponse, err := app.TransferMiddlewareKeeper.EscrowAddress(ctx, &types.QueryEscrowAddressRequest{ChannelId: "channel-0"})
-	require.NoError(t, err)
-	require.Equal(t, escrowResponse.EscrowAddress, transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0").String())
+	escrowResponse, err := suite.app.TransferMiddlewareKeeper.EscrowAddress(suite.ctx, &types.QueryEscrowAddressRequest{ChannelId: "channel-0"})
+	suite.Require().NoError(err)
+	suite.Require().Equal(escrowResponse.EscrowAddress, transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0").String())
 }

@@ -1,14 +1,13 @@
 package keeper_test
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 	"testing"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/stretchr/testify/require"
 )
 
 // TODO: change hard code address
@@ -16,13 +15,10 @@ const (
 	authorityAddr = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 )
 
-func setupMsgServer(k keeper.Keeper) types.MsgServer {
-	return keeper.NewMsgServerImpl(k)
-}
+func (suite *TransferMiddlewareKeeperTestSuite) TestMsgAddParachainIBCInfo() {
+	suite.SetupTest()
+	t := suite.T()
 
-func TestMsgAddParachainIBCInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
-	msgServer := setupMsgServer(app.TransferMiddlewareKeeper)
 	notAuthorityAddr := authtypes.NewModuleAddress(types.ModuleName).String()
 
 	var (
@@ -99,23 +95,24 @@ func TestMsgAddParachainIBCInfo(t *testing.T) {
 				tc.info.AssetId,
 				tc.info.ChannelId,
 			)
-			_, err := msgServer.AddParachainIBCTokenInfo(
-				ctx,
+			_, err := suite.msgServer.AddParachainIBCTokenInfo(
+				suite.ctx,
 				msg,
 			)
 
 			if tc.expectedPass {
-				require.NoError(t, err)
+				suite.Require().NoError(err)
 			} else {
-				require.ErrorIs(t, tc.expectedErr, err)
+				suite.Require().ErrorIs(tc.expectedErr, err)
 			}
 		})
 	}
 }
 
-func TestRemoveParachainIBCTokenInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
-	msgServer := setupMsgServer(app.TransferMiddlewareKeeper)
+func (suite *TransferMiddlewareKeeperTestSuite) TestRemoveParachainIBCTokenInfo() {
+	suite.SetupTest()
+	t := suite.T()
+
 	notAuthorityAddr := authtypes.NewModuleAddress(types.ModuleName).String()
 
 	infos := [2]types.ParachainIBCTokenInfo{
@@ -133,8 +130,8 @@ func TestRemoveParachainIBCTokenInfo(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx,
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -174,33 +171,34 @@ func TestRemoveParachainIBCTokenInfo(t *testing.T) {
 				tc.denom,
 			)
 
-			_, err := msgServer.RemoveParachainIBCTokenInfo(
-				ctx,
+			_, err := suite.msgServer.RemoveParachainIBCTokenInfo(
+				suite.ctx,
 				msg,
 			)
 
 			if tc.expectedPass {
-				require.NoError(t, err)
+				suite.Require().NoError(err)
 				found := false
 
-				app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool) {
+				suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool) {
 					if removeInfo.NativeDenom == tc.denom {
 						found = true
 					}
 					return false
 				})
 
-				require.True(t, found)
+				suite.Require().True(found)
 			} else {
-				require.ErrorIs(t, tc.expectedErr, err)
+				suite.Require().ErrorIs(tc.expectedErr, err)
 			}
 		})
 	}
 }
 
-func TestMsgAddRlyAddress(t *testing.T) {
-	app, ctx := SetupTest(t)
-	msgServer := setupMsgServer(app.TransferMiddlewareKeeper)
+func (suite *TransferMiddlewareKeeperTestSuite) TestMsgAddRlyAddress() {
+	suite.SetupTest()
+	t := suite.T()
+
 	notAuthorityAddr := authtypes.NewModuleAddress(types.ModuleName).String()
 	allowedAddress := "allowed"
 	notAllowedAddress := "not_allowed"
@@ -209,11 +207,11 @@ func TestMsgAddRlyAddress(t *testing.T) {
 		authorityAddr,
 	)
 
-	_, err := msgServer.AddRlyAddress(
-		ctx,
+	_, err := suite.msgServer.AddRlyAddress(
+		suite.ctx,
 		msg,
 	)
-	require.NoError(t, err)
+	suite.Require().NoError(err)
 
 	testCases := map[string]struct {
 		address      string
@@ -248,16 +246,16 @@ func TestMsgAddRlyAddress(t *testing.T) {
 				tc.address,
 			)
 
-			_, err := msgServer.AddRlyAddress(
-				ctx,
+			_, err := suite.msgServer.AddRlyAddress(
+				suite.ctx,
 				msg,
 			)
 			if tc.expectedPass {
-				require.NoError(t, err)
-				res := app.TransferMiddlewareKeeper.HasAllowRlyAddress(ctx, tc.address)
-				require.True(t, res)
+				suite.Require().NoError(err)
+				res := suite.app.TransferMiddlewareKeeper.HasAllowRlyAddress(suite.ctx, tc.address)
+				suite.Require().True(res)
 			} else {
-				require.Error(t, tc.expectedErr, err)
+				suite.Require().Error(tc.expectedErr, err)
 			}
 		})
 	}

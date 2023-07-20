@@ -7,13 +7,24 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/notional-labs/centauri/v3/app"
 	helpers "github.com/notional-labs/centauri/v3/app/helpers"
+
+	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
 	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 )
 
-func SetupTest(t *testing.T) (*app.CentauriApp, sdk.Context) {
-	app := helpers.SetupCentauriAppWithValSet(t)
-	ctx := helpers.NewContextForApp(*app)
+type TransferMiddlewareKeeperTestSuite struct {
+	suite.Suite
+	app       *app.CentauriApp
+	ctx       sdk.Context
+	msgServer types.MsgServer
+}
+
+func (suite *TransferMiddlewareKeeperTestSuite) SetupTest() {
+	suite.app = helpers.SetupCentauriAppWithValSet(suite.T())
+	suite.ctx = helpers.NewContextForApp(*suite.app)
+	suite.msgServer = keeper.NewMsgServerImpl(suite.app.TransferMiddlewareKeeper)
+
 	tokenInfos := make([]types.ParachainIBCTokenInfo, 1)
 	tokenInfos[0] = types.ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test",
@@ -22,15 +33,14 @@ func SetupTest(t *testing.T) (*app.CentauriApp, sdk.Context) {
 		AssetId:     "1",
 	}
 
-	app.TransferMiddlewareKeeper.InitGenesis(ctx, types.GenesisState{
+	suite.app.TransferMiddlewareKeeper.InitGenesis(suite.ctx, types.GenesisState{
 		TokenInfos: tokenInfos,
 	})
-
-	return app, ctx
 }
 
-func TestAddParachainIBCInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestAddParachainIBCInfo() {
+	suite.SetupTest()
+	t := suite.T()
 	var (
 		validInfo = types.ParachainIBCTokenInfo{
 			IbcDenom:    "ibc-test-1",
@@ -59,36 +69,36 @@ func TestAddParachainIBCInfo(t *testing.T) {
 	)
 
 	testCases := map[string]struct {
-		info types.ParachainIBCTokenInfo
-		expectedErr error
+		info         types.ParachainIBCTokenInfo
+		expectedErr  error
 		expectedPass bool
 	}{
 		"valid parachain info": {
-			info: validInfo,
-			expectedErr: nil,
+			info:         validInfo,
+			expectedErr:  nil,
 			expectedPass: true,
 		},
 		"duplicate asset ID": {
-			info: duplAssetId,
-			expectedErr: types.ErrMultipleMapping,
+			info:         duplAssetId,
+			expectedErr:  types.ErrMultipleMapping,
 			expectedPass: false,
 		},
 		"duplicate IBC denom": {
-			info: duplIBCDenom,
-			expectedErr: types.ErrMultipleMapping,
+			info:         duplIBCDenom,
+			expectedErr:  types.ErrMultipleMapping,
 			expectedPass: false,
 		},
 		"duplicate native denom": {
-			info: dup1NativeDenom,
-			expectedErr: types.ErrMultipleMapping,
+			info:         dup1NativeDenom,
+			expectedErr:  types.ErrMultipleMapping,
 			expectedPass: false,
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			err := app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-				ctx, 
+			err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+				suite.ctx,
 				tc.info.IbcDenom,
 				tc.info.ChannelId,
 				tc.info.NativeDenom,
@@ -96,17 +106,17 @@ func TestAddParachainIBCInfo(t *testing.T) {
 			)
 
 			if tc.expectedPass {
-				require.NoError(t, err)
+				suite.Require().NoError(err)
 			} else {
-				require.ErrorIs(t, tc.expectedErr, err)
+				suite.Require().ErrorIs(tc.expectedErr, err)
 			}
 		})
 	}
 }
 
-func TestAddParachainIBCInfoToRemoveList(t *testing.T) {
-	app, ctx := SetupTest(t)
-
+func (suite *TransferMiddlewareKeeperTestSuite) TestAddParachainIBCInfoToRemoveList() {
+	suite.SetupTest()
+	t := suite.T()
 	validInfo := types.ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-1",
 		ChannelId:   "channel-1",
@@ -114,8 +124,8 @@ func TestAddParachainIBCInfoToRemoveList(t *testing.T) {
 		AssetId:     "2",
 	}
 
-	app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-		ctx, 
+	suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+		suite.ctx,
 		validInfo.IbcDenom,
 		validInfo.ChannelId,
 		validInfo.NativeDenom,
@@ -123,40 +133,40 @@ func TestAddParachainIBCInfoToRemoveList(t *testing.T) {
 	)
 
 	testCases := map[string]struct {
-		denom string
-		expectedErr error
+		denom        string
+		expectedErr  error
 		expectedPass bool
 	}{
 		"valid denom": {
-			denom: "pica",
-			expectedErr: nil,
+			denom:        "pica",
+			expectedErr:  nil,
 			expectedPass: true,
 		},
 		"not existed denom": {
-			denom: "native-xxxxx",
-			expectedErr: sdkerrors.ErrKeyNotFound,
+			denom:        "native-xxxxx",
+			expectedErr:  sdkerrors.ErrKeyNotFound,
 			expectedPass: false,
 		},
 	}
-	params := app.TransferMiddlewareKeeper.GetParams(ctx)
+	params := suite.app.TransferMiddlewareKeeper.GetParams(suite.ctx)
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			time, err := app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(ctx, tc.denom)
-			removeTime := ctx.BlockTime().Add(params.Duration)
+			time, err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(suite.ctx, tc.denom)
+			removeTime := suite.ctx.BlockTime().Add(params.Duration)
 
 			if tc.expectedPass {
-				require.Equal(t, removeTime, time)
-				require.NoError(t, err)
+				suite.Require().Equal(removeTime, time)
+				suite.Require().NoError(err)
 			} else {
-				require.ErrorIs(t, err, tc.expectedErr)
+				suite.Require().ErrorIs(err, tc.expectedErr)
 			}
 		})
 	}
 }
 
-func TestIterateRemoveListInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestIterateRemoveListInfo() {
+	suite.SetupTest()
 
 	infos := [5]types.ParachainIBCTokenInfo{
 		{
@@ -193,8 +203,8 @@ func TestIterateRemoveListInfo(t *testing.T) {
 
 	count := 0
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -202,30 +212,31 @@ func TestIterateRemoveListInfo(t *testing.T) {
 		)
 	}
 
-	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
+	suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
 		count++
 		return false
 	})
 
-	require.Equal(t, count, 0)
-	
+	suite.Require().Equal(count, 0)
+
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(
+			suite.ctx,
 			info.NativeDenom,
 		)
 	}
 
-	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
+	suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
 		count++
 		return false
 	})
 
-	require.Equal(t, count, 5)
+	suite.Require().Equal(count, 5)
 }
 
-func TestRemoveParachainIBCInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestRemoveParachainIBCInfo() {
+	suite.SetupTest()
+	t := suite.T()
 
 	infos := [2]types.ParachainIBCTokenInfo{
 		{
@@ -242,8 +253,8 @@ func TestRemoveParachainIBCInfo(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -251,65 +262,68 @@ func TestRemoveParachainIBCInfo(t *testing.T) {
 		)
 	}
 	testCases := map[string]struct {
-		denom string
-		expectedErr error
+		denom        string
+		expectedErr  error
 		expectedPass bool
 	}{
 		"valid denom": {
-			denom: "native-1",
-			expectedErr: nil,
+			denom:        "native-1",
+			expectedErr:  nil,
 			expectedPass: true,
 		},
 		"not existed denom": {
-			denom: "native-xxxxx",
-			expectedErr: types.NotRegisteredNativeDenom,
+			denom:        "native-xxxxx",
+			expectedErr:  types.NotRegisteredNativeDenom,
 			expectedPass: false,
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			err := app.TransferMiddlewareKeeper.RemoveParachainIBCInfo(ctx, tc.denom)
+			err := suite.app.TransferMiddlewareKeeper.RemoveParachainIBCInfo(suite.ctx, tc.denom)
 
 			if tc.expectedPass {
-				require.NoError(t, err)
+				suite.Require().NoError(err)
 			} else {
-				require.ErrorIs(t, err, tc.expectedErr)
+				suite.Require().ErrorIs(err, tc.expectedErr)
 			}
 		})
 	}
 }
 
-func TestAllowRlyAddress(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestAllowRlyAddress() {
+	suite.SetupTest()
+	t := suite.T()
+
 	allowedAddress := "allowed"
 	notAllowedAddress := "not_allowed"
-	app.TransferMiddlewareKeeper.SetAllowRlyAddress(ctx, allowedAddress)
+	suite.app.TransferMiddlewareKeeper.SetAllowRlyAddress(suite.ctx, allowedAddress)
 	testCases := map[string]struct {
-		address string
+		address     string
 		expectedRes bool
 	}{
 		"allowed address": {
-			address: allowedAddress,
+			address:     allowedAddress,
 			expectedRes: true,
 		},
 		"not allowed address": {
-			address: notAllowedAddress,
+			address:     notAllowedAddress,
 			expectedRes: false,
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			res := app.TransferMiddlewareKeeper.HasAllowRlyAddress(ctx, tc.address)
+			res := suite.app.TransferMiddlewareKeeper.HasAllowRlyAddress(suite.ctx, tc.address)
 
-			require.Equal(t, tc.expectedRes, res)
+			suite.Require().Equal(tc.expectedRes, res)
 		})
 	}
 }
 
-func TestHasParachainIBCInfoByNativeDenom(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestHasParachainIBCInfoByNativeDenom() {
+	suite.SetupTest()
+	t := suite.T()
 
 	infos := [2]types.ParachainIBCTokenInfo{
 		{
@@ -326,8 +340,8 @@ func TestHasParachainIBCInfoByNativeDenom(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -335,38 +349,39 @@ func TestHasParachainIBCInfoByNativeDenom(t *testing.T) {
 		)
 	}
 	testCases := map[string]struct {
-		denom string
+		denom       string
 		expectedRes bool
 	}{
 		"has info by default native denom": {
-			denom: "pica",
+			denom:       "pica",
 			expectedRes: true,
 		},
 		"has info by native denom 1": {
-			denom: "native-1",
+			denom:       "native-1",
 			expectedRes: true,
 		},
 		"has info by native denom 2": {
-			denom: "native-1",
+			denom:       "native-1",
 			expectedRes: true,
 		},
 		"not have info by native denom": {
-			denom: "native-xxxxx",
+			denom:       "native-xxxxx",
 			expectedRes: false,
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			res := app.TransferMiddlewareKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, tc.denom)
+			res := suite.app.TransferMiddlewareKeeper.HasParachainIBCTokenInfoByNativeDenom(suite.ctx, tc.denom)
 
-			require.Equal(t, tc.expectedRes, res)
+			suite.Require().Equal(tc.expectedRes, res)
 		})
 	}
 }
 
-func TestHasParachainIBCInfoByAssetID(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestHasParachainIBCInfoByAssetID() {
+	suite.SetupTest()
+	t := suite.T()
 
 	infos := [2]types.ParachainIBCTokenInfo{
 		{
@@ -383,8 +398,8 @@ func TestHasParachainIBCInfoByAssetID(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -392,38 +407,39 @@ func TestHasParachainIBCInfoByAssetID(t *testing.T) {
 		)
 	}
 	testCases := map[string]struct {
-		assetID string
+		assetID     string
 		expectedRes bool
 	}{
 		"has info by default asset ID": {
-			assetID: "1",
+			assetID:     "1",
 			expectedRes: true,
 		},
 		"has info by asset ID 2": {
-			assetID: "2",
+			assetID:     "2",
 			expectedRes: true,
 		},
 		"has info by asset ID 3": {
-			assetID: "3",
+			assetID:     "3",
 			expectedRes: true,
 		},
 		"not have info by asset ID": {
-			assetID: "4",
+			assetID:     "4",
 			expectedRes: false,
 		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			res := app.TransferMiddlewareKeeper.HasParachainIBCTokenInfoByAssetID(ctx, tc.assetID)
+			res := suite.app.TransferMiddlewareKeeper.HasParachainIBCTokenInfoByAssetID(suite.ctx, tc.assetID)
 
-			require.Equal(t, tc.expectedRes, res)
+			suite.Require().Equal(tc.expectedRes, res)
 		})
 	}
 }
 
-func TestGetParachainIBCTokenInfo(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestGetParachainIBCTokenInfo() {
+	suite.SetupTest()
+	t := suite.T()
 
 	infos := map[string]types.ParachainIBCTokenInfo{
 		"2": {
@@ -446,8 +462,8 @@ func TestGetParachainIBCTokenInfo(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -455,23 +471,23 @@ func TestGetParachainIBCTokenInfo(t *testing.T) {
 		)
 	}
 	testCases := map[string]struct {
-		denom string
-		assetID string
+		denom       string
+		assetID     string
 		expectedRes bool
 	}{
 		"valid info of token 2": {
-			denom: "native-2",
-			assetID: "2",
+			denom:       "native-2",
+			assetID:     "2",
 			expectedRes: true,
 		},
 		"valid info of token 3": {
-			denom: "native-3",
-			assetID: "3",
+			denom:       "native-3",
+			assetID:     "3",
 			expectedRes: true,
 		},
 		"not have info": {
-			denom: "native-xxxxx",
-			assetID: "4",
+			denom:       "native-xxxxx",
+			assetID:     "4",
 			expectedRes: false,
 		},
 	}
@@ -479,22 +495,23 @@ func TestGetParachainIBCTokenInfo(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			tokenInfoRaw := infos[tc.assetID]
-			tokenInfoByDenom := app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, tc.denom)
-			tokenInfoByAssetID := app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByAssetID(ctx, tc.assetID)
+			tokenInfoByDenom := suite.app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByNativeDenom(suite.ctx, tc.denom)
+			tokenInfoByAssetID := suite.app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByAssetID(suite.ctx, tc.assetID)
 
-			if (tc.expectedRes) {
-				require.Equal(t, tokenInfoRaw, tokenInfoByDenom)
-				require.Equal(t, tokenInfoRaw, tokenInfoByAssetID)
+			if tc.expectedRes {
+				suite.Require().Equal(tokenInfoRaw, tokenInfoByDenom)
+				suite.Require().Equal(tokenInfoRaw, tokenInfoByAssetID)
 			} else {
-				require.NotEqual(t, tokenInfoRaw, tokenInfoByDenom)
-				require.NotEqual(t, tokenInfoRaw, tokenInfoByAssetID)
+				suite.Require().NotEqual(tokenInfoRaw, tokenInfoByDenom)
+				suite.Require().NotEqual(tokenInfoRaw, tokenInfoByAssetID)
 			}
 		})
 	}
 }
 
-func TestGetNativeDenomByIBCDenomSecondaryIndex(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestGetNativeDenomByIBCDenomSecondaryIndex() {
+	suite.SetupTest()
+	t := suite.T()
 
 	infos := map[string]types.ParachainIBCTokenInfo{
 		"2": {
@@ -517,8 +534,8 @@ func TestGetNativeDenomByIBCDenomSecondaryIndex(t *testing.T) {
 		},
 	}
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -526,23 +543,23 @@ func TestGetNativeDenomByIBCDenomSecondaryIndex(t *testing.T) {
 		)
 	}
 	testCases := map[string]struct {
-		ibcDenom string
-		assetID string
+		ibcDenom    string
+		assetID     string
 		expectedRes bool
 	}{
 		"valid info of token 2": {
-			ibcDenom: "ibc-test-1",
-			assetID: "2",
+			ibcDenom:    "ibc-test-1",
+			assetID:     "2",
 			expectedRes: true,
 		},
 		"valid info of token 3": {
-			ibcDenom: "ibc-test-2",
-			assetID: "3",
+			ibcDenom:    "ibc-test-2",
+			assetID:     "3",
 			expectedRes: true,
 		},
 		"not have info": {
-			ibcDenom: "ibc-test-xxxxx",
-			assetID: "4",
+			ibcDenom:    "ibc-test-xxxxx",
+			assetID:     "4",
 			expectedRes: false,
 		},
 	}
@@ -550,20 +567,18 @@ func TestGetNativeDenomByIBCDenomSecondaryIndex(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			nativeDenomRaw := infos[tc.assetID].NativeDenom
-			nativeDenomByIbcDenom := app.TransferMiddlewareKeeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, tc.ibcDenom)
+			nativeDenomByIbcDenom := suite.app.TransferMiddlewareKeeper.GetNativeDenomByIBCDenomSecondaryIndex(suite.ctx, tc.ibcDenom)
 
-			if (tc.expectedRes) {
-				require.Equal(t, nativeDenomRaw, nativeDenomByIbcDenom)
+			if tc.expectedRes {
+				suite.Require().Equal(nativeDenomRaw, nativeDenomByIbcDenom)
 			} else {
-				require.NotEqual(t, nativeDenomRaw, nativeDenomByIbcDenom)
+				suite.Require().NotEqual(nativeDenomRaw, nativeDenomByIbcDenom)
 			}
 		})
 	}
 }
 
-func TestLogger(t *testing.T) {
-	app, ctx := SetupTest(t)
-	require.Equal(t, ctx.Logger().With("module", "x/ibc-transfermiddleware"), app.TransferMiddlewareKeeper.Logger(ctx))
+func (suite *TransferMiddlewareKeeperTestSuite) TestLogger() {
+	suite.SetupTest()
+	suite.Require().Equal(suite.ctx.Logger().With("module", "x/ibc-transfermiddleware"), suite.app.TransferMiddlewareKeeper.Logger(suite.ctx))
 }
-
-// TODO: TestGetTotalEscrowedToken with IBC relay

@@ -1,15 +1,11 @@
 package keeper_test
 
 import (
-	"testing"
-
 	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
-
-	"github.com/stretchr/testify/require"
 )
 
-func TestBeginBlocker(t *testing.T) {
-	app, ctx := SetupTest(t)
+func (suite *TransferMiddlewareKeeperTestSuite) TestBeginBlocker() {
+	suite.SetupTest()
 
 	infos := [5]types.ParachainIBCTokenInfo{
 		{
@@ -46,8 +42,8 @@ func TestBeginBlocker(t *testing.T) {
 
 	count := 0
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfo(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
 			info.IbcDenom,
 			info.ChannelId,
 			info.NativeDenom,
@@ -55,37 +51,37 @@ func TestBeginBlocker(t *testing.T) {
 		)
 	}
 
-	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
+	suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
 		count++
 		return false
 	})
 
-	require.Equal(t, count, 0)
-	
+	suite.Require().Equal(count, 0)
+
 	for _, info := range infos {
-		app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(
-			ctx, 
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(
+			suite.ctx,
 			info.NativeDenom,
 		)
 	}
 
-	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
+	suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(_ types.RemoveParachainIBCTokenInfo) (stop bool) {
 		count++
 		return false
 	})
 
-	require.Equal(t, count, 5)
+	suite.Require().Equal(count, 5)
 
-	app.TransferMiddlewareKeeper.BeginBlocker(ctx)
+	suite.app.TransferMiddlewareKeeper.BeginBlocker(suite.ctx)
 
 	countRemove := 0
-	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(removeList types.RemoveParachainIBCTokenInfo) (stop bool) {
-		if ctx.BlockTime().After(removeList.RemoveTime) {
+	suite.app.TransferMiddlewareKeeper.IterateRemoveListInfo(suite.ctx, func(removeList types.RemoveParachainIBCTokenInfo) (stop bool) {
+		if suite.ctx.BlockTime().After(removeList.RemoveTime) {
 			countRemove++
 			count--
 		}
 		return false
 	})
 
-	require.Equal(t, countRemove + count, 5)
+	suite.Require().Equal(countRemove+count, 5)
 }
