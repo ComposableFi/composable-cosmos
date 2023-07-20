@@ -186,7 +186,7 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 	// ibc-go with wasm client
-	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.0-wasm-client
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client
 
 	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3
 
