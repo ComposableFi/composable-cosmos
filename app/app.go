@@ -31,9 +31,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	bech32stakingmigration "github.com/notional-labs/centauri/v3/bech32-migration/staking"
+	bech32stakingmigration "github.com/notional-labs/centauri/v4/bech32-migration/staking"
 
-	"github.com/notional-labs/centauri/v3/app/keepers"
+	"github.com/notional-labs/centauri/v4/app/keepers"
+	v4 "github.com/notional-labs/centauri/v4/app/upgrades/v4"
+
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
@@ -71,6 +73,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
+	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -82,31 +86,35 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	reward "github.com/notional-labs/centauri/v3/app/upgrade/reward"
-	custombankmodule "github.com/notional-labs/centauri/v3/custom/bank"
+	custombankmodule "github.com/notional-labs/centauri/v4/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	"github.com/notional-labs/centauri/v3/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v3/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v3/x/mint"
-	minttypes "github.com/notional-labs/centauri/v3/x/mint/types"
+	"github.com/notional-labs/centauri/v4/x/mint"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v3/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v3/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v4/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+
+	upgrades "github.com/notional-labs/centauri/v4/app/upgrades"
 )
 
 const (
@@ -123,6 +131,8 @@ var (
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
+
+	Upgrades = []upgrades.Upgrade{v4.Upgrade}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -194,8 +204,10 @@ var (
 		wasm08.AppModuleBasic{},
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
+		ica.AppModuleBasic{},
 		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
+		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
@@ -214,6 +226,7 @@ var (
 		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
+		icatypes.ModuleName:                 nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -291,7 +304,7 @@ func NewCentauriApp(
 		skipUpgradeHeights,
 		homePath,
 	)
-
+	app.setupUpgradeStoreLoaders()
 	app.InitNormalKeepers(
 		appCodec,
 		cdc,
@@ -308,8 +321,10 @@ func NewCentauriApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
+	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
+	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
 	/****  Module Options ****/
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
@@ -348,6 +363,8 @@ func NewCentauriApp(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		routerModule,
 		transfermiddlewareModule,
+		icaModule,
+		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -369,6 +386,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
 		authtypes.ModuleName,
@@ -381,6 +399,7 @@ func NewCentauriApp(
 		paramstypes.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
@@ -406,11 +425,13 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icqtypes.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 	)
@@ -440,11 +461,13 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
+		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
@@ -453,6 +476,8 @@ func NewCentauriApp(
 	app.mm.RegisterInvariants(app.CrisisKeeper)
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
+
+	app.setupUpgradeHandlers()
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	// app.sm = module.NewSimulationManager(
@@ -513,9 +538,6 @@ func NewCentauriApp(
 			tmos.Exit(err.Error())
 		}
 	}
-
-	// app.ScopedMonitoringKeeper = scopedMonitoringKeeper
-	app.UpgradeKeeper.SetUpgradeHandler(reward.UpgradeName, reward.CreateUpgradeHandler(app.mm, app.configurator, app.TransferMiddlewareKeeper, app.MintKeeper))
 
 	return app
 }
@@ -654,4 +676,48 @@ func GetMaccPerms() map[string][]string {
 // SimulationManager implements the SimulationApp interface
 func (app *CentauriApp) SimulationManager() *module.SimulationManager {
 	return app.sm
+}
+
+// configure store loader that checks if version == upgradeHeight and applies store upgrades
+func (app *CentauriApp) setupUpgradeStoreLoaders() {
+	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
+	if err != nil {
+		panic(fmt.Sprintf("failed to read upgrade info from disk %s", err))
+	}
+
+	if app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		return
+	}
+
+	currentHeight := app.CommitMultiStore().LastCommitID().Version
+
+	if upgradeInfo.Height == currentHeight+1 {
+		app.customPreUpgradeHandler(upgradeInfo)
+	}
+
+	for _, upgrade := range Upgrades {
+		if upgradeInfo.Name == upgrade.UpgradeName {
+			app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades))
+		}
+	}
+}
+
+func (app *CentauriApp) customPreUpgradeHandler(upgradeInfo upgradetypes.Plan) {
+	switch upgradeInfo.Name {
+	default:
+	}
+}
+
+func (app *CentauriApp) setupUpgradeHandlers() {
+	for _, upgrade := range Upgrades {
+		app.UpgradeKeeper.SetUpgradeHandler(
+			upgrade.UpgradeName,
+			upgrade.CreateUpgradeHandler(
+				app.mm,
+				app.configurator,
+				app.BaseApp,
+				&app.AppKeepers,
+			),
+		)
+	}
 }

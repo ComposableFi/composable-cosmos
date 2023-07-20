@@ -5,7 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v3/x/mint/types"
+	"github.com/notional-labs/centauri/v4/x/mint/types"
 	"github.com/spf13/cobra"
 )
 

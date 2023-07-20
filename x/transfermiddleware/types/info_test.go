@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/stretchr/testify/require"
 )
 

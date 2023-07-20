@@ -10,11 +10,11 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	banktypes "github.com/notional-labs/centauri/v3/custom/bank/types"
+	banktypes "github.com/notional-labs/centauri/v4/custom/bank/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 
 	alliancekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
