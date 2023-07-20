@@ -10,4 +10,5 @@ var (
 	NotFungibleTokenPacketData        = sdkerrors.Register(ModuleName, 3, "not fungible token packet data")
 	ErrMultipleMapping                = sdkerrors.Register(ModuleName, 4, "err mapping key to multiple value")
 	NotRegisteredNativeDenom          = sdkerrors.Register(ModuleName, 5, "nativeDenom is not registered")
+	DuplRlyAddress          		  = sdkerrors.Register(ModuleName, 6, "rlyAddress already registry in allow list")
 )

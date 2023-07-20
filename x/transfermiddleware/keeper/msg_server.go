@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -79,7 +78,7 @@ func (ms msgServer) AddRlyAddress(goCtx context.Context, req *types.MsgAddRlyAdd
 
 	found := ms.HasAllowRlyAddress(ctx, req.RlyAddress)
 	if found {
-		return nil, fmt.Errorf("address %v already registry in allow list", req.RlyAddress)
+		return nil, errors.Wrapf(types.DuplRlyAddress, "got %v", req.RlyAddress)
 	}
 
 	ms.SetAllowRlyAddress(ctx, req.RlyAddress)
