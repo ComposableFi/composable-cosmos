@@ -78,19 +78,19 @@ func ParsePacketFromEvents(events sdk.Events) (channeltypes.Packet, error) {
 					packet.Sequence = seq
 
 				case channeltypes.AttributeKeySrcPort:
-					packet.SourcePort = string(attr.Value)
+					packet.SourcePort = attr.Value
 
 				case channeltypes.AttributeKeySrcChannel:
-					packet.SourceChannel = string(attr.Value)
+					packet.SourceChannel = attr.Value
 
 				case channeltypes.AttributeKeyDstPort:
-					packet.DestinationPort = string(attr.Value)
+					packet.DestinationPort = attr.Value
 
 				case channeltypes.AttributeKeyDstChannel:
-					packet.DestinationChannel = string(attr.Value)
+					packet.DestinationChannel = attr.Value
 
 				case channeltypes.AttributeKeyTimeoutHeight:
-					height, err := clienttypes.ParseHeight(string(attr.Value))
+					height, err := clienttypes.ParseHeight(attr.Value)
 					if err != nil {
 						return channeltypes.Packet{}, err
 					}
@@ -98,7 +98,7 @@ func ParsePacketFromEvents(events sdk.Events) (channeltypes.Packet, error) {
 					packet.TimeoutHeight = height
 
 				case channeltypes.AttributeKeyTimeoutTimestamp:
-					timestamp, err := strconv.ParseUint(string(attr.Value), 10, 64)
+					timestamp, err := strconv.ParseUint(attr.Value, 10, 64)
 					if err != nil {
 						return channeltypes.Packet{}, err
 					}

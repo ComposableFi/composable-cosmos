@@ -42,21 +42,21 @@ func (b AppModuleBasic) RegisterInterfaces(_ cdctypes.InterfaceRegistry) {}
 
 // DefaultGenesis returns default genesis state as raw bytes for the
 // module.
-func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
+func (AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage {
 	emptyString := "{}"
 	return []byte(emptyString)
 }
 
 // ValidateGenesis performs genesis state validation for the ibc-hooks module.
-func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
 	return nil
 }
 
 // RegisterRESTRoutes registers the REST routes for the ibc-hooks module.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
+func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, rtr *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the ibc-hooks module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, mux *runtime.ServeMux) {}
 
 // GetTxCmd returns no root tx command for the ibc-hooks module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
@@ -95,21 +95,21 @@ func (AppModule) QuerierRoute() string {
 
 // RegisterServices registers a gRPC query service to respond to the
 // module-specific gRPC queries.
-func (am AppModule) RegisterServices(cfg module.Configurator) {
+func (am AppModule) RegisterServices(_ module.Configurator) {
 }
 
 // InitGenesis performs genesis initialization for the ibc-hooks module. It returns
 // no validator updates.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(_ sdk.Context, _ codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
 
-func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+func (am AppModule) ExportGenesis(_ sdk.Context, _ codec.JSONCodec) json.RawMessage {
 	return json.RawMessage([]byte("{}"))
 }
 
 // BeginBlock returns the begin blocker for the ibc-hooks module.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {
 }
 
 // EndBlock returns the end blocker for the ibc-hooks module. It returns no validator
