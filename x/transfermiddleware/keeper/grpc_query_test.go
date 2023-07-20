@@ -2,7 +2,7 @@ package keeper_test
 
 import (
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 
 func (suite *TransferMiddlewareKeeperTestSuite) TestParaTokenInfo() {

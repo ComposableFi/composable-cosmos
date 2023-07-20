@@ -5,11 +5,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/notional-labs/centauri/v3/app"
-	helpers "github.com/notional-labs/centauri/v3/app/helpers"
+	"github.com/notional-labs/centauri/v4/app"
+	helpers "github.com/notional-labs/centauri/v4/app/helpers"
 
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/stretchr/testify/suite"
 )
 

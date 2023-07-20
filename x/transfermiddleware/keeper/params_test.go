@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 
 func (suite *TransferMiddlewareKeeperTestSuite) TestGetParams() {
