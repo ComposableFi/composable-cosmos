@@ -48,15 +48,15 @@ func (AppModuleBasic) DefaultGenesis(_ codec.JSONCodec) json.RawMessage {
 }
 
 // ValidateGenesis performs genesis state validation for the ibc-hooks module.
-func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(_ codec.JSONCodec, _ client.TxEncodingConfig, _ json.RawMessage) error {
 	return nil
 }
 
 // RegisterRESTRoutes registers the REST routes for the ibc-hooks module.
-func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, rtr *mux.Router) {}
+func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the ibc-hooks module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, mux *runtime.ServeMux) {}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, _ *runtime.ServeMux) {}
 
 // GetTxCmd returns no root tx command for the ibc-hooks module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
@@ -100,7 +100,7 @@ func (am AppModule) RegisterServices(_ module.Configurator) {
 
 // InitGenesis performs genesis initialization for the ibc-hooks module. It returns
 // no validator updates.
-func (am AppModule) InitGenesis(_ sdk.Context, _ codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(_ sdk.Context, _ codec.JSONCodec, _ json.RawMessage) []abci.ValidatorUpdate {
 	return []abci.ValidatorUpdate{}
 }
 
