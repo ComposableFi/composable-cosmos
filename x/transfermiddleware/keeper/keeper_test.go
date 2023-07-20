@@ -38,6 +38,10 @@ func (suite *TransferMiddlewareKeeperTestSuite) SetupTest() {
 	})
 }
 
+func TestKeeperTestSuite(t *testing.T) {
+	suite.Run(t, new(TransferMiddlewareKeeperTestSuite))
+}
+
 func (suite *TransferMiddlewareKeeperTestSuite) TestAddParachainIBCInfo() {
 	suite.SetupTest()
 	t := suite.T()

@@ -28,9 +28,9 @@ func (suite *TransferMiddlewareKeeperTestSuite) TestTFMInitGenesis() {
 func (suite *TransferMiddlewareKeeperTestSuite) TestTFMExportGenesis() {
 	suite.SetupTest()
 
-	err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test", "channel-0", "pica", "1")
+	err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test2", "channel-0", "paca", "2")
 	suite.Require().NoError(err)
-	err = suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test2", "channel-1", "poke", "2")
+	err = suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test3", "channel-1", "poke", "3")
 	suite.Require().NoError(err)
 	genesis := suite.app.TransferMiddlewareKeeper.ExportGenesis(suite.ctx)
 
@@ -40,17 +40,22 @@ func (suite *TransferMiddlewareKeeperTestSuite) TestTFMExportGenesis() {
 	suite.Require().Equal("ibc-test", genesis.TokenInfos[0].IbcDenom)
 
 	suite.Require().Equal("2", genesis.TokenInfos[1].AssetId)
-	suite.Require().Equal("poke", genesis.TokenInfos[1].NativeDenom)
-	suite.Require().Equal("channel-1", genesis.TokenInfos[1].ChannelId)
+	suite.Require().Equal("paca", genesis.TokenInfos[1].NativeDenom)
+	suite.Require().Equal("channel-0", genesis.TokenInfos[1].ChannelId)
 	suite.Require().Equal("ibc-test2", genesis.TokenInfos[1].IbcDenom)
+
+	suite.Require().Equal("3", genesis.TokenInfos[2].AssetId)
+	suite.Require().Equal("poke", genesis.TokenInfos[2].NativeDenom)
+	suite.Require().Equal("channel-1", genesis.TokenInfos[2].ChannelId)
+	suite.Require().Equal("ibc-test3", genesis.TokenInfos[2].IbcDenom)
 }
 
 func (suite *TransferMiddlewareKeeperTestSuite) TestIterateParaTokenInfos() {
 	suite.SetupTest()
 
-	err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test", "channel-0", "pica", "1")
+	err := suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test2", "channel-0", "paca", "2")
 	suite.Require().NoError(err)
-	err = suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test2", "channel-1", "poke", "2")
+	err = suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(suite.ctx, "ibc-test3", "channel-1", "poke", "3")
 	suite.Require().NoError(err)
 
 	infos := []types.ParachainIBCTokenInfo{}
@@ -66,7 +71,12 @@ func (suite *TransferMiddlewareKeeperTestSuite) TestIterateParaTokenInfos() {
 	suite.Require().Equal("ibc-test", infos[0].IbcDenom)
 
 	suite.Require().Equal("2", infos[1].AssetId)
-	suite.Require().Equal("poke", infos[1].NativeDenom)
-	suite.Require().Equal("channel-1", infos[1].ChannelId)
+	suite.Require().Equal("paca", infos[1].NativeDenom)
+	suite.Require().Equal("channel-0", infos[1].ChannelId)
 	suite.Require().Equal("ibc-test2", infos[1].IbcDenom)
+
+	suite.Require().Equal("3", infos[2].AssetId)
+	suite.Require().Equal("poke", infos[2].NativeDenom)
+	suite.Require().Equal("channel-1", infos[2].ChannelId)
+	suite.Require().Equal("ibc-test3", infos[2].IbcDenom)
 }
