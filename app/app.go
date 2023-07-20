@@ -703,9 +703,9 @@ func (app *CentauriApp) setupUpgradeStoreLoaders() {
 }
 
 func (app *CentauriApp) customPreUpgradeHandler(upgradeInfo upgradetypes.Plan) {
-	switch upgradeInfo.Name {
-	default:
-	}
+	// switch upgradeInfo.Name {
+	// default:
+	// }
 }
 
 func (app *CentauriApp) setupUpgradeHandlers() {

@@ -1,4 +1,4 @@
-package ibc_hooks
+package ibchooks
 
 import (
 	// external libraries
@@ -14,13 +14,13 @@ import (
 type Hooks interface{}
 
 type OnChanOpenInitOverrideHooks interface {
-	OnChanOpenInitOverride(im IBCMiddleware, ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) (string, error)
+	OnChanOpenInitOverride(im IBCMiddleware, ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) (string, error)
 }
 type OnChanOpenInitBeforeHooks interface {
-	OnChanOpenInitBeforeHook(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string)
+	OnChanOpenInitBeforeHook(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string)
 }
 type OnChanOpenInitAfterHooks interface {
-	OnChanOpenInitAfterHook(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string, finalVersion string, err error)
+	OnChanOpenInitAfterHook(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version, finalVersion string, err error)
 }
 
 // OnChanOpenTry Hooks
