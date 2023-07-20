@@ -92,7 +92,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
 	params := keeper.GetParams(ctx)
 	store := ctx.KVStore(keeper.storeKey)
-	if store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+	if !store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
 		return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
 	}
 
