@@ -35,7 +35,7 @@ type MsgAddRateLimit struct {
 	// overwritten).
 	Authority      string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom          string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 	MaxPercentSend github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
 	MaxPercentRecv github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
 	DurationHours  uint64                                 `protobuf:"varint,6,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
@@ -88,9 +88,9 @@ func (m *MsgAddRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgAddRateLimit) GetChannelId() string {
+func (m *MsgAddRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -143,7 +143,7 @@ type MsgUpdateRateLimit struct {
 	// overwritten).
 	Authority      string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom          string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 	MaxPercentSend github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
 	MaxPercentRecv github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
 	DurationHours  uint64                                 `protobuf:"varint,6,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
@@ -196,9 +196,9 @@ func (m *MsgUpdateRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgUpdateRateLimit) GetChannelId() string {
+func (m *MsgUpdateRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -251,7 +251,7 @@ type MsgRemoveRateLimit struct {
 	// overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom     string `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *MsgRemoveRateLimit) Reset()         { *m = MsgRemoveRateLimit{} }
@@ -301,9 +301,9 @@ func (m *MsgRemoveRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgRemoveRateLimit) GetChannelId() string {
+func (m *MsgRemoveRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -349,7 +349,7 @@ type MsgResetRateLimit struct {
 	// overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom     string `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *MsgResetRateLimit) Reset()         { *m = MsgResetRateLimit{} }
@@ -399,9 +399,9 @@ func (m *MsgResetRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgResetRateLimit) GetChannelId() string {
+func (m *MsgResetRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -728,10 +728,10 @@ func (m *MsgAddRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x22
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -820,10 +820,10 @@ func (m *MsgUpdateRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x22
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -887,10 +887,10 @@ func (m *MsgRemoveRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -954,10 +954,10 @@ func (m *MsgResetRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -1026,7 +1026,7 @@ func (m *MsgAddRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1063,7 +1063,7 @@ func (m *MsgUpdateRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1100,7 +1100,7 @@ func (m *MsgRemoveRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1130,7 +1130,7 @@ func (m *MsgResetRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1247,7 +1247,7 @@ func (m *MsgAddRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1275,7 +1275,7 @@ func (m *MsgAddRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -1530,7 +1530,7 @@ func (m *MsgUpdateRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1558,7 +1558,7 @@ func (m *MsgUpdateRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -1813,7 +1813,7 @@ func (m *MsgRemoveRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1841,7 +1841,7 @@ func (m *MsgRemoveRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2009,7 +2009,7 @@ func (m *MsgResetRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2037,7 +2037,7 @@ func (m *MsgResetRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

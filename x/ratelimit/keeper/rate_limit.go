@@ -13,9 +13,9 @@ import (
 	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 )
 
-// Get the rate limit byte key built from the denom and channelId
-func GetRateLimitItemKey(denom string, channelId string) []byte {
-	return append(types.KeyPrefix(denom), types.KeyPrefix(channelId)...)
+// Get the rate limit byte key built from the denom and channelID
+func GetRateLimitItemKey(denom string, channelID string) []byte {
+	return append(types.KeyPrefix(denom), types.KeyPrefix(channelID)...)
 }
 
 // The total value on a given path (aka, the denominator in the percentage calculation)
@@ -25,7 +25,7 @@ func (k Keeper) GetChannelValue(ctx sdk.Context, denom string) math.Int {
 }
 
 // If the rate limit is exceeded or the denom is blacklisted, we emit an event
-func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelId string, direction types.PacketDirection, amount math.Int, err error) {
+func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelID string, direction types.PacketDirection, amount math.Int, err error) {
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTransferDenied,
@@ -33,7 +33,7 @@ func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelId string, d
 			sdk.NewAttribute(types.AttributeKeyReason, reason),
 			sdk.NewAttribute(types.AttributeKeyAction, strings.ToLower(direction.String())), // packet_send or packet_recv
 			sdk.NewAttribute(types.AttributeKeyDenom, denom),
-			sdk.NewAttribute(types.AttributeKeyChannel, channelId),
+			sdk.NewAttribute(types.AttributeKeyChannel, channelID),
 			sdk.NewAttribute(types.AttributeKeyAmount, amount.String()),
 			sdk.NewAttribute(types.AttributeKeyError, err.Error()),
 		),
@@ -60,11 +60,11 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 	packetInfo RateLimitedPacketInfo,
 ) (updatedFlow bool, err error) {
 	denom := packetInfo.Denom
-	channelId := packetInfo.ChannelID
+	channelID := packetInfo.ChannelID
 	amount := packetInfo.Amount
 
 	// If there's no rate limit yet for this denom, no action is necessary
-	rateLimit, found := k.GetRateLimit(ctx, denom, channelId)
+	rateLimit, found := k.GetRateLimit(ctx, denom, channelID)
 	if !found {
 		return false, nil
 	}
@@ -77,7 +77,7 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 	// Update the flow object with the change in amount
 	if err := k.UpdateFlow(rateLimit, direction, amount); err != nil {
 		// If the rate limit was exceeded, emit an event
-		EmitTransferDeniedEvent(ctx, types.EventRateLimitExceeded, denom, channelId, direction, amount, err)
+		EmitTransferDeniedEvent(ctx, types.EventRateLimitExceeded, denom, channelID, direction, amount, err)
 		return false, err
 	}
 	// If there's no quota error, update the rate limit object in the store with the new flow
@@ -87,19 +87,19 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 }
 
 // If a SendPacket fails or times out, undo the outflow increment that happened during the send
-func (k Keeper) UndoSendPacket(ctx sdk.Context, channelId string, sequence uint64, denom string, amount math.Int) error {
-	rateLimit, found := k.GetRateLimit(ctx, denom, channelId)
+func (k Keeper) UndoSendPacket(ctx sdk.Context, channelID string, sequence uint64, denom string, amount math.Int) error {
+	rateLimit, found := k.GetRateLimit(ctx, denom, channelID)
 	if !found {
 		return nil
 	}
 
 	// If the packet was sent during this quota, decrement the outflow
 	// Otherwise, it can be ignored
-	if k.CheckPacketSentDuringCurrentQuota(ctx, channelId, sequence) {
+	if k.CheckPacketSentDuringCurrentQuota(ctx, channelID, sequence) {
 		rateLimit.Flow.Outflow = rateLimit.Flow.Outflow.Sub(amount)
 		k.SetRateLimit(ctx, rateLimit)
 
-		k.RemovePendingSendPacket(ctx, channelId, sequence)
+		k.RemovePendingSendPacket(ctx, channelID, sequence)
 	}
 
 	return nil
@@ -108,15 +108,15 @@ func (k Keeper) UndoSendPacket(ctx sdk.Context, channelId string, sequence uint6
 // Reset the rate limit after expiration
 // The inflow and outflow should get reset to 0, the channelValue should be updated,
 // and all pending send packet sequence numbers should be removed
-func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) error {
+func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelID string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
-		if channelId == tokenInfo.ChannelId {
+		if channelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
 	}
 
-	rateLimit, found := k.GetRateLimit(ctx, denom, channelId)
+	rateLimit, found := k.GetRateLimit(ctx, denom, channelID)
 	if !found {
 		return types.ErrRateLimitNotFound
 	}
@@ -129,7 +129,7 @@ func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) 
 	rateLimit.Flow = &flow
 
 	k.SetRateLimit(ctx, rateLimit)
-	k.RemoveAllChannelPendingSendPackets(ctx, channelId)
+	k.RemoveAllChannelPendingSendPackets(ctx, channelID)
 	return nil
 }
 
@@ -137,38 +137,38 @@ func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) 
 func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
-	rateLimitKey := GetRateLimitItemKey(rateLimit.Path.Denom, rateLimit.Path.ChannelId)
+	rateLimitKey := GetRateLimitItemKey(rateLimit.Path.Denom, rateLimit.Path.ChannelID)
 	rateLimitValue := k.cdc.MustMarshal(&rateLimit)
 
 	store.Set(rateLimitKey, rateLimitValue)
 }
 
 // Removes a rate limit object from the store using denom and channel-id
-func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelId string) error {
+func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelID string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
-		if channelId == tokenInfo.ChannelId {
+		if channelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
 	}
 
-	_, found := k.GetRateLimit(ctx, denom, channelId)
+	_, found := k.GetRateLimit(ctx, denom, channelID)
 	if !found {
 		return types.ErrRateLimitNotFound
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
-	rateLimitKey := GetRateLimitItemKey(denom, channelId)
+	rateLimitKey := GetRateLimitItemKey(denom, channelID)
 	store.Delete(rateLimitKey)
 
 	return nil
 }
 
 // Grabs and returns a rate limit object from the store using denom and channel-id
-func (k Keeper) GetRateLimit(ctx sdk.Context, denom string, channelId string) (rateLimit types.RateLimit, found bool) {
+func (k Keeper) GetRateLimit(ctx sdk.Context, denom string, channelID string) (rateLimit types.RateLimit, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
-	rateLimitKey := GetRateLimitItemKey(denom, channelId)
+	rateLimitKey := GetRateLimitItemKey(denom, channelID)
 	rateLimitValue := store.Get(rateLimitKey)
 
 	if len(rateLimitValue) == 0 {
@@ -185,7 +185,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
-		if msg.ChannelId == tokenInfo.ChannelId {
+		if msg.ChannelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
 	}
@@ -196,7 +196,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 	}
 
 	// Confirm the rate limit does not already exist
-	_, found := k.GetRateLimit(ctx, denom, msg.ChannelId)
+	_, found := k.GetRateLimit(ctx, denom, msg.ChannelID)
 	if found {
 		return errorsmod.Wrap(types.ErrRateLimitAlreadyExists, "rate limit already exists")
 	}
@@ -204,7 +204,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 	// Create and store the rate limit object
 	path := types.Path{
 		Denom:     denom,
-		ChannelId: msg.ChannelId,
+		ChannelID: msg.ChannelID,
 	}
 	quota := types.Quota{
 		MaxPercentSend: msg.MaxPercentSend,
@@ -232,13 +232,13 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
-		if msg.ChannelId == tokenInfo.ChannelId {
+		if msg.ChannelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
 	}
 
 	// Confirm the rate limit exists
-	_, found := k.GetRateLimit(ctx, denom, msg.ChannelId)
+	_, found := k.GetRateLimit(ctx, denom, msg.ChannelID)
 	if !found {
 		return errorsmod.Wrap(types.ErrRateLimitNotFound, "rate limit not found")
 	}
@@ -247,7 +247,7 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	// The flow should also get reset to 0
 	path := types.Path{
 		Denom:     denom,
-		ChannelId: msg.ChannelId,
+		ChannelID: msg.ChannelID,
 	}
 	quota := types.Quota{
 		MaxPercentSend: msg.MaxPercentSend,
@@ -288,25 +288,25 @@ func (k Keeper) GetAllRateLimits(ctx sdk.Context) []types.RateLimit {
 }
 
 // Sets the sequence number of a packet that was just sent
-func (k Keeper) SetPendingSendPacket(ctx sdk.Context, channelId string, sequence uint64) {
+func (k Keeper) SetPendingSendPacket(ctx sdk.Context, channelID string, sequence uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
-	key := types.GetPendingSendPacketKey(channelId, sequence)
+	key := types.GetPendingSendPacketKey(channelID, sequence)
 	store.Set(key, []byte{1})
 }
 
 // Remove a pending packet sequence number from the store
 // Used after the ack or timeout for a packet has been received
-func (k Keeper) RemovePendingSendPacket(ctx sdk.Context, channelId string, sequence uint64) {
+func (k Keeper) RemovePendingSendPacket(ctx sdk.Context, channelID string, sequence uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
-	key := types.GetPendingSendPacketKey(channelId, sequence)
+	key := types.GetPendingSendPacketKey(channelID, sequence)
 	store.Delete(key)
 }
 
 // Checks whether the packet sequence number is in the store - indicating that it was
 // sent during the current quota
-func (k Keeper) CheckPacketSentDuringCurrentQuota(ctx sdk.Context, channelId string, sequence uint64) bool {
+func (k Keeper) CheckPacketSentDuringCurrentQuota(ctx sdk.Context, channelID string, sequence uint64) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
-	key := types.GetPendingSendPacketKey(channelId, sequence)
+	key := types.GetPendingSendPacketKey(channelID, sequence)
 	valueBz := store.Get(key)
 	found := len(valueBz) != 0
 	return found
@@ -323,11 +323,11 @@ func (k Keeper) GetAllPendingSendPackets(ctx sdk.Context) []string {
 	for ; iterator.Valid(); iterator.Next() {
 		key := iterator.Key()
 
-		channelId := string(key[:types.PendingSendPacketChannelLength])
-		channelId = strings.TrimRight(channelId, "\x00") // removes null bytes from suffix
+		channelID := string(key[:types.PendingSendPacketChannelLength])
+		channelID = strings.TrimRight(channelID, "\x00") // removes null bytes from suffix
 		sequence := binary.BigEndian.Uint64(key[types.PendingSendPacketChannelLength:])
 
-		packetId := fmt.Sprintf("%s/%d", channelId, sequence)
+		packetId := fmt.Sprintf("%s/%d", channelID, sequence)
 		pendingPackets = append(pendingPackets, packetId)
 	}
 
@@ -336,10 +336,10 @@ func (k Keeper) GetAllPendingSendPackets(ctx sdk.Context) []string {
 
 // Remove all pending sequence numbers from the store
 // This is executed when the quota resets
-func (k Keeper) RemoveAllChannelPendingSendPackets(ctx sdk.Context, channelId string) {
+func (k Keeper) RemoveAllChannelPendingSendPackets(ctx sdk.Context, channelID string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefix(channelId))
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefix(channelID))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

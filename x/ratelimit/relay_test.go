@@ -99,7 +99,7 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
+		ChannelID:      path.EndpointB.ChannelID,
 		MaxPercentSend: sdk.NewInt(5),
 		MaxPercentRecv: sdk.NewInt(5),
 		DurationHours:  1,
@@ -210,7 +210,7 @@ func (suite *RateLimitTestSuite) TestSendIBCToken() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
+		ChannelID:      path.EndpointB.ChannelID,
 		MaxPercentSend: sdk.NewInt(5),
 		MaxPercentRecv: sdk.NewInt(5),
 		DurationHours:  1,

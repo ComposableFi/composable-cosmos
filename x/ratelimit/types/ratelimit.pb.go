@@ -51,7 +51,7 @@ func (PacketDirection) EnumDescriptor() ([]byte, []int) {
 
 type Path struct {
 	Denom     string `protobuf:"bytes,1,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *Path) Reset()         { *m = Path{} }
@@ -94,9 +94,9 @@ func (m *Path) GetDenom() string {
 	return ""
 }
 
-func (m *Path) GetChannelId() string {
+func (m *Path) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -368,10 +368,10 @@ func (m *Path) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintRatelimit(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintRatelimit(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -603,7 +603,7 @@ func (m *Path) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovRatelimit(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovRatelimit(uint64(l))
 	}
@@ -748,7 +748,7 @@ func (m *Path) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -776,7 +776,7 @@ func (m *Path) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

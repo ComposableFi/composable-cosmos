@@ -55,7 +55,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // GetParams get all parameters as types.Params
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+func (k Keeper) GetParams(_ sdk.Context) types.Params {
 	return types.NewParams()
 }
 

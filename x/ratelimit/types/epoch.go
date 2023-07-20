@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	DAY_EPOCH                     = "hour"
-	EpochHourPeriod time.Duration = time.Hour * 24
+	DayEpoch                      = "hour"
+	EpochHourPeriod time.Duration = 24 * time.Hour
 )
 
 // Validate also validates epoch info.
