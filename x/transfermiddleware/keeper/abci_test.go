@@ -81,7 +81,6 @@ func TestBeginBlocker(t *testing.T) {
 	countRemove := 0
 	app.TransferMiddlewareKeeper.IterateRemoveListInfo(ctx, func(removeList types.RemoveParachainIBCTokenInfo) (stop bool) {
 		if ctx.BlockTime().After(removeList.RemoveTime) {
-			t.Log(ctx.BlockTime(), removeList.RemoveTime)
 			countRemove++
 			count--
 		}
