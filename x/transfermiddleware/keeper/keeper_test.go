@@ -582,6 +582,55 @@ func (suite *TransferMiddlewareKeeperTestSuite) TestGetNativeDenomByIBCDenomSeco
 	}
 }
 
+func (suite *TransferMiddlewareKeeperTestSuite) TestGetTotalEscrowedToken() {
+	suite.SetupTest()
+	infos := map[string]types.ParachainIBCTokenInfo{
+		"2": {
+			IbcDenom:    "ibc-test-2",
+			ChannelId:   "channel-1",
+			NativeDenom: "native-2",
+			AssetId:     "2",
+		},
+		"3": {
+			IbcDenom:    "ibc-test-3",
+			ChannelId:   "channel-1",
+			NativeDenom: "native-3",
+			AssetId:     "3",
+		},
+		"4": {
+			IbcDenom:    "ibc-test-4",
+			ChannelId:   "channel-2",
+			NativeDenom: "native-4",
+			AssetId:     "4",
+		},
+		"5": {
+			IbcDenom:    "ibc-test-5",
+			ChannelId:   "channel-2",
+			NativeDenom: "native-5",
+			AssetId:     "5",
+		},
+	}
+	for _, info := range infos {
+		suite.app.TransferMiddlewareKeeper.AddParachainIBCInfo(
+			suite.ctx,
+			info.IbcDenom,
+			info.ChannelId,
+			info.NativeDenom,
+			info.AssetId,
+		)
+	}
+	coins := suite.app.TransferMiddlewareKeeper.GetTotalEscrowedToken(suite.ctx)
+
+	suite.Require().Equal(coins.Len(), 5)
+
+	for _, coin := range coins {
+		ibcTokenInfo := suite.app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByNativeDenom(suite.ctx, coin.Denom)
+		if ibcTokenInfo.AssetId != "1" {
+			suite.Require().Equal(infos[ibcTokenInfo.AssetId] ,ibcTokenInfo)
+		}
+	}
+}
+
 func (suite *TransferMiddlewareKeeperTestSuite) TestLogger() {
 	suite.SetupTest()
 	suite.Require().Equal(suite.ctx.Logger().With("module", "x/ibc-transfermiddleware"), suite.app.TransferMiddlewareKeeper.Logger(suite.ctx))
