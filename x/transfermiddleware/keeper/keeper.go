@@ -1,20 +1,25 @@
 package keeper
 
 import (
+	"time"
+
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 
 type Keeper struct {
 	cdc            codec.BinaryCodec
 	storeKey       storetypes.StoreKey
+	paramSpace     paramtypes.Subspace
 	ICS4Wrapper    porttypes.ICS4Wrapper
 	bankKeeper     types.BankKeeper
 	transferKeeper types.TransferKeeper
@@ -27,14 +32,21 @@ type Keeper struct {
 // NewKeeper returns a new instance of the x/ibchooks keeper
 func NewKeeper(
 	storeKey storetypes.StoreKey,
+	paramSpace paramtypes.Subspace,
 	codec codec.BinaryCodec,
 	ics4Wrapper porttypes.ICS4Wrapper,
 	transferKeeper types.TransferKeeper,
 	bankKeeper types.BankKeeper,
 	authority string,
 ) Keeper {
+	// set KeyTable if it has not already been set
+	if !paramSpace.HasKeyTable() {
+		paramSpace = paramSpace.WithKeyTable(types.ParamKeyTable())
+	}
+
 	return Keeper{
 		storeKey:       storeKey,
+		paramSpace:     paramSpace,
 		transferKeeper: transferKeeper,
 		bankKeeper:     bankKeeper,
 		cdc:            codec,
@@ -73,6 +85,47 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 	store.Set(types.GetKeyParachainIBCTokenInfoByAssetID(assetID), bz)
 	store.Set(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom), []byte(nativeDenom))
 	return nil
+}
+
+// TODO: testing
+// AddParachainIBCInfoToRemoveList add parachain token information token to remove list.
+func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
+	params := keeper.GetParams(ctx)
+	store := ctx.KVStore(keeper.storeKey)
+	if !store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+		return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
+	}
+
+	// Add to remove list
+	removeTime := ctx.BlockTime().Add(params.Duration)
+	removeToken := types.RemoveParachainIBCTokenInfo{
+		NativeDenom: nativeDenom,
+		RemoveTime:  removeTime,
+	}
+
+	bz, err := keeper.cdc.Marshal(&removeToken)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	store.Set(types.GetKeyParachainIBCTokenRemoveListByNativeDenom(nativeDenom), bz)
+	return removeTime, nil
+}
+
+// TODO: testing
+// IterateRemoveListInfo iterate all parachain token in remove list.
+func (keeper Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool)) {
+	store := ctx.KVStore(keeper.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.KeyParachainIBCTokenRemoveListByNativeDenom)
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var removeInfo types.RemoveParachainIBCTokenInfo
+		keeper.cdc.MustUnmarshal(iterator.Value(), &removeInfo)
+		if cb(removeInfo) {
+			break
+		}
+	}
 }
 
 // TODO: testing

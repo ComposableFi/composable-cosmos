@@ -15,8 +15,10 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
-  rpc FundModuleAccount(MsgFundModuleAccount) returns (MsgFundModuleAccountResponse);
-  rpc AddAccountToFundModuleSet(MsgAddAccountToFundModuleSet) returns (MsgAddAccountToFundModuleSetResponse);
+  rpc FundModuleAccount(MsgFundModuleAccount)
+      returns (MsgFundModuleAccountResponse);
+  rpc AddAccountToFundModuleSet(MsgAddAccountToFundModuleSet)
+      returns (MsgAddAccountToFundModuleSetResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -24,15 +26,17 @@ service Msg {
 // Since: cosmos-sdk 0.47
 message MsgUpdateParams {
   option (cosmos.msg.v1.signer) = "authority";
-  option (amino.name)           = "centauri/x/mint/MsgUpdateParams";
+  option (amino.name) = "centauri/x/mint/MsgUpdateParams";
 
-  // authority is the address that controls the module (defaults to x/gov unless overwritten).
-  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // params defines the x/mint parameters to update.
   //
   // NOTE: All parameters must be supplied.
-  Params params = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  Params params = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
 // MsgUpdateParamsResponse defines the response structure for executing a
@@ -42,8 +46,8 @@ message MsgUpdateParams {
 message MsgUpdateParamsResponse {}
 
 message MsgFundModuleAccount {
-    string from_address = 1;
-    repeated cosmos.base.v1beta1.Coin amount = 2 [
+  string from_address = 1;
+  repeated cosmos.base.v1beta1.Coin amount = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"amount\"",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
@@ -54,9 +58,11 @@ message MsgFundModuleAccountResponse {}
 
 // MsgAddAccountToFundModuleSet add account in to allowed fund module set
 message MsgAddAccountToFundModuleSet {
-    // authority is the address that controls the module (defaults to x/gov unless overwritten).
-    string authority = 1[ (gogoproto.moretags) = "yaml:\"authority\"" ];
-    string allowed_address = 2 [ (gogoproto.moretags) = "yaml:\"allowed_address\"" ];
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+  string allowed_address = 2
+      [ (gogoproto.moretags) = "yaml:\"allowed_address\"" ];
 }
 
 message MsgAddAccountToFundModuleSetResponse {}

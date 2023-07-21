@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 
 // TODO: add init genesis logic
@@ -11,6 +11,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	for _, tokenInfo := range genState.TokenInfos {
 		k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelId, tokenInfo.NativeDenom, tokenInfo.AssetId)
 	}
+	k.SetParams(ctx, genState.Params)
 }
 
 // IterateParaTokenInfos iterate through all parachain token info.
@@ -47,5 +48,6 @@ func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
 
 	return &types.GenesisState{
 		TokenInfos: infos,
+		Params:     k.GetParams(ctx),
 	}
 }

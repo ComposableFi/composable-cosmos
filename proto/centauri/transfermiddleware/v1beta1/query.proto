@@ -9,33 +9,38 @@ option go_package = "x/transfermiddleware/types";
 // Query provides defines the gRPC querier service.
 service Query {
   // ParaTokenInfo queries all token info of a native denom.
-  rpc ParaTokenInfo(QueryParaTokenInfoRequest) returns (QueryParaTokenInfoResponse) {
+  rpc ParaTokenInfo(QueryParaTokenInfoRequest)
+      returns (QueryParaTokenInfoResponse) {
     option (google.api.http).get = "/centauri/paratokeninfo";
   }
-  rpc EscrowAddress(QueryEscrowAddressRequest) returns (QueryEscrowAddressResponse) {
+  rpc EscrowAddress(QueryEscrowAddressRequest)
+      returns (QueryEscrowAddressResponse) {
     option (google.api.http).get = "/centauri/escrowaddress";
   }
 }
 
-// message QueryEscrowAddressRequest 
+// message QueryEscrowAddressRequest
 message QueryEscrowAddressRequest {
-  string channel_id = 1 [(gogoproto.moretags) = "yaml:\"channel_id\""];
+  string channel_id = 1 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
 }
 
-// QueryEscrowAddressResponse 
+// QueryEscrowAddressResponse
 message QueryEscrowAddressResponse {
-  string escrow_address = 1 [(gogoproto.moretags) = "yaml:\"escrow_address\""];
+  string escrow_address = 1
+      [ (gogoproto.moretags) = "yaml:\"escrow_address\"" ];
 }
 
-// QueryParaTokenInfoRequest is the request type for the Query/Params RPC method.
+// QueryParaTokenInfoRequest is the request type for the Query/Params RPC
+// method.
 message QueryParaTokenInfoRequest {
-    string native_denom = 1 [(gogoproto.moretags) = "yaml:\"native_denom\""];
+  string native_denom = 1 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
 }
 
-// QueryParaTokenInfoResponse is the response type for the Query/ParaTokenInfo RPC method.
+// QueryParaTokenInfoResponse is the response type for the Query/ParaTokenInfo
+// RPC method.
 message QueryParaTokenInfoResponse {
-    string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
-    string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
-    string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
-    string asset_id = 4 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
+  string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+  string channel_id = 2 [ (gogoproto.moretags) = "yaml:\"channel_id\"" ];
+  string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+  string asset_id = 4 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
 }

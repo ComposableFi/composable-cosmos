@@ -2,9 +2,13 @@ package ibctesting
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"fmt"
+	"os"
 	"testing"
 	"time"
+
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
 
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -19,12 +23,20 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
+	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	teststaking "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
@@ -39,10 +51,11 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	centauri "github.com/notional-labs/centauri/v3/app"
-	"github.com/notional-labs/centauri/v3/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v4/app"
+	"github.com/notional-labs/centauri/v4/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 )
 
 // TestChain is a testing struct that wraps a simapp with the last TM Header, the current ABCI
@@ -111,7 +124,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -605,6 +618,10 @@ func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 
+func (chain *TestChain) RateLimit() ratelimitmodulekeeper.Keeper {
+	return chain.GetTestSupport().RateLimit()
+}
+
 func (chain *TestChain) Balance(acc sdk.AccAddress, denom string) sdk.Coin {
 	return chain.GetTestSupport().BankKeeper().GetBalance(chain.GetContext(), acc, denom)
 }
@@ -619,6 +636,73 @@ func (chain *TestChain) GetBankKeeper() bankkeeper.Keeper {
 
 func (chain TestChain) GetTestSupport() *centauri.TestSupport {
 	return chain.App.(*TestingAppDecorator).TestSupport()
+}
+
+func (chain *TestChain) QueryContract(suite *suite.Suite, contract sdk.AccAddress, key []byte) string {
+	wasmKeeper := chain.GetTestSupport().WasmdKeeper()
+	state, err := wasmKeeper.QuerySmart(chain.GetContext(), contract, key)
+	suite.Require().NoError(err)
+	return string(state)
+}
+
+func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
+	govModuleAddress := chain.GetTestSupport().AccountKeeper().GetModuleAddress(govtypes.ModuleName)
+	wasmCode, err := os.ReadFile(path)
+	suite.Require().NoError(err)
+
+	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) {
+		p.RunAs = govModuleAddress.String()
+		p.WASMByteCode = wasmCode
+		checksum := sha256.Sum256(wasmCode)
+		p.CodeHash = checksum[:]
+	})
+
+	govKeeper := chain.GetTestSupport().GovKeeper()
+	// when
+	mustSubmitAndExecuteLegacyProposal(suite.T(), chain.GetContext(), src, chain.SenderAccount.GetAddress().String(), &govKeeper, govModuleAddress.String())
+	suite.Require().NoError(err)
+}
+
+func (chain *TestChain) InstantiateContract(suite *suite.Suite, msg string, codeID uint64) sdk.AccAddress {
+	wasmKeeper := chain.GetTestSupport().WasmdKeeper()
+	govModuleAddress := chain.GetTestSupport().AccountKeeper().GetModuleAddress(govtypes.ModuleName)
+
+	contractKeeper := wasmkeeper.NewDefaultPermissionKeeper(wasmKeeper)
+	addr, _, err := contractKeeper.Instantiate(chain.GetContext(), codeID, govModuleAddress, govModuleAddress, []byte(msg), "contract", nil)
+	suite.Require().NoError(err)
+	return addr
+}
+
+func mustSubmitAndExecuteLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress string, govKeeper *govkeeper.Keeper, authority string) {
+	t.Helper()
+	msgServer := govkeeper.NewMsgServerImpl(govKeeper)
+	// ignore all submit events
+	contentMsg, err := submitLegacyProposal(t, ctx.WithEventManager(sdk.NewEventManager()), content, myActorAddress, authority, msgServer)
+	require.NoError(t, err)
+
+	_, err = msgServer.ExecLegacyContent(sdk.WrapSDKContext(ctx), v1.NewMsgExecLegacyContent(contentMsg.Content, authority))
+	require.NoError(t, err)
+}
+
+// does not fail on submit proposal
+func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress string, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
+	t.Helper()
+	contentMsg, err := v1.NewLegacyContent(content, govAuthority)
+	require.NoError(t, err)
+
+	proposal, err := v1.NewMsgSubmitProposal(
+		[]sdk.Msg{contentMsg},
+		sdk.Coins{},
+		myActorAddress,
+		"",
+		"my title",
+		"my description",
+	)
+	require.NoError(t, err)
+
+	// when stored
+	_, err = msgServer.SubmitProposal(sdk.WrapSDKContext(ctx), proposal)
+	return contentMsg, err
 }
 
 var _ ibctesting.TestingApp = TestingAppDecorator{}
@@ -641,6 +725,14 @@ func (a TestingAppDecorator) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return a.TestSupport().StakingKeeper()
 }
 
+func (a TestingAppDecorator) GetAccountKeeper() authkeeper.AccountKeeper {
+	return a.TestSupport().AccountKeeper()
+}
+
+func (a TestingAppDecorator) GetGovKeeper() govkeeper.Keeper {
+	return a.TestSupport().GovKeeper()
+}
+
 func (a TestingAppDecorator) GetBankKeeper() bankkeeper.Keeper {
 	return a.TestSupport().BankKeeper()
 }
@@ -659,6 +751,10 @@ func (a TestingAppDecorator) GetTxConfig() client.TxConfig {
 
 func (a TestingAppDecorator) TestSupport() *centauri.TestSupport {
 	return centauri.NewTestSupport(a.t, a.CentauriApp)
+}
+
+func (a TestingAppDecorator) GetWasmdKeeper() wasm.Keeper {
+	return a.TestSupport().WasmdKeeper()
 }
 
 func (a TestingAppDecorator) GetWasmKeeper() wasm08.Keeper {
