@@ -92,7 +92,7 @@ build:
 	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile.debug .
 
 ###############################################################################
 ###                                  Proto                                  ###

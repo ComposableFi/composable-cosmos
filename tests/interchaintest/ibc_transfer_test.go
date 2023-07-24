@@ -153,6 +153,11 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	t.Cleanup(func() {
 		_ = ic.Close()
 	})
+
+	// Fund users on both cosmos and parachain, mints Asset 1 for Alice
+	fundAmount := int64(12_333_000_000_000)
+	polkadotUser, cosmosUser := fundUsers(t, ctx, fundAmount, composable, centaurid)
+
 	// Create a proposal, vote, and wait for it to pass. Return code hash for relayer.
 	codeHash := pushWasmContractViaGov(t, ctx, centaurid)
 
@@ -160,13 +165,14 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	err = r.SetClientContractHash(ctx, eRep, centaurid.Config(), codeHash)
 	require.NoError(t, err)
 
+	t.Logf("addr: %s", cosmosUser.FormattedAddress())
+	t.Logf("mnemonic: %s", cosmosUser.Mnemonic())
+	err = r.SetMnemonic(ctx, eRep, centaurid.Config(), cosmosUser.Mnemonic())
+	require.NoError(t, err)
+
 	// Ensure parachain has started (starts 1 session/epoch after relay chain)
 	err = testutil.WaitForBlocks(ctx, 1, composable)
 	require.NoError(t, err, "polkadot chain failed to make blocks")
-
-	// Fund users on both cosmos and parachain, mints Asset 1 for Alice
-	fundAmount := int64(12_333_000_000_000)
-	polkadotUser, cosmosUser := fundUsers(t, ctx, fundAmount, composable, centaurid)
 
 	err = r.GeneratePath(ctx, eRep, centaurid.Config().ChainID, composable.Config().ChainID, pathName)
 	require.NoError(t, err)
