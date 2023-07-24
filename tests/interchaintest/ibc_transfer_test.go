@@ -97,8 +97,8 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 				Images:         []ibc.DockerImage{CentauriImage},
 				Bin:            "centaurid",
 				Bech32Prefix:   "centauri",
-				Denom:          "stake",
-				GasPrices:      "0.00stake",
+				Denom:          "ppica",
+				GasPrices:      "0.00ppica",
 				GasAdjustment:  1.3,
 				TrustingPeriod: "504h",
 				CoinType:       "118",
@@ -334,7 +334,6 @@ func fundUsers(t *testing.T, ctx context.Context, fundAmount int64, composable, 
 	polkadotUser, cosmosUser := users[0], users[1]
 	err := testutil.WaitForBlocks(ctx, 2, composable, centaurid) // Only waiting 1 block is flaky for parachain
 	require.NoError(t, err, "cosmos or polkadot chain failed to make blocks")
-
 	// Check balances are correct
 	polkadotUserAmount, err := composable.GetBalance(ctx, polkadotUser.FormattedAddress(), composable.Config().Denom)
 	require.NoError(t, err)
