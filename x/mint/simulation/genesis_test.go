@@ -5,8 +5,6 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -15,6 +13,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	"github.com/notional-labs/centauri/v4/x/mint/simulation"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
+	"github.com/stretchr/testify/require"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.

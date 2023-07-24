@@ -6,19 +6,18 @@ import (
 	"fmt"
 
 	abci "github.com/cometbft/cometbft/abci/types"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/notional-labs/centauri/v4/x/mint/client/cli"
 	"github.com/notional-labs/centauri/v4/x/mint/keeper"
 	"github.com/notional-labs/centauri/v4/x/mint/simulation"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
+	"github.com/spf13/cobra"
 )
 
 var (

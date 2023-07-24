@@ -5,13 +5,12 @@ import (
 	"testing"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	"gotest.tools/v3/assert"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/notional-labs/centauri/v4/x/mint/simulation"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
+	"gotest.tools/v3/assert"
 )
 
 func TestProposalMsgs(t *testing.T) {

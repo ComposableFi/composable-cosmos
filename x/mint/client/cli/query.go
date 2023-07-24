@@ -3,11 +3,10 @@ package cli
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
+	"github.com/spf13/cobra"
 )
 
 // GetQueryCmd returns the cli query commands for the minting module.

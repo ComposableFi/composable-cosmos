@@ -8,9 +8,10 @@ import (
 	"testing"
 	"time"
 
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
-
 	"cosmossdk.io/errors"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
@@ -24,19 +25,15 @@ import (
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
-	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
-	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	teststaking "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
@@ -53,6 +50,7 @@ import (
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 	centauri "github.com/notional-labs/centauri/v4/app"
 	"github.com/notional-labs/centauri/v4/app/ibctesting/simapp"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
 	routerKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -685,7 +683,7 @@ func mustSubmitAndExecuteLegacyProposal(t *testing.T, ctx sdk.Context, content v
 }
 
 // does not fail on submit proposal
-func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress string, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
+func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
 	t.Helper()
 	contentMsg, err := v1.NewLegacyContent(content, govAuthority)
 	require.NoError(t, err)

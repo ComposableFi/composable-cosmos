@@ -6,9 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notional-labs/centauri/v4/bech32-migration/utils"
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -19,6 +16,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
+	"github.com/notional-labs/centauri/v4/bech32-migration/utils"
+	"github.com/spf13/cobra"
 )
 
 // TODO this is heavily inspired from https://github.com/cosmos/interchain-accounts-demo/blob/7419a89e98b3da1a39c8ccfeb80ae2b5b1bf1783/cmd/icad/cmd/root.go#L154

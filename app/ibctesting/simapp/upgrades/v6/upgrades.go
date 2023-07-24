@@ -7,7 +7,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
 	v6 "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/migrations/v6"
 )
 

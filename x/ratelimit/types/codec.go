@@ -5,12 +5,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 	authzcodec "github.com/cosmos/cosmos-sdk/x/authz/codec"
 	govcodec "github.com/cosmos/cosmos-sdk/x/gov/codec"
 	groupcodec "github.com/cosmos/cosmos-sdk/x/group/codec"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the

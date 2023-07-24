@@ -14,7 +14,7 @@ import (
 )
 
 // Get the rate limit byte key built from the denom and channelId
-func GetRateLimitItemKey(denom string, channelId string) []byte {
+func GetRateLimitItemKey(denom, channelId string) []byte {
 	return append(types.KeyPrefix(denom), types.KeyPrefix(channelId)...)
 }
 
@@ -108,7 +108,7 @@ func (k Keeper) UndoSendPacket(ctx sdk.Context, channelId string, sequence uint6
 // Reset the rate limit after expiration
 // The inflow and outflow should get reset to 0, the channelValue should be updated,
 // and all pending send packet sequence numbers should be removed
-func (k Keeper) ResetRateLimit(ctx sdk.Context, denom string, channelId string) error {
+func (k Keeper) ResetRateLimit(ctx sdk.Context, denom, channelId string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if channelId == tokenInfo.ChannelId {
@@ -144,7 +144,7 @@ func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 }
 
 // Removes a rate limit object from the store using denom and channel-id
-func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelId string) error {
+func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom, channelId string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if channelId == tokenInfo.ChannelId {
@@ -165,7 +165,7 @@ func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom string, channelId string)
 }
 
 // Grabs and returns a rate limit object from the store using denom and channel-id
-func (k Keeper) GetRateLimit(ctx sdk.Context, denom string, channelId string) (rateLimit types.RateLimit, found bool) {
+func (k Keeper) GetRateLimit(ctx sdk.Context, denom, channelId string) (rateLimit types.RateLimit, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
 	rateLimitKey := GetRateLimitItemKey(denom, channelId)

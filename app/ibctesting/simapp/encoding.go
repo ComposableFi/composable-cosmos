@@ -2,7 +2,6 @@ package simapp
 
 import (
 	"github.com/cosmos/cosmos-sdk/std"
-
 	simappparams "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/params"
 )
 

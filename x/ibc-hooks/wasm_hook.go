@@ -4,18 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 
+	errorsmod "cosmossdk.io/errors"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	"github.com/notional-labs/centauri/v4/x/ibc-hooks/keeper"
 	"github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
-
-	errorsmod "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 )
 
 type ContractAck struct {
@@ -273,7 +272,7 @@ func (h WasmHooks) OnTimeoutPacketOverride(im IBCMiddleware, ctx sdk.Context, pa
 	return nil
 }
 
-func ValidateAndParseMemo(memo string, receiver string) (isWasmRouted bool, contractAddr sdk.AccAddress, msgBytes []byte, err error) {
+func ValidateAndParseMemo(memo, receiver string) (isWasmRouted bool, contractAddr sdk.AccAddress, msgBytes []byte, err error) {
 	isWasmRouted, metadata := jsonStringHasKey(memo, "wasm")
 	if !isWasmRouted {
 		return isWasmRouted, sdk.AccAddress{}, nil, nil

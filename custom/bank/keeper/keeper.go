@@ -11,13 +11,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	banktypes "github.com/notional-labs/centauri/v4/custom/bank/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
-
 	alliancekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Keeper struct {

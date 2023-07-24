@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/stretchr/testify/require"
-
 	tmtypes "github.com/cometbft/cometbft/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	"github.com/stretchr/testify/require"
 )
 
 // ConstructUpdateWasmClientHeader will construct a valid 08-wasm Header with a zero height

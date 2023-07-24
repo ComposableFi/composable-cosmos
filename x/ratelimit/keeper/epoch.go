@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gogo/protobuf/proto"
-
-	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/gogo/protobuf/proto"
+	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
 )
 
 // HasEpochInfo return true if has epoch info

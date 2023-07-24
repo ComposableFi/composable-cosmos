@@ -33,11 +33,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/ibc-go/v7/testing/simapp"
 	"github.com/cosmos/ibc-go/v7/testing/simapp/params"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the

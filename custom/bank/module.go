@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank/exported"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
-
 	custombankkeeper "github.com/notional-labs/centauri/v4/custom/bank/keeper"
 )
 

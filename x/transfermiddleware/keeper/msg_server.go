@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )

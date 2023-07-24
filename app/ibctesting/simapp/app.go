@@ -87,16 +87,6 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/gorilla/mux"
-
-	// TODO: mint module not complete yet,
-	"github.com/notional-labs/centauri/v4/x/mint"
-	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
-
-	"github.com/rakyll/statik/fs"
-	"github.com/spf13/cast"
-
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icacontroller "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"
@@ -123,13 +113,20 @@ import (
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibcmock "github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
+	"github.com/gorilla/mux"
 	simappparams "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/params"
 	simappupgrades "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/upgrades"
 	v6 "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/upgrades/v6"
 	v7 "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/upgrades/v7"
+	// TODO: mint module not complete yet,
+	"github.com/notional-labs/centauri/v4/x/mint"
+	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	"github.com/rakyll/statik/fs"
+	"github.com/spf13/cast"
 )
 
 const appName = "SimApp"

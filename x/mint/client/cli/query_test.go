@@ -8,17 +8,15 @@ import (
 	"testing"
 
 	rpcclientmock "github.com/cometbft/cometbft/rpc/client/mock"
-	"github.com/stretchr/testify/require"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	testutilmod "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/cosmos/cosmos-sdk/x/mint"
 	mintcli "github.com/cosmos/cosmos-sdk/x/mint/client/cli"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetCmdQueryParams(t *testing.T) {
