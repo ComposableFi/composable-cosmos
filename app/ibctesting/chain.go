@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
@@ -49,9 +51,9 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	centauri "github.com/notional-labs/centauri/v3/app"
-	"github.com/notional-labs/centauri/v3/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v4/app"
+	"github.com/notional-labs/centauri/v4/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -122,7 +124,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -614,6 +616,10 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 
 func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
+}
+
+func (chain *TestChain) RateLimit() ratelimitmodulekeeper.Keeper {
+	return chain.GetTestSupport().RateLimit()
 }
 
 func (chain *TestChain) Balance(acc sdk.AccAddress, denom string) sdk.Coin {

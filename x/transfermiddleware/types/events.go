@@ -10,4 +10,5 @@ const (
 	AttributeKeyIbcDenom    = "ibc-denom"
 	AttributeKeyAssetID     = "asset-id"
 	AttributeKeyRlyAdress   = "rly-address"
+	AttributeKeyRemoveTime  = "remove_time"
 )

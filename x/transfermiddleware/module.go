@@ -14,9 +14,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/client/cli"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/keeper"
-	"github.com/notional-labs/centauri/v3/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/client/cli"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/spf13/cobra"
 )
 
@@ -123,7 +123,9 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock implements the AppModule interface
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+	am.keeper.BeginBlocker(ctx)
+}
 
 // EndBlock implements the AppModule interface
 func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
