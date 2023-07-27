@@ -46,16 +46,29 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	nv := 5 // Number of validators
 	nf := 3 // Number of full nodes
 
+	// Override config files to support an ~2.5MB contract
+	configFileOverrides := make(map[string]any)
+
+	appTomlOverrides := make(testutil.Toml)
+	configTomlOverrides := make(testutil.Toml)
+
+	apiOverrides := make(testutil.Toml)
+	apiOverrides["rpc-max-body-bytes"] = 2_000_000_000
+	appTomlOverrides["api"] = apiOverrides
+
+	rpcOverrides := make(testutil.Toml)
+	rpcOverrides["max_body_bytes"] = 2_000_000_000
+	rpcOverrides["max_header_bytes"] = 2_100_000_000
+	configTomlOverrides["rpc"] = rpcOverrides
+
 	consensusOverrides := make(testutil.Toml)
 	blockTime := 5 // seconds, parachain is 12 second blocks, don't make relayer work harder than needed
 	blockT := (time.Duration(blockTime) * time.Second).String()
 	consensusOverrides["timeout_commit"] = blockT
 	consensusOverrides["timeout_propose"] = blockT
 
-	configTomlOverrides := make(testutil.Toml)
 	configTomlOverrides["consensus"] = consensusOverrides
-
-	configFileOverrides := make(map[string]any)
+	configFileOverrides["config/app.toml"] = appTomlOverrides
 	configFileOverrides["config/config.toml"] = configTomlOverrides
 
 	// Get both chains
@@ -159,7 +172,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	polkadotUser, cosmosUser := fundUsers(t, ctx, fundAmount, composable, centaurid)
 
 	// Create a proposal, vote, and wait for it to pass. Return code hash for relayer.
-	codeHash := pushWasmContractViaGov(t, ctx, centaurid)
+	codeHash := pushWasmContractViaGov(t, ctx, centaurid, cosmosUser)
 
 	// Set client contract hash in cosmos chain config
 	err = r.SetClientContractHash(ctx, eRep, centaurid.Config(), codeHash)
@@ -291,16 +304,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	// require.NoError(t, err)
 }
 
-func pushWasmContractViaGov(t *testing.T, ctx context.Context, centaurid *cosmos.CosmosChain) string {
-	// Set up cosmos user for pushing new wasm code msg via governance
-	fundAmountForGov := int64(10_000_000_000)
-	contractUsers := interchaintest.GetAndFundTestUsers(t, ctx, "default", int64(fundAmountForGov), centaurid)
-	contractUser := contractUsers[0]
-
-	contractUserBalInitial, err := centaurid.GetBalance(ctx, contractUser.FormattedAddress(), centaurid.Config().Denom)
-	require.NoError(t, err)
-	require.Equal(t, fundAmountForGov, contractUserBalInitial)
-
+func pushWasmContractViaGov(t *testing.T, ctx context.Context, centaurid *cosmos.CosmosChain, contractUser ibc.Wallet) string {
 	proposal := cosmos.TxProposalv1{
 		Metadata: "none",
 		Deposit:  "500000000" + centaurid.Config().Denom, // greater than min deposit

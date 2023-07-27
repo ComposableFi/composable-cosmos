@@ -229,7 +229,7 @@ replace (
 	//  Use notional lab version of async-icq
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230317170414-3c3da64f93d4 => github.com/notional-labs/async-icq/v7 v7.0.0
 
-	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230724175900-661a0bc3d1af
+	github.com/strangelove-ventures/interchaintest/v7 v7.0.0-20230322043324-cb6ba0947fff => github.com/notional-labs/interchaintest/v7 v7.1.3-0.20230725040710-ba4f5be72a24
 )
 
 replace github.com/notional-labs/composable-testnet => ../../
