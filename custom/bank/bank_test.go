@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	customibctesting "github.com/notional-labs/centauri/v4/app/ibctesting"
 	"github.com/stretchr/testify/suite"
@@ -48,24 +49,30 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 	var (
 		transferAmount = sdk.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
-		coinToSendToB = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
-		timeoutHeight = clienttypes.NewHeight(1, 110)
+		coinToSendToB     = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+		timeoutHeight     = clienttypes.NewHeight(1, 110)
+		originAmt, err    = sdk.NewIntFromString("10000000001100000000000")
+		chainBOriginSuply = sdk.NewCoin("stake", originAmt)
 	)
+	suite.Require().True(err)
 	var (
 		expChainBBalanceDiff sdk.Coin
 		path                 = NewTransferPath(suite.chainA, suite.chainB)
+		escrowAddr           = transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0")
 	)
 
 	testCases := []struct {
 		name                 string
 		expChainABalanceDiff sdk.Coin
 		expTotalSupplyDiff   sdk.Coins
+		expChainBTotalSuppy  sdk.Coins
 		malleate             func()
 	}{
 		{
 			"Total supply with no transfermiddleware setup",
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
 			sdk.Coins{sdk.NewCoin("ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", transferAmount)},
+			sdk.Coins{sdk.NewCoin("ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", transferAmount), chainBOriginSuply},
 			func() {
 				expChainBBalanceDiff = ibctransfertypes.GetTransferCoin(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, coinToSendToB.Denom, transferAmount)
 			},
@@ -74,11 +81,31 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 			"Total supply with transfermiddleware setup",
 			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
 			sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)),
+			sdk.Coins{chainBOriginSuply.Add(sdk.NewCoin("stake", transferAmount))},
 			func() {
 				// Add parachain token info
 				chainBtransMiddleware := suite.chainB.TransferMiddleware()
 				expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 				err := chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
+				suite.Require().NoError(err)
+			},
+		},
+		{
+			"Total supply with transfermiddleware setup and pre mint",
+			sdk.NewCoin(sdk.DefaultBondDenom, transferAmount),
+			sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)),
+			sdk.Coins{chainBOriginSuply.Add(sdk.NewCoin("stake", transferAmount))},
+			func() {
+				// Premint for escrow
+				err := suite.chainB.GetBankKeeper().MintCoins(suite.chainB.GetContext(), "mint", sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))))
+				suite.Require().NoError(err)
+				err = suite.chainB.GetBankKeeper().SendCoinsFromModuleToAccount(suite.chainB.GetContext(), "mint", escrowAddr, sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))))
+				suite.Require().NoError(err)
+
+				// Add parachain token info
+				chainBtransMiddleware := suite.chainB.TransferMiddleware()
+				expChainBBalanceDiff = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
+				err = chainBtransMiddleware.AddParachainIBCInfo(suite.chainB.GetContext(), "ibc/C053D637CCA2A2BA030E2C5EE1B28A16F71CCB0E45E8BE52766DC1B241B77878", "channel-0", sdk.DefaultBondDenom, sdk.DefaultBondDenom)
 				suite.Require().NoError(err)
 			},
 		},
@@ -128,6 +155,7 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 			totalSupply, err := suite.chainB.GetBankKeeper().TotalSupply(suite.chainB.GetContext(), &banktypes.QueryTotalSupplyRequest{})
 			suite.Require().NoError(err)
 			suite.Require().Equal(totalSupply.Supply, originalChainBTotalSupply.Supply.Add(tc.expTotalSupplyDiff...))
+			suite.Require().Equal(totalSupply.Supply, tc.expChainBTotalSuppy)
 		})
 	}
 }
