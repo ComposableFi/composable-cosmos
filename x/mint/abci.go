@@ -1,6 +1,7 @@
 package mint
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -30,6 +31,8 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 
 	// send the minted coins to the fee collector account
 	err := k.AddCollectedFees(ctx, mintedCoins)
+	fmt.Println("err here:", err)
+	fmt.Println("mintedCoins:", mintedCoins)
 	if err != nil {
 		k.Logger(ctx).Info("Not enough incentive tokens in the mint pool to distribute")
 	}
