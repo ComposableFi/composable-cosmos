@@ -11,7 +11,7 @@ LOGLEVEL="info"
 TRACE=""
 
 # remove existing daemon
-rm -rf ~/.centauri*
+rm -rf ~/.banksy*
 
 centaurid config keyring-backend $KEYRING
 centaurid config chain-id $CHAINID
