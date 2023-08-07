@@ -1,0 +1,72 @@
+{
+    "body": {
+        "messages": [
+            {
+                "@type": "/cosmos.gov.v1.MsgSubmitProposal",
+                "messages": [
+                    {
+                        "@type": "/centauri.ratelimit.v1beta1.MsgAddRateLimit",
+                        "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
+                        "denom": "ibc/EF48E6B1A1A19F47ECAEA62F5670C37C0580E86A9E88498B7E393EB6F49F33C0",
+                        "channel_id": "channel-2",
+                        "max_percent_send": "30",
+                        "max_percent_recv": "30",
+                        "duration_hours": "24"
+                    },
+                    {
+                        "@type": "/centauri.ratelimit.v1beta1.MsgAddRateLimit",
+                        "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
+                        "denom": "ibc/47BD209179859CDE4A2806763D7189B6E6FE13A17880FE2B42DE1E6C1E329E23",
+                        "channel_id": "channel-2",
+                        "max_percent_send": "30",
+                        "max_percent_recv": "30",
+                        "duration_hours": "24"
+                    },
+                    {
+                        "@type": "/centauri.ratelimit.v1beta1.MsgAddRateLimit",
+                        "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
+                        "denom": "ibc/F3EC9F834E57DF704FA3AEAF14E8391C2E58397FE56960AD70E67562990D8265",
+                        "channel_id": "channel-2",
+                        "max_percent_send": "30",
+                        "max_percent_recv": "30",
+                        "duration_hours": "24"
+                    },
+                    {
+                        "@type": "/centauri.ratelimit.v1beta1.MsgAddRateLimit",
+                        "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
+                        "denom": "ibc/6727B2F071643B3841BD535ECDD4ED9CAE52ABDD0DCD07C3630811A7A37B215C",
+                        "channel_id": "channel-2",
+                        "max_percent_send": "30",
+                        "max_percent_recv": "30",
+                        "duration_hours": "24"
+                    }
+                ],
+                "initial_deposit": [
+                    {
+                        "denom": "ppica",
+                        "amount": "500000000000000000"
+                    }
+                ],
+                "proposer": "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m",
+                "metadata": "Add Transfer RateLimit",
+                "title": "Add Transfer RateLimit",
+                "summary": "Add Transfer RateLimit for ATOM and OSMO"
+            }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+    },
+    "auth_info": {
+        "signer_infos": [],
+        "fee": {
+            "amount": [],
+            "gas_limit": "200000",
+            "payer": "",
+            "granter": ""
+        },
+        "tip": null
+    },
+    "signatures": []
+}
