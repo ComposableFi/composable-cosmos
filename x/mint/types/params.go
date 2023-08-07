@@ -19,7 +19,7 @@ const (
 	MaxTokenPerYear  = 1000000000000000
 	MinTokenPerYear  = 800000000000000
 	BlockTime        = 5 // assuming 5 second block times
-	IncentivesSupply = 100000000000
+	IncentivesSupply = 1000000000000000000
 )
 
 // Parameter store keys
