@@ -152,3 +152,8 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
 	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
 }
+
+func (k Keeper) GetBankBalances(ctx sdk.Context, denom string) sdk.Coin {
+	mintAddr := k.accountKeeper.GetModuleAddress(types.ModuleName)
+	return k.bankKeeper.GetBalance(ctx, mintAddr, denom)
+}
