@@ -33,9 +33,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 	err := k.AddCollectedFees(ctx, mintedCoins)
 	fmt.Println("err here:", err)
 	fmt.Println("mintedCoins lmao:", mintedCoins)
-	if ctx.BlockHeader().Height > 3 {
-		fmt.Println("mint Balance:", k.GetBankBalances(ctx, "ppica"))
-	}
 	if err != nil {
 		k.Logger(ctx).Info("Not enough incentive tokens in the mint pool to distribute")
 	}
