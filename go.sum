@@ -770,10 +770,10 @@ github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OS
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc1NGpU8TntXwM/s7Z/whsKNDVPiLim35HLBAzA=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
+github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20230809131924-ea880d737dd6 h1:/YN1Cii081rd0njFZMFfwFRyL8G4N2g/7S9h+vAmAZo=
+github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20230809131924-ea880d737dd6/go.mod h1:M4wXmuGMEFX665yUsYgR35aXln+e+YpxuYbYpdUl3Zk=
 github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70 h1:oZTUDZzUBp8D2h3uZfPQmZGVksrROqubHDASvFB/+u0=
 github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3 h1:LBK82QivQaiycoKZPGDV3fJL1KTWy8AAoerEGUno/60=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3/go.mod h1:L7nnQ9rEoYLyulE9M/zhcBcHDWqMMSQn8cf4yY5A+T8=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
