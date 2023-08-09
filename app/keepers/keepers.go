@@ -68,9 +68,9 @@ import (
 
 	custombankkeeper "github.com/notional-labs/centauri/v4/custom/bank/keeper"
 
-	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
-	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
-	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
+	"github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/router"
+	routerkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/router/keeper"
+	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/router/types"
 
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
