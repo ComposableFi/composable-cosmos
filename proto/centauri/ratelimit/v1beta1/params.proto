@@ -7,4 +7,9 @@ import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
 // Params holds parameters for the mint module.
-message Params {}
+message Params {
+    string min_rate_limit_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}

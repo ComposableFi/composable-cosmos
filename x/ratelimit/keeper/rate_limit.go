@@ -41,12 +41,13 @@ func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelId string, d
 }
 
 // Adds an amount to the flow in either the SEND or RECV direction
-func (k Keeper) UpdateFlow(rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
+func (k Keeper) UpdateFlow(ctx sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
+	minRateLimitAmount := k.GetParams(ctx).MinRateLimitAmount
 	switch direction {
 	case types.PACKET_SEND:
-		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota)
+		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota, minRateLimitAmount)
 	case types.PACKET_RECV:
-		return rateLimit.Flow.AddInflow(amount, *rateLimit.Quota)
+		return rateLimit.Flow.AddInflow(amount, *rateLimit.Quota, minRateLimitAmount)
 	default:
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "invalid packet direction (%s)", direction.String())
 	}
@@ -75,7 +76,7 @@ func (k Keeper) CheckRateLimitAndUpdateFlow(
 		return false, nil
 	}
 	// Update the flow object with the change in amount
-	if err := k.UpdateFlow(rateLimit, direction, amount); err != nil {
+	if err := k.UpdateFlow(ctx, rateLimit, direction, amount); err != nil {
 		// If the rate limit was exceeded, emit an event
 		EmitTransferDeniedEvent(ctx, types.EventRateLimitExceeded, denom, channelId, direction, amount, err)
 		return false, err
