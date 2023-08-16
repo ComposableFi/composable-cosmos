@@ -107,11 +107,12 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	// add rate limit
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
-		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
-		MaxPercentSend: sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
-		MaxPercentRecv: sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
-		DurationHours:  1,
+		Denom:              nativeDenom,
+		ChannelId:          path.EndpointB.ChannelID,
+		MaxPercentSend:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
+		MaxPercentRecv:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
+		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
+		DurationHours:      1,
 	}
 	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &msgAddRateLimit)
 	suite.Require().NoError(err)
@@ -218,11 +219,12 @@ func (suite *RateLimitTestSuite) TestSendIBCToken() {
 	// add rate limit
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
-		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
-		MaxPercentSend: sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
-		MaxPercentRecv: sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
-		DurationHours:  1,
+		Denom:              nativeDenom,
+		ChannelId:          path.EndpointB.ChannelID,
+		MaxPercentSend:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
+		MaxPercentRecv:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
+		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
+		DurationHours:      1,
 	}
 	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &msgAddRateLimit)
 	suite.Require().NoError(err)
@@ -333,11 +335,12 @@ func (suite *RateLimitTestSuite) TestReceiveIBCTokenWithMinRateLimitAmount() {
 	// add rate limit
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
-		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
-		MaxPercentSend: sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
-		MaxPercentRecv: sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
-		DurationHours:  1,
+		Denom:              nativeDenom,
+		ChannelId:          path.EndpointB.ChannelID,
+		MaxPercentSend:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
+		MaxPercentRecv:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
+		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
+		DurationHours:      1,
 	}
 	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &msgAddRateLimit)
 	suite.Require().NoError(err)
@@ -453,11 +456,12 @@ func (suite *RateLimitTestSuite) TestSendIBCTokenWithMinRateLimitAmount() {
 	// add rate limit 5%
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
-		Denom:          nativeDenom,
-		ChannelId:      path.EndpointB.ChannelID,
-		MaxPercentSend: sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
-		MaxPercentRecv: sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
-		DurationHours:  1,
+		Denom:              nativeDenom,
+		ChannelId:          path.EndpointB.ChannelID,
+		MaxPercentSend:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
+		MaxPercentRecv:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
+		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
+		DurationHours:      1,
 	}
 	err = chainBRateLimitKeeper.AddRateLimit(suite.chainB.GetContext(), &msgAddRateLimit)
 	suite.Require().NoError(err)

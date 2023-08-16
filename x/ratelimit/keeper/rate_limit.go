@@ -42,12 +42,11 @@ func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelId string, d
 
 // Adds an amount to the flow in either the SEND or RECV direction
 func (k Keeper) UpdateFlow(ctx sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
-	minRateLimitAmount := k.GetParams(ctx).MinRateLimitAmount
 	switch direction {
 	case types.PACKET_SEND:
-		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota, minRateLimitAmount)
+		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota, rateLimit.MinRateLimitAmount)
 	case types.PACKET_RECV:
-		return rateLimit.Flow.AddInflow(amount, *rateLimit.Quota, minRateLimitAmount)
+		return rateLimit.Flow.AddInflow(amount, *rateLimit.Quota, rateLimit.MinRateLimitAmount)
 	default:
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "invalid packet direction (%s)", direction.String())
 	}
@@ -219,9 +218,10 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 	}
 
 	k.SetRateLimit(ctx, types.RateLimit{
-		Path:  &path,
-		Quota: &quota,
-		Flow:  &flow,
+		Path:               &path,
+		Quota:              &quota,
+		Flow:               &flow,
+		MinRateLimitAmount: msg.MinRateLimitAmount,
 	})
 
 	return nil
@@ -262,9 +262,10 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	}
 
 	k.SetRateLimit(ctx, types.RateLimit{
-		Path:  &path,
-		Quota: &quota,
-		Flow:  &flow,
+		Path:               &path,
+		Quota:              &quota,
+		Flow:               &flow,
+		MinRateLimitAmount: msg.MinRateLimitAmount,
 	})
 
 	return nil
