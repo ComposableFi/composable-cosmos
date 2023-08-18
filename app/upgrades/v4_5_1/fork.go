@@ -11,6 +11,8 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	ctx.Logger().Info("Applying v5 upgrade" +
 		"Remove Rate Limit",
 	)
+
+	RemoveRateLimit(ctx, &keepers.RatelimitKeeper)
 }
 
 func RemoveRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
