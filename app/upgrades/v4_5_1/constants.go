@@ -8,7 +8,7 @@ const (
 
 	// UpgradeHeight defines the block height at which the Composable v6 upgrade is
 	// triggered.
-	UpgradeHeight = 1_117_000
+	UpgradeHeight = 1127000
 )
 
 var Fork = upgrades.Fork{
