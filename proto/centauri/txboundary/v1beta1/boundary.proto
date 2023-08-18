@@ -1,0 +1,14 @@
+syntax = "proto3";
+package centauri.txboundary.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "x/tx-boundary/types";
+
+// Boundary defines the number of tx limit and block per tx generation time
+message Boundary {
+    uint64 boundary = 1;
+    uint64 blocks_per_generation = 2;
+}
