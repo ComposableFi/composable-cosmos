@@ -113,6 +113,7 @@ import (
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	v4_5 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5"
+	v4_5_1 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5_1"
 
 	upgrades "github.com/notional-labs/centauri/v4/app/upgrades"
 )
@@ -133,7 +134,7 @@ var (
 	EnableSpecificProposals = ""
 
 	Upgrades = []upgrades.Upgrade{v4.Upgrade}
-	Forks    = []upgrades.Fork{v4_5.Fork}
+	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
