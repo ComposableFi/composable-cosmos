@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/notional-labs/centauri/v4/x/mint/keeper"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
 )

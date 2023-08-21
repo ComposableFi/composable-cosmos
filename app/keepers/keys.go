@@ -34,6 +34,7 @@ import (
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+
 	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"

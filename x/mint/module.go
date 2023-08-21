@@ -15,6 +15,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+
 	"github.com/notional-labs/centauri/v4/x/mint/client/cli"
 	"github.com/notional-labs/centauri/v4/x/mint/keeper"
 	"github.com/notional-labs/centauri/v4/x/mint/simulation"
