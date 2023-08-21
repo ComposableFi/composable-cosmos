@@ -30,7 +30,11 @@ message MsgAddRateLimit {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  uint64 duration_hours = 6;
+  string min_rate_limit_amount = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 duration_hours = 7;
 }
 
 message MsgAddRateLimitResponse {}
@@ -51,7 +55,11 @@ message MsgUpdateRateLimit {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  uint64 duration_hours = 6;
+  string min_rate_limit_amount = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 duration_hours = 7;
 }
 
 message MsgUpdateRateLimitResponse {}
