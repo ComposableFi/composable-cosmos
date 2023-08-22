@@ -35,7 +35,7 @@ type MsgAddRateLimit struct {
 	// overwritten).
 	Authority          string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom              string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 	MaxPercentSend     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
 	MaxPercentRecv     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
 	MinRateLimitAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=min_rate_limit_amount,json=minRateLimitAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_rate_limit_amount"`
@@ -144,7 +144,7 @@ type MsgUpdateRateLimit struct {
 	// overwritten).
 	Authority          string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom              string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 	MaxPercentSend     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
 	MaxPercentRecv     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
 	MinRateLimitAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=min_rate_limit_amount,json=minRateLimitAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_rate_limit_amount"`
