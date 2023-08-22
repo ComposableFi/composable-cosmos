@@ -76,6 +76,10 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "either the max send or max receive threshold must be greater than 0")
 	}
 
+	if msg.MinRateLimitAmount.LTE(math.ZeroInt()) {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "mint rate limit amount must be greater than 0")
+	}
+
 	if msg.DurationHours == 0 {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "duration can not be zero")
 	}
@@ -142,6 +146,10 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 
 	if msg.MaxPercentRecv.IsZero() && msg.MaxPercentSend.IsZero() {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "either the max send or max receive threshold must be greater than 0")
+	}
+
+	if msg.MinRateLimitAmount.LTE(math.ZeroInt()) {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "mint rate limit amount must be greater than 0")
 	}
 
 	if msg.DurationHours == 0 {

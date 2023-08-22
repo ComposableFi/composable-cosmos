@@ -31,7 +31,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	bech32stakingmigration "github.com/notional-labs/centauri/v4/bech32-migration/staking"
 
 	"github.com/notional-labs/centauri/v4/app/keepers"
 	v4 "github.com/notional-labs/centauri/v4/app/upgrades/v4"
@@ -113,6 +112,8 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	v4_5 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5"
+	v4_5_1 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5_1"
 
 	upgrades "github.com/notional-labs/centauri/v4/app/upgrades"
 )
@@ -133,6 +134,7 @@ var (
 	EnableSpecificProposals = ""
 
 	Upgrades = []upgrades.Upgrade{v4.Upgrade}
+	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -576,10 +578,7 @@ func (app *CentauriApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	if ctx.BlockHeight() == ForkHeight {
-		bech32stakingmigration.MigrateUnbonding(ctx, app.GetKey(stakingtypes.StoreKey), app.appCodec)
-	}
-
+	BeginBlockForks(ctx, app)
 	return app.mm.BeginBlock(ctx, req)
 }
 

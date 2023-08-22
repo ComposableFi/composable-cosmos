@@ -18,10 +18,10 @@ func NewFlow(channelValue math.Int) Flow {
 
 // Adds an amount to the rate limit's flow after an incoming packet was received
 // Returns an error if the new inflow will cause the rate limit to exceed its quota
-func (f *Flow) AddInflow(amount math.Int, quota Quota) error {
+func (f *Flow) AddInflow(amount math.Int, quota Quota, minRateLimit math.Int) error {
 	netInflow := f.Inflow.Sub(f.Outflow).Add(amount)
 
-	if quota.CheckExceedsQuota(PACKET_RECV, netInflow, f.ChannelValue) {
+	if quota.CheckExceedsQuota(PACKET_RECV, netInflow, f.ChannelValue, minRateLimit) {
 		return errorsmod.Wrapf(ErrQuotaExceeded,
 			"Inflow exceeds quota - Net Inflow: %v, Channel Value: %v, Threshold: %v%%",
 			netInflow, f.ChannelValue, quota.MaxPercentRecv)
@@ -33,10 +33,10 @@ func (f *Flow) AddInflow(amount math.Int, quota Quota) error {
 
 // Adds an amount to the rate limit's flow after a packet was sent
 // Returns an error if the new outflow will cause the rate limit to exceed its quota
-func (f *Flow) AddOutflow(amount math.Int, quota Quota) error {
+func (f *Flow) AddOutflow(amount math.Int, quota Quota, minRateLimit math.Int) error {
 	netOutflow := f.Outflow.Sub(f.Inflow).Add(amount)
 
-	if quota.CheckExceedsQuota(PACKET_SEND, netOutflow, f.ChannelValue) {
+	if quota.CheckExceedsQuota(PACKET_SEND, netOutflow, f.ChannelValue, minRateLimit) {
 		return errorsmod.Wrapf(ErrQuotaExceeded,
 			"Outflow exceeds quota - Net Outflow: %v, Channel Value: %v, Threshold: %v%%",
 			netOutflow, f.ChannelValue, quota.MaxPercentSend)

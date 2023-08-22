@@ -38,6 +38,11 @@ func NewKeeper(
 	tfmwKeeper tfmwkeeper.Keeper,
 	authority string,
 ) *Keeper {
+	// set KeyTable if it has not already been set
+	if !ps.HasKeyTable() {
+		ps = ps.WithKeyTable(types.ParamKeyTable())
+	}
+
 	return &Keeper{
 		cdc:           cdc,
 		storeKey:      key,
@@ -55,8 +60,9 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // GetParams get all parameters as types.Params
-func (k Keeper) GetParams(_ sdk.Context) types.Params {
-	return types.NewParams()
+func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
+	k.paramstore.GetParamSet(ctx, &params)
+	return params
 }
 
 // SetParams set the params
