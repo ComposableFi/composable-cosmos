@@ -1,5 +1,7 @@
 package types
 
+import fmt "fmt"
+
 var (
 	DefaultDelegateBoundary = Boundary{
 		TxLimit:             5,
@@ -22,5 +24,8 @@ func DefaultGenesisState() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func ValidateGenesis(data GenesisState) error {
+	if data.DelegateBoundary.BlocksPerGeneration <= 0 || data.RedelegateBoundary.BlocksPerGeneration <= 0 {
+		return fmt.Errorf("BlocksPerGeneration must greater than 0")
+	}
 	return nil
 }

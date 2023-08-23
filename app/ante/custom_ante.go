@@ -61,9 +61,12 @@ func (g StakingPermissionDecorator) ValidateStakingMsg(ctx sdk.Context, msgs []s
 func (g StakingPermissionDecorator) validDelegateMsg(ctx sdk.Context, msg *stakingtypes.MsgDelegate) error {
 	boundary := g.txBoundary.GetDelegateBoundary(ctx)
 	g.txBoundary.UpdateLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress))
-	if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).DelegateCount > boundary.TxLimit {
+	if boundary.TxLimit == 0 {
+		return nil
+	} else if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).DelegateCount > boundary.TxLimit {
 		return fmt.Errorf("delegate tx denied, excess tx limit")
 	}
+	g.txBoundary.IncrementDelegateCount(ctx, sdk.AccAddress(msg.DelegatorAddress))
 
 	return nil
 }
@@ -71,9 +74,11 @@ func (g StakingPermissionDecorator) validDelegateMsg(ctx sdk.Context, msg *staki
 func (g StakingPermissionDecorator) validRedelegateMsg(ctx sdk.Context, msg *stakingtypes.MsgBeginRedelegate) error {
 	boundary := g.txBoundary.GetRedelegateBoundary(ctx)
 	g.txBoundary.UpdateLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress))
-	if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).DelegateCount > boundary.TxLimit {
+	if boundary.TxLimit == 0 {
+		return nil
+	} else if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).ReledegateCount > boundary.TxLimit {
 		return fmt.Errorf("redelegate tx denied, excess tx limit")
 	}
-
+	g.txBoundary.IncrementRedelegateCount(ctx, sdk.AccAddress(msg.DelegatorAddress))
 	return nil
 }
