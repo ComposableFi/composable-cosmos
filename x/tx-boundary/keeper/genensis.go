@@ -9,11 +9,16 @@ import (
 // InitGenesis initializes the capability module's state from a provided genesis
 // state.
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
-	// TODO: init genensis
+	k.SetDelegateBoundary(ctx, genState.DelegateBoundary)
+	k.SetRedelegateBoundary(ctx, genState.RedelegateBoundary)
 }
 
 // ExportGenesis returns the capability module's exported genesis.
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
-	// TODO: export genensis
-	return nil
+	genesis := types.DefaultGenesisState()
+
+	genesis.DelegateBoundary = k.GetDelegateBoundary(ctx)
+	genesis.RedelegateBoundary = k.GetRedelegateBoundary(ctx)
+
+	return genesis
 }
