@@ -49,7 +49,7 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	}
 
 	// lock ibc token if dstChannel is paraChannel
-	if packet.GetDestChannel() == paraTokenInfo.ChannelId {
+	if packet.GetDestChannel() == paraTokenInfo.ChannelID {
 		// escrow ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
 

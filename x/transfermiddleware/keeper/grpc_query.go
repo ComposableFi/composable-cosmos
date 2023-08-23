@@ -15,13 +15,13 @@ func (k Keeper) ParaTokenInfo(c context.Context, req *types.QueryParaTokenInfoRe
 	return &types.QueryParaTokenInfoResponse{
 		IbcDenom:    info.IbcDenom,
 		NativeDenom: info.NativeDenom,
-		ChannelId:   info.ChannelId,
+		ChannelID:   info.ChannelID,
 		AssetId:     info.AssetId,
 	}, nil
 }
 
 func (k Keeper) EscrowAddress(_ context.Context, req *types.QueryEscrowAddressRequest) (*types.QueryEscrowAddressResponse, error) {
-	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, req.ChannelId)
+	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, req.ChannelID)
 
 	return &types.QueryEscrowAddressResponse{
 		EscrowAddress: escrowAddress.String(),

@@ -67,7 +67,7 @@ func GetEscowAddress() *cobra.Command {
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 			res, err := queryClient.EscrowAddress(cmd.Context(), &types.QueryEscrowAddressRequest{
-				ChannelId: args[0],
+				ChannelID: args[0],
 			})
 			if err != nil {
 				return err

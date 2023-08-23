@@ -9,25 +9,25 @@ import (
 var (
 	info1 = ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-1",
-		ChannelId:   "channel-1",
+		ChannelID:   "channel-1",
 		NativeDenom: "native-1",
 		AssetId:     "1",
 	}
 	info2 = ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-2",
-		ChannelId:   "channel-2",
+		ChannelID:   "channel-2",
 		NativeDenom: "native-2",
 		AssetId:     "2",
 	}
 	invalidAssetID = ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-3",
-		ChannelId:   "channel-3",
+		ChannelID:   "channel-3",
 		NativeDenom: "native-3",
 		AssetId:     "asset-3",
 	}
 	dup1 = ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test-4",
-		ChannelId:   "channel-4",
+		ChannelID:   "channel-4",
 		NativeDenom: "native-1",
 		AssetId:     "1",
 	}

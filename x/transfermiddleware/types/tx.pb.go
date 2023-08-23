@@ -34,7 +34,7 @@ type MsgAddParachainIBCTokenInfo struct {
 	// authority is the address that controls the module (defaults to x/gov unless
 	// overwritten).
 	Authority   string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
-	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID   string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	IbcDenom    string `protobuf:"bytes,3,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
 	NativeDenom string `protobuf:"bytes,4,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 	AssetId     string `protobuf:"bytes,5,opt,name=asset_id,json=assetId,proto3" json:"asset_id,omitempty" yaml:"asset_id"`
@@ -80,9 +80,9 @@ func (m *MsgAddParachainIBCTokenInfo) GetAuthority() string {
 	return ""
 }
 
-func (m *MsgAddParachainIBCTokenInfo) GetChannelId() string {
+func (m *MsgAddParachainIBCTokenInfo) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -572,10 +572,10 @@ func (m *MsgAddParachainIBCTokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, er
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -753,7 +753,7 @@ func (m *MsgAddParachainIBCTokenInfo) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -902,7 +902,7 @@ func (m *MsgAddParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -930,7 +930,7 @@ func (m *MsgAddParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {

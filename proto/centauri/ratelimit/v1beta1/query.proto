@@ -17,12 +17,12 @@ service Query {
     option (google.api.http).get =
         "/centauri/ratelimit/ratelimit/{channel_id}/by_denom";
   }
-  rpc RateLimitsByChainId(QueryRateLimitsByChainIdRequest)
-      returns (QueryRateLimitsByChainIdResponse) {
+  rpc RateLimitsByChainID(QueryRateLimitsByChainIDRequest)
+      returns (QueryRateLimitsByChainIDResponse) {
     option (google.api.http).get = "/centauri/ratelimit/ratelimits/{chain_id}";
   }
-  rpc RateLimitsByChannelId(QueryRateLimitsByChannelIdRequest)
-      returns (QueryRateLimitsByChannelIdResponse) {
+  rpc RateLimitsByChannelID(QueryRateLimitsByChannelIDRequest)
+      returns (QueryRateLimitsByChannelIDResponse) {
     option (google.api.http).get =
         "/centauri/ratelimit/ratelimits/{channel_id}";
   }
@@ -43,13 +43,13 @@ message QueryRateLimitRequest {
 }
 message QueryRateLimitResponse { RateLimit rate_limit = 1; }
 
-message QueryRateLimitsByChainIdRequest { string chain_id = 1; }
-message QueryRateLimitsByChainIdResponse {
+message QueryRateLimitsByChainIDRequest { string chain_id = 1; }
+message QueryRateLimitsByChainIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryRateLimitsByChannelIdRequest { string channel_id = 1; }
-message QueryRateLimitsByChannelIdResponse {
+message QueryRateLimitsByChannelIDRequest { string channel_id = 1; }
+message QueryRateLimitsByChannelIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }
 

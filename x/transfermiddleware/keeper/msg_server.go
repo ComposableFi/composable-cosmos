@@ -32,7 +32,7 @@ func (ms msgServer) AddParachainIBCTokenInfo(goCtx context.Context, req *types.M
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
 	}
 
-	err := ms.AddParachainIBCInfo(ctx, req.IbcDenom, req.ChannelId, req.NativeDenom, req.AssetId)
+	err := ms.AddParachainIBCInfo(ctx, req.IbcDenom, req.ChannelID, req.NativeDenom, req.AssetId)
 	if err != nil {
 		return nil, err
 	}
