@@ -80,6 +80,9 @@ import (
 	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
+	txBoundaryKeeper "github.com/notional-labs/centauri/v4/x/tx-boundary/keeper"
+	txBoundaryTypes "github.com/notional-labs/centauri/v4/x/tx-boundary/types"
+
 	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
 	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
 	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
@@ -145,6 +148,7 @@ type AppKeepers struct {
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
+	TxBoundaryKeepper        txBoundaryKeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
@@ -270,6 +274,12 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
+		authorityAddress,
+	)
+
+	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[txBoundaryTypes.StoreKey],
 		authorityAddress,
 	)
 

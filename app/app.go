@@ -96,6 +96,9 @@ import (
 	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 
+	txBoundary "github.com/notional-labs/centauri/v4/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/centauri/v4/x/tx-boundary/types"
+
 	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
 	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 
@@ -208,6 +211,7 @@ var (
 		ica.AppModuleBasic{},
 		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
+		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
@@ -322,6 +326,7 @@ func NewCentauriApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
+	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
@@ -364,6 +369,7 @@ func NewCentauriApp(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		routerModule,
 		transfermiddlewareModule,
+		txBoundaryModule,
 		icaModule,
 		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
@@ -387,6 +393,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
@@ -426,6 +433,7 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
@@ -462,6 +470,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
@@ -521,6 +530,7 @@ func NewCentauriApp(
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
+		app.TxBoundaryKeepper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
