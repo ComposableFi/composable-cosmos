@@ -414,7 +414,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	appCodec codec.Codec,
 	cdc *codec.LegacyAmino,
 	bApp *baseapp.BaseApp,
-	invCheckPeriod uint,
+	_ uint, // invCheckPeriod
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 ) {

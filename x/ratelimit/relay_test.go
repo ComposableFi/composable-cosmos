@@ -109,7 +109,7 @@ func (suite *RateLimitTestSuite) TestReceiveIBCToken() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:              nativeDenom,
-		ChannelId:          path.EndpointB.ChannelID,
+		ChannelID:          path.EndpointB.ChannelID,
 		MaxPercentSend:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
 		MaxPercentRecv:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
 		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
@@ -221,7 +221,7 @@ func (suite *RateLimitTestSuite) TestSendIBCToken() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:              nativeDenom,
-		ChannelId:          path.EndpointB.ChannelID,
+		ChannelID:          path.EndpointB.ChannelID,
 		MaxPercentSend:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
 		MaxPercentRecv:     sdk.NewInt(5), // 50_000_000_000 > minRateLimitAmount(10_000_000_000) => RateLimit = 50_000_000_000
 		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
@@ -337,7 +337,7 @@ func (suite *RateLimitTestSuite) TestReceiveIBCTokenWithMinRateLimitAmount() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:              nativeDenom,
-		ChannelId:          path.EndpointB.ChannelID,
+		ChannelID:          path.EndpointB.ChannelID,
 		MaxPercentSend:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
 		MaxPercentRecv:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
 		MinRateLimitAmount: sdk.NewInt(10_000_000_000),
@@ -458,7 +458,7 @@ func (suite *RateLimitTestSuite) TestSendIBCTokenWithMinRateLimitAmount() {
 	chainBRateLimitKeeper := suite.chainB.RateLimit()
 	msgAddRateLimit := ratelimittypes.MsgAddRateLimit{
 		Denom:              nativeDenom,
-		ChannelId:          path.EndpointB.ChannelID,
+		ChannelID:          path.EndpointB.ChannelID,
 		MaxPercentSend:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
 		MaxPercentRecv:     sdk.NewInt(5), // 5_000_000_000 < minRateLimitAmount(10_000_000_000) => RateLimit = 10_000_000_000
 		MinRateLimitAmount: sdk.NewInt(10_000_000_000),

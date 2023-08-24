@@ -14,7 +14,6 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) {
 		if ctx.BlockTime().After(removeList.RemoveTime) {
 			k.RemoveParachainIBCInfo(ctx, removeList.NativeDenom)
 		}
-
 		return false
 	})
 }

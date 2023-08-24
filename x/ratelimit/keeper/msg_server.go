@@ -69,7 +69,7 @@ func (k Keeper) RemoveTransferRateLimit(goCtx context.Context, msg *types.MsgRem
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelId)
+	err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (k Keeper) ResetTransferRateLimit(goCtx context.Context, msg *types.MsgRese
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelID)
 	if err != nil {
 		return nil, err
 	}

@@ -113,7 +113,7 @@ func (keeper Keeper) SendPacket(
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
 	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
-	if parachainInfo.ChannelId != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
+	if parachainInfo.ChannelID != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
 		return keeper.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
 
@@ -188,10 +188,10 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		return nil
 	}
 
-	if packet.GetSourceChannel() == paraTokenInfo.ChannelId {
+	if packet.GetSourceChannel() == paraTokenInfo.ChannelID {
 		nativeToken := sdk.NewCoin(paraTokenInfo.NativeDenom, transferAmount)
 		// send IBC token to escrow address ibc token
-		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelId)
+		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelID)
 		if err := keeper.bankKeeper.SendCoins(ctx, sender, escrowAddress, sdk.NewCoins(token)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from account to module despite previously minting coins to module account: %v", err))
 		}

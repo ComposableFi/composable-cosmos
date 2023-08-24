@@ -34,7 +34,7 @@ type ParachainIBCTokenInfo struct {
 	// dotsama chain.
 	IbcDenom string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
 	// channel_id is source channel in IBC connection from centauri chain
-	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	// native denom is new native minted denom in centauri chain.
 	NativeDenom string `protobuf:"bytes,3,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 	// asset id is the id of the asset on Picasso
@@ -81,9 +81,9 @@ func (m *ParachainIBCTokenInfo) GetIbcDenom() string {
 	return ""
 }
 
-func (m *ParachainIBCTokenInfo) GetChannelId() string {
+func (m *ParachainIBCTokenInfo) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -228,10 +228,10 @@ func (m *ParachainIBCTokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintParachainTokenInfo(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintParachainTokenInfo(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -304,7 +304,7 @@ func (m *ParachainIBCTokenInfo) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovParachainTokenInfo(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovParachainTokenInfo(uint64(l))
 	}
@@ -403,7 +403,7 @@ func (m *ParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -431,7 +431,7 @@ func (m *ParachainIBCTokenInfo) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {

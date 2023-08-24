@@ -10,7 +10,7 @@ import (
 // InitGenesis initializes the transfermiddleware module's state from a provided genesis state.
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	for _, tokenInfo := range genState.TokenInfos {
-		k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelId, tokenInfo.NativeDenom, tokenInfo.AssetId)
+		k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelID, tokenInfo.NativeDenom, tokenInfo.AssetId)
 	}
 	k.SetParams(ctx, genState.Params)
 }

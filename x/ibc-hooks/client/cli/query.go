@@ -14,7 +14,7 @@ import (
 	"github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 )
 
-func indexRunCmd(cmd *cobra.Command, args []string) error {
+func indexRunCmd(cmd *cobra.Command, _ []string) error {
 	usageTemplate := `Usage:{{if .HasAvailableSubCommands}}
   {{.CommandPath}} [command]{{end}}
   

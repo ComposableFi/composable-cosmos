@@ -12,13 +12,13 @@ func TestValidateBasic(t *testing.T) {
 	var (
 		validInfo = types.ParachainIBCTokenInfo{
 			IbcDenom:    "ibc-test-1",
-			ChannelId:   "channel-1",
+			ChannelID:   "channel-1",
 			NativeDenom: "native-1",
 			AssetId:     "1",
 		}
 		invalidInfo = types.ParachainIBCTokenInfo{
 			IbcDenom:    "ibc-test-1",
-			ChannelId:   "channel-1",
+			ChannelID:   "channel-1",
 			NativeDenom: "native-1",
 			AssetId:     "asset-1",
 		}

@@ -20,7 +20,7 @@ func RemoveRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 	rateLimits := rlKeeper.GetAllRateLimits(ctx)
 	// Remove Rate limit
 	for _, rateLimit := range rateLimits {
-		err := rlKeeper.RemoveRateLimit(ctx, rateLimit.Path.Denom, rateLimit.Path.ChannelId)
+		err := rlKeeper.RemoveRateLimit(ctx, rateLimit.Path.Denom, rateLimit.Path.ChannelID)
 		if err != nil {
 			panic(err)
 		}

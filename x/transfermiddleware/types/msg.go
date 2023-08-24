@@ -27,7 +27,7 @@ func NewMsgAddParachainIBCTokenInfo(
 		IbcDenom:    ibcDenom,
 		NativeDenom: nativeDenom,
 		AssetId:     assetID,
-		ChannelId:   channelID,
+		ChannelID:   channelID,
 	}
 }
 
@@ -55,8 +55,8 @@ func (msg *MsgAddParachainIBCTokenInfo) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	// validate channelIDs
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
 
