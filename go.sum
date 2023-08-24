@@ -772,8 +772,8 @@ github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
 github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70 h1:oZTUDZzUBp8D2h3uZfPQmZGVksrROqubHDASvFB/+u0=
 github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3 h1:LBK82QivQaiycoKZPGDV3fJL1KTWy8AAoerEGUno/60=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230719072346-7acf9377aac3/go.mod h1:L7nnQ9rEoYLyulE9M/zhcBcHDWqMMSQn8cf4yY5A+T8=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230720035542-4b1cd673ad3e h1:5Jm678g0o1NJ8TibGYVyMf62pxwcfKgbd3GEgKyMyjI=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230720035542-4b1cd673ad3e/go.mod h1:3jaW2/rb+utcdgh54fUxnvrWMFLe8OyQA0sgUOHYtCE=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=

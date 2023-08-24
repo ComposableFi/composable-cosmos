@@ -28,7 +28,7 @@ func NewMsgAddRateLimit(
 	return &MsgAddRateLimit{
 		Authority:      authority,
 		Denom:          denom,
-		ChannelId:      channelID,
+		ChannelID:      channelID,
 		MaxPercentSend: maxPercentSend,
 		MaxPercentRecv: maxPercentRecv,
 		DurationHours:  durationHours,
@@ -59,8 +59,8 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	// validate channelIDs
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
 
@@ -100,7 +100,7 @@ func NewMsgUpdateRateLimit(
 	return &MsgUpdateRateLimit{
 		Authority:      authority,
 		Denom:          denom,
-		ChannelId:      channelID,
+		ChannelID:      channelID,
 		MaxPercentSend: maxPercentSend,
 		MaxPercentRecv: maxPercentRecv,
 		DurationHours:  durationHours,
@@ -131,8 +131,8 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	// validate channelIDs
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
 
@@ -169,7 +169,7 @@ func NewMsgRemoveRateLimit(
 	return &MsgRemoveRateLimit{
 		Authority: authority,
 		Denom:     denom,
-		ChannelId: channelID,
+		ChannelID: channelID,
 	}
 }
 
@@ -197,12 +197,10 @@ func (msg *MsgRemoveRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
-		return err
-	}
+	// validate channelIDs
+	err := host.ChannelIdentifierValidator(msg.ChannelID)
 
-	return nil
+	return err
 }
 
 var _ sdk.Msg = &MsgResetRateLimit{}
@@ -215,7 +213,7 @@ func NewMsgResetRateLimit(
 	return &MsgResetRateLimit{
 		Authority: authority,
 		Denom:     denom,
-		ChannelId: channelID,
+		ChannelID: channelID,
 	}
 }
 
@@ -243,10 +241,8 @@ func (msg *MsgResetRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
-		return err
-	}
+	// validate channelIDs
+	err := host.ChannelIdentifierValidator(msg.ChannelID)
 
-	return nil
+	return err
 }

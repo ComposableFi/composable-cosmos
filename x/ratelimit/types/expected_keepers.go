@@ -15,6 +15,6 @@ type BankKeeper interface {
 // ChannelKeeper defines the channel contract that must be fulfilled when
 // creating a x/ratelimit keeper.
 type ChannelKeeper interface {
-	GetChannel(ctx sdk.Context, portID string, channelID string) (channeltypes.Channel, bool)
-	GetChannelClientState(ctx sdk.Context, portID string, channelID string) (string, exported.ClientState, error)
+	GetChannel(ctx sdk.Context, portID, channelID string) (channeltypes.Channel, bool)
+	GetChannelClientState(ctx sdk.Context, portID, channelID string) (string, exported.ClientState, error)
 }

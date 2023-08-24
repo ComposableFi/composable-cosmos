@@ -15,7 +15,7 @@ func TestTFMInitGenesis(t *testing.T) {
 	tokenInfos := make([]types.ParachainIBCTokenInfo, 1)
 	tokenInfos[0] = types.ParachainIBCTokenInfo{
 		IbcDenom:    "ibc-test",
-		ChannelId:   "channel-0",
+		ChannelID:   "channel-0",
 		NativeDenom: "pica",
 		AssetId:     "1",
 	}
@@ -29,7 +29,7 @@ func TestTFMInitGenesis(t *testing.T) {
 	require.Equal(t, "1", info.AssetId)
 	require.Equal(t, "pica", info.NativeDenom)
 	require.Equal(t, "ibc-test", info.IbcDenom)
-	require.Equal(t, "channel-0", info.ChannelId)
+	require.Equal(t, "channel-0", info.ChannelID)
 }
 
 func TestTFMExportGenesis(t *testing.T) {
@@ -44,12 +44,12 @@ func TestTFMExportGenesis(t *testing.T) {
 
 	require.Equal(t, "1", genesis.TokenInfos[0].AssetId)
 	require.Equal(t, "pica", genesis.TokenInfos[0].NativeDenom)
-	require.Equal(t, "channel-0", genesis.TokenInfos[0].ChannelId)
+	require.Equal(t, "channel-0", genesis.TokenInfos[0].ChannelID)
 	require.Equal(t, "ibc-test", genesis.TokenInfos[0].IbcDenom)
 
 	require.Equal(t, "2", genesis.TokenInfos[1].AssetId)
 	require.Equal(t, "poke", genesis.TokenInfos[1].NativeDenom)
-	require.Equal(t, "channel-1", genesis.TokenInfos[1].ChannelId)
+	require.Equal(t, "channel-1", genesis.TokenInfos[1].ChannelID)
 	require.Equal(t, "ibc-test2", genesis.TokenInfos[1].IbcDenom)
 }
 
@@ -71,11 +71,11 @@ func TestIterateParaTokenInfos(t *testing.T) {
 
 	require.Equal(t, "1", infos[0].AssetId)
 	require.Equal(t, "pica", infos[0].NativeDenom)
-	require.Equal(t, "channel-0", infos[0].ChannelId)
+	require.Equal(t, "channel-0", infos[0].ChannelID)
 	require.Equal(t, "ibc-test", infos[0].IbcDenom)
 
 	require.Equal(t, "2", infos[1].AssetId)
 	require.Equal(t, "poke", infos[1].NativeDenom)
-	require.Equal(t, "channel-1", infos[1].ChannelId)
+	require.Equal(t, "channel-1", infos[1].ChannelID)
 	require.Equal(t, "ibc-test2", infos[1].IbcDenom)
 }

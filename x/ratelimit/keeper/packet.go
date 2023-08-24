@@ -110,7 +110,7 @@ func (k Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData 
 	return denom
 }
 
-// Parses the sender and channelId and denom for the corresponding RateLimit object, and
+// Parses the sender and channelID and denom for the corresponding RateLimit object, and
 // the sender/receiver/transfer amount
 //
 // The Stride channelID should always be used as the key for the RateLimit object (not the counterparty channelID)
@@ -190,7 +190,7 @@ func (k Keeper) ReceiveRateLimitedPacket(ctx sdk.Context, packet channeltypes.Pa
 // Middleware implementation for OnAckPacket with rate limiting
 // If the packet failed, we should decrement the Outflow
 func (k Keeper) AcknowledgeRateLimitedPacket(ctx sdk.Context, packet channeltypes.Packet, ack []byte) error {
-	// Parse the denom, channelId, and amount from the packet
+	// Parse the denom, channelID, and amount from the packet
 	packetInfo, err := k.ParsePacketInfo(packet, types.PACKET_SEND)
 	if err != nil {
 		return err
