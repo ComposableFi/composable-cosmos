@@ -42,7 +42,7 @@ func GetCmdUpdateDelegateBoundary() *cobra.Command {
 				return err
 			}
 
-			block_per_generation, err := strconv.ParseInt(args[1], 10, 64)
+			block_per_generation, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -77,7 +77,7 @@ func GetCmdUpdateRedelegateBoundary() *cobra.Command {
 				return err
 			}
 
-			block_per_generation, err := strconv.ParseInt(args[1], 10, 64)
+			block_per_generation, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}

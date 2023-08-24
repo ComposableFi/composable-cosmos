@@ -41,15 +41,17 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// TODO: Duplicate fnc here
 // SetDelegateBoundary sets the delegate boundary.
-func (k Keeper) SetDelegateBoundary(ctx sdk.Context, boundary types.Boundary) {
+func (k Keeper) SetDelegateBoundary(ctx sdk.Context, boundary types.Boundary) error {
 	store := ctx.KVStore(k.storeKey)
+	if boundary.BlocksPerGeneration == 0 {
+		return fmt.Errorf("BlocksPerGeneration must not be zero")
+	}
 	bz := k.cdc.MustMarshal(&boundary)
 	store.Set(types.DelegateBoundaryKey, bz)
+	return nil
 }
 
-// TODO: Duplicate fnc here
 // GetDelegateBoundary sets the delegate boundary.
 func (k Keeper) GetDelegateBoundary(ctx sdk.Context) (boundary types.Boundary) {
 	store := ctx.KVStore(k.storeKey)
@@ -63,10 +65,14 @@ func (k Keeper) GetDelegateBoundary(ctx sdk.Context) (boundary types.Boundary) {
 }
 
 // SetRedelegateBoundary sets the delegate boundary.
-func (k Keeper) SetRedelegateBoundary(ctx sdk.Context, boundary types.Boundary) {
+func (k Keeper) SetRedelegateBoundary(ctx sdk.Context, boundary types.Boundary) error {
 	store := ctx.KVStore(k.storeKey)
+	if boundary.BlocksPerGeneration == 0 {
+		return fmt.Errorf("BlocksPerGeneration must not be zero")
+	}
 	bz := k.cdc.MustMarshal(&boundary)
 	store.Set(types.RedelegateBoundaryKey, bz)
+	return nil
 }
 
 // GetRedelegateBoundary sets the delegate boundary.
@@ -135,10 +141,10 @@ func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
 		return
 	}
 	boundary := k.GetDelegateBoundary(ctx)
-	if limit_per_addr.LatestUpdateBlock+boundary.BlocksPerGeneration >= ctx.BlockHeight() {
+	if limit_per_addr.LatestUpdateBlock+int64(boundary.BlocksPerGeneration) >= ctx.BlockHeight() {
 		// Calculate the generated tx number from the duration between latest update block and curent block height
-		var generatedTx int64
-		duration := limit_per_addr.LatestUpdateBlock + boundary.BlocksPerGeneration - ctx.BlockHeight()
+		var generatedTx uint64
+		duration := uint64(limit_per_addr.LatestUpdateBlock) + boundary.BlocksPerGeneration - uint64(ctx.BlockHeight())
 		if duration/boundary.BlocksPerGeneration > 5 {
 			generatedTx = 5
 		} else {
