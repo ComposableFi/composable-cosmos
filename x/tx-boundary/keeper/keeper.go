@@ -31,7 +31,7 @@ func NewKeeper(cdc codec.Codec, storeKey storetypes.StoreKey, authority string) 
 	}
 }
 
-// GetAuthority returns the x/mint module's authority.
+// GetAuthority returns the x/tx-boundary module's authority.
 func (k Keeper) GetAuthority() string {
 	return k.authority
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
 )
 
-// GetQueryCmd returns the cli query commands for the minting module.
+// GetQueryCmd returns the cli query commands for the tx-boundary module.
 func GetQueryCmd() *cobra.Command {
 	txboundaryQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,

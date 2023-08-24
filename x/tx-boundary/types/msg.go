@@ -14,7 +14,6 @@ func (m MsgUpdateDelegateBoundary) Route() string { return sdk.MsgTypeURL(&m) }
 // Type Implements Msg.
 func (m MsgUpdateDelegateBoundary) Type() string { return sdk.MsgTypeURL(&m) }
 
-// GetSigners returns the expected signers for a MsgMintAndAllocateExp .
 func (m MsgUpdateDelegateBoundary) GetSigners() []sdk.AccAddress {
 	authorityAddr, err := sdk.AccAddressFromBech32(m.Authority)
 	if err != nil {
@@ -52,7 +51,6 @@ func (m MsgUpdateRedelegateBoundary) Route() string { return sdk.MsgTypeURL(&m) 
 // Type Implements Msg.
 func (m MsgUpdateRedelegateBoundary) Type() string { return sdk.MsgTypeURL(&m) }
 
-// GetSigners returns the expected signers for a MsgMintAndAllocateExp .
 func (m MsgUpdateRedelegateBoundary) GetSigners() []sdk.AccAddress {
 	authorityAddr, err := sdk.AccAddressFromBech32(m.Authority)
 	if err != nil {

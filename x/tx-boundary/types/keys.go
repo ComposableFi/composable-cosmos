@@ -8,7 +8,6 @@ const (
 	StoreKey = ModuleName
 )
 
-// MinterKey is the key to use for the keeper store.
 var (
 	// DelegateBoundaryKey is the key to use for the keeper store.
 	DelegateBoundaryKey = []byte{0x00}
