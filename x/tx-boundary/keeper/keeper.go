@@ -94,30 +94,40 @@ func (k Keeper) SetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress, limit_per_
 	store.Set(addr, bz)
 }
 
-func (k Keeper) IncrementDelegateCount(ctx sdk.Context, addr sdk.AccAddress) error {
+func (k Keeper) IncrementDelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
 	if store.Has(addr) == false {
-		return fmt.Errorf("key is nil")
+		k.SetLimitPerAddr(ctx, addr, types.LimitPerAddr{
+			DelegateCount:     1,
+			ReledegateCount:   0,
+			LatestUpdateBlock: ctx.BlockHeight(),
+		})
+		return
 	}
 	bz := store.Get(addr)
 	var limit_per_addr types.LimitPerAddr
 	k.cdc.MustUnmarshal(bz, &limit_per_addr)
 	limit_per_addr.DelegateCount += 1
 	k.SetLimitPerAddr(ctx, addr, limit_per_addr)
-	return nil
+	return
 }
 
-func (k Keeper) IncrementRedelegateCount(ctx sdk.Context, addr sdk.AccAddress) error {
+func (k Keeper) IncrementRedelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
 	if store.Has(addr) == false {
-		return fmt.Errorf("key is nil")
+		k.SetLimitPerAddr(ctx, addr, types.LimitPerAddr{
+			DelegateCount:     0,
+			ReledegateCount:   1,
+			LatestUpdateBlock: ctx.BlockHeight(),
+		})
+		return
 	}
 	bz := store.Get(addr)
 	var limit_per_addr types.LimitPerAddr
 	k.cdc.MustUnmarshal(bz, &limit_per_addr)
 	limit_per_addr.ReledegateCount += 1
 	k.SetLimitPerAddr(ctx, addr, limit_per_addr)
-	return nil
+	return
 }
 
 // GetDelegateCount get the number of delegate tx for a given address

@@ -44,7 +44,10 @@ func (g StakingPermissionDecorator) AnteHandle(
 // ValidateStakingMsg validate
 func (g StakingPermissionDecorator) ValidateStakingMsgs(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, m := range msgs {
-		g.ValidateStakingMsg(ctx, m)
+		err := g.ValidateStakingMsg(ctx, m)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -72,26 +75,35 @@ func (g StakingPermissionDecorator) ValidateStakingMsg(ctx sdk.Context, msg sdk.
 
 func (g StakingPermissionDecorator) validDelegateMsg(ctx sdk.Context, msg *stakingtypes.MsgDelegate) error {
 	boundary := g.txBoundary.GetDelegateBoundary(ctx)
-	g.txBoundary.UpdateLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress))
+	delegator, err := sdk.AccAddressFromBech32(msg.DelegatorAddress)
+	if err != nil {
+		return err
+	}
+	g.txBoundary.UpdateLimitPerAddr(ctx, delegator)
+
 	if boundary.TxLimit == 0 {
 		return nil
-	} else if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).DelegateCount > boundary.TxLimit {
+	} else if g.txBoundary.GetLimitPerAddr(ctx, delegator).DelegateCount >= boundary.TxLimit {
 		return fmt.Errorf("delegate tx denied, excess tx limit")
 	}
-	g.txBoundary.IncrementDelegateCount(ctx, sdk.AccAddress(msg.DelegatorAddress))
-
+	g.txBoundary.IncrementDelegateCount(ctx, delegator)
 	return nil
 }
 
 func (g StakingPermissionDecorator) validRedelegateMsg(ctx sdk.Context, msg *stakingtypes.MsgBeginRedelegate) error {
 	boundary := g.txBoundary.GetRedelegateBoundary(ctx)
-	g.txBoundary.UpdateLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress))
+	delegator, err := sdk.AccAddressFromBech32(msg.DelegatorAddress)
+	if err != nil {
+		return err
+	}
+
+	g.txBoundary.UpdateLimitPerAddr(ctx, delegator)
 	if boundary.TxLimit == 0 {
 		return nil
-	} else if g.txBoundary.GetLimitPerAddr(ctx, sdk.AccAddress(msg.DelegatorAddress)).ReledegateCount > boundary.TxLimit {
+	} else if g.txBoundary.GetLimitPerAddr(ctx, delegator).ReledegateCount >= boundary.TxLimit {
 		return fmt.Errorf("redelegate tx denied, excess tx limit")
 	}
-	g.txBoundary.IncrementRedelegateCount(ctx, sdk.AccAddress(msg.DelegatorAddress))
+	g.txBoundary.IncrementRedelegateCount(ctx, delegator)
 	return nil
 }
 
@@ -105,6 +117,5 @@ func (g StakingPermissionDecorator) validAuthz(ctx sdk.Context, execMsg *authz.M
 			return err
 		}
 	}
-
 	return nil
 }
