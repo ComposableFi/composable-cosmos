@@ -9,7 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
+
 	tfmwKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	txBoundaryAnte "github.com/notional-labs/centauri/v4/x/tx-boundary/ante"
+	txBoundaryKeeper "github.com/notional-labs/centauri/v4/x/tx-boundary/keeper"
 )
 
 // Link to default ante handler used by cosmos sdk:
@@ -21,6 +24,7 @@ func NewAnteHandler(
 	signModeHandler signing.SignModeHandler,
 	channelKeeper *ibckeeper.Keeper,
 	tfmwKeeper tfmwKeeper.Keeper,
+	txBoundaryKeeper txBoundaryKeeper.Keeper,
 	codec codec.BinaryCodec,
 ) sdk.AnteHandler {
 	return sdk.ChainAnteDecorators(
@@ -30,6 +34,7 @@ func NewAnteHandler(
 		ante.NewValidateMemoDecorator(ak),
 		ante.NewConsumeGasForTxSizeDecorator(ak),
 		NewIBCPermissionDecorator(codec, tfmwKeeper),
+		txBoundaryAnte.NewStakingPermissionDecorator(codec, txBoundaryKeeper),
 		ante.NewSetPubKeyDecorator(ak), // SetPubKeyDecorator must be called before all signature verification decorators
 		ante.NewValidateSigCountDecorator(ak),
 		ante.NewSigGasConsumeDecorator(ak, sigGasConsumer),

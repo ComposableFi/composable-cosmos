@@ -35,6 +35,7 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"

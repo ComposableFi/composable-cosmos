@@ -8,6 +8,7 @@ import (
 
 	"cosmossdk.io/errors"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 )
 

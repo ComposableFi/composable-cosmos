@@ -123,6 +123,7 @@ import (
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibcmock "github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
+
 	simappparams "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/params"
 	simappupgrades "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/upgrades"
 	v6 "github.com/notional-labs/centauri/v4/app/ibctesting/simapp/upgrades/v6"

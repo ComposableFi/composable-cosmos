@@ -30,10 +30,12 @@ import (
 	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
 	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
 	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	txBoundaryTypes "github.com/notional-labs/centauri/v4/x/tx-boundary/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+
 	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
@@ -48,7 +50,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
 	)
 
 	// Define transient store keys

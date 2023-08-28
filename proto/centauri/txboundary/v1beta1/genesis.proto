@@ -1,0 +1,21 @@
+syntax = "proto3";
+package centauri.txboundary.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "centauri/txboundary/v1beta1/boundary.proto";
+
+option go_package = "x/tx-boundary/types";
+
+// GenesisState defines the module various parameters when first
+// initialized
+message GenesisState {
+  Boundary delegate_boundary = 1 [
+    (gogoproto.moretags) = "yaml:\"delegate_boundary\"",
+    (gogoproto.nullable) = false
+  ];
+  Boundary redelegate_boundary = 2 [
+    (gogoproto.moretags) = "yaml:\"redelegate_boundary\"",
+    (gogoproto.nullable) = false
+  ];
+}
+

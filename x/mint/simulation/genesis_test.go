@@ -13,6 +13,7 @@ import (
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/mint"
+
 	"github.com/notional-labs/centauri/v4/x/mint/simulation"
 	"github.com/notional-labs/centauri/v4/x/mint/types"
 )
