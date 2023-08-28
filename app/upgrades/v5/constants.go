@@ -2,7 +2,7 @@ package v5
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/notional-labs/centauri/v4/app/upgrades"
+	"github.com/notional-labs/centauri/v5/app/upgrades"
 )
 
 const (

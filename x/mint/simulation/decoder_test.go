@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 
-	"github.com/notional-labs/centauri/v4/x/mint/simulation"
-	centauriminttypes "github.com/notional-labs/centauri/v4/x/mint/types"
+	"github.com/notional-labs/centauri/v5/x/mint/simulation"
+	centauriminttypes "github.com/notional-labs/centauri/v5/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {

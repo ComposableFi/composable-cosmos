@@ -12,7 +12,7 @@ import (
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 
-	"github.com/notional-labs/centauri/v4/app/keepers"
+	"github.com/notional-labs/centauri/v5/app/keepers"
 )
 
 func RunForkLogic(ctx sdk.Context, appKeepers *keepers.AppKeepers) {

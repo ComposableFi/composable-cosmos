@@ -15,9 +15,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/client/cli"
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/keeper"
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/client/cli"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/keeper"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 )
 
 var (
