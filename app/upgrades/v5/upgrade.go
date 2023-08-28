@@ -53,7 +53,7 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(1282_000_000),
+				MinRateLimitAmount: sdk.NewInt(1282_000_000), // decimal 6
 			}
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		} else {
@@ -86,11 +86,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(2267_000_000_000_000),
+				MinRateLimitAmount: sdk.NewInt(22_670_000_000_000), // decimal 10
 			}
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		} else {
-			dotRateLimit.MinRateLimitAmount = sdk.NewInt(2267_000_000_000_000)
+			dotRateLimit.MinRateLimitAmount = sdk.NewInt(22_670_000_000_000)
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		}
 		// add ksm
@@ -119,7 +119,7 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(510_000_000_000_000),
+				MinRateLimitAmount: sdk.NewInt(510_000_000_000_000), // decimal 12
 			}
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		} else {
@@ -152,11 +152,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(10_000_000_000_000_000),
+				MinRateLimitAmount: sdk.NewInt(10_000_000_000), // decimal 6
 			}
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		} else {
-			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000_000_000)
+			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000)
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		}
 
