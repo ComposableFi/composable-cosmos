@@ -16,17 +16,17 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	for _, addressPair := range genState.WhitelistedAddressPairs {
 		k.SetWhitelistedAddressPair(ctx, addressPair)
 	}
-	for _, pendingPacketId := range genState.PendingSendPacketSequenceNumbers {
-		splits := strings.Split(pendingPacketId, "/")
+	for _, pendingPacketID := range genState.PendingSendPacketSequenceNumbers {
+		splits := strings.Split(pendingPacketID, "/")
 		if len(splits) != 2 {
-			panic("Invalid pending send packet, must be of form: {channelId}/{sequenceNumber}")
+			panic("Invalid pending send packet, must be of form: {channelID}/{sequenceNumber}")
 		}
-		channelId := splits[0]
+		channelID := splits[0]
 		sequence, err := strconv.ParseUint(splits[1], 10, 64)
 		if err != nil {
 			panic(err)
 		}
-		k.SetPendingSendPacket(ctx, channelId, sequence)
+		k.SetPendingSendPacket(ctx, channelID, sequence)
 	}
 	for _, epoch := range genState.Epochs {
 		err := k.AddEpochInfo(ctx, epoch)

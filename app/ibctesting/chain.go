@@ -650,7 +650,7 @@ func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
 	wasmCode, err := os.ReadFile(path)
 	suite.Require().NoError(err)
 
-	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) {
+	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) { //nolint: staticcheck
 		p.RunAs = govModuleAddress.String()
 		p.WASMByteCode = wasmCode
 		checksum := sha256.Sum256(wasmCode)
@@ -685,7 +685,7 @@ func mustSubmitAndExecuteLegacyProposal(t *testing.T, ctx sdk.Context, content v
 }
 
 // does not fail on submit proposal
-func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress string, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
+func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
 	t.Helper()
 	contentMsg, err := v1.NewLegacyContent(content, govAuthority)
 	require.NoError(t, err)

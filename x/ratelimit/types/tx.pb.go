@@ -33,12 +33,13 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgAddRateLimit struct {
 	// authority is the address that controls the module (defaults to x/gov unless
 	// overwritten).
-	Authority      string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
-	Denom          string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	MaxPercentSend github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
-	MaxPercentRecv github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
-	DurationHours  uint64                                 `protobuf:"varint,6,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
+	Authority          string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	Denom              string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
+	ChannelID          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
+	MaxPercentSend     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
+	MaxPercentRecv     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
+	MinRateLimitAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=min_rate_limit_amount,json=minRateLimitAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_rate_limit_amount"`
+	DurationHours      uint64                                 `protobuf:"varint,7,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
 }
 
 func (m *MsgAddRateLimit) Reset()         { *m = MsgAddRateLimit{} }
@@ -88,9 +89,9 @@ func (m *MsgAddRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgAddRateLimit) GetChannelId() string {
+func (m *MsgAddRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -141,12 +142,13 @@ var xxx_messageInfo_MsgAddRateLimitResponse proto.InternalMessageInfo
 type MsgUpdateRateLimit struct {
 	// authority is the address that controls the module (defaults to x/gov unless
 	// overwritten).
-	Authority      string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
-	Denom          string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId      string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	MaxPercentSend github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
-	MaxPercentRecv github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
-	DurationHours  uint64                                 `protobuf:"varint,6,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
+	Authority          string                                 `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	Denom              string                                 `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
+	ChannelID          string                                 `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
+	MaxPercentSend     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=max_percent_send,json=maxPercentSend,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_send"`
+	MaxPercentRecv     github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=max_percent_recv,json=maxPercentRecv,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_percent_recv"`
+	MinRateLimitAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=min_rate_limit_amount,json=minRateLimitAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_rate_limit_amount"`
+	DurationHours      uint64                                 `protobuf:"varint,7,opt,name=duration_hours,json=durationHours,proto3" json:"duration_hours,omitempty"`
 }
 
 func (m *MsgUpdateRateLimit) Reset()         { *m = MsgUpdateRateLimit{} }
@@ -196,9 +198,9 @@ func (m *MsgUpdateRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgUpdateRateLimit) GetChannelId() string {
+func (m *MsgUpdateRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -251,7 +253,7 @@ type MsgRemoveRateLimit struct {
 	// overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom     string `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *MsgRemoveRateLimit) Reset()         { *m = MsgRemoveRateLimit{} }
@@ -301,9 +303,9 @@ func (m *MsgRemoveRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgRemoveRateLimit) GetChannelId() string {
+func (m *MsgRemoveRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -349,7 +351,7 @@ type MsgResetRateLimit struct {
 	// overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
 	Denom     string `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,3,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,3,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *MsgResetRateLimit) Reset()         { *m = MsgResetRateLimit{} }
@@ -399,9 +401,9 @@ func (m *MsgResetRateLimit) GetDenom() string {
 	return ""
 }
 
-func (m *MsgResetRateLimit) GetChannelId() string {
+func (m *MsgResetRateLimit) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -458,41 +460,43 @@ func init() {
 }
 
 var fileDescriptor_6b20911f56917b5f = []byte{
-	// 534 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x95, 0xc1, 0x8a, 0xd3, 0x40,
-	0x1c, 0xc6, 0x9b, 0xdd, 0xee, 0x42, 0x07, 0xac, 0xbb, 0x43, 0xb1, 0xd9, 0xa8, 0xe9, 0x12, 0x51,
-	0x16, 0x97, 0x4d, 0xe8, 0x2e, 0x7a, 0xd8, 0xdb, 0xee, 0xc9, 0x05, 0x0b, 0x12, 0x15, 0xc4, 0x4b,
-	0x99, 0x66, 0xc6, 0x34, 0xd8, 0xcc, 0x84, 0x99, 0x49, 0x48, 0x2f, 0x82, 0x5e, 0xbc, 0x28, 0xf8,
-	0x28, 0x3e, 0xc6, 0x1e, 0xf7, 0x28, 0x1e, 0x8a, 0xb4, 0x88, 0x9e, 0x7d, 0x02, 0x49, 0xd2, 0xb4,
-	0x6b, 0x42, 0x29, 0x45, 0x44, 0x0f, 0x9e, 0x26, 0x99, 0xff, 0x97, 0x6f, 0x7e, 0x33, 0xdf, 0x4c,
-	0x06, 0xdc, 0x72, 0x08, 0x95, 0x28, 0xe4, 0x9e, 0xc5, 0x91, 0x24, 0x03, 0xcf, 0xf7, 0xa4, 0x15,
-	0xb5, 0x7b, 0x44, 0xa2, 0xb6, 0x25, 0x63, 0x33, 0xe0, 0x4c, 0x32, 0xa8, 0xe5, 0x22, 0x73, 0x26,
-	0x32, 0xa7, 0x22, 0xad, 0xe1, 0x32, 0x97, 0xa5, 0x32, 0x2b, 0x79, 0xca, 0xbe, 0xd0, 0x9a, 0x0e,
-	0x13, 0x3e, 0x13, 0x96, 0x2f, 0x5c, 0x2b, 0x6a, 0x27, 0x4d, 0x56, 0x30, 0xbe, 0xae, 0x81, 0xab,
-	0x1d, 0xe1, 0x9e, 0x60, 0x6c, 0x23, 0x49, 0x1e, 0x26, 0x56, 0xf0, 0x10, 0xd4, 0x50, 0x28, 0xfb,
-	0x8c, 0x7b, 0x72, 0xa8, 0x2a, 0xbb, 0xca, 0x5e, 0xed, 0xb4, 0xf1, 0x63, 0xd4, 0xda, 0x1a, 0x22,
-	0x7f, 0x70, 0x6c, 0xcc, 0x4a, 0x86, 0x3d, 0x97, 0xc1, 0x06, 0xd8, 0xc0, 0x84, 0x32, 0x5f, 0x5d,
-	0x4b, 0xf4, 0x76, 0xf6, 0x02, 0x6f, 0x02, 0xe0, 0xf4, 0x11, 0xa5, 0x64, 0xd0, 0xf5, 0xb0, 0xba,
-	0x9e, 0x96, 0x6a, 0xd3, 0x9e, 0x33, 0x0c, 0x9f, 0x81, 0x2d, 0x1f, 0xc5, 0xdd, 0x80, 0xf0, 0x64,
-	0x42, 0x5d, 0x41, 0x28, 0x56, 0xab, 0xe9, 0x78, 0xe6, 0xf9, 0xa8, 0x55, 0xf9, 0x3c, 0x6a, 0xdd,
-	0x71, 0x3d, 0xd9, 0x0f, 0x7b, 0xa6, 0xc3, 0x7c, 0x6b, 0x3a, 0x85, 0xac, 0x39, 0x10, 0xf8, 0xa5,
-	0x25, 0x87, 0x01, 0x11, 0xe6, 0x19, 0x95, 0x76, 0xdd, 0x47, 0xf1, 0xa3, 0xcc, 0xe6, 0x31, 0xa1,
-	0x25, 0x67, 0x4e, 0x9c, 0x48, 0xdd, 0xf8, 0x5d, 0x67, 0x9b, 0x38, 0x11, 0xbc, 0x0d, 0xea, 0x38,
-	0xe4, 0x48, 0x7a, 0x8c, 0x76, 0xfb, 0x2c, 0xe4, 0x42, 0xdd, 0xdc, 0x55, 0xf6, 0xaa, 0xf6, 0x95,
-	0xbc, 0xf7, 0x41, 0xd2, 0x79, 0x5c, 0x7f, 0xf3, 0xed, 0xe3, 0xdd, 0xf9, 0xfa, 0x18, 0x3b, 0xa0,
-	0x59, 0x58, 0x66, 0x9b, 0x88, 0x80, 0x51, 0x41, 0x8c, 0xef, 0x6b, 0x00, 0x76, 0x84, 0xfb, 0x34,
-	0xc0, 0x48, 0x92, 0xff, 0x29, 0xfc, 0xc9, 0x14, 0x6e, 0x00, 0xad, 0xbc, 0xd2, 0xb3, 0x20, 0xde,
-	0x2b, 0x69, 0x10, 0x36, 0xf1, 0x59, 0xf4, 0x17, 0x82, 0x58, 0x40, 0x5b, 0xc0, 0x99, 0xd1, 0xbe,
-	0x53, 0xc0, 0x76, 0x5a, 0x16, 0x44, 0xfe, 0x03, 0xb0, 0xd7, 0xc1, 0x4e, 0x89, 0x26, 0x67, 0x3d,
-	0x7c, 0x5b, 0x05, 0xeb, 0x1d, 0xe1, 0xc2, 0x18, 0x34, 0x4e, 0x30, 0x7e, 0xc2, 0x11, 0x15, 0x2f,
-	0x08, 0x9f, 0x53, 0xef, 0x9b, 0x8b, 0xff, 0x68, 0x66, 0xe1, 0xdc, 0x68, 0x47, 0x2b, 0x88, 0x73,
-	0x02, 0xf8, 0x5a, 0x01, 0xcd, 0x2c, 0xf7, 0xf2, 0xe8, 0xe6, 0x12, 0xc3, 0xc2, 0x7e, 0xd1, 0xee,
-	0xaf, 0xa6, 0xff, 0x85, 0x21, 0x4b, 0x73, 0x75, 0x86, 0xc2, 0x2e, 0x58, 0xca, 0xb0, 0x60, 0xd7,
-	0xc0, 0x57, 0xe0, 0x5a, 0x9a, 0x51, 0x99, 0xe0, 0x60, 0xa9, 0xe3, 0xe5, 0x68, 0xb5, 0x7b, 0x2b,
-	0xc9, 0xf3, 0xf1, 0x4f, 0xf7, 0xcf, 0xc7, 0xba, 0x72, 0x31, 0xd6, 0x95, 0x2f, 0x63, 0x5d, 0xf9,
-	0x30, 0xd1, 0x2b, 0x17, 0x13, 0xbd, 0xf2, 0x69, 0xa2, 0x57, 0x9e, 0x6f, 0xc7, 0x97, 0xae, 0xbc,
-	0xf4, 0xe4, 0xf7, 0x36, 0xd3, 0x3b, 0xea, 0xe8, 0x67, 0x00, 0x00, 0x00, 0xff, 0xff, 0xbc, 0x59,
-	0x49, 0x80, 0x15, 0x07, 0x00, 0x00,
+	// 561 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x95, 0x4d, 0x8b, 0x13, 0x31,
+	0x1c, 0xc6, 0x3b, 0xb6, 0xbb, 0xd2, 0x80, 0x75, 0x37, 0x54, 0x3b, 0x3b, 0xea, 0x74, 0xa9, 0x28,
+	0x8b, 0xcb, 0xce, 0xd0, 0x5d, 0xf4, 0xb0, 0xb7, 0xee, 0xc9, 0x05, 0x0b, 0x32, 0x2a, 0x88, 0x97,
+	0x21, 0x9d, 0xc4, 0xe9, 0x60, 0x93, 0x94, 0x24, 0x53, 0xda, 0x8b, 0xa0, 0x17, 0x2f, 0x0a, 0x7e,
+	0x14, 0x3f, 0x46, 0xc1, 0xcb, 0x1e, 0xc5, 0x43, 0x91, 0xf6, 0xe0, 0xdd, 0x4f, 0x20, 0x93, 0xe9,
+	0xcb, 0xda, 0x52, 0x4a, 0xf5, 0xa0, 0xc2, 0x9e, 0x32, 0x93, 0xff, 0x33, 0x4f, 0x9e, 0xe4, 0x97,
+	0x4c, 0xc0, 0xed, 0x80, 0x30, 0x85, 0x62, 0x11, 0xb9, 0x02, 0x29, 0xd2, 0x8a, 0x68, 0xa4, 0xdc,
+	0x4e, 0xb5, 0x41, 0x14, 0xaa, 0xba, 0xaa, 0xeb, 0xb4, 0x05, 0x57, 0x1c, 0x5a, 0x13, 0x91, 0x33,
+	0x15, 0x39, 0x63, 0x91, 0x55, 0x0c, 0x79, 0xc8, 0xb5, 0xcc, 0x4d, 0x9e, 0xd2, 0x2f, 0xac, 0x52,
+	0xc0, 0x25, 0xe5, 0xd2, 0xa5, 0x32, 0x74, 0x3b, 0xd5, 0xa4, 0x49, 0x0b, 0x95, 0x7e, 0x16, 0x5c,
+	0xad, 0xcb, 0xb0, 0x86, 0xb1, 0x87, 0x14, 0x79, 0x94, 0x58, 0xc1, 0x43, 0x90, 0x47, 0xb1, 0x6a,
+	0x72, 0x11, 0xa9, 0x9e, 0x69, 0xec, 0x1a, 0x7b, 0xf9, 0x93, 0xe2, 0x8f, 0x41, 0x79, 0xab, 0x87,
+	0x68, 0xeb, 0xb8, 0x32, 0x2d, 0x55, 0xbc, 0x99, 0x0c, 0x16, 0xc1, 0x06, 0x26, 0x8c, 0x53, 0xf3,
+	0x52, 0xa2, 0xf7, 0xd2, 0x17, 0x78, 0x0b, 0x80, 0xa0, 0x89, 0x18, 0x23, 0x2d, 0x3f, 0xc2, 0x66,
+	0x56, 0x97, 0xf2, 0xe3, 0x9e, 0x53, 0x0c, 0x9f, 0x83, 0x2d, 0x8a, 0xba, 0x7e, 0x9b, 0x88, 0x64,
+	0x42, 0xbe, 0x24, 0x0c, 0x9b, 0x39, 0x3d, 0x9e, 0xd3, 0x1f, 0x94, 0x33, 0x5f, 0x07, 0xe5, 0xbb,
+	0x61, 0xa4, 0x9a, 0x71, 0xc3, 0x09, 0x38, 0x75, 0xc7, 0x53, 0x48, 0x9b, 0x03, 0x89, 0x5f, 0xb9,
+	0xaa, 0xd7, 0x26, 0xd2, 0x39, 0x65, 0xca, 0x2b, 0x50, 0xd4, 0x7d, 0x9c, 0xda, 0x3c, 0x21, 0x6c,
+	0xc1, 0x59, 0x90, 0xa0, 0x63, 0x6e, 0xfc, 0xa9, 0xb3, 0x47, 0x82, 0x0e, 0x44, 0xe0, 0x1a, 0x8d,
+	0x98, 0x9f, 0x2c, 0xbc, 0xaf, 0x57, 0xde, 0x47, 0x94, 0xc7, 0x4c, 0x99, 0x9b, 0xbf, 0x65, 0x0f,
+	0x69, 0xc4, 0xa6, 0x2b, 0x5f, 0xd3, 0x4e, 0xf0, 0x0e, 0x28, 0xe0, 0x58, 0x20, 0x15, 0x71, 0xe6,
+	0x37, 0x79, 0x2c, 0xa4, 0x79, 0x79, 0xd7, 0xd8, 0xcb, 0x79, 0x57, 0x26, 0xbd, 0x0f, 0x93, 0xce,
+	0xe3, 0xc2, 0xdb, 0xef, 0x9f, 0xee, 0xcd, 0x10, 0x54, 0x76, 0x40, 0x69, 0x8e, 0xa4, 0x47, 0x64,
+	0x9b, 0x33, 0x49, 0x2a, 0x9f, 0xb3, 0x00, 0xd6, 0x65, 0xf8, 0xac, 0x8d, 0x91, 0x22, 0x17, 0xa0,
+	0xff, 0x73, 0xd0, 0x37, 0x81, 0xb5, 0x08, 0x73, 0xca, 0xfa, 0x83, 0xa1, 0x59, 0x7b, 0x84, 0xf2,
+	0xce, 0x5f, 0x60, 0xbd, 0x24, 0xed, 0x5c, 0x9c, 0x69, 0xda, 0xf7, 0x06, 0xd8, 0xd6, 0x65, 0x49,
+	0xd4, 0x3f, 0x10, 0xf6, 0x06, 0xd8, 0x59, 0x48, 0x33, 0xc9, 0x7a, 0xf8, 0x2e, 0x07, 0xb2, 0x75,
+	0x19, 0xc2, 0x2e, 0x28, 0xd6, 0x30, 0x7e, 0x2a, 0x10, 0x93, 0x2f, 0x89, 0x98, 0xa5, 0xde, 0x77,
+	0x96, 0xff, 0x97, 0x9d, 0xb9, 0xa3, 0x69, 0x1d, 0xad, 0x21, 0x9e, 0x24, 0x80, 0x6f, 0x0c, 0x50,
+	0x4a, 0xb9, 0x2f, 0x8e, 0xee, 0xac, 0x30, 0x9c, 0xdb, 0x2f, 0xd6, 0x83, 0xf5, 0xf4, 0xbf, 0x64,
+	0x48, 0x69, 0xae, 0x9f, 0x61, 0x6e, 0x17, 0xac, 0xcc, 0xb0, 0x64, 0xd7, 0xc0, 0xd7, 0xe0, 0xba,
+	0x66, 0xb4, 0x98, 0xe0, 0x60, 0xa5, 0xe3, 0x79, 0xb4, 0xd6, 0xfd, 0xb5, 0xe4, 0x93, 0xf1, 0x4f,
+	0xf6, 0xfb, 0x43, 0xdb, 0x38, 0x1b, 0xda, 0xc6, 0xb7, 0xa1, 0x6d, 0x7c, 0x1c, 0xd9, 0x99, 0xb3,
+	0x91, 0x9d, 0xf9, 0x32, 0xb2, 0x33, 0x2f, 0xb6, 0xbb, 0xe7, 0x2e, 0x6e, 0x7d, 0xfa, 0x1b, 0x9b,
+	0xfa, 0xa6, 0x3d, 0xfa, 0x19, 0x00, 0x00, 0xff, 0xff, 0x62, 0x2e, 0x80, 0x93, 0xdb, 0x07, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -706,8 +710,18 @@ func (m *MsgAddRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	if m.DurationHours != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.DurationHours))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x38
 	}
+	{
+		size := m.MinRateLimitAmount.Size()
+		i -= size
+		if _, err := m.MinRateLimitAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
 	{
 		size := m.MaxPercentRecv.Size()
 		i -= size
@@ -728,10 +742,10 @@ func (m *MsgAddRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x22
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -798,8 +812,18 @@ func (m *MsgUpdateRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	if m.DurationHours != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.DurationHours))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x38
 	}
+	{
+		size := m.MinRateLimitAmount.Size()
+		i -= size
+		if _, err := m.MinRateLimitAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
 	{
 		size := m.MaxPercentRecv.Size()
 		i -= size
@@ -820,10 +844,10 @@ func (m *MsgUpdateRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x22
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -887,10 +911,10 @@ func (m *MsgRemoveRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -954,10 +978,10 @@ func (m *MsgResetRateLimit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x1a
 	}
@@ -1026,13 +1050,15 @@ func (m *MsgAddRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	l = m.MaxPercentSend.Size()
 	n += 1 + l + sovTx(uint64(l))
 	l = m.MaxPercentRecv.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.MinRateLimitAmount.Size()
 	n += 1 + l + sovTx(uint64(l))
 	if m.DurationHours != 0 {
 		n += 1 + sovTx(uint64(m.DurationHours))
@@ -1063,13 +1089,15 @@ func (m *MsgUpdateRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	l = m.MaxPercentSend.Size()
 	n += 1 + l + sovTx(uint64(l))
 	l = m.MaxPercentRecv.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.MinRateLimitAmount.Size()
 	n += 1 + l + sovTx(uint64(l))
 	if m.DurationHours != 0 {
 		n += 1 + sovTx(uint64(m.DurationHours))
@@ -1100,7 +1128,7 @@ func (m *MsgRemoveRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1130,7 +1158,7 @@ func (m *MsgResetRateLimit) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1247,7 +1275,7 @@ func (m *MsgAddRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1275,7 +1303,7 @@ func (m *MsgAddRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -1346,6 +1374,40 @@ func (m *MsgAddRateLimit) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinRateLimitAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MinRateLimitAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DurationHours", wireType)
 			}
@@ -1530,7 +1592,7 @@ func (m *MsgUpdateRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1558,7 +1620,7 @@ func (m *MsgUpdateRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
@@ -1629,6 +1691,40 @@ func (m *MsgUpdateRateLimit) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinRateLimitAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MinRateLimitAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DurationHours", wireType)
 			}
@@ -1813,7 +1909,7 @@ func (m *MsgRemoveRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1841,7 +1937,7 @@ func (m *MsgRemoveRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2009,7 +2105,7 @@ func (m *MsgResetRateLimit) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2037,7 +2133,7 @@ func (m *MsgResetRateLimit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

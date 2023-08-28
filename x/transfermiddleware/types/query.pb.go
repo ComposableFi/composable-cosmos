@@ -31,7 +31,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // message QueryEscrowAddressRequest
 type QueryEscrowAddressRequest struct {
-	ChannelId string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID string `protobuf:"bytes,1,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 }
 
 func (m *QueryEscrowAddressRequest) Reset()         { *m = QueryEscrowAddressRequest{} }
@@ -67,9 +67,9 @@ func (m *QueryEscrowAddressRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryEscrowAddressRequest proto.InternalMessageInfo
 
-func (m *QueryEscrowAddressRequest) GetChannelId() string {
+func (m *QueryEscrowAddressRequest) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -169,7 +169,7 @@ func (m *QueryParaTokenInfoRequest) GetNativeDenom() string {
 // RPC method.
 type QueryParaTokenInfoResponse struct {
 	IbcDenom    string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
-	ChannelId   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID   string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	NativeDenom string `protobuf:"bytes,3,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 	AssetId     string `protobuf:"bytes,4,opt,name=asset_id,json=assetId,proto3" json:"asset_id,omitempty" yaml:"asset_id"`
 }
@@ -214,9 +214,9 @@ func (m *QueryParaTokenInfoResponse) GetIbcDenom() string {
 	return ""
 }
 
-func (m *QueryParaTokenInfoResponse) GetChannelId() string {
+func (m *QueryParaTokenInfoResponse) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -418,10 +418,10 @@ func (m *QueryEscrowAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -522,10 +522,10 @@ func (m *QueryParaTokenInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -556,7 +556,7 @@ func (m *QueryEscrowAddressRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -599,7 +599,7 @@ func (m *QueryParaTokenInfoResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -651,7 +651,7 @@ func (m *QueryEscrowAddressRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -679,7 +679,7 @@ func (m *QueryEscrowAddressRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -929,7 +929,7 @@ func (m *QueryParaTokenInfoResponse) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -957,7 +957,7 @@ func (m *QueryParaTokenInfoResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {

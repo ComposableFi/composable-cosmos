@@ -28,7 +28,7 @@ func NewMsgAddRateLimit(
 	return &MsgAddRateLimit{
 		Authority:      authority,
 		Denom:          denom,
-		ChannelId:      channelID,
+		ChannelID:      channelID,
 		MaxPercentSend: maxPercentSend,
 		MaxPercentRecv: maxPercentRecv,
 		DurationHours:  durationHours,
@@ -59,8 +59,8 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	// validate channelIDs
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
 
@@ -74,6 +74,10 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 
 	if msg.MaxPercentRecv.IsZero() && msg.MaxPercentSend.IsZero() {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "either the max send or max receive threshold must be greater than 0")
+	}
+
+	if msg.MinRateLimitAmount.LTE(math.ZeroInt()) {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "mint rate limit amount must be greater than 0")
 	}
 
 	if msg.DurationHours == 0 {
@@ -96,7 +100,7 @@ func NewMsgUpdateRateLimit(
 	return &MsgUpdateRateLimit{
 		Authority:      authority,
 		Denom:          denom,
-		ChannelId:      channelID,
+		ChannelID:      channelID,
 		MaxPercentSend: maxPercentSend,
 		MaxPercentRecv: maxPercentRecv,
 		DurationHours:  durationHours,
@@ -127,8 +131,8 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
+	// validate channelIDs
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
 
@@ -142,6 +146,10 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 
 	if msg.MaxPercentRecv.IsZero() && msg.MaxPercentSend.IsZero() {
 		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "either the max send or max receive threshold must be greater than 0")
+	}
+
+	if msg.MinRateLimitAmount.LTE(math.ZeroInt()) {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidRequest, "mint rate limit amount must be greater than 0")
 	}
 
 	if msg.DurationHours == 0 {
@@ -161,7 +169,7 @@ func NewMsgRemoveRateLimit(
 	return &MsgRemoveRateLimit{
 		Authority: authority,
 		Denom:     denom,
-		ChannelId: channelID,
+		ChannelID: channelID,
 	}
 }
 
@@ -189,12 +197,10 @@ func (msg *MsgRemoveRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
-		return err
-	}
+	// validate channelIDs
+	err := host.ChannelIdentifierValidator(msg.ChannelID)
 
-	return nil
+	return err
 }
 
 var _ sdk.Msg = &MsgResetRateLimit{}
@@ -207,7 +213,7 @@ func NewMsgResetRateLimit(
 	return &MsgResetRateLimit{
 		Authority: authority,
 		Denom:     denom,
-		ChannelId: channelID,
+		ChannelID: channelID,
 	}
 }
 
@@ -235,10 +241,8 @@ func (msg *MsgResetRateLimit) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIds
-	if err := host.ChannelIdentifierValidator(msg.ChannelId); err != nil {
-		return err
-	}
+	// validate channelIDs
+	err := host.ChannelIdentifierValidator(msg.ChannelID)
 
-	return nil
+	return err
 }

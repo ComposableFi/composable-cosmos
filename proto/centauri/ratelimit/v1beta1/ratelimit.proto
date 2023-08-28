@@ -48,6 +48,10 @@ message RateLimit {
   Path path = 1;
   Quota quota = 2;
   Flow flow = 3;
+  string min_rate_limit_amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message WhitelistedAddressPair {
