@@ -5,7 +5,7 @@ import (
 )
 
 // CheckExceedsQuota checks if new in/out flow is going to reach the max in/out or not
-func (q *Quota) CheckExceedsQuota(direction PacketDirection, amount math.Int, totalValue math.Int, minRateLimitAmount math.Int) bool {
+func (q *Quota) CheckExceedsQuota(direction PacketDirection, amount, totalValue, minRateLimitAmount math.Int) bool {
 	// If there's no channel value (this should be almost impossible), it means there is no
 	// supply of the asset, so we shoudn't prevent inflows/outflows
 	if totalValue.IsZero() {

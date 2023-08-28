@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	"github.com/notional-labs/centauri/v4/app/keepers"
 	"github.com/notional-labs/centauri/v4/app/upgrades"
 )

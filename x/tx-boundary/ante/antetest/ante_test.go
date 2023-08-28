@@ -9,10 +9,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	txboundaryAnte "github.com/notional-labs/centauri/v4/x/tx-boundary/ante"
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	txboundaryAnte "github.com/notional-labs/centauri/v4/x/tx-boundary/ante"
+	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
 )
 
 func TestAnteTestSuite(t *testing.T) {
@@ -117,5 +118,4 @@ func (s *AnteTestSuite) TestStakingAnte() {
 			s.Require().Error(err)
 		}
 	}
-
 }
