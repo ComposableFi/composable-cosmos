@@ -14,10 +14,11 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
+
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/client/cli"
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
-	"github.com/spf13/cobra"
 )
 
 var (

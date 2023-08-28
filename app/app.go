@@ -86,12 +86,13 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v4/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+
+	custombankmodule "github.com/notional-labs/centauri/v4/custom/bank"
 
 	"github.com/notional-labs/centauri/v4/app/ante"
 	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
@@ -113,6 +114,7 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+
 	v4_5 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5"
 	v4_5_1 "github.com/notional-labs/centauri/v4/app/upgrades/v4_5_1"
 

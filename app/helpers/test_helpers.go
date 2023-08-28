@@ -21,8 +21,9 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
-	centauri "github.com/notional-labs/centauri/v4/app"
 	"github.com/stretchr/testify/require"
+
+	centauri "github.com/notional-labs/centauri/v4/app"
 )
 
 // SimAppChainID hardcoded chainID for simulation

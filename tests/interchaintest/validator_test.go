@@ -89,7 +89,7 @@ func TestValidator(t *testing.T) {
 
 	fmt.Println("validators", string(validators[1].ConsensusPubkey.Value))
 
-	var defaultTime = time.Date(1970, time.January, 1, 0, 0, 0, 0, time.UTC)
+	defaultTime := time.Date(1970, time.January, 1, 0, 0, 0, 0, time.UTC)
 
 	// sdk.ConsAddress(validators[1].ConsensusPubkey)
 	infos, err := centauri.QuerySigningInfos(ctx)

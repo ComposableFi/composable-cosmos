@@ -3,9 +3,10 @@ package keeper_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	helpers "github.com/notional-labs/centauri/v4/app/helpers"
 	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestTFMInitGenesis(t *testing.T) {

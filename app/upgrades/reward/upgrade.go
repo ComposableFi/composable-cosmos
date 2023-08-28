@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
 	tfmwkeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 )
