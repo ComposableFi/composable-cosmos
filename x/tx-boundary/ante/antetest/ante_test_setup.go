@@ -42,7 +42,7 @@ type AnteTestSuite struct {
 func (suite *AnteTestSuite) SetupTest() {
 	suite.app, suite.delegator, suite.validators = helpers.SetupCentauriAppWithValSetWithGenAccout(suite.T())
 	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
-	app.FundAccount(suite.app.BankKeeper, suite.ctx, sdk.AccAddress(suite.delegator), BaseBalance)
+	app.FundAccount(suite.app.BankKeeper, suite.ctx, suite.delegator, BaseBalance)
 
 	encodingConfig := app.MakeEncodingConfig()
 	encodingConfig.Amino.RegisterConcrete(&testdata.TestMsg{}, "testdata.TestMsg", nil)
