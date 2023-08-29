@@ -130,11 +130,12 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 	addr2 := s.delegator
 
 	for _, tc := range []struct {
-		desc      string
-		txMsg     sdk.Msg
-		malleate  func() error
-		expErr    bool
-		expErrStr string
+		desc        string
+		txMsg       sdk.Msg
+		malleate    func() error
+		blocksAdded int64
+		expErr      bool
+		expErrStr   string
 	}{
 		{
 			desc:  "Case delegate success update limit",
@@ -147,7 +148,8 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 				})
 				return nil
 			},
-			expErr: false,
+			blocksAdded: 5,
+			expErr:      false,
 		},
 		{
 			desc:  "Case redelegate success update limit",
@@ -160,7 +162,8 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 				})
 				return nil
 			},
-			expErr: false,
+			blocksAdded: 5,
+			expErr:      false,
 		},
 		{
 			desc:  "Case authz success update limit",
@@ -173,7 +176,50 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 				})
 				return nil
 			},
-			expErr: false,
+			blocksAdded: 5,
+			expErr:      false,
+		},
+		{
+			desc:  "Case delegate fail update limit",
+			txMsg: stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000))),
+			malleate: func() error {
+				s.app.TxBoundaryKeepper.SetLimitPerAddr(s.ctx, addr2, types.LimitPerAddr{
+					DelegateCount:     5,
+					ReledegateCount:   5,
+					LatestUpdateBlock: s.ctx.BlockHeight(),
+				})
+				return nil
+			},
+			blocksAdded: 4,
+			expErr:      true,
+		},
+		{
+			desc:  "Case redelegate fail update limit",
+			txMsg: stakingtypes.NewMsgBeginRedelegate(s.delegator, s.validators[0].GetOperator(), s.newvalidators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000))),
+			malleate: func() error {
+				s.app.TxBoundaryKeepper.SetLimitPerAddr(s.ctx, addr2, types.LimitPerAddr{
+					DelegateCount:     5,
+					ReledegateCount:   5,
+					LatestUpdateBlock: s.ctx.BlockHeight(),
+				})
+				return nil
+			},
+			blocksAdded: 4,
+			expErr:      true,
+		},
+		{
+			desc:  "Case authz success update limit",
+			txMsg: &authz.MsgExec{Grantee: addr1.String(), Msgs: []*cdctypes.Any{msgDelegateAny}},
+			malleate: func() error {
+				s.app.TxBoundaryKeepper.SetLimitPerAddr(s.ctx, addr2, types.LimitPerAddr{
+					DelegateCount:     5,
+					ReledegateCount:   5,
+					LatestUpdateBlock: s.ctx.BlockHeight(),
+				})
+				return nil
+			},
+			blocksAdded: 4,
+			expErr:      true,
 		},
 	} {
 		tc := tc
@@ -189,7 +235,7 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 
 		tx, err := s.CreateTestTx(privs, accNums, accSeqs, s.ctx.ChainID())
 		s.Require().NoError(err)
-		s.ctx = s.ctx.WithBlockHeight(s.ctx.BlockHeight() + 5)
+		s.ctx = s.ctx.WithBlockHeight(s.ctx.BlockHeight() + tc.blocksAdded)
 		_, err = antehandler(s.ctx, tx, false)
 		if !tc.expErr {
 			s.Require().NoError(err)
