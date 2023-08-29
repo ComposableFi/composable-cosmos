@@ -27,7 +27,7 @@ import (
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	"github.com/stretchr/testify/require"
 
-	centauri "github.com/notional-labs/centauri/v4/app"
+	centauri "github.com/notional-labs/centauri/v5/app"
 )
 
 // SimAppChainID hardcoded chainID for simulation

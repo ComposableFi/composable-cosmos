@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	helpers "github.com/notional-labs/centauri/v4/app/helpers"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	helpers "github.com/notional-labs/centauri/v5/app/helpers"
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func TestTFMInitGenesis(t *testing.T) {
