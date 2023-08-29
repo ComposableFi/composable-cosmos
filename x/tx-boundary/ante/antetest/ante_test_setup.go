@@ -22,8 +22,8 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/notional-labs/centauri/v4/app"
-	"github.com/notional-labs/centauri/v4/app/helpers"
+	"github.com/notional-labs/centauri/v5/app"
+	"github.com/notional-labs/centauri/v5/app/helpers"
 )
 
 var BaseBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000000)))
