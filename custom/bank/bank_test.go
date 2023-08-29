@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/stretchr/testify/suite"
 
@@ -59,7 +58,7 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 	var (
 		expChainBBalanceDiff sdk.Coin
 		path                 = NewTransferPath(suite.chainA, suite.chainB)
-		escrowAddr           = transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-0")
+		escrowAddr           = ibctransfertypes.GetEscrowAddress(ibctransfertypes.PortID, "channel-0")
 	)
 
 	testCases := []struct {

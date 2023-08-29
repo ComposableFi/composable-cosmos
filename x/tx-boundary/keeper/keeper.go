@@ -88,15 +88,15 @@ func (k Keeper) GetRedelegateBoundary(ctx sdk.Context) (boundary types.Boundary)
 }
 
 // SetDelegateCount set the number of delegate tx for a given address
-func (k Keeper) SetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress, limit_per_addr types.LimitPerAddr) {
+func (k Keeper) SetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress, limitPerAddr types.LimitPerAddr) {
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&limit_per_addr)
+	bz := k.cdc.MustMarshal(&limitPerAddr)
 	store.Set(addr, bz)
 }
 
 func (k Keeper) IncrementDelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	if store.Has(addr) == false {
+	if !store.Has(addr) {
 		k.SetLimitPerAddr(ctx, addr, types.LimitPerAddr{
 			DelegateCount:     1,
 			ReledegateCount:   0,
@@ -105,16 +105,15 @@ func (k Keeper) IncrementDelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 		return
 	}
 	bz := store.Get(addr)
-	var limit_per_addr types.LimitPerAddr
-	k.cdc.MustUnmarshal(bz, &limit_per_addr)
-	limit_per_addr.DelegateCount += 1
-	k.SetLimitPerAddr(ctx, addr, limit_per_addr)
-	return
+	var limitPerAddr types.LimitPerAddr
+	k.cdc.MustUnmarshal(bz, &limitPerAddr)
+	limitPerAddr.DelegateCount++
+	k.SetLimitPerAddr(ctx, addr, limitPerAddr)
 }
 
 func (k Keeper) IncrementRedelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	if store.Has(addr) == false {
+	if !store.Has(addr) {
 		k.SetLimitPerAddr(ctx, addr, types.LimitPerAddr{
 			DelegateCount:     0,
 			ReledegateCount:   1,
@@ -123,17 +122,16 @@ func (k Keeper) IncrementRedelegateCount(ctx sdk.Context, addr sdk.AccAddress) {
 		return
 	}
 	bz := store.Get(addr)
-	var limit_per_addr types.LimitPerAddr
-	k.cdc.MustUnmarshal(bz, &limit_per_addr)
-	limit_per_addr.ReledegateCount += 1
-	k.SetLimitPerAddr(ctx, addr, limit_per_addr)
-	return
+	var limitPerAddr types.LimitPerAddr
+	k.cdc.MustUnmarshal(bz, &limitPerAddr)
+	limitPerAddr.ReledegateCount++
+	k.SetLimitPerAddr(ctx, addr, limitPerAddr)
 }
 
 // GetDelegateCount get the number of delegate tx for a given address
-func (k Keeper) GetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) (limit_per_addr types.LimitPerAddr) {
+func (k Keeper) GetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) (limitPerAddr types.LimitPerAddr) {
 	store := ctx.KVStore(k.storeKey)
-	if store.Has(addr) == false {
+	if !store.Has(addr) {
 		return types.LimitPerAddr{
 			DelegateCount:     0,
 			ReledegateCount:   0,
@@ -141,20 +139,20 @@ func (k Keeper) GetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) (limit_per
 		}
 	}
 	bz := store.Get(addr)
-	k.cdc.MustUnmarshal(bz, &limit_per_addr)
+	k.cdc.MustUnmarshal(bz, &limitPerAddr)
 	return
 }
 
 func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
-	limit_per_addr := k.GetLimitPerAddr(ctx, addr)
-	if limit_per_addr.LatestUpdateBlock == 0 {
+	limitPerAddr := k.GetLimitPerAddr(ctx, addr)
+	if limitPerAddr.LatestUpdateBlock == 0 {
 		return
 	}
 	boundary := k.GetDelegateBoundary(ctx)
-	if limit_per_addr.LatestUpdateBlock+int64(boundary.BlocksPerGeneration) >= ctx.BlockHeight() {
-		// Calculate the generated tx number from the duration between latest update block and curent block height
+	if limitPerAddr.LatestUpdateBlock+int64(boundary.BlocksPerGeneration) >= ctx.BlockHeight() {
+		// Calculate the generated tx number from the duration between latest update block and current block height
 		var generatedTx uint64
-		duration := uint64(limit_per_addr.LatestUpdateBlock) + boundary.BlocksPerGeneration - uint64(ctx.BlockHeight())
+		duration := uint64(limitPerAddr.LatestUpdateBlock) + boundary.BlocksPerGeneration - uint64(ctx.BlockHeight())
 		if duration/boundary.BlocksPerGeneration > 5 {
 			generatedTx = 5
 		} else {
@@ -162,20 +160,19 @@ func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
 		}
 
 		// Update the delegate tx limit
-		if uint64(generatedTx) > limit_per_addr.DelegateCount {
-			limit_per_addr.DelegateCount = 0
+		if generatedTx > limitPerAddr.DelegateCount {
+			limitPerAddr.DelegateCount = 0
 		} else {
-			limit_per_addr.DelegateCount -= uint64(generatedTx)
+			limitPerAddr.DelegateCount -= generatedTx
 		}
 		// Update the redelegate tx limit
-		if uint64(generatedTx) > limit_per_addr.ReledegateCount {
-			limit_per_addr.ReledegateCount = 0
+		if generatedTx > limitPerAddr.ReledegateCount {
+			limitPerAddr.ReledegateCount = 0
 		} else {
-			limit_per_addr.ReledegateCount -= uint64(generatedTx)
+			limitPerAddr.ReledegateCount -= generatedTx
 		}
 		// Update LatestUpdateBlock
-		limit_per_addr.LatestUpdateBlock = ctx.BlockHeight()
+		limitPerAddr.LatestUpdateBlock = ctx.BlockHeight()
 		return
 	}
-	return
 }

@@ -23,9 +23,9 @@ func init() {
 }
 
 // RegisterLegacyAminoCodec registers concrete types on the LegacyAmino codec
-func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+func RegisterLegacyAminoCodec(_ *codec.LegacyAmino) {
 }
 
 // RegisterInterfaces registers the interfaces types with the interface registry.
-func RegisterInterfaces(registry types.InterfaceRegistry) {
+func RegisterInterfaces(_ types.InterfaceRegistry) {
 }

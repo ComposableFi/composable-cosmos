@@ -29,7 +29,7 @@ func GetTxCmd() *cobra.Command {
 
 func GetCmdUpdateDelegateBoundary() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "update-delegate [tx_limit] [block_per_generation]",
+		Use:  "update-delegate [txLimit] [blockPerGeneration]",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -37,20 +37,20 @@ func GetCmdUpdateDelegateBoundary() *cobra.Command {
 				return err
 			}
 
-			tx_limit, err := strconv.ParseUint(args[0], 10, 64)
+			txLimit, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			block_per_generation, err := strconv.ParseUint(args[1], 10, 64)
+			blockPerGeneration, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgUpdateDelegateBoundary(
 				types.Boundary{
-					TxLimit:             tx_limit,
-					BlocksPerGeneration: block_per_generation,
+					TxLimit:             txLimit,
+					BlocksPerGeneration: blockPerGeneration,
 				},
 				clientCtx.GetFromAddress().String(),
 			)
@@ -64,7 +64,7 @@ func GetCmdUpdateDelegateBoundary() *cobra.Command {
 
 func GetCmdUpdateRedelegateBoundary() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:  "update-redelegate [tx_limit] [block_per_generation]",
+		Use:  "update-redelegate [txLimit] [blockPerGeneration]",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -72,20 +72,20 @@ func GetCmdUpdateRedelegateBoundary() *cobra.Command {
 				return err
 			}
 
-			tx_limit, err := strconv.ParseUint(args[0], 10, 64)
+			txLimit, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			block_per_generation, err := strconv.ParseUint(args[1], 10, 64)
+			blockPerGeneration, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgUpdateRedelegateBoundary(
 				types.Boundary{
-					TxLimit:             tx_limit,
-					BlocksPerGeneration: block_per_generation,
+					TxLimit:             txLimit,
+					BlocksPerGeneration: blockPerGeneration,
 				},
 				clientCtx.GetFromAddress().String(),
 			)

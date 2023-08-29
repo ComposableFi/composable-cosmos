@@ -117,5 +117,4 @@ func (s *AnteTestSuite) TestStakingAnte() {
 			s.Require().Error(err)
 		}
 	}
-
 }
