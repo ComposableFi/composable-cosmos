@@ -13,7 +13,7 @@ Requires [Go 1.19](https://go.dev/doc/install) or higher.
 
 ```bash
 make install
-banksyd version
+centaurid version
 ```
 Then you can run a node with a single command.
 
