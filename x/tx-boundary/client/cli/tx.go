@@ -6,9 +6,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 	"github.com/spf13/cobra"
-
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
 )
 
 // GetTxCmd returns the tx commands for tx-boundary

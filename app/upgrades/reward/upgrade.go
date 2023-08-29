@@ -5,8 +5,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
-	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
-	tfmwkeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+	mintkeeper "github.com/notional-labs/centauri/v5/x/mint/keeper"
+	tfmwkeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
 )
 
 var listAllowedRelayAddress = []string{

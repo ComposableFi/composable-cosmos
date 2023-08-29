@@ -9,8 +9,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	txBoundaryKeeper "github.com/notional-labs/centauri/v4/x/tx-boundary/keeper"
+	txBoundaryKeeper "github.com/notional-labs/centauri/v5/x/tx-boundary/keeper"
 )
 
 type StakingPermissionDecorator struct {

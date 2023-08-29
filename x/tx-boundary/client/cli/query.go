@@ -7,8 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-
-	"github.com/notional-labs/centauri/v4/x/tx-boundary/types"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 )
 
 // GetQueryCmd returns the cli query commands for the tx-boundary module.

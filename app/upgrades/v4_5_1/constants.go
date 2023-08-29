@@ -1,6 +1,6 @@
 package v4_5_1
 
-import "github.com/notional-labs/centauri/v4/app/upgrades"
+import "github.com/notional-labs/centauri/v5/app/upgrades"
 
 const (
 	// UpgradeName defines the on-chain upgrade name for the Composable v5 upgrade.

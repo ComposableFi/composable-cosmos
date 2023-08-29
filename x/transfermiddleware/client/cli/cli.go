@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 // GetQueryCmd returns the query commands for router

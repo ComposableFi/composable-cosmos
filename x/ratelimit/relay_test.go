@@ -8,8 +8,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/stretchr/testify/suite"
 
-	customibctesting "github.com/notional-labs/centauri/v4/app/ibctesting"
-	ratelimittypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	customibctesting "github.com/notional-labs/centauri/v5/app/ibctesting"
+	ratelimittypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
 type RateLimitTestSuite struct {

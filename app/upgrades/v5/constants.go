@@ -2,8 +2,8 @@ package v5
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
-
-	"github.com/notional-labs/centauri/v4/app/upgrades"
+	"github.com/notional-labs/centauri/v5/app/upgrades"
+	txboundary "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 )
 
 const (
@@ -15,6 +15,6 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added: []string{},
+		Added: []string{txboundary.ModuleName},
 	},
 }

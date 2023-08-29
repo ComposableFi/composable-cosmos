@@ -16,9 +16,9 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v4/x/ratelimit/client/cli"
-	"github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
-	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v5/x/ratelimit/client/cli"
+	"github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
+	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
 var (
