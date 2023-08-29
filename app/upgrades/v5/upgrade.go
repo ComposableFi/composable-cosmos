@@ -31,9 +31,6 @@ func CreateUpgradeHandler(
 		uatomRateLimit, found := rlKeeper.GetRateLimit(ctx, uatom, "channel-2")
 		if !found {
 			channelValue := rlKeeper.GetChannelValue(ctx, uatom)
-			if channelValue.IsZero() {
-				panic("Zero ATOM channel value")
-			}
 			// Create and store the rate limit object
 			path := types.Path{
 				Denom:     uatom,
@@ -64,9 +61,6 @@ func CreateUpgradeHandler(
 		dotRateLimit, found := rlKeeper.GetRateLimit(ctx, dot, "channel-2")
 		if !found {
 			channelValue := rlKeeper.GetChannelValue(ctx, dot)
-			if channelValue.IsZero() {
-				panic("Zero DOT channel value")
-			}
 			// Create and store the rate limit object
 			path := types.Path{
 				Denom:     dot,
@@ -97,9 +91,6 @@ func CreateUpgradeHandler(
 		ksmRateLimit, found := rlKeeper.GetRateLimit(ctx, ksm, "channel-2")
 		if !found {
 			channelValue := rlKeeper.GetChannelValue(ctx, ksm)
-			if channelValue.IsZero() {
-				panic("Zero KSM channel value")
-			}
 			// Create and store the rate limit object
 			path := types.Path{
 				Denom:     ksm,
@@ -130,9 +121,6 @@ func CreateUpgradeHandler(
 		usdtRateLimit, found := rlKeeper.GetRateLimit(ctx, usdt, "channel-2")
 		if !found {
 			channelValue := rlKeeper.GetChannelValue(ctx, usdt)
-			if channelValue.IsZero() {
-				panic("Zero USDT channel value")
-			}
 			// Create and store the rate limit object
 			path := types.Path{
 				Denom:     usdt,
