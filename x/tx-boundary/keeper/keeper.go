@@ -149,10 +149,11 @@ func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
 		return
 	}
 	boundary := k.GetDelegateBoundary(ctx)
-	if limitPerAddr.LatestUpdateBlock+int64(boundary.BlocksPerGeneration) >= ctx.BlockHeight() {
+	if limitPerAddr.LatestUpdateBlock+int64(boundary.BlocksPerGeneration) <= ctx.BlockHeight() {
 		// Calculate the generated tx number from the duration between latest update block and current block height
 		var generatedTx uint64
-		duration := uint64(limitPerAddr.LatestUpdateBlock) + boundary.BlocksPerGeneration - uint64(ctx.BlockHeight())
+
+		duration := uint64(ctx.BlockHeight()) - uint64(limitPerAddr.LatestUpdateBlock)
 		if duration/boundary.BlocksPerGeneration > 5 {
 			generatedTx = 5
 		} else {
@@ -173,6 +174,9 @@ func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
 		}
 		// Update LatestUpdateBlock
 		limitPerAddr.LatestUpdateBlock = ctx.BlockHeight()
+
+		// Set to store
+		k.SetLimitPerAddr(ctx, addr, limitPerAddr)
 		return
 	}
 }
