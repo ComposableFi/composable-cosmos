@@ -330,7 +330,7 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 	github.com/cometbft/cometbft v0.37.1 => github.com/vuong177/cometbft v0.0.0-20230906120834-49ffb4da83cb
-	github.com/cosmos/cosmos-sdk => github.com/vuong177/cosmos-sdk v0.0.0-20230906121536-a7daeb5708a8
+	github.com/cosmos/cosmos-sdk => github.com/vuong177/cosmos-sdk v0.0.0-20230906122817-f67e1691b5ca
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70
 

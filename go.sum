@@ -1266,8 +1266,8 @@ github.com/uudashr/gocognit v1.0.6 h1:2Cgi6MweCsdB6kpcVQp7EW4U23iBFQWfTXiWlyp842
 github.com/uudashr/gocognit v1.0.6/go.mod h1:nAIUuVBnYU7pcninia3BHOvQkpQCeO76Uscky5BOwcY=
 github.com/vuong177/cometbft v0.0.0-20230906120834-49ffb4da83cb h1:qEBRTZCEyUPJpM7rL0er6CnKXRDDiM1vX/g6paMIUn8=
 github.com/vuong177/cometbft v0.0.0-20230906120834-49ffb4da83cb/go.mod h1:49ziCkkKwF6F5JZMt21hBn2Cv0nlS5eGwVIHysoTayY=
-github.com/vuong177/cosmos-sdk v0.0.0-20230906121536-a7daeb5708a8 h1:LfUhIOjwYi0oZbqDE8TboiF011Uxy9QXJAO86HNG6lE=
-github.com/vuong177/cosmos-sdk v0.0.0-20230906121536-a7daeb5708a8/go.mod h1:u2lC0v2JK87WciV8szF7vFmtt75M4F01dd0/OVY9hgw=
+github.com/vuong177/cosmos-sdk v0.0.0-20230906122817-f67e1691b5ca h1:VYBLzorYy76KeTWCXw00jEqvCk6sEbw1EOjnA6edLtM=
+github.com/vuong177/cosmos-sdk v0.0.0-20230906122817-f67e1691b5ca/go.mod h1:u2lC0v2JK87WciV8szF7vFmtt75M4F01dd0/OVY9hgw=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 github.com/yagipy/maintidx v1.0.0 h1:h5NvIsCz+nRDapQ0exNv4aJ0yXSI0420omVANTv3GJM=
