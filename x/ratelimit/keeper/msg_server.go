@@ -6,7 +6,8 @@ import (
 	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
+
+	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
 var _ types.MsgServer = msgServer{}
@@ -30,6 +31,10 @@ func (k Keeper) AddTransferRateLimit(goCtx context.Context, msg *types.MsgAddRat
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
+	if err := msg.ValidateBasic(); err != nil {
+		return nil, err
+	}
+
 	err := k.AddRateLimit(ctx, msg)
 	if err != nil {
 		return nil, err
@@ -43,6 +48,10 @@ func (k Keeper) UpdateTransferRateLimit(goCtx context.Context, msg *types.MsgUpd
 
 	if k.authority != msg.Authority {
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	if err := msg.ValidateBasic(); err != nil {
+		return nil, err
 	}
 
 	err := k.UpdateRateLimit(ctx, msg)
@@ -60,7 +69,7 @@ func (k Keeper) RemoveTransferRateLimit(goCtx context.Context, msg *types.MsgRem
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelId)
+	err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +84,7 @@ func (k Keeper) ResetTransferRateLimit(goCtx context.Context, msg *types.MsgRese
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelId)
+	err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelID)
 	if err != nil {
 		return nil, err
 	}

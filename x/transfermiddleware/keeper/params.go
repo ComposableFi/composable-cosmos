@@ -2,7 +2,8 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {

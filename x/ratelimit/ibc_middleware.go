@@ -3,7 +3,7 @@ package ratelimit
 import (
 	"fmt"
 
-	"github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+	"github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -179,6 +179,6 @@ func (im IBCMiddleware) WriteAcknowledgement(
 }
 
 // GetAppVersion returns the application version of the underlying application
-func (i IBCMiddleware) GetAppVersion(ctx sdk.Context, portID, channelID string) (string, bool) {
-	return i.keeper.GetAppVersion(ctx, portID, channelID)
+func (im IBCMiddleware) GetAppVersion(ctx sdk.Context, portID, channelID string) (string, bool) {
+	return im.keeper.GetAppVersion(ctx, portID, channelID)
 }

@@ -6,8 +6,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/spf13/cobra"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 // GetQueryCmd returns the query commands for router
@@ -67,7 +68,7 @@ func GetEscowAddress() *cobra.Command {
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 			res, err := queryClient.EscrowAddress(cmd.Context(), &types.QueryEscrowAddressRequest{
-				ChannelId: args[0],
+				ChannelID: args[0],
 			})
 			if err != nil {
 				return err

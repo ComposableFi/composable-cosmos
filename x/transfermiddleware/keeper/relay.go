@@ -5,7 +5,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
@@ -49,7 +50,7 @@ func (k Keeper) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, data t
 	}
 
 	// lock ibc token if dstChannel is paraChannel
-	if packet.GetDestChannel() == paraTokenInfo.ChannelId {
+	if packet.GetDestChannel() == paraTokenInfo.ChannelID {
 		// escrow ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(packet.GetDestPort(), packet.GetDestChannel())
 

@@ -3,21 +3,22 @@ package types_test
 import (
 	"testing"
 
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func TestValidateBasic(t *testing.T) {
 	var (
 		validInfo = types.ParachainIBCTokenInfo{
 			IbcDenom:    "ibc-test-1",
-			ChannelId:   "channel-1",
+			ChannelID:   "channel-1",
 			NativeDenom: "native-1",
 			AssetId:     "1",
 		}
 		invalidInfo = types.ParachainIBCTokenInfo{
 			IbcDenom:    "ibc-test-1",
-			ChannelId:   "channel-1",
+			ChannelID:   "channel-1",
 			NativeDenom: "native-1",
 			AssetId:     "asset-1",
 		}

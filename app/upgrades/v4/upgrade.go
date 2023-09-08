@@ -5,15 +5,16 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/notional-labs/centauri/v4/app/keepers"
-	"github.com/notional-labs/centauri/v4/app/upgrades"
-	tfmdtypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	"github.com/notional-labs/centauri/v5/app/keepers"
+	"github.com/notional-labs/centauri/v5/app/upgrades"
+	tfmdtypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
-	bpm upgrades.BaseAppParamManager,
+	_ upgrades.BaseAppParamManager,
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {

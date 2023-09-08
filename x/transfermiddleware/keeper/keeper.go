@@ -13,7 +13,8 @@ import (
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 type Keeper struct {
@@ -71,7 +72,7 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 
 	info := types.ParachainIBCTokenInfo{
 		IbcDenom:    ibcDenom,
-		ChannelId:   channelID,
+		ChannelID:   channelID,
 		NativeDenom: nativeDenom,
 		AssetId:     assetID,
 	}
@@ -203,8 +204,9 @@ func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibc
 
 func (keeper Keeper) GetTotalEscrowedToken(ctx sdk.Context) (coins sdk.Coins) {
 	keeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
-		escrowCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelId), info.IbcDenom)
-		coins = append(coins, escrowCoin)
+		escrowIbcCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.IbcDenom)
+		escrowNativeCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.NativeDenom)
+		coins = append(coins, escrowIbcCoin, escrowNativeCoin)
 		return false
 	})
 

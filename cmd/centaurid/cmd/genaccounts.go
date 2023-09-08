@@ -6,8 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/notional-labs/centauri/v4/bech32-migration/utils"
 	"github.com/spf13/cobra"
+
+	"github.com/notional-labs/centauri/v5/bech32-migration/utils"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"

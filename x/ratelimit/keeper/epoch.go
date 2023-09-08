@@ -6,7 +6,7 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -117,14 +117,14 @@ func (k Keeper) NumBlocksSinceEpochStart(ctx sdk.Context, identifier string) (in
 }
 
 func (k Keeper) AfterEpochEnd(ctx sdk.Context, epochInfo types.EpochInfo) {
-	if epochInfo.Identifier == types.DAY_EPOCH {
+	if epochInfo.Identifier == types.DayEpoch {
 		epochHour := uint64(epochInfo.CurrentEpoch)
 
 		for _, rateLimit := range k.GetAllRateLimits(ctx) {
 			if epochHour%rateLimit.Quota.DurationHours == 0 {
-				err := k.ResetRateLimit(ctx, rateLimit.Path.Denom, rateLimit.Path.ChannelId)
+				err := k.ResetRateLimit(ctx, rateLimit.Path.Denom, rateLimit.Path.ChannelID)
 				if err != nil {
-					k.Logger(ctx).Error(fmt.Sprintf("Unable to reset quota for Denom: %s, ChannelId: %s", rateLimit.Path.Denom, rateLimit.Path.ChannelId))
+					k.Logger(ctx).Error(fmt.Sprintf("Unable to reset quota for Denom: %s, ChannelID: %s", rateLimit.Path.Denom, rateLimit.Path.ChannelID))
 				}
 			}
 		}

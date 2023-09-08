@@ -31,10 +31,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
-	bech32stakingmigration "github.com/notional-labs/centauri/v4/bech32-migration/staking"
 
-	"github.com/notional-labs/centauri/v4/app/keepers"
-	v4 "github.com/notional-labs/centauri/v4/app/upgrades/v4"
+	"github.com/notional-labs/centauri/v5/app/keepers"
+	v4 "github.com/notional-labs/centauri/v5/app/upgrades/v4"
+	v5 "github.com/notional-labs/centauri/v5/app/upgrades/v5"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -86,35 +86,42 @@ import (
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v4/custom/bank"
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemodule "github.com/terra-money/alliance/x/alliance"
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	"github.com/notional-labs/centauri/v4/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	custombankmodule "github.com/notional-labs/centauri/v5/custom/bank"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v5/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+
+	txBoundary "github.com/notional-labs/centauri/v5/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+
+	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v4/x/mint"
-	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
+	"github.com/notional-labs/centauri/v5/x/mint"
+	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v4/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	upgrades "github.com/notional-labs/centauri/v4/app/upgrades"
+	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
+	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
+
+	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
 )
 
 const (
@@ -132,7 +139,8 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade}
+	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -207,6 +215,7 @@ var (
 		ica.AppModuleBasic{},
 		ibc_hooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
+		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
@@ -321,6 +330,7 @@ func NewCentauriApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
+	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
@@ -363,6 +373,7 @@ func NewCentauriApp(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		routerModule,
 		transfermiddlewareModule,
+		txBoundaryModule,
 		icaModule,
 		ratelimitModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
@@ -386,6 +397,7 @@ func NewCentauriApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
@@ -425,6 +437,7 @@ func NewCentauriApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
@@ -461,6 +474,7 @@ func NewCentauriApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
+		txBoundaryTypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
@@ -520,6 +534,7 @@ func NewCentauriApp(
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
+		app.TxBoundaryKeepper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
@@ -576,10 +591,7 @@ func (app *CentauriApp) GetTxConfig() client.TxConfig {
 
 // BeginBlocker application updates every begin block
 func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
-	if ctx.BlockHeight() == ForkHeight {
-		bech32stakingmigration.MigrateUnbonding(ctx, app.GetKey(stakingtypes.StoreKey), app.appCodec)
-	}
-
+	BeginBlockForks(ctx, app)
 	return app.mm.BeginBlock(ctx, req)
 }
 
@@ -696,16 +708,17 @@ func (app *CentauriApp) setupUpgradeStoreLoaders() {
 	}
 
 	for _, upgrade := range Upgrades {
+		upgrade := upgrade
 		if upgradeInfo.Name == upgrade.UpgradeName {
 			app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades))
 		}
 	}
 }
 
-func (app *CentauriApp) customPreUpgradeHandler(upgradeInfo upgradetypes.Plan) {
-	switch upgradeInfo.Name {
-	default:
-	}
+func (app *CentauriApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
+	// switch upgradeInfo.Name {
+	// default:
+	// }
 }
 
 func (app *CentauriApp) setupUpgradeHandlers() {

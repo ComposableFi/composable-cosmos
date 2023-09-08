@@ -111,7 +111,7 @@ func (m *QueryAllRateLimitsResponse) GetRateLimits() []RateLimit {
 
 type QueryRateLimitRequest struct {
 	Denom     string `protobuf:"bytes,1,opt,name=denom,proto3" json:"denom,omitempty"`
-	ChannelId string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	ChannelID string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
 func (m *QueryRateLimitRequest) Reset()         { *m = QueryRateLimitRequest{} }
@@ -154,9 +154,9 @@ func (m *QueryRateLimitRequest) GetDenom() string {
 	return ""
 }
 
-func (m *QueryRateLimitRequest) GetChannelId() string {
+func (m *QueryRateLimitRequest) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
@@ -205,22 +205,22 @@ func (m *QueryRateLimitResponse) GetRateLimit() *RateLimit {
 	return nil
 }
 
-type QueryRateLimitsByChainIdRequest struct {
+type QueryRateLimitsByChainIDRequest struct {
 	ChainId string `protobuf:"bytes,1,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
 }
 
-func (m *QueryRateLimitsByChainIdRequest) Reset()         { *m = QueryRateLimitsByChainIdRequest{} }
-func (m *QueryRateLimitsByChainIdRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryRateLimitsByChainIdRequest) ProtoMessage()    {}
-func (*QueryRateLimitsByChainIdRequest) Descriptor() ([]byte, []int) {
+func (m *QueryRateLimitsByChainIDRequest) Reset()         { *m = QueryRateLimitsByChainIDRequest{} }
+func (m *QueryRateLimitsByChainIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryRateLimitsByChainIDRequest) ProtoMessage()    {}
+func (*QueryRateLimitsByChainIDRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_b0fc123b957ea496, []int{4}
 }
-func (m *QueryRateLimitsByChainIdRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryRateLimitsByChainIDRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryRateLimitsByChainIdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryRateLimitsByChainIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryRateLimitsByChainIdRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryRateLimitsByChainIDRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -230,41 +230,41 @@ func (m *QueryRateLimitsByChainIdRequest) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *QueryRateLimitsByChainIdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryRateLimitsByChainIdRequest.Merge(m, src)
+func (m *QueryRateLimitsByChainIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRateLimitsByChainIDRequest.Merge(m, src)
 }
-func (m *QueryRateLimitsByChainIdRequest) XXX_Size() int {
+func (m *QueryRateLimitsByChainIDRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryRateLimitsByChainIdRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryRateLimitsByChainIdRequest.DiscardUnknown(m)
+func (m *QueryRateLimitsByChainIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRateLimitsByChainIDRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryRateLimitsByChainIdRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryRateLimitsByChainIDRequest proto.InternalMessageInfo
 
-func (m *QueryRateLimitsByChainIdRequest) GetChainId() string {
+func (m *QueryRateLimitsByChainIDRequest) GetChainId() string {
 	if m != nil {
 		return m.ChainId
 	}
 	return ""
 }
 
-type QueryRateLimitsByChainIdResponse struct {
+type QueryRateLimitsByChainIDResponse struct {
 	RateLimits []RateLimit `protobuf:"bytes,1,rep,name=rate_limits,json=rateLimits,proto3" json:"rate_limits"`
 }
 
-func (m *QueryRateLimitsByChainIdResponse) Reset()         { *m = QueryRateLimitsByChainIdResponse{} }
-func (m *QueryRateLimitsByChainIdResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryRateLimitsByChainIdResponse) ProtoMessage()    {}
-func (*QueryRateLimitsByChainIdResponse) Descriptor() ([]byte, []int) {
+func (m *QueryRateLimitsByChainIDResponse) Reset()         { *m = QueryRateLimitsByChainIDResponse{} }
+func (m *QueryRateLimitsByChainIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryRateLimitsByChainIDResponse) ProtoMessage()    {}
+func (*QueryRateLimitsByChainIDResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_b0fc123b957ea496, []int{5}
 }
-func (m *QueryRateLimitsByChainIdResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryRateLimitsByChainIDResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryRateLimitsByChainIdResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryRateLimitsByChainIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryRateLimitsByChainIdResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryRateLimitsByChainIDResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -274,41 +274,41 @@ func (m *QueryRateLimitsByChainIdResponse) XXX_Marshal(b []byte, deterministic b
 		return b[:n], nil
 	}
 }
-func (m *QueryRateLimitsByChainIdResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryRateLimitsByChainIdResponse.Merge(m, src)
+func (m *QueryRateLimitsByChainIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRateLimitsByChainIDResponse.Merge(m, src)
 }
-func (m *QueryRateLimitsByChainIdResponse) XXX_Size() int {
+func (m *QueryRateLimitsByChainIDResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryRateLimitsByChainIdResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryRateLimitsByChainIdResponse.DiscardUnknown(m)
+func (m *QueryRateLimitsByChainIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRateLimitsByChainIDResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryRateLimitsByChainIdResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryRateLimitsByChainIDResponse proto.InternalMessageInfo
 
-func (m *QueryRateLimitsByChainIdResponse) GetRateLimits() []RateLimit {
+func (m *QueryRateLimitsByChainIDResponse) GetRateLimits() []RateLimit {
 	if m != nil {
 		return m.RateLimits
 	}
 	return nil
 }
 
-type QueryRateLimitsByChannelIdRequest struct {
-	ChannelId string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+type QueryRateLimitsByChannelIDRequest struct {
+	ChannelID string `protobuf:"bytes,1,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty"`
 }
 
-func (m *QueryRateLimitsByChannelIdRequest) Reset()         { *m = QueryRateLimitsByChannelIdRequest{} }
-func (m *QueryRateLimitsByChannelIdRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryRateLimitsByChannelIdRequest) ProtoMessage()    {}
-func (*QueryRateLimitsByChannelIdRequest) Descriptor() ([]byte, []int) {
+func (m *QueryRateLimitsByChannelIDRequest) Reset()         { *m = QueryRateLimitsByChannelIDRequest{} }
+func (m *QueryRateLimitsByChannelIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryRateLimitsByChannelIDRequest) ProtoMessage()    {}
+func (*QueryRateLimitsByChannelIDRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_b0fc123b957ea496, []int{6}
 }
-func (m *QueryRateLimitsByChannelIdRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryRateLimitsByChannelIDRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryRateLimitsByChannelIdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryRateLimitsByChannelIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryRateLimitsByChannelIdRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryRateLimitsByChannelIDRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -318,41 +318,41 @@ func (m *QueryRateLimitsByChannelIdRequest) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *QueryRateLimitsByChannelIdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryRateLimitsByChannelIdRequest.Merge(m, src)
+func (m *QueryRateLimitsByChannelIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRateLimitsByChannelIDRequest.Merge(m, src)
 }
-func (m *QueryRateLimitsByChannelIdRequest) XXX_Size() int {
+func (m *QueryRateLimitsByChannelIDRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryRateLimitsByChannelIdRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryRateLimitsByChannelIdRequest.DiscardUnknown(m)
+func (m *QueryRateLimitsByChannelIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRateLimitsByChannelIDRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryRateLimitsByChannelIdRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryRateLimitsByChannelIDRequest proto.InternalMessageInfo
 
-func (m *QueryRateLimitsByChannelIdRequest) GetChannelId() string {
+func (m *QueryRateLimitsByChannelIDRequest) GetChannelID() string {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return ""
 }
 
-type QueryRateLimitsByChannelIdResponse struct {
+type QueryRateLimitsByChannelIDResponse struct {
 	RateLimits []RateLimit `protobuf:"bytes,1,rep,name=rate_limits,json=rateLimits,proto3" json:"rate_limits"`
 }
 
-func (m *QueryRateLimitsByChannelIdResponse) Reset()         { *m = QueryRateLimitsByChannelIdResponse{} }
-func (m *QueryRateLimitsByChannelIdResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryRateLimitsByChannelIdResponse) ProtoMessage()    {}
-func (*QueryRateLimitsByChannelIdResponse) Descriptor() ([]byte, []int) {
+func (m *QueryRateLimitsByChannelIDResponse) Reset()         { *m = QueryRateLimitsByChannelIDResponse{} }
+func (m *QueryRateLimitsByChannelIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryRateLimitsByChannelIDResponse) ProtoMessage()    {}
+func (*QueryRateLimitsByChannelIDResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_b0fc123b957ea496, []int{7}
 }
-func (m *QueryRateLimitsByChannelIdResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryRateLimitsByChannelIDResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryRateLimitsByChannelIdResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryRateLimitsByChannelIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryRateLimitsByChannelIdResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryRateLimitsByChannelIDResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -362,19 +362,19 @@ func (m *QueryRateLimitsByChannelIdResponse) XXX_Marshal(b []byte, deterministic
 		return b[:n], nil
 	}
 }
-func (m *QueryRateLimitsByChannelIdResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryRateLimitsByChannelIdResponse.Merge(m, src)
+func (m *QueryRateLimitsByChannelIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRateLimitsByChannelIDResponse.Merge(m, src)
 }
-func (m *QueryRateLimitsByChannelIdResponse) XXX_Size() int {
+func (m *QueryRateLimitsByChannelIDResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryRateLimitsByChannelIdResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryRateLimitsByChannelIdResponse.DiscardUnknown(m)
+func (m *QueryRateLimitsByChannelIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRateLimitsByChannelIDResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryRateLimitsByChannelIdResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryRateLimitsByChannelIDResponse proto.InternalMessageInfo
 
-func (m *QueryRateLimitsByChannelIdResponse) GetRateLimits() []RateLimit {
+func (m *QueryRateLimitsByChannelIDResponse) GetRateLimits() []RateLimit {
 	if m != nil {
 		return m.RateLimits
 	}
@@ -466,10 +466,10 @@ func init() {
 	proto.RegisterType((*QueryAllRateLimitsResponse)(nil), "centauri.ratelimit.v1beta1.QueryAllRateLimitsResponse")
 	proto.RegisterType((*QueryRateLimitRequest)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitRequest")
 	proto.RegisterType((*QueryRateLimitResponse)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitResponse")
-	proto.RegisterType((*QueryRateLimitsByChainIdRequest)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChainIdRequest")
-	proto.RegisterType((*QueryRateLimitsByChainIdResponse)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChainIdResponse")
-	proto.RegisterType((*QueryRateLimitsByChannelIdRequest)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChannelIdRequest")
-	proto.RegisterType((*QueryRateLimitsByChannelIdResponse)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChannelIdResponse")
+	proto.RegisterType((*QueryRateLimitsByChainIDRequest)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChainIDRequest")
+	proto.RegisterType((*QueryRateLimitsByChainIDResponse)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChainIDResponse")
+	proto.RegisterType((*QueryRateLimitsByChannelIDRequest)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChannelIDRequest")
+	proto.RegisterType((*QueryRateLimitsByChannelIDResponse)(nil), "centauri.ratelimit.v1beta1.QueryRateLimitsByChannelIDResponse")
 	proto.RegisterType((*QueryAllWhitelistedAddressesRequest)(nil), "centauri.ratelimit.v1beta1.QueryAllWhitelistedAddressesRequest")
 	proto.RegisterType((*QueryAllWhitelistedAddressesResponse)(nil), "centauri.ratelimit.v1beta1.QueryAllWhitelistedAddressesResponse")
 }
@@ -479,46 +479,46 @@ func init() {
 }
 
 var fileDescriptor_b0fc123b957ea496 = []byte{
-	// 612 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x95, 0x4f, 0x6f, 0x12, 0x41,
-	0x18, 0xc6, 0x99, 0x6a, 0xad, 0xbc, 0xb5, 0x07, 0xc7, 0x56, 0xe9, 0xaa, 0x5b, 0x5c, 0x6d, 0x53,
-	0x25, 0xb2, 0x01, 0x52, 0x2f, 0xad, 0x7f, 0x8a, 0x5e, 0x9a, 0x70, 0x50, 0x2e, 0x26, 0x26, 0x4a,
-	0x06, 0x76, 0x02, 0x6b, 0xe8, 0xce, 0x76, 0x67, 0x50, 0x89, 0xe9, 0xc5, 0xc4, 0xbb, 0x89, 0xdf,
-	0xc1, 0xab, 0x1f, 0xc2, 0x0b, 0x89, 0x07, 0x9b, 0x78, 0xf1, 0x64, 0x0c, 0xf8, 0x41, 0xcc, 0xce,
-	0xce, 0x2e, 0x42, 0x61, 0x0b, 0x24, 0xbd, 0x2d, 0x33, 0xef, 0xf3, 0xcc, 0xef, 0x7d, 0x77, 0x9e,
-	0x05, 0x36, 0x6a, 0xd4, 0x11, 0xa4, 0xe5, 0xd9, 0xa6, 0x47, 0x04, 0x6d, 0xda, 0xfb, 0xb6, 0x30,
-	0xdf, 0xe4, 0xaa, 0x54, 0x90, 0x9c, 0x79, 0xd0, 0xa2, 0x5e, 0x3b, 0xeb, 0x7a, 0x4c, 0x30, 0xac,
-	0x85, 0x75, 0xd9, 0xa8, 0x2e, 0xab, 0xea, 0xb4, 0x3b, 0x31, 0x1e, 0xfd, 0x6a, 0xe9, 0xa3, 0x5d,
+	// 613 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x95, 0x4f, 0x6f, 0xd3, 0x30,
+	0x18, 0xc6, 0xeb, 0xc1, 0x18, 0x7d, 0xc7, 0x0e, 0x98, 0x0d, 0xb6, 0x00, 0x59, 0x09, 0x6c, 0x1a,
+	0x54, 0x34, 0x6a, 0xab, 0x71, 0xd9, 0xf8, 0xb3, 0xb2, 0x4b, 0xa5, 0x1e, 0xa0, 0x17, 0x24, 0x24,
+	0xa8, 0xdc, 0xc6, 0x6a, 0x83, 0xba, 0x38, 0x8b, 0x5d, 0xa0, 0x42, 0xbb, 0x20, 0x71, 0x47, 0xe2,
+	0x3b, 0x70, 0xe5, 0x43, 0x70, 0xa9, 0xc4, 0x81, 0x49, 0x5c, 0x38, 0x21, 0xd4, 0xf2, 0x41, 0x50,
+	0x1c, 0x27, 0xa5, 0x5d, 0x1b, 0xda, 0x4a, 0xbb, 0x39, 0xf6, 0xfb, 0x3c, 0xfe, 0xbd, 0x8e, 0x9f,
+	0x04, 0x36, 0x6b, 0xd4, 0x11, 0xa4, 0xe5, 0xd9, 0xa6, 0x47, 0x04, 0x6d, 0xda, 0x07, 0xb6, 0x30,
+	0x5f, 0x67, 0xab, 0x54, 0x90, 0xac, 0x79, 0xd8, 0xa2, 0x5e, 0x3b, 0xe3, 0x7a, 0x4c, 0x30, 0xac,
+	0x85, 0x75, 0x99, 0xa8, 0x2e, 0xa3, 0xea, 0xb4, 0x3b, 0x31, 0x1e, 0xfd, 0x6a, 0xe9, 0xa3, 0x5d,
 	0xab, 0x33, 0x56, 0x6f, 0x52, 0x93, 0xb8, 0xb6, 0x49, 0x1c, 0x87, 0x09, 0x22, 0x6c, 0xe6, 0x70,
-	0xb5, 0xbb, 0x5c, 0x67, 0x75, 0x26, 0x1f, 0x4d, 0xff, 0x29, 0x58, 0x35, 0xae, 0xc2, 0xea, 0x33,
-	0x1f, 0x65, 0xb7, 0xd9, 0x2c, 0x13, 0x41, 0x4b, 0xbe, 0x1d, 0x2f, 0xd3, 0x83, 0x16, 0xe5, 0xc2,
-	0x78, 0x0d, 0xda, 0xa8, 0x4d, 0xee, 0x32, 0x87, 0x53, 0x5c, 0x82, 0x45, 0x9f, 0xa0, 0x22, 0x11,
-	0x78, 0x0a, 0xa5, 0xcf, 0x6c, 0x2e, 0xe6, 0xd7, 0xb3, 0xe3, 0x9b, 0xc9, 0x46, 0x26, 0xc5, 0xb3,
-	0x9d, 0xdf, 0x6b, 0x89, 0x32, 0x78, 0x91, 0xab, 0x51, 0x82, 0x15, 0x79, 0x56, 0x54, 0xa3, 0x20,
-	0xf0, 0x32, 0xcc, 0x5b, 0xd4, 0x61, 0xfb, 0x29, 0x94, 0x46, 0x9b, 0xc9, 0x72, 0xf0, 0x03, 0x5f,
-	0x07, 0xa8, 0x35, 0x88, 0xe3, 0xd0, 0x66, 0xc5, 0xb6, 0x52, 0x73, 0x72, 0x2b, 0xa9, 0x56, 0xf6,
-	0x2c, 0xe3, 0x15, 0x5c, 0x1e, 0x76, 0x53, 0xd4, 0x4f, 0x00, 0xfa, 0xd4, 0xd2, 0x73, 0x52, 0xe8,
-	0x72, 0x32, 0xc2, 0x35, 0x76, 0x60, 0x6d, 0xd0, 0x9f, 0x17, 0xdb, 0x8f, 0x1b, 0xc4, 0x76, 0xf6,
-	0xac, 0x90, 0x7b, 0x15, 0xce, 0xd7, 0xfc, 0x15, 0x9f, 0x2f, 0x40, 0x5f, 0xa8, 0x05, 0x15, 0x86,
-	0x0b, 0xe9, 0xf1, 0xea, 0x53, 0x99, 0x6e, 0x11, 0x6e, 0x8c, 0x3a, 0x31, 0x98, 0x56, 0x48, 0x3c,
-	0x38, 0x53, 0x34, 0x3c, 0x53, 0x0f, 0x8c, 0x38, 0x8f, 0x53, 0xe1, 0x5e, 0x87, 0x9b, 0xe1, 0x0d,
-	0x7c, 0xde, 0xb0, 0x7d, 0x25, 0x17, 0xd4, 0xda, 0xb5, 0x2c, 0x8f, 0x72, 0x4e, 0xa3, 0x8b, 0xfa,
-	0x11, 0xc1, 0xad, 0xf8, 0x3a, 0x45, 0xf7, 0x12, 0x96, 0x48, 0xb0, 0x58, 0x71, 0x89, 0xed, 0x85,
-	0x7c, 0xf9, 0x38, 0xbe, 0xe3, 0x86, 0x4f, 0x89, 0xed, 0x29, 0xd8, 0x0b, 0xa4, 0xbf, 0xc4, 0xf3,
-	0x9d, 0x05, 0x98, 0x97, 0x1c, 0xf8, 0x0b, 0x82, 0xa5, 0x81, 0xd8, 0xe0, 0xad, 0xb8, 0x33, 0xc6,
-	0x66, 0x50, 0xbb, 0x37, 0xad, 0x2c, 0xe8, 0xd4, 0xd8, 0xf8, 0xf0, 0xf3, 0xef, 0xe7, 0xb9, 0x34,
-	0xd6, 0xcd, 0x11, 0x5f, 0x90, 0xe8, 0x89, 0xe3, 0xaf, 0x08, 0x92, 0x91, 0x1c, 0xe7, 0x4e, 0x3c,
-	0x6d, 0x38, 0x9f, 0x5a, 0x7e, 0x1a, 0x89, 0x82, 0xdb, 0x96, 0x70, 0x5b, 0xb8, 0x10, 0x0b, 0x67,
-	0xbe, 0xef, 0x5f, 0xc7, 0x43, 0xb3, 0xda, 0xae, 0x04, 0xd1, 0xff, 0x86, 0xe0, 0xd2, 0x88, 0xe4,
-	0xe0, 0xed, 0xc9, 0x41, 0x8e, 0xa5, 0x55, 0xdb, 0x99, 0x4d, 0xac, 0xfa, 0xc9, 0xc9, 0x7e, 0x32,
-	0xf8, 0x76, 0xfc, 0xb0, 0x65, 0x43, 0xf2, 0x8b, 0x70, 0x88, 0xbf, 0x23, 0x58, 0x19, 0x99, 0x24,
-	0x7c, 0x7f, 0x5a, 0x94, 0x81, 0x14, 0x6b, 0x0f, 0x66, 0x95, 0xab, 0x5e, 0x0a, 0xb2, 0x97, 0xbb,
-	0x38, 0x33, 0x41, 0x2f, 0xe1, 0xcb, 0xc1, 0x3f, 0x10, 0x5c, 0x19, 0x93, 0x3d, 0xfc, 0x70, 0x92,
-	0x1b, 0x1c, 0x93, 0x6e, 0xed, 0xd1, 0xec, 0x06, 0x93, 0xbc, 0x9f, 0xb7, 0x7d, 0x65, 0x85, 0x84,
-	0xd2, 0x62, 0xa6, 0xd3, 0xd5, 0xd1, 0x51, 0x57, 0x47, 0x7f, 0xba, 0x3a, 0xfa, 0xd4, 0xd3, 0x13,
-	0x47, 0x3d, 0x3d, 0xf1, 0xab, 0xa7, 0x27, 0x5e, 0x5c, 0x7c, 0xf7, 0x9f, 0x58, 0xb4, 0x5d, 0xca,
-	0xab, 0xe7, 0xe4, 0x9f, 0x69, 0xe1, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x90, 0x72, 0x96, 0x2b,
-	0xf2, 0x07, 0x00, 0x00,
+	0xb5, 0xba, 0x5c, 0x67, 0x75, 0x26, 0x87, 0xa6, 0x3f, 0x0a, 0x66, 0x8d, 0xab, 0xb0, 0xf6, 0xd4,
+	0x47, 0xd9, 0x6b, 0x36, 0xcb, 0x44, 0xd0, 0x92, 0x6f, 0xc7, 0xcb, 0xf4, 0xb0, 0x45, 0xb9, 0x30,
+	0x5e, 0x81, 0x36, 0x6a, 0x91, 0xbb, 0xcc, 0xe1, 0x14, 0x97, 0x60, 0xd1, 0x27, 0xa8, 0x48, 0x04,
+	0xbe, 0x8a, 0x52, 0x67, 0xb6, 0x16, 0x73, 0x1b, 0x99, 0xf1, 0xcd, 0x64, 0x22, 0x93, 0xc2, 0xd9,
+	0xce, 0xaf, 0xf5, 0x44, 0x19, 0xbc, 0xc8, 0xd5, 0x28, 0xc1, 0x8a, 0xdc, 0x2b, 0xaa, 0x51, 0x10,
+	0x78, 0x19, 0xe6, 0x2d, 0xea, 0xb0, 0x83, 0x55, 0x94, 0x42, 0x5b, 0xc9, 0x72, 0xf0, 0x80, 0xaf,
+	0x03, 0xd4, 0x1a, 0xc4, 0x71, 0x68, 0xb3, 0x62, 0x5b, 0xab, 0x73, 0x72, 0x29, 0xa9, 0x66, 0x8a,
+	0x96, 0xf1, 0x12, 0x2e, 0x0f, 0xbb, 0x29, 0xea, 0x7d, 0x80, 0x3e, 0xb5, 0xf4, 0x9c, 0x14, 0xba,
+	0x9c, 0x8c, 0x70, 0x8d, 0x5d, 0x58, 0x1f, 0xf4, 0xe7, 0x85, 0xf6, 0xe3, 0x06, 0xb1, 0x9d, 0xe2,
+	0x7e, 0xc8, 0xbd, 0x06, 0xe7, 0x6b, 0xfe, 0x8c, 0xcf, 0x17, 0xa0, 0x2f, 0xc8, 0xe7, 0xa2, 0x65,
+	0xb8, 0x90, 0x1a, 0xaf, 0x3e, 0x95, 0xd3, 0x2d, 0xc0, 0x8d, 0x51, 0x3b, 0x06, 0xa7, 0x15, 0x12,
+	0x0f, 0x9e, 0x29, 0x1a, 0x3e, 0x53, 0x0f, 0x8c, 0x38, 0x8f, 0x53, 0xe1, 0xde, 0x80, 0x9b, 0xe1,
+	0x0d, 0x7c, 0xd6, 0xb0, 0x7d, 0x25, 0x17, 0xd4, 0xda, 0xb3, 0x2c, 0x8f, 0x72, 0x4e, 0xa3, 0x8b,
+	0xfa, 0x01, 0xc1, 0xad, 0xf8, 0x3a, 0x45, 0xf7, 0x02, 0x96, 0x48, 0x30, 0x59, 0x71, 0x89, 0xed,
+	0x85, 0x7c, 0xb9, 0x38, 0xbe, 0x93, 0x86, 0x4f, 0x88, 0xed, 0x29, 0xd8, 0x0b, 0xa4, 0x3f, 0xc5,
+	0x73, 0x9d, 0x05, 0x98, 0x97, 0x1c, 0xf8, 0x33, 0x82, 0xa5, 0x81, 0xd8, 0xe0, 0xed, 0xb8, 0x3d,
+	0xc6, 0x66, 0x50, 0xbb, 0x37, 0xad, 0x2c, 0xe8, 0xd4, 0xd8, 0x7c, 0xff, 0xe3, 0xcf, 0xa7, 0xb9,
+	0x14, 0xd6, 0xcd, 0x11, 0x5f, 0x90, 0x68, 0xc4, 0xf1, 0x17, 0x04, 0xc9, 0x48, 0x8e, 0xb3, 0xff,
+	0xdd, 0x6d, 0x38, 0x9f, 0x5a, 0x6e, 0x1a, 0x89, 0x82, 0xdb, 0x91, 0x70, 0xdb, 0x38, 0x1f, 0x0b,
+	0x67, 0xbe, 0xeb, 0x5f, 0xc7, 0x23, 0xb3, 0xda, 0xae, 0x04, 0xd1, 0xff, 0x8a, 0xe0, 0xd2, 0x88,
+	0xe4, 0xe0, 0x9d, 0xc9, 0x41, 0x4e, 0xa4, 0x55, 0xdb, 0x9d, 0x4d, 0xac, 0xfa, 0xc9, 0xca, 0x7e,
+	0xd2, 0xf8, 0x76, 0xfc, 0x61, 0xcb, 0x86, 0xe4, 0x17, 0xe1, 0x08, 0x7f, 0x43, 0xb0, 0x32, 0x32,
+	0x49, 0xf8, 0xfe, 0xb4, 0x28, 0x03, 0x29, 0xd6, 0x1e, 0xcc, 0x2a, 0x57, 0xbd, 0xe4, 0x65, 0x2f,
+	0x77, 0x71, 0x7a, 0x82, 0x5e, 0xc2, 0x97, 0x83, 0xbf, 0x23, 0xb8, 0x32, 0x26, 0x7b, 0xf8, 0xe1,
+	0x24, 0x37, 0x38, 0x26, 0xdd, 0xda, 0xa3, 0xd9, 0x0d, 0x26, 0x79, 0x3f, 0x6f, 0xfa, 0xca, 0x0a,
+	0x09, 0xa5, 0x85, 0x74, 0xa7, 0xab, 0xa3, 0xe3, 0xae, 0x8e, 0x7e, 0x77, 0x75, 0xf4, 0xb1, 0xa7,
+	0x27, 0x8e, 0x7b, 0x7a, 0xe2, 0x67, 0x4f, 0x4f, 0x3c, 0xbf, 0xf8, 0xf6, 0x1f, 0xb1, 0x68, 0xbb,
+	0x94, 0x57, 0xcf, 0xc9, 0x9f, 0x69, 0xfe, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x21, 0x22, 0x2b,
+	0xa5, 0xf2, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -535,8 +535,8 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	AllRateLimits(ctx context.Context, in *QueryAllRateLimitsRequest, opts ...grpc.CallOption) (*QueryAllRateLimitsResponse, error)
 	RateLimit(ctx context.Context, in *QueryRateLimitRequest, opts ...grpc.CallOption) (*QueryRateLimitResponse, error)
-	RateLimitsByChainId(ctx context.Context, in *QueryRateLimitsByChainIdRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChainIdResponse, error)
-	RateLimitsByChannelId(ctx context.Context, in *QueryRateLimitsByChannelIdRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChannelIdResponse, error)
+	RateLimitsByChainID(ctx context.Context, in *QueryRateLimitsByChainIDRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChainIDResponse, error)
+	RateLimitsByChannelID(ctx context.Context, in *QueryRateLimitsByChannelIDRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChannelIDResponse, error)
 	AllWhitelistedAddresses(ctx context.Context, in *QueryAllWhitelistedAddressesRequest, opts ...grpc.CallOption) (*QueryAllWhitelistedAddressesResponse, error)
 }
 
@@ -566,18 +566,18 @@ func (c *queryClient) RateLimit(ctx context.Context, in *QueryRateLimitRequest, 
 	return out, nil
 }
 
-func (c *queryClient) RateLimitsByChainId(ctx context.Context, in *QueryRateLimitsByChainIdRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChainIdResponse, error) {
-	out := new(QueryRateLimitsByChainIdResponse)
-	err := c.cc.Invoke(ctx, "/centauri.ratelimit.v1beta1.Query/RateLimitsByChainId", in, out, opts...)
+func (c *queryClient) RateLimitsByChainID(ctx context.Context, in *QueryRateLimitsByChainIDRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChainIDResponse, error) {
+	out := new(QueryRateLimitsByChainIDResponse)
+	err := c.cc.Invoke(ctx, "/centauri.ratelimit.v1beta1.Query/RateLimitsByChainID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) RateLimitsByChannelId(ctx context.Context, in *QueryRateLimitsByChannelIdRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChannelIdResponse, error) {
-	out := new(QueryRateLimitsByChannelIdResponse)
-	err := c.cc.Invoke(ctx, "/centauri.ratelimit.v1beta1.Query/RateLimitsByChannelId", in, out, opts...)
+func (c *queryClient) RateLimitsByChannelID(ctx context.Context, in *QueryRateLimitsByChannelIDRequest, opts ...grpc.CallOption) (*QueryRateLimitsByChannelIDResponse, error) {
+	out := new(QueryRateLimitsByChannelIDResponse)
+	err := c.cc.Invoke(ctx, "/centauri.ratelimit.v1beta1.Query/RateLimitsByChannelID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -597,8 +597,8 @@ func (c *queryClient) AllWhitelistedAddresses(ctx context.Context, in *QueryAllW
 type QueryServer interface {
 	AllRateLimits(context.Context, *QueryAllRateLimitsRequest) (*QueryAllRateLimitsResponse, error)
 	RateLimit(context.Context, *QueryRateLimitRequest) (*QueryRateLimitResponse, error)
-	RateLimitsByChainId(context.Context, *QueryRateLimitsByChainIdRequest) (*QueryRateLimitsByChainIdResponse, error)
-	RateLimitsByChannelId(context.Context, *QueryRateLimitsByChannelIdRequest) (*QueryRateLimitsByChannelIdResponse, error)
+	RateLimitsByChainID(context.Context, *QueryRateLimitsByChainIDRequest) (*QueryRateLimitsByChainIDResponse, error)
+	RateLimitsByChannelID(context.Context, *QueryRateLimitsByChannelIDRequest) (*QueryRateLimitsByChannelIDResponse, error)
 	AllWhitelistedAddresses(context.Context, *QueryAllWhitelistedAddressesRequest) (*QueryAllWhitelistedAddressesResponse, error)
 }
 
@@ -612,11 +612,11 @@ func (*UnimplementedQueryServer) AllRateLimits(ctx context.Context, req *QueryAl
 func (*UnimplementedQueryServer) RateLimit(ctx context.Context, req *QueryRateLimitRequest) (*QueryRateLimitResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RateLimit not implemented")
 }
-func (*UnimplementedQueryServer) RateLimitsByChainId(ctx context.Context, req *QueryRateLimitsByChainIdRequest) (*QueryRateLimitsByChainIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RateLimitsByChainId not implemented")
+func (*UnimplementedQueryServer) RateLimitsByChainID(ctx context.Context, req *QueryRateLimitsByChainIDRequest) (*QueryRateLimitsByChainIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RateLimitsByChainID not implemented")
 }
-func (*UnimplementedQueryServer) RateLimitsByChannelId(ctx context.Context, req *QueryRateLimitsByChannelIdRequest) (*QueryRateLimitsByChannelIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RateLimitsByChannelId not implemented")
+func (*UnimplementedQueryServer) RateLimitsByChannelID(ctx context.Context, req *QueryRateLimitsByChannelIDRequest) (*QueryRateLimitsByChannelIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RateLimitsByChannelID not implemented")
 }
 func (*UnimplementedQueryServer) AllWhitelistedAddresses(ctx context.Context, req *QueryAllWhitelistedAddressesRequest) (*QueryAllWhitelistedAddressesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllWhitelistedAddresses not implemented")
@@ -662,38 +662,38 @@ func _Query_RateLimit_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_RateLimitsByChainId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryRateLimitsByChainIdRequest)
+func _Query_RateLimitsByChainID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRateLimitsByChainIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).RateLimitsByChainId(ctx, in)
+		return srv.(QueryServer).RateLimitsByChainID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/centauri.ratelimit.v1beta1.Query/RateLimitsByChainId",
+		FullMethod: "/centauri.ratelimit.v1beta1.Query/RateLimitsByChainID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).RateLimitsByChainId(ctx, req.(*QueryRateLimitsByChainIdRequest))
+		return srv.(QueryServer).RateLimitsByChainID(ctx, req.(*QueryRateLimitsByChainIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_RateLimitsByChannelId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryRateLimitsByChannelIdRequest)
+func _Query_RateLimitsByChannelID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRateLimitsByChannelIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).RateLimitsByChannelId(ctx, in)
+		return srv.(QueryServer).RateLimitsByChannelID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/centauri.ratelimit.v1beta1.Query/RateLimitsByChannelId",
+		FullMethod: "/centauri.ratelimit.v1beta1.Query/RateLimitsByChannelID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).RateLimitsByChannelId(ctx, req.(*QueryRateLimitsByChannelIdRequest))
+		return srv.(QueryServer).RateLimitsByChannelID(ctx, req.(*QueryRateLimitsByChannelIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -729,12 +729,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_RateLimit_Handler,
 		},
 		{
-			MethodName: "RateLimitsByChainId",
-			Handler:    _Query_RateLimitsByChainId_Handler,
+			MethodName: "RateLimitsByChainID",
+			Handler:    _Query_RateLimitsByChainID_Handler,
 		},
 		{
-			MethodName: "RateLimitsByChannelId",
-			Handler:    _Query_RateLimitsByChannelId_Handler,
+			MethodName: "RateLimitsByChannelID",
+			Handler:    _Query_RateLimitsByChannelID_Handler,
 		},
 		{
 			MethodName: "AllWhitelistedAddresses",
@@ -825,10 +825,10 @@ func (m *QueryRateLimitRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -877,7 +877,7 @@ func (m *QueryRateLimitResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryRateLimitsByChainIdRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryRateLimitsByChainIDRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -887,12 +887,12 @@ func (m *QueryRateLimitsByChainIdRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryRateLimitsByChainIdRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChainIDRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryRateLimitsByChainIdRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChainIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -907,7 +907,7 @@ func (m *QueryRateLimitsByChainIdRequest) MarshalToSizedBuffer(dAtA []byte) (int
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryRateLimitsByChainIdResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryRateLimitsByChainIDResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -917,12 +917,12 @@ func (m *QueryRateLimitsByChainIdResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryRateLimitsByChainIdResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChainIDResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryRateLimitsByChainIdResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChainIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -944,7 +944,7 @@ func (m *QueryRateLimitsByChainIdResponse) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryRateLimitsByChannelIdRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryRateLimitsByChannelIDRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -954,27 +954,27 @@ func (m *QueryRateLimitsByChannelIdRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryRateLimitsByChannelIdRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChannelIDRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryRateLimitsByChannelIdRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChannelIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelId)))
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelID)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryRateLimitsByChannelIdResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryRateLimitsByChannelIDResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -984,12 +984,12 @@ func (m *QueryRateLimitsByChannelIdResponse) Marshal() (dAtA []byte, err error) 
 	return dAtA[:n], nil
 }
 
-func (m *QueryRateLimitsByChannelIdResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChannelIDResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryRateLimitsByChannelIdResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryRateLimitsByChannelIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1116,7 +1116,7 @@ func (m *QueryRateLimitRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -1136,7 +1136,7 @@ func (m *QueryRateLimitResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryRateLimitsByChainIdRequest) Size() (n int) {
+func (m *QueryRateLimitsByChainIDRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1149,7 +1149,7 @@ func (m *QueryRateLimitsByChainIdRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryRateLimitsByChainIdResponse) Size() (n int) {
+func (m *QueryRateLimitsByChainIDResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1164,20 +1164,20 @@ func (m *QueryRateLimitsByChainIdResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryRateLimitsByChannelIdRequest) Size() (n int) {
+func (m *QueryRateLimitsByChannelIDRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ChannelId)
+	l = len(m.ChannelID)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
 
-func (m *QueryRateLimitsByChannelIdResponse) Size() (n int) {
+func (m *QueryRateLimitsByChannelIDResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1419,7 +1419,7 @@ func (m *QueryRateLimitRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1447,7 +1447,7 @@ func (m *QueryRateLimitRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1556,7 +1556,7 @@ func (m *QueryRateLimitResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryRateLimitsByChainIdRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryRateLimitsByChainIDRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1579,10 +1579,10 @@ func (m *QueryRateLimitsByChainIdRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryRateLimitsByChainIdRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryRateLimitsByChainIDRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryRateLimitsByChainIdRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryRateLimitsByChainIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1638,7 +1638,7 @@ func (m *QueryRateLimitsByChainIdRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryRateLimitsByChainIdResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryRateLimitsByChainIDResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1661,10 +1661,10 @@ func (m *QueryRateLimitsByChainIdResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryRateLimitsByChainIdResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryRateLimitsByChainIDResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryRateLimitsByChainIdResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryRateLimitsByChainIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1722,7 +1722,7 @@ func (m *QueryRateLimitsByChainIdResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryRateLimitsByChannelIdRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryRateLimitsByChannelIDRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1745,15 +1745,15 @@ func (m *QueryRateLimitsByChannelIdRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryRateLimitsByChannelIdRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryRateLimitsByChannelIDRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryRateLimitsByChannelIdRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryRateLimitsByChannelIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1781,7 +1781,7 @@ func (m *QueryRateLimitsByChannelIdRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1804,7 +1804,7 @@ func (m *QueryRateLimitsByChannelIdRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryRateLimitsByChannelIdResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryRateLimitsByChannelIDResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1827,10 +1827,10 @@ func (m *QueryRateLimitsByChannelIdResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryRateLimitsByChannelIdResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryRateLimitsByChannelIDResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryRateLimitsByChannelIdResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryRateLimitsByChannelIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

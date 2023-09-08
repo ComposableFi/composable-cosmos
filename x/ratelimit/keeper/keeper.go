@@ -9,8 +9,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
-	"github.com/notional-labs/centauri/v4/x/ratelimit/types"
-	tfmwkeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
+
+	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	tfmwkeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
 )
 
 type Keeper struct {
@@ -38,6 +39,11 @@ func NewKeeper(
 	tfmwKeeper tfmwkeeper.Keeper,
 	authority string,
 ) *Keeper {
+	// set KeyTable if it has not already been set
+	if !ps.HasKeyTable() {
+		ps = ps.WithKeyTable(types.ParamKeyTable())
+	}
+
 	return &Keeper{
 		cdc:           cdc,
 		storeKey:      key,
@@ -55,8 +61,9 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // GetParams get all parameters as types.Params
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
-	return types.NewParams()
+func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
+	k.paramstore.GetParamSet(ctx, &params)
+	return params
 }
 
 // SetParams set the params

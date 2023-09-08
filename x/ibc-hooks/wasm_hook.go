@@ -1,4 +1,4 @@
-package ibc_hooks
+package ibchooks
 
 import (
 	"encoding/json"
@@ -10,8 +10,9 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	"github.com/notional-labs/centauri/v4/x/ibc-hooks/keeper"
-	"github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
+
+	"github.com/notional-labs/centauri/v5/x/ibc-hooks/keeper"
+	"github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -210,7 +211,7 @@ func (h WasmHooks) OnAcknowledgementPacketOverride(im IBCMiddleware, ctx sdk.Con
 	}
 
 	// Notify the sender that the ack has been received
-	ackAsJson, err := json.Marshal(acknowledgement)
+	ackAsJSON, err := json.Marshal(acknowledgement)
 	if err != nil {
 		// If the ack is not a json object, error
 		return err
@@ -218,7 +219,7 @@ func (h WasmHooks) OnAcknowledgementPacketOverride(im IBCMiddleware, ctx sdk.Con
 
 	sudoMsg := []byte(fmt.Sprintf(
 		`{"ibc_lifecycle_complete": {"ibc_ack": {"channel": "%s", "sequence": %d, "ack": %s, "success": %s}}}`,
-		packet.SourceChannel, packet.Sequence, ackAsJson, success))
+		packet.SourceChannel, packet.Sequence, ackAsJSON, success))
 	_, err = h.ContractKeeper.Sudo(ctx, contractAddr, sudoMsg)
 	if err != nil {
 		// error processing the callback
@@ -273,7 +274,7 @@ func (h WasmHooks) OnTimeoutPacketOverride(im IBCMiddleware, ctx sdk.Context, pa
 	return nil
 }
 
-func ValidateAndParseMemo(memo string, receiver string) (isWasmRouted bool, contractAddr sdk.AccAddress, msgBytes []byte, err error) {
+func ValidateAndParseMemo(memo, receiver string) (isWasmRouted bool, contractAddr sdk.AccAddress, msgBytes []byte, err error) {
 	isWasmRouted, metadata := jsonStringHasKey(memo, "wasm")
 	if !isWasmRouted {
 		return isWasmRouted, sdk.AccAddress{}, nil, nil

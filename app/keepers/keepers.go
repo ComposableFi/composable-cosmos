@@ -66,7 +66,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankkeeper "github.com/notional-labs/centauri/v4/custom/bank/keeper"
+	custombankkeeper "github.com/notional-labs/centauri/v5/custom/bank/keeper"
 
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
@@ -76,19 +76,22 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/centauri/v4/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v4/x/ratelimit"
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v4/x/ratelimit/types"
+	txBoundaryKeeper "github.com/notional-labs/centauri/v5/x/tx-boundary/keeper"
+	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+
+	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	mintkeeper "github.com/notional-labs/centauri/v4/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v4/x/mint/types"
+	mintkeeper "github.com/notional-labs/centauri/v5/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -96,9 +99,9 @@ import (
 	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v4/x/ibc-hooks"
-	ibchookskeeper "github.com/notional-labs/centauri/v4/x/ibc-hooks/keeper"
-	ibchookstypes "github.com/notional-labs/centauri/v4/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
+	ibchookskeeper "github.com/notional-labs/centauri/v5/x/ibc-hooks/keeper"
+	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
 )
 
 const (
@@ -145,6 +148,7 @@ type AppKeepers struct {
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
+	TxBoundaryKeepper        txBoundaryKeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
@@ -271,6 +275,12 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[txBoundaryTypes.StoreKey],
+		authorityAddress,
 	)
 
 	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
@@ -414,7 +424,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	appCodec codec.Codec,
 	cdc *codec.LegacyAmino,
 	bApp *baseapp.BaseApp,
-	invCheckPeriod uint,
+	_ uint, // invCheckPeriod
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 ) {

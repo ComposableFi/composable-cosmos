@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v4/x/ratelimit/keeper"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
 
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -51,11 +51,12 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-	centauri "github.com/notional-labs/centauri/v4/app"
-	"github.com/notional-labs/centauri/v4/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/centauri/v4/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	centauri "github.com/notional-labs/centauri/v5/app"
+	"github.com/notional-labs/centauri/v5/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
 )
 
 // TestChain is a testing struct that wraps a simapp with the last TM Header, the current ABCI
@@ -650,7 +651,7 @@ func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
 	wasmCode, err := os.ReadFile(path)
 	suite.Require().NoError(err)
 
-	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) {
+	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) { //nolint: staticcheck
 		p.RunAs = govModuleAddress.String()
 		p.WASMByteCode = wasmCode
 		checksum := sha256.Sum256(wasmCode)
@@ -685,7 +686,7 @@ func mustSubmitAndExecuteLegacyProposal(t *testing.T, ctx sdk.Context, content v
 }
 
 // does not fail on submit proposal
-func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress string, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
+func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
 	t.Helper()
 	contentMsg, err := v1.NewLegacyContent(content, govAuthority)
 	require.NoError(t, err)

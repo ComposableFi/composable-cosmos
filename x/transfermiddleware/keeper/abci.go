@@ -2,7 +2,8 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v4/x/transfermiddleware/types"
+
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 // BeginBlocker of epochs module.
@@ -13,8 +14,6 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) {
 		if ctx.BlockTime().After(removeList.RemoveTime) {
 			k.RemoveParachainIBCInfo(ctx, removeList.NativeDenom)
 		}
-
 		return false
 	})
-
 }
