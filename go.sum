@@ -965,8 +965,8 @@ github.com/nishanths/predeclared v0.2.2 h1:V2EPdZPliZymNAn79T8RkNApBjMmVKh5XRpLm
 github.com/nishanths/predeclared v0.2.2/go.mod h1:RROzoN6TnGQupbC+lqggsOlcgysk3LMK/HI84Mp280c=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc1NGpU8TntXwM/s7Z/whsKNDVPiLim35HLBAzA=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
-github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70 h1:oZTUDZzUBp8D2h3uZfPQmZGVksrROqubHDASvFB/+u0=
-github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230724144435-2b77d4a1ce70/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
+github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230721070834-bf6971a1323b h1:IdhKAXU5JyAXI7nPsMDHRSXs8ngCEr2iLykK7Iprw7o=
+github.com/notional-labs/ibc-go/v7 v7.0.1-wasm-client.0.20230721070834-bf6971a1323b/go.mod h1:ISHo/Qitjtvj2svGmttaZv03zVXmS+uqvUyF9kFqlI0=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230828115741-8f5f501461be h1:fCcfI4QG6WsnTvmwG6BC/jLpTHOg0v4aOrBWDXVmohE=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230828115741-8f5f501461be/go.mod h1:+Urw3FnxiiB7qs3CQaMWlgfntFkbebHlYNYt2y8JI/I=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
