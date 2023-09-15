@@ -120,7 +120,7 @@ import (
 
 	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
 	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
-	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
+	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v5_1_0"
 
 	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
 )
