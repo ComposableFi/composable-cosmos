@@ -46,7 +46,7 @@ func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 		}
 		rlKeeper.SetRateLimit(ctx, uosmoRateLimit)
 	} else {
-		uosmoRateLimit.MinRateLimitAmount = sdk.NewInt(1282_000_000)
+		uosmoRateLimit.MinRateLimitAmount = sdk.NewInt(1)
 		rlKeeper.SetRateLimit(ctx, uosmoRateLimit)
 	}
 
