@@ -120,6 +120,7 @@ import (
 
 	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
 	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
+	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
 
 	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
 )
@@ -140,7 +141,7 @@ var (
 	EnableSpecificProposals = ""
 
 	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade}
-	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork}
+	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork, v5_1_0.Fork}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
