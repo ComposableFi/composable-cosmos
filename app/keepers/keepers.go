@@ -509,6 +509,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
+	paramsKeeper.Subspace(ccvconsumertypes.ModuleName)
 
 	return paramsKeeper
 }
