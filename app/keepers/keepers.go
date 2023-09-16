@@ -102,6 +102,10 @@ import (
 	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
 	ibchookskeeper "github.com/notional-labs/centauri/v5/x/ibc-hooks/keeper"
 	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+
+	ccvconsumer "github.com/cosmos/interchain-security/v3/x/ccv/consumer"
+	ccvconsumerkeeper "github.com/cosmos/interchain-security/v3/x/ccv/consumer/keeper"
+	ccvconsumertypes "github.com/cosmos/interchain-security/v3/x/ccv/consumer/types"
 )
 
 const (
@@ -140,18 +144,21 @@ type AppKeepers struct {
 	Ics20WasmHooks   *ibc_hooks.WasmHooks
 	HooksICS4Wrapper ibc_hooks.ICS4Middleware
 	// make scoped keepers public for test purposes
-	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
-	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
-	ScopedWasmKeeper      capabilitykeeper.ScopedKeeper
-	ScopedICAHostKeeper   capabilitykeeper.ScopedKeeper
-	ScopedRateLimitKeeper capabilitykeeper.ScopedKeeper
-	ConsensusParamsKeeper consensusparamkeeper.Keeper
+	ScopedIBCKeeper         capabilitykeeper.ScopedKeeper
+	ScopedTransferKeeper    capabilitykeeper.ScopedKeeper
+	ScopedWasmKeeper        capabilitykeeper.ScopedKeeper
+	ScopedICAHostKeeper     capabilitykeeper.ScopedKeeper
+	ScopedRateLimitKeeper   capabilitykeeper.ScopedKeeper
+	ConsensusParamsKeeper   consensusparamkeeper.Keeper
+	ScopedCCVConsumerKeeper capabilitykeeper.ScopedKeeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	TxBoundaryKeepper        txBoundaryKeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
+
+	ConsumerKeeper ccvconsumerkeeper.Keeper
 }
 
 // InitNormalKeepers initializes all 'normal' keepers.
@@ -186,10 +193,10 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, appKeepers.keys[distrtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
-		appKeepers.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appKeepers.StakingKeeper, ccvconsumertypes.ConsumerRedistributeName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	appKeepers.SlashingKeeper = slashingkeeper.NewKeeper(
-		appCodec, cdc, appKeepers.keys[slashingtypes.StoreKey], appKeepers.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appCodec, cdc, appKeepers.keys[slashingtypes.StoreKey], &appKeepers.ConsumerKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.CrisisKeeper = crisiskeeper.NewKeeper(appCodec, appKeepers.keys[crisistypes.StoreKey],
@@ -230,10 +237,20 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	// ... other modules keepers
+	appKeepers.ConsumerKeeper = ccvconsumerkeeper.NewNonZeroKeeper(
+		appCodec,
+		appKeepers.keys[ccvconsumertypes.StoreKey],
+		appKeepers.GetSubspace(ccvconsumertypes.ModuleName),
+	)
 
 	// Create IBC Keeper
 	appKeepers.IBCKeeper = ibckeeper.NewKeeper(
-		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
+		appCodec,
+		appKeepers.keys[ibchost.StoreKey],
+		appKeepers.GetSubspace(ibchost.ModuleName),
+		&appKeepers.ConsumerKeeper,
+		appKeepers.UpgradeKeeper,
+		appKeepers.ScopedIBCKeeper,
 	)
 
 	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
@@ -345,10 +362,33 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
-		appCodec, appKeepers.keys[evidencetypes.StoreKey], appKeepers.StakingKeeper, appKeepers.SlashingKeeper,
+		appCodec, appKeepers.keys[evidencetypes.StoreKey], &appKeepers.ConsumerKeeper, appKeepers.SlashingKeeper,
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	appKeepers.EvidenceKeeper = *evidenceKeeper
+
+	// Create CCV consumer and modules
+	appKeepers.ConsumerKeeper = ccvconsumerkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[ccvconsumertypes.StoreKey],
+		appKeepers.GetSubspace(ccvconsumertypes.ModuleName),
+		appKeepers.ScopedCCVConsumerKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.IBCKeeper.ConnectionKeeper,
+		appKeepers.IBCKeeper.ClientKeeper,
+		appKeepers.SlashingKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.AccountKeeper,
+		&appKeepers.TransferKeeper,
+		appKeepers.IBCKeeper,
+		authtypes.FeeCollectorName,
+	)
+	appKeepers.ConsumerKeeper.SetStandaloneStakingKeeper(appKeepers.StakingKeeper)
+
+	// register slashing module StakingHooks to the consumer keeper
+	appKeepers.ConsumerKeeper = *appKeepers.ConsumerKeeper.SetHooks(appKeepers.SlashingKeeper.Hooks())
+	consumerModule := ccvconsumer.NewAppModule(appKeepers.ConsumerKeeper, appKeepers.GetSubspace(ccvconsumertypes.ModuleName))
 
 	wasmDir := filepath.Join(homePath, "wasm")
 	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
@@ -414,6 +454,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
 	ibcRouter.AddRoute(wasm.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
+	ibcRouter.AddRoute(ccvconsumertypes.ModuleName, consumerModule)
 
 	// this line is used by starport scaffolding # ibc/app/router
 	appKeepers.IBCKeeper.SetRouter(ibcRouter)
@@ -442,6 +483,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasm.ModuleName)
 	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	appKeepers.ScopedRateLimitKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ratelimitmoduletypes.ModuleName)
+	appKeepers.ScopedCCVConsumerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ccvconsumertypes.ModuleName)
 
 	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, appKeepers.keys[upgradetypes.StoreKey], appCodec, homePath, bApp, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 }
