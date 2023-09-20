@@ -1,0 +1,24 @@
+=============== Sep 20, 2023 (+07) ===============
+17:43:25.072129 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+17:43:25.127277 db@open opening
+17:43:25.127705 version@stat F·[] S·0B[] Sc·[]
+17:43:25.144372 db@janitor F·2 G·0
+17:43:25.144418 db@open done T·17.114208ms
+17:46:49.567302 memdb@flush N·38527 S·3MiB
+17:46:49.634362 memdb@flush created L0@3 N·38527 S·2MiB "s/1,v577":"s/latest,v578"
+17:46:49.634388 version@stat F·[1] S·2MiB[2MiB] Sc·[0.25]
+17:46:49.651238 memdb@flush committed F·1 T·83.784042ms
+17:46:49.651650 journal@remove removed @1
+17:49:49.262334 memdb@flush N·37886 S·3MiB
+17:49:49.324856 memdb@flush created L0@5 N·37886 S·2MiB "s/186,v38578":"s/latest,v38579"
+17:49:49.324883 version@stat F·[2] S·4MiB[4MiB] Sc·[0.50]
+17:49:49.341781 memdb@flush committed F·1 T·79.293958ms
+17:49:49.342139 journal@remove removed @2
+17:49:54.731995 table@compaction L0·2 -> L1·0 S·4MiB Q·77395
+17:49:54.781409 table@build created L1@6 N·22906 S·2MiB "s/1,v577":"s/k..l\x8bh,v15539"
+17:49:54.810809 table@build created L1@7 N·30803 S·2MiB "s/k..\xa5\xabY,v35203":"s/k..\xa1\xd7\b,v46217"
+17:49:54.830749 table@build created L1@8 N·8703 S·428KiB "s/k..\xf7:v,v65304":"s/latest,v76235"
+17:49:54.830773 version@stat F·[0 3] S·4MiB[0B 4MiB] Sc·[0.00 0.04]
+17:49:54.832329 table@compaction committed F+1 S-140KiB Ke·0 D·14001 T·100.305667ms
+17:49:54.832441 table@remove removed @5
+17:49:54.832556 table@remove removed @3
