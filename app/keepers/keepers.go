@@ -67,6 +67,7 @@ import (
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	custombankkeeper "github.com/notional-labs/centauri/v5/custom/bank/keeper"
+	"github.com/notional-labs/centauri/v5/wasmbinding"
 
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
@@ -359,6 +360,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
 	availableCapabilities := strings.Join(AllCapabilities(), ",")
+	wasmOpts = append(wasmbinding.RegisterStargateQueries(*bApp.GRPCQueryRouter(), appCodec), wasmOpts...)
 	appKeepers.WasmKeeper = wasm.NewKeeper(
 		appCodec,
 		appKeepers.keys[wasm.StoreKey],
