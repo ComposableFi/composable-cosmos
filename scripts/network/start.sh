@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BINARY=${BINARY:-neutrond}
+BINARY=${BINARY:-centaurid}
 BASE_DIR=./data
 CHAINID=${CHAINID:-test-1}
 GRPCPORT=${GRPCPORT:-9090}
