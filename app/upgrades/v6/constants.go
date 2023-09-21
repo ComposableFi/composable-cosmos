@@ -2,8 +2,8 @@ package v5
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
-	ccvconsumertypes "github.com/cosmos/interchain-security/v3/x/ccv/consumer/types"
 	"github.com/notional-labs/centauri/v5/app/upgrades"
+	txboundary "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 )
 
 const (
@@ -15,6 +15,6 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added: []string{ccvconsumertypes.ModuleName},
+		Added: []string{txboundary.ModuleName},
 	},
 }
