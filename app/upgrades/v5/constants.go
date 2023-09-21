@@ -2,7 +2,6 @@ package v5
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
-
 	"github.com/notional-labs/centauri/v6/app/upgrades"
 	txboundary "github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 )
