@@ -54,7 +54,7 @@ func (s *StargateTestSuite) TestStargateQuerier() {
 			path: "/ibc.core.channel.v1.Query/NextSequenceSend",
 			requestData: func() []byte {
 				epochrequest := channeltypes.QueryNextSequenceSendRequest{
-					PortId: "transfer",
+					PortId:    "transfer",
 					ChannelId: "channel-1",
 				}
 				bz, err := proto.Marshal(&epochrequest)
@@ -71,7 +71,6 @@ func (s *StargateTestSuite) TestStargateQuerier() {
 			if tc.testSetup != nil {
 				tc.testSetup()
 			}
-
 
 			stargateQuerier := wasmbinding.StargateQuerier(*s.app.GRPCQueryRouter(), s.app.AppCodec())
 			stargateRequest := &wasmvmtypes.StargateQuery{
