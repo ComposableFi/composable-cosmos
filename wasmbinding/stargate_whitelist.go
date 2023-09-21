@@ -54,10 +54,9 @@ func init() {
 	setWhitelistedQuery("/cosmos.staking.v1beta1.Query/Params", &stakingtypes.QueryParamsResponse{})
 	setWhitelistedQuery("/cosmos.staking.v1beta1.Query/Validator", &stakingtypes.QueryValidatorResponse{})
 
-	//ibc
+	// ibc
 	setWhitelistedQuery("/ibc.core.channel.v1.Query/NextSequenceSend", &channeltypes.QueryNextSequenceSendResponse{})
-
-	// centauri querier
+	setWhitelistedQuery("/ibc.core.channel.v1.Query/NextSequenceReceive", &channeltypes.QueryNextSequenceReceiveResponse{})
 }
 
 // GetWhitelistedQuery returns the whitelisted query at the provided path.
