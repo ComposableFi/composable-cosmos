@@ -119,6 +119,7 @@ import (
 	v4_5 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5"
 	v4_5_1 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5_1"
 	v5_1_0 "github.com/notional-labs/centauri/v6/app/upgrades/v5_1_0"
+	v6 "github.com/notional-labs/centauri/v6/app/upgrades/v6"
 
 	upgrades "github.com/notional-labs/centauri/v6/app/upgrades"
 
@@ -146,7 +147,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
 	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork, v5_1_0.Fork}
 )
 
