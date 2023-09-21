@@ -8,7 +8,7 @@ import (
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/centauri/v6/x/mint/types"
 )
 
 var _ types.MsgServer = msgServer{}

@@ -27,16 +27,16 @@ import (
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
-	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	ibchookstypes "github.com/notional-labs/centauri/v6/x/ibc-hooks/types"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v6/x/ratelimit/types"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v6/x/transfermiddleware/types"
+	txBoundaryTypes "github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	minttypes "github.com/notional-labs/centauri/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"

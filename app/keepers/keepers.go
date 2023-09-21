@@ -66,7 +66,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankkeeper "github.com/notional-labs/centauri/v5/custom/bank/keeper"
+	custombankkeeper "github.com/notional-labs/centauri/v6/custom/bank/keeper"
 
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
@@ -76,22 +76,22 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	transfermiddleware "github.com/notional-labs/centauri/v6/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/centauri/v6/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v6/x/transfermiddleware/types"
 
-	txBoundaryKeeper "github.com/notional-labs/centauri/v5/x/tx-boundary/keeper"
-	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	txBoundaryKeeper "github.com/notional-labs/centauri/v6/x/tx-boundary/keeper"
+	txBoundaryTypes "github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
-	ratelimitmodulekeeper "github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v6/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v6/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v6/x/ratelimit/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	mintkeeper "github.com/notional-labs/centauri/v5/x/mint/keeper"
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	mintkeeper "github.com/notional-labs/centauri/v6/x/mint/keeper"
+	minttypes "github.com/notional-labs/centauri/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -99,9 +99,9 @@ import (
 	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
-	ibchookskeeper "github.com/notional-labs/centauri/v5/x/ibc-hooks/keeper"
-	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v6/x/ibc-hooks"
+	ibchookskeeper "github.com/notional-labs/centauri/v6/x/ibc-hooks/keeper"
+	ibchookstypes "github.com/notional-labs/centauri/v6/x/ibc-hooks/types"
 
 	ccvconsumer "github.com/cosmos/interchain-security/v3/x/ccv/consumer"
 	ccvconsumerkeeper "github.com/cosmos/interchain-security/v3/x/ccv/consumer/keeper"

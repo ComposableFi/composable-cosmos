@@ -10,9 +10,9 @@ import (
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 
-	tfmwKeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
-	txBoundaryAnte "github.com/notional-labs/centauri/v5/x/tx-boundary/ante"
-	txBoundaryKeeper "github.com/notional-labs/centauri/v5/x/tx-boundary/keeper"
+	tfmwKeeper "github.com/notional-labs/centauri/v6/x/transfermiddleware/keeper"
+	txBoundaryAnte "github.com/notional-labs/centauri/v6/x/tx-boundary/ante"
+	txBoundaryKeeper "github.com/notional-labs/centauri/v6/x/tx-boundary/keeper"
 
 	democracyante "github.com/cosmos/interchain-security/v3/app/consumer-democracy/ante"
 	consumerante "github.com/cosmos/interchain-security/v3/app/consumer/ante"

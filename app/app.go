@@ -32,9 +32,9 @@ import (
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
-	"github.com/notional-labs/centauri/v5/app/keepers"
-	v4 "github.com/notional-labs/centauri/v5/app/upgrades/v4"
-	v5 "github.com/notional-labs/centauri/v5/app/upgrades/v5"
+	"github.com/notional-labs/centauri/v6/app/keepers"
+	v4 "github.com/notional-labs/centauri/v6/app/upgrades/v4"
+	v5 "github.com/notional-labs/centauri/v6/app/upgrades/v5"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -90,37 +90,37 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v5/custom/bank"
+	custombankmodule "github.com/notional-labs/centauri/v6/custom/bank"
 
-	"github.com/notional-labs/centauri/v5/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v6/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v6/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v6/x/transfermiddleware/types"
 
-	txBoundary "github.com/notional-labs/centauri/v5/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	txBoundary "github.com/notional-labs/centauri/v6/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v6/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v6/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v5/x/mint"
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/centauri/v6/x/mint"
+	minttypes "github.com/notional-labs/centauri/v6/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v6/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v6/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
-	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
-	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v5_1_0"
+	v4_5 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5"
+	v4_5_1 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5_1"
+	v5_1_0 "github.com/notional-labs/centauri/v6/app/upgrades/v5_1_0"
 
-	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
+	upgrades "github.com/notional-labs/centauri/v6/app/upgrades"
 
 	ccvdistr "github.com/cosmos/interchain-security/v3/x/ccv/democracy/distribution"
 	ccvgov "github.com/cosmos/interchain-security/v3/x/ccv/democracy/governance"

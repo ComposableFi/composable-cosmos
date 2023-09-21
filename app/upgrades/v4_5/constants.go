@@ -1,6 +1,6 @@
 package v45
 
-import "github.com/notional-labs/centauri/v5/app/upgrades"
+import "github.com/notional-labs/centauri/v6/app/upgrades"
 
 const (
 	// UpgradeName defines the on-chain upgrade name for the Centauri upgrade.

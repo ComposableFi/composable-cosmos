@@ -19,7 +19,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 
-	"github.com/notional-labs/centauri/v5/app"
+	"github.com/notional-labs/centauri/v6/app"
 )
 
 // This function creates consumer module genesis state that is used as starting point for modifications

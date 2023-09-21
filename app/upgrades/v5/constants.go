@@ -3,7 +3,7 @@ package v5
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	ccvconsumertypes "github.com/cosmos/interchain-security/v3/x/ccv/consumer/types"
-	"github.com/notional-labs/centauri/v5/app/upgrades"
+	"github.com/notional-labs/centauri/v6/app/upgrades"
 )
 
 const (

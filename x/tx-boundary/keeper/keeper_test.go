@@ -8,9 +8,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/notional-labs/centauri/v5/app"
-	"github.com/notional-labs/centauri/v5/app/helpers"
-	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	"github.com/notional-labs/centauri/v6/app"
+	"github.com/notional-labs/centauri/v6/app/helpers"
+	"github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 )
 
 type KeeperTestSuite struct {
