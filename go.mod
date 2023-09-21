@@ -324,7 +324,7 @@ replace (
 	// ics
 	github.com/cosmos/interchain-security/v3 => github.com/notional-labs/interchain-security/v3 v3.0.0-20230916095915-6ebb16c60de1
 
-	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230828115741-8f5f501461be
+	github.com/strangelove-ventures/packet-forward-middleware/v7 => github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230921184903-f09128a3ed26
 
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01
