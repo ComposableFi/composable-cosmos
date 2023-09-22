@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/centauri/v6/x/mint/types"
 )
 
 // GetTxCmd returns the tx commands for mint

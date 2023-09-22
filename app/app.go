@@ -32,9 +32,9 @@ import (
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
-	"github.com/notional-labs/centauri/v5/app/keepers"
-	v4 "github.com/notional-labs/centauri/v5/app/upgrades/v4"
-	v5 "github.com/notional-labs/centauri/v5/app/upgrades/v5"
+	"github.com/notional-labs/centauri/v6/app/keepers"
+	v4 "github.com/notional-labs/centauri/v6/app/upgrades/v4"
+	v5 "github.com/notional-labs/centauri/v6/app/upgrades/v5"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -43,7 +43,6 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
-	distr "github.com/cosmos/cosmos-sdk/x/distribution"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
@@ -68,7 +67,6 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
-	"github.com/cosmos/cosmos-sdk/x/staking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
@@ -92,37 +90,46 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v5/custom/bank"
+	custombankmodule "github.com/notional-labs/centauri/v6/custom/bank"
 
-	"github.com/notional-labs/centauri/v5/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v6/app/ante"
+	transfermiddleware "github.com/notional-labs/centauri/v6/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/centauri/v6/x/transfermiddleware/types"
 
-	txBoundary "github.com/notional-labs/centauri/v5/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	txBoundary "github.com/notional-labs/centauri/v6/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/centauri/v6/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/centauri/v6/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v6/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v5/x/mint"
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/centauri/v6/x/mint"
+	minttypes "github.com/notional-labs/centauri/v6/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/centauri/v6/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/centauri/v6/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
-	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
-	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v5_1_0"
+	v4_5 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5"
+	v4_5_1 "github.com/notional-labs/centauri/v6/app/upgrades/v4_5_1"
+	v5_1_0 "github.com/notional-labs/centauri/v6/app/upgrades/v5_1_0"
+	v6 "github.com/notional-labs/centauri/v6/app/upgrades/v6"
 
-	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
+	upgrades "github.com/notional-labs/centauri/v6/app/upgrades"
+
+	ccvdistr "github.com/cosmos/interchain-security/v3/x/ccv/democracy/distribution"
+	ccvgov "github.com/cosmos/interchain-security/v3/x/ccv/democracy/governance"
+	ccvstaking "github.com/cosmos/interchain-security/v3/x/ccv/democracy/staking"
+
+	ccvconsumer "github.com/cosmos/interchain-security/v3/x/ccv/consumer"
+	// ccvconsumerkeeper "github.com/cosmos/interchain-security/v3/x/ccv/consumer/keeper"
+	ccvconsumertypes "github.com/cosmos/interchain-security/v3/x/ccv/consumer/types"
 )
 
 const (
@@ -140,7 +147,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
 	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork, v5_1_0.Fork}
 )
 
@@ -194,8 +201,8 @@ var (
 		genutil.NewAppModuleBasic(genutiltypes.DefaultMessageValidator),
 		bank.AppModuleBasic{},
 		capability.AppModuleBasic{},
-		staking.AppModuleBasic{},
-		distr.AppModuleBasic{},
+		ccvstaking.AppModuleBasic{},
+		ccvdistr.AppModuleBasic{},
 		gov.NewAppModuleBasic(getGovProposalHandlers()),
 		params.AppModuleBasic{},
 		crisis.AppModuleBasic{},
@@ -220,6 +227,7 @@ var (
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
+		ccvconsumer.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -228,15 +236,17 @@ var (
 		authtypes.FeeCollectorName: nil,
 		distrtypes.ModuleName:      nil,
 		// mint module needs burn access to remove excess validator tokens (it overallocates, then burns)
-		minttypes.ModuleName:                {authtypes.Minter},
-		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                 {authtypes.Burner},
-		transfermiddlewaretypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.RewardsPoolName: nil,
-		icatypes.ModuleName:                 nil,
+		ccvconsumertypes.ConsumerRedistributeName:     nil,
+		ccvconsumertypes.ConsumerToSendToProviderName: nil,
+		minttypes.ModuleName:                          {authtypes.Minter},
+		stakingtypes.BondedPoolName:                   {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:                {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                           {authtypes.Burner},
+		transfermiddlewaretypes.ModuleName:            {authtypes.Minter, authtypes.Burner},
+		ibctransfertypes.ModuleName:                   {authtypes.Minter, authtypes.Burner},
+		alliancemoduletypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
+		alliancemoduletypes.RewardsPoolName:           nil,
+		icatypes.ModuleName:                           nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -336,6 +346,7 @@ func NewCentauriApp(
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
+	consumerModule := ccvconsumer.NewAppModule(app.ConsumerKeeper, app.GetSubspace(ccvconsumertypes.ModuleName))
 	/****  Module Options ****/
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
@@ -357,11 +368,11 @@ func NewCentauriApp(
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		groupmodule.NewAppModule(appCodec, app.GroupKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)),
-		gov.NewAppModule(appCodec, &app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
+		ccvgov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, ante.IsProposalWhitelisted, app.GetSubspace(govtypes.ModuleName), func(_ string) bool { return true }),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
-		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
-		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
-		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.ConsumerKeeper, app.GetSubspace(slashingtypes.ModuleName)),
+		ccvdistr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, *app.StakingKeeper, authtypes.FeeCollectorName, app.GetSubspace(distrtypes.ModuleName)),
+		ccvstaking.NewAppModule(appCodec, *app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
@@ -377,6 +388,7 @@ func NewCentauriApp(
 		txBoundaryModule,
 		icaModule,
 		ratelimitModule,
+		consumerModule,
 		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -415,6 +427,7 @@ func NewCentauriApp(
 		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
+		ccvconsumertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -448,6 +461,7 @@ func NewCentauriApp(
 		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
+		ccvconsumertypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -485,6 +499,7 @@ func NewCentauriApp(
 		icatypes.ModuleName,
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
+		ccvconsumertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -536,6 +551,7 @@ func NewCentauriApp(
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
 		app.TxBoundaryKeepper,
+		app.ConsumerKeeper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
