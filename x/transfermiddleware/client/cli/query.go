@@ -14,7 +14,7 @@ import (
 // GetQueryCmd returns the query commands for router
 func GetQueryCmd() *cobra.Command {
 	queryCmd := &cobra.Command{
-		Use:                        "transfermiddleware",
+		Use:                        types.ModuleName,
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 	}
