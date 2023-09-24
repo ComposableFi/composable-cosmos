@@ -507,7 +507,7 @@ func NewCentauriApp(
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
 	app.mm.RegisterServices(app.configurator)
 
-	app.setupUpgradeHandlers()
+	app.setupUpgradeHandlers(appOpts)
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	// app.sm = module.NewSimulationManager(
@@ -738,7 +738,7 @@ func (app *CentauriApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
 	// }
 }
 
-func (app *CentauriApp) setupUpgradeHandlers() {
+func (app *CentauriApp) setupUpgradeHandlers(appOpts servertypes.AppOptions) {
 	for _, upgrade := range Upgrades {
 		app.UpgradeKeeper.SetUpgradeHandler(
 			upgrade.UpgradeName,
@@ -746,6 +746,8 @@ func (app *CentauriApp) setupUpgradeHandlers() {
 				app.mm,
 				app.configurator,
 				app.BaseApp,
+				appOpts,
+				app.appCodec,
 				&app.AppKeepers,
 			),
 		)
