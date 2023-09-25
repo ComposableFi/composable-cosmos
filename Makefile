@@ -11,6 +11,7 @@ ifeq (,$(VERSION))
   endif
 endif
 
+PACKAGES_NOSIMULATION=$(shell go list ./... | grep -v '/simulation')
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
@@ -82,6 +83,9 @@ ifeq (,$(findstring nostrip,$(COSMOS_BUILD_OPTIONS)))
   BUILD_FLAGS += -trimpath
 endif
 
+###############################################################################
+###                                  Build                                  ###
+###############################################################################
 
 all: install
 
@@ -99,6 +103,24 @@ lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run github.com/client9/misspell/cmd/misspell -w
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run golang.org/x/tools/cmd/goimports -w -local github.com/notional-labs/centauri
 .PHONY: lint
+
+###############################################################################
+###                           Tests & Simulation                            ###
+###############################################################################
+
+test: test-unit
+test-all: test-unit test-race test-cover
+
+test-unit: 
+	@VERSION=$(VERSION) go test -mod=readonly -tags='norace' $(PACKAGES_NOSIMULATION)
+
+test-race:
+	@go test -mod=readonly -timeout 30m -race -coverprofile=coverage.txt -covermode=atomic -tags='ledger test_ledger_mock' ./...
+
+test-cover:
+	@go test -mod=readonly -timeout 30m -coverprofile=coverage.txt -covermode=atomic -tags='norace ledger test_ledger_mock' ./...
+
+.PHONY: test test-all test-unit test-race test-cover
 
 ###############################################################################
 ###                                  Proto                                  ###
@@ -128,6 +150,8 @@ proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
 .PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking 
+
+###############################################################################
 ###                             Interchain test                             ###
 ###############################################################################
 
