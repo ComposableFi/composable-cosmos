@@ -6,8 +6,10 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
 	"github.com/notional-labs/centauri/v5/app"
 	"github.com/notional-labs/centauri/v5/app/helpers"
@@ -39,4 +41,27 @@ func (s *KeeperTestSuite) SetupTest() {
 	s.keeper = s.app.RatelimitKeeper
 	s.querier = keeper.NewQueryServer(s.keeper)
 	s.msgServer = keeper.NewMsgServerImpl(s.keeper)
+}
+
+// addRateLimit is a convenient method to add new RateLimit without the need of authority.
+func (s *KeeperTestSuite) addRateLimit(
+	denom string,
+	channelID string,
+	maxPercentSend sdkmath.Int,
+	maxPercentRecv sdkmath.Int,
+	MinRateLimitAmount sdkmath.Int,
+	DurationHours uint64,
+) {
+	s.T().Helper()
+
+	err := s.keeper.AddRateLimit(s.ctx, &types.MsgAddRateLimit{
+		Authority:          "",
+		Denom:              denom,
+		ChannelID:          channelID,
+		MaxPercentSend:     maxPercentSend,
+		MaxPercentRecv:     maxPercentRecv,
+		MinRateLimitAmount: MinRateLimitAmount,
+		DurationHours:      DurationHours,
+	})
+	s.Require().NoError(err)
 }
