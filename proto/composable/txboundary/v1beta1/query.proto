@@ -1,9 +1,9 @@
 syntax = "proto3";
-package centauri.txboundary.v1beta1;
+package composable.txboundary.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "centauri/txboundary/v1beta1/boundary.proto";
+import "composable/txboundary/v1beta1/boundary.proto";
 
 option go_package = "x/tx-boundary/types";
 

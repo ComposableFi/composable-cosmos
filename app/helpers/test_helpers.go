@@ -27,7 +27,7 @@ import (
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	"github.com/stretchr/testify/require"
 
-	centauri "github.com/notional-labs/centauri/v5/app"
+	composable "github.com/notional-labs/composable/v5/app"
 )
 
 // SimAppChainID hardcoded chainID for simulation
@@ -58,7 +58,7 @@ type EmptyAppOptions struct{}
 
 func (EmptyAppOptions) Get(_ string) interface{} { return nil }
 
-func NewContextForApp(app centauri.CentauriApp) sdk.Context {
+func NewContextForApp(app composable.ComposableApp) sdk.Context {
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{
 		ChainID: fmt.Sprintf("test-chain-%s", tmrand.Str(4)),
 		Height:  1,
@@ -66,7 +66,7 @@ func NewContextForApp(app centauri.CentauriApp) sdk.Context {
 	return ctx
 }
 
-func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.CentauriApp {
+func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *composable.ComposableApp {
 	t.Helper()
 	app, genesisState := setup(!isCheckTx, invCheckPeriod)
 	if !isCheckTx {
@@ -87,34 +87,34 @@ func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *centauri.Centauri
 	return app
 }
 
-func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*centauri.CentauriApp, centauri.GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*composable.ComposableApp, composable.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := centauri.MakeEncodingConfig()
-	app := centauri.NewCentauriApp(
+	encCdc := composable.MakeEncodingConfig()
+	app := composable.NewComposableApp(
 		log.NewNopLogger(),
 		db,
 		nil,
 		true,
 		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
-		centauri.DefaultNodeHome,
+		composable.DefaultNodeHome,
 		invCheckPeriod,
 		encCdc,
 		EmptyAppOptions{},
 		opts,
 	)
 	if withGenesis {
-		return app, centauri.NewDefaultGenesisState()
+		return app, composable.NewDefaultGenesisState()
 	}
 
-	return app, centauri.GenesisState{}
+	return app, composable.GenesisState{}
 }
 
-// SetupWithGenesisValSet initializes a new CentauriApp with a validator set and genesis accounts
+// SetupWithGenesisValSet initializes a new ComposableApp with a validator set and genesis accounts
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
-// of one consensus engine unit (10^6) in the default token of the CentauriApp from first genesis
-// account. A Nop logger is set in CentauriApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, balances ...banktypes.Balance) *centauri.CentauriApp {
+// of one consensus engine unit (10^6) in the default token of the ComposableApp from first genesis
+// account. A Nop logger is set in ComposableApp.
+func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, balances ...banktypes.Balance) *composable.ComposableApp {
 	t.Helper()
 	app, genesisState := setup(true, 5)
 	genesisState, err := simtestutil.GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, genAccs, balances...)
@@ -151,7 +151,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 	return app
 }
 
-func SetupCentauriAppWithValSet(t *testing.T) *centauri.CentauriApp {
+func SetupComposableAppWithValSet(t *testing.T) *composable.ComposableApp {
 	t.Helper()
 	// generate validator private/public key
 	privVal := mock.NewPV()
@@ -173,11 +173,11 @@ func SetupCentauriAppWithValSet(t *testing.T) *centauri.CentauriApp {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	centauriApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", balance)
-	return centauriApp
+	composableApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", balance)
+	return composableApp
 }
 
-func SetupCentauriAppWithValSetWithGenAccout(t *testing.T) (*centauri.CentauriApp, sdk.AccAddress, []stakingtypes.Validator) {
+func SetupComposableAppWithValSetWithGenAccout(t *testing.T) (*composable.ComposableApp, sdk.AccAddress, []stakingtypes.Validator) {
 	t.Helper()
 	// generate validator private/public key
 	privVal := mock.NewPV()
@@ -219,7 +219,7 @@ func SetupCentauriAppWithValSetWithGenAccout(t *testing.T) (*centauri.CentauriAp
 		}
 		validators = append(validators, validator)
 	}
-	centauriApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", balance)
+	composableApp := SetupWithGenesisValSet(t, valSet, []authtypes.GenesisAccount{acc}, "notional", balance)
 
-	return centauriApp, acc.GetAddress(), validators
+	return composableApp, acc.GetAddress(), validators
 }

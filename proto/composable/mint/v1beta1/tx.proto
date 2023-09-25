@@ -1,11 +1,11 @@
 syntax = "proto3";
-package centauri.mint.v1beta1;
+package composable.mint.v1beta1;
 
 import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "centauri/mint/v1beta1/mint.proto";
+import "composable/mint/v1beta1/mint.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "x/mint/types";

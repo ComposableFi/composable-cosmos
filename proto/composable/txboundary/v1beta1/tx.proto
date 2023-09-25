@@ -1,11 +1,11 @@
 syntax = "proto3";
-package centauri.txboundary.v1beta1;
+package composable.txboundary.v1beta1;
 
 import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "centauri/txboundary/v1beta1/boundary.proto";
+import "composable/txboundary/v1beta1/boundary.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "x/tx-boundary/types";
@@ -24,7 +24,7 @@ service Msg {
   // Since: cosmos-sdk 0.47
   message MsgUpdateDelegateBoundary {
     option (cosmos.msg.v1.signer) = "authority";
-    option (amino.name) = "centauri/x/txboundary/MsgUpdateDelegateBoundary";
+    option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
   
     // authority is the address that controls the module (defaults to x/gov unless
     // overwritten).
@@ -48,7 +48,7 @@ service Msg {
   // Since: cosmos-sdk 0.47
   message MsgUpdateRedelegateBoundary {
     option (cosmos.msg.v1.signer) = "authority";
-    option (amino.name) = "centauri/x/txboundary/MsgUpdateDelegateBoundary";
+    option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
   
     // authority is the address that controls the module (defaults to x/gov unless
     // overwritten).

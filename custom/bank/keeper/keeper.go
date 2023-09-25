@@ -13,9 +13,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	banktypes "github.com/notional-labs/centauri/v5/custom/bank/types"
+	banktypes "github.com/notional-labs/composable/v5/custom/bank/types"
 
-	transfermiddlewarekeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
+	transfermiddlewarekeeper "github.com/notional-labs/composable/v5/x/transfermiddleware/keeper"
 
 	alliancekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancetypes "github.com/terra-money/alliance/x/alliance/types"

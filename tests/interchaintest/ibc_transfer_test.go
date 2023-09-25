@@ -29,7 +29,7 @@ import (
 // * create client, connection, and channel in relayer
 // * start relayer
 // * send transfer over ibc
-func TestCentauriPicassoIBCTransfer(t *testing.T) {
+func TestComposablePicassoIBCTransfer(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}

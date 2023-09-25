@@ -8,9 +8,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/notional-labs/centauri/v5/app"
-	"github.com/notional-labs/centauri/v5/app/helpers"
-	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	"github.com/notional-labs/composable/v5/app"
+	"github.com/notional-labs/composable/v5/app/helpers"
+	"github.com/notional-labs/composable/v5/x/tx-boundary/types"
 )
 
 type KeeperTestSuite struct {
@@ -18,11 +18,11 @@ type KeeperTestSuite struct {
 
 	ctx sdk.Context
 	// querier sdk.Querier
-	app *app.CentauriApp
+	app *app.ComposableApp
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
-	suite.app = helpers.SetupCentauriAppWithValSet(suite.T())
+	suite.app = helpers.SetupComposableAppWithValSet(suite.T())
 	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
 }
 

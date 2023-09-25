@@ -1,9 +1,9 @@
 syntax = "proto3";
-package centauri.transfermiddleware.v1beta1;
+package composable.transfermiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "centauri/transfermiddleware/v1beta1/params.proto";
-import "centauri/transfermiddleware/v1beta1/parachain_token_info.proto";
+import "composable/transfermiddleware/v1beta1/params.proto";
+import "composable/transfermiddleware/v1beta1/parachain_token_info.proto";
 
 option go_package = "x/transfermiddleware/types";
 

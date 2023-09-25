@@ -1,5 +1,5 @@
 syntax = "proto3";
-package centauri.ratelimit.v1beta1;
+package composable.ratelimit.v1beta1;
 
 option go_package = "x/ratelimit/types";
 

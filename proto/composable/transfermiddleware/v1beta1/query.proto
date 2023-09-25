@@ -1,5 +1,5 @@
 syntax = "proto3";
-package centauri.transfermiddleware.v1beta1;
+package composable.transfermiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -11,11 +11,11 @@ service Query {
   // ParaTokenInfo queries all token info of a native denom.
   rpc ParaTokenInfo(QueryParaTokenInfoRequest)
       returns (QueryParaTokenInfoResponse) {
-    option (google.api.http).get = "/centauri/paratokeninfo";
+    option (google.api.http).get = "/composable/paratokeninfo";
   }
   rpc EscrowAddress(QueryEscrowAddressRequest)
       returns (QueryEscrowAddressResponse) {
-    option (google.api.http).get = "/centauri/escrowaddress";
+    option (google.api.http).get = "/composable/escrowaddress";
   }
 }
 
