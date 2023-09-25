@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
         -o /centauri/build/centaurid \
-        /centauri/cmd/centaurid/main.go
+        /centauri/cmd/centaurid/
 
 # --------------------------------------------------------
 # Runner
