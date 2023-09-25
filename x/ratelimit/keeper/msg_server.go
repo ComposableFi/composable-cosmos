@@ -31,12 +31,7 @@ func (k Keeper) AddTransferRateLimit(goCtx context.Context, msg *types.MsgAddRat
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	if err := msg.ValidateBasic(); err != nil {
-		return nil, err
-	}
-
-	err := k.AddRateLimit(ctx, msg)
-	if err != nil {
+	if err := k.AddRateLimit(ctx, msg); err != nil {
 		return nil, err
 	}
 
@@ -50,12 +45,7 @@ func (k Keeper) UpdateTransferRateLimit(goCtx context.Context, msg *types.MsgUpd
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	if err := msg.ValidateBasic(); err != nil {
-		return nil, err
-	}
-
-	err := k.UpdateRateLimit(ctx, msg)
-	if err != nil {
+	if err := k.UpdateRateLimit(ctx, msg); err != nil {
 		return nil, err
 	}
 
@@ -69,8 +59,7 @@ func (k Keeper) RemoveTransferRateLimit(goCtx context.Context, msg *types.MsgRem
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID)
-	if err != nil {
+	if err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
 		return nil, err
 	}
 
@@ -84,9 +73,9 @@ func (k Keeper) ResetTransferRateLimit(goCtx context.Context, msg *types.MsgRese
 		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelID)
-	if err != nil {
+	if err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
 		return nil, err
 	}
+
 	return &types.MsgResetRateLimitResponse{}, nil
 }
