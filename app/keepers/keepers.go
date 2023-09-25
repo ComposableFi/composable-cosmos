@@ -106,7 +106,7 @@ import (
 
 const (
 	AccountAddressPrefix = "composable"
-	// authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // TODO: convert authorityAddress and replace here
 )
 
 type AppKeepers struct {
