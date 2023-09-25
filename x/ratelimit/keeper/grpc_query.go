@@ -3,6 +3,9 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -11,24 +14,33 @@ import (
 	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
-// Querier is used as Keeper will have duplicate methods if used directly, and gRPC names take precedence over keeper.
-type Querier struct {
+var _ types.QueryServer = queryServer{}
+
+type queryServer struct {
 	Keeper
 }
 
-var _ types.QueryServer = Querier{}
+// NewQueryServer returns an implementation of the QueryServer
+// for the provided Keeper.
+func NewQueryServer(k Keeper) types.QueryServer {
+	return queryServer{Keeper: k}
+}
 
 // AllRateLimits queries all rate limits.
-func (k Querier) AllRateLimits(goCtx context.Context, _ *types.QueryAllRateLimitsRequest) (*types.QueryAllRateLimitsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	rateLimits := k.GetAllRateLimits(ctx)
+func (q queryServer) AllRateLimits(c context.Context, req *types.QueryAllRateLimitsRequest) (*types.QueryAllRateLimitsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	rateLimits := q.GetAllRateLimits(ctx)
 	return &types.QueryAllRateLimitsResponse{RateLimits: rateLimits}, nil
 }
 
 // RateLimit queries a rate limit by denom and channel id.
-func (k Querier) RateLimit(goCtx context.Context, req *types.QueryRateLimitRequest) (*types.QueryRateLimitResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	rateLimit, found := k.GetRateLimit(ctx, req.Denom, req.ChannelID)
+func (q queryServer) RateLimit(c context.Context, req *types.QueryRateLimitRequest) (*types.QueryRateLimitResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	rateLimit, found := q.GetRateLimit(ctx, req.Denom, req.ChannelID)
 	if !found {
 		return &types.QueryRateLimitResponse{}, nil
 	}
@@ -36,14 +48,14 @@ func (k Querier) RateLimit(goCtx context.Context, req *types.QueryRateLimitReque
 }
 
 // RateLimitsByChainID queries all rate limits for a given chain.
-func (k Querier) RateLimitsByChainID(goCtx context.Context, req *types.QueryRateLimitsByChainIDRequest) (*types.QueryRateLimitsByChainIDResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
+func (q queryServer) RateLimitsByChainID(c context.Context, req *types.QueryRateLimitsByChainIDRequest) (*types.QueryRateLimitsByChainIDResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
 
 	rateLimits := []types.RateLimit{}
-	for _, rateLimit := range k.GetAllRateLimits(ctx) {
+	for _, rateLimit := range q.GetAllRateLimits(ctx) {
 
 		// Determine the client state from the channel Id
-		_, clientState, err := k.channelKeeper.GetChannelClientState(ctx, transfertypes.PortID, rateLimit.Path.ChannelID)
+		_, clientState, err := q.channelKeeper.GetChannelClientState(ctx, transfertypes.PortID, rateLimit.Path.ChannelID)
 		if err != nil {
 			return &types.QueryRateLimitsByChainIDResponse{}, errorsmod.Wrapf(types.ErrInvalidClientState, "Unable to fetch client state from channelID")
 		}
@@ -62,11 +74,11 @@ func (k Querier) RateLimitsByChainID(goCtx context.Context, req *types.QueryRate
 }
 
 // RateLimitsByChannelID queries all rate limits for a given channel.
-func (k Querier) RateLimitsByChannelID(goCtx context.Context, req *types.QueryRateLimitsByChannelIDRequest) (*types.QueryRateLimitsByChannelIDResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
+func (q queryServer) RateLimitsByChannelID(c context.Context, req *types.QueryRateLimitsByChannelIDRequest) (*types.QueryRateLimitsByChannelIDResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
 
 	rateLimits := []types.RateLimit{}
-	for _, rateLimit := range k.GetAllRateLimits(ctx) {
+	for _, rateLimit := range q.GetAllRateLimits(ctx) {
 		// If the channel ID matches, add the rate limit to the returned list
 		if rateLimit.Path.ChannelID == req.ChannelID {
 			rateLimits = append(rateLimits, rateLimit)
@@ -77,8 +89,8 @@ func (k Querier) RateLimitsByChannelID(goCtx context.Context, req *types.QueryRa
 }
 
 // AllWhitelistedAddresses queries all whitelisted addresses.
-func (k Querier) AllWhitelistedAddresses(goCtx context.Context, _ *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	whitelistedAddresses := k.GetAllWhitelistedAddressPairs(ctx)
+func (q queryServer) AllWhitelistedAddresses(c context.Context, _ *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	whitelistedAddresses := q.GetAllWhitelistedAddressPairs(ctx)
 	return &types.QueryAllWhitelistedAddressesResponse{AddressPairs: whitelistedAddresses}, nil
 }

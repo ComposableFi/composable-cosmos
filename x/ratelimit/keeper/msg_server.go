@@ -10,19 +10,19 @@ import (
 	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
+var _ types.MsgServer = msgServer{}
+
 type msgServer struct {
 	Keeper
 }
 
 // NewMsgServerImpl returns an implementation of the MsgServer interface
 // for the provided Keeper.
-func NewMsgServerImpl(keeper Keeper) types.MsgServer {
+func NewMsgServerImpl(k Keeper) types.MsgServer {
 	return &msgServer{
-		Keeper: keeper,
+		Keeper: k,
 	}
 }
-
-var _ types.MsgServer = msgServer{}
 
 func (m msgServer) AddTransferRateLimit(goCtx context.Context, msg *types.MsgAddRateLimit) (*types.MsgAddRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
