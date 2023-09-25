@@ -39,7 +39,7 @@ message QueryAllRateLimitsResponse {
 
 message QueryRateLimitRequest {
   string denom = 1;
-  string channel_id = 2;
+  string channel_id = 2 [ (gogoproto.customname) = "ChannelID" ];
 }
 message QueryRateLimitResponse { RateLimit rate_limit = 1; }
 
