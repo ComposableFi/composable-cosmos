@@ -12,57 +12,60 @@ option go_package = "x/tx-boundary/types";
 
 // Msg defines the x/mint Msg service.
 service Msg {
-    option (cosmos.msg.v1.service) = true;
-  
-    rpc UpdateDelegateBoundary(MsgUpdateDelegateBoundary) returns (MsgUpdateDelegateBoundaryResponse);
+  option (cosmos.msg.v1.service) = true;
 
-    rpc UpdateRedelegateBoundary(MsgUpdateRedelegateBoundary) returns (MsgUpdateRedelegateBoundaryResponse);
-  }
-  
-  // MsgUpdateDelegateBoundary is the Msg/UpdateDelegateBoundary request type.
-  //
-  // Since: cosmos-sdk 0.47
-  message MsgUpdateDelegateBoundary {
-    option (cosmos.msg.v1.signer) = "authority";
-    option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
-  
-    // authority is the address that controls the module (defaults to x/gov unless
-    // overwritten).
-    string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  
-    // boundary defines the x/tx-boundary parameters to update.
-    //
-    // NOTE: All parameters must be supplied.
-    Boundary boundary = 2
-        [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
-  }
-  
-  // MsgUpdateDelegateBoundaryResponse defines the response structure for executing a
-  // MsgUpdateDelegateBoundary message.
-  //
-  // Since: cosmos-sdk 0.47
-  message MsgUpdateDelegateBoundaryResponse {}
+  rpc UpdateDelegateBoundary(MsgUpdateDelegateBoundary)
+      returns (MsgUpdateDelegateBoundaryResponse);
 
-  // MsgUpdateRedelegateBoundary is the Msg/MsgUpdateRedelegateBoundary request type.
+  rpc UpdateRedelegateBoundary(MsgUpdateRedelegateBoundary)
+      returns (MsgUpdateRedelegateBoundaryResponse);
+}
+
+// MsgUpdateDelegateBoundary is the Msg/UpdateDelegateBoundary request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateDelegateBoundary {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // boundary defines the x/tx-boundary parameters to update.
   //
-  // Since: cosmos-sdk 0.47
-  message MsgUpdateRedelegateBoundary {
-    option (cosmos.msg.v1.signer) = "authority";
-    option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
-  
-    // authority is the address that controls the module (defaults to x/gov unless
-    // overwritten).
-    string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  
-    // boundary defines the x/tx-boundary parameters to update.
-    //
-    // NOTE: All parameters must be supplied.
-    Boundary boundary = 2
-        [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
-  }
-  
-  // MsgUpdateRedelegateBoundaryResponse defines the response structure for executing a
-  // MsgUpdateRedelegateBoundary message.
+  // NOTE: All parameters must be supplied.
+  Boundary boundary = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgUpdateDelegateBoundaryResponse defines the response structure for
+// executing a MsgUpdateDelegateBoundary message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateDelegateBoundaryResponse {}
+
+// MsgUpdateRedelegateBoundary is the Msg/MsgUpdateRedelegateBoundary request
+// type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateRedelegateBoundary {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "composable/x/txboundary/MsgUpdateDelegateBoundary";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // boundary defines the x/tx-boundary parameters to update.
   //
-  // Since: cosmos-sdk 0.47
-  message MsgUpdateRedelegateBoundaryResponse {}
+  // NOTE: All parameters must be supplied.
+  Boundary boundary = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgUpdateRedelegateBoundaryResponse defines the response structure for
+// executing a MsgUpdateRedelegateBoundary message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateRedelegateBoundaryResponse {}

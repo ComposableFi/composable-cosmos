@@ -9,9 +9,12 @@ option go_package = "x/ratelimit/types";
 // Msg defines the transfer middleware Msg service.
 service Msg {
   rpc AddTransferRateLimit(MsgAddRateLimit) returns (MsgAddRateLimitResponse);
-  rpc UpdateTransferRateLimit(MsgUpdateRateLimit) returns (MsgUpdateRateLimitResponse);
-  rpc RemoveTransferRateLimit(MsgRemoveRateLimit) returns (MsgRemoveRateLimitResponse);
-  rpc ResetTransferRateLimit(MsgResetRateLimit) returns (MsgResetRateLimitResponse);
+  rpc UpdateTransferRateLimit(MsgUpdateRateLimit)
+      returns (MsgUpdateRateLimitResponse);
+  rpc RemoveTransferRateLimit(MsgRemoveRateLimit)
+      returns (MsgRemoveRateLimitResponse);
+  rpc ResetTransferRateLimit(MsgResetRateLimit)
+      returns (MsgResetRateLimitResponse);
 }
 
 message MsgAddRateLimit {
@@ -76,8 +79,8 @@ message MsgRemoveRateLimit {
   // authority is the address that controls the module (defaults to x/gov unless
   // overwritten).
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
-  string denom = 2 [ (gogoproto.customname) = "ChannelID" ];
-  string channel_id = 3;
+  string denom = 2;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
 }
 
 message MsgRemoveRateLimitResponse {}
@@ -88,8 +91,8 @@ message MsgResetRateLimit {
   // authority is the address that controls the module (defaults to x/gov unless
   // overwritten).
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
-  string denom = 2 [ (gogoproto.customname) = "ChannelID" ];
-  string channel_id = 3;
+  string denom = 2;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
 }
 
 message MsgResetRateLimitResponse {}

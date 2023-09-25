@@ -52,7 +52,7 @@ func local_request_Query_AllRateLimits_0(ctx context.Context, marshaler runtime.
 }
 
 var (
-	filter_Query_RateLimit_0 = &utilities.DoubleArray{Encoding: map[string]int{"channel_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_RateLimit_0 = &utilities.DoubleArray{Encoding: map[string]int{"ChannelID": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_RateLimit_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -66,15 +66,15 @@ func request_Query_RateLimit_0(ctx context.Context, marshaler runtime.Marshaler,
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["ChannelID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ChannelID")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	protoReq.ChannelID, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ChannelID", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -100,15 +100,15 @@ func local_request_Query_RateLimit_0(ctx context.Context, marshaler runtime.Mars
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["ChannelID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ChannelID")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	protoReq.ChannelID, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ChannelID", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -188,15 +188,15 @@ func request_Query_RateLimitsByChannelID_0(ctx context.Context, marshaler runtim
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["ChannelID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ChannelID")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	protoReq.ChannelID, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ChannelID", err)
 	}
 
 	msg, err := client.RateLimitsByChannelID(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -215,15 +215,15 @@ func local_request_Query_RateLimitsByChannelID_0(ctx context.Context, marshaler 
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["ChannelID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "ChannelID")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	protoReq.ChannelID, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "ChannelID", err)
 	}
 
 	msg, err := server.RateLimitsByChannelID(ctx, &protoReq)
@@ -517,11 +517,11 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 var (
 	pattern_Query_AllRateLimits_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"composable", "ratelimit", "ratelimits"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RateLimit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"composable", "ratelimit", "channel_id", "by_denom"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_RateLimit_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"composable", "ratelimit", "ChannelID", "by_denom"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_RateLimitsByChainID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"composable", "ratelimit", "ratelimits", "chain_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RateLimitsByChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"composable", "ratelimit", "ratelimits", "channel_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_RateLimitsByChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"composable", "ratelimit", "ratelimits", "ChannelID"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_AllWhitelistedAddresses_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"composable", "ratelimit", "whitelisted_addresses"}, "", runtime.AssumeColonVerbOpt(false)))
 )

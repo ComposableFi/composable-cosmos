@@ -13,7 +13,7 @@ message ParachainIBCTokenInfo {
   // dotsama chain.
   string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
   // channel_id is source channel in IBC connection from composable chain
-  string channel_id = 2 [ 
+  string channel_id = 2 [
     (gogoproto.moretags) = "yaml:\"channel_id\"",
     (gogoproto.customname) = "ChannelID"
   ];
