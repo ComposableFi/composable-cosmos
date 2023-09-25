@@ -10,7 +10,9 @@ import (
 	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
-var _ types.MsgServer = msgServer{}
+type msgServer struct {
+	Keeper
+}
 
 // NewMsgServerImpl returns an implementation of the MsgServer interface
 // for the provided Keeper.
@@ -20,60 +22,58 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 	}
 }
 
-type msgServer struct {
-	Keeper
-}
+var _ types.MsgServer = msgServer{}
 
-func (k Keeper) AddTransferRateLimit(goCtx context.Context, msg *types.MsgAddRateLimit) (*types.MsgAddRateLimitResponse, error) {
+func (m msgServer) AddTransferRateLimit(goCtx context.Context, msg *types.MsgAddRateLimit) (*types.MsgAddRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if k.authority != msg.Authority {
-		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	if m.authority != msg.Authority {
+		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", m.authority, msg.Authority)
 	}
 
-	if err := k.AddRateLimit(ctx, msg); err != nil {
+	if err := m.AddRateLimit(ctx, msg); err != nil {
 		return nil, err
 	}
 
 	return &types.MsgAddRateLimitResponse{}, nil
 }
 
-func (k Keeper) UpdateTransferRateLimit(goCtx context.Context, msg *types.MsgUpdateRateLimit) (*types.MsgUpdateRateLimitResponse, error) {
+func (m msgServer) UpdateTransferRateLimit(goCtx context.Context, msg *types.MsgUpdateRateLimit) (*types.MsgUpdateRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if k.authority != msg.Authority {
-		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	if m.authority != msg.Authority {
+		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", m.authority, msg.Authority)
 	}
 
-	if err := k.UpdateRateLimit(ctx, msg); err != nil {
+	if err := m.UpdateRateLimit(ctx, msg); err != nil {
 		return nil, err
 	}
 
 	return &types.MsgUpdateRateLimitResponse{}, nil
 }
 
-func (k Keeper) RemoveTransferRateLimit(goCtx context.Context, msg *types.MsgRemoveRateLimit) (*types.MsgRemoveRateLimitResponse, error) {
+func (m msgServer) RemoveTransferRateLimit(goCtx context.Context, msg *types.MsgRemoveRateLimit) (*types.MsgRemoveRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if k.authority != msg.Authority {
-		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	if m.authority != msg.Authority {
+		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", m.authority, msg.Authority)
 	}
 
-	if err := k.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
+	if err := m.RemoveRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
 		return nil, err
 	}
 
 	return &types.MsgRemoveRateLimitResponse{}, nil
 }
 
-func (k Keeper) ResetTransferRateLimit(goCtx context.Context, msg *types.MsgResetRateLimit) (*types.MsgResetRateLimitResponse, error) {
+func (m msgServer) ResetTransferRateLimit(goCtx context.Context, msg *types.MsgResetRateLimit) (*types.MsgResetRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if k.authority != msg.Authority {
-		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	if m.authority != msg.Authority {
+		return nil, errors.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", m.authority, msg.Authority)
 	}
 
-	if err := k.ResetRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
+	if err := m.ResetRateLimit(ctx, msg.Denom, msg.ChannelID); err != nil {
 		return nil, err
 	}
 

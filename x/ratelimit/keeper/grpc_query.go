@@ -11,17 +11,22 @@ import (
 	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
-var _ types.QueryServer = Keeper{}
+// Querier is used as Keeper will have duplicate methods if used directly, and gRPC names take precedence over keeper.
+type Querier struct {
+	Keeper
+}
 
-// Query all rate limits
-func (k Keeper) AllRateLimits(goCtx context.Context, _ *types.QueryAllRateLimitsRequest) (*types.QueryAllRateLimitsResponse, error) {
+var _ types.QueryServer = Querier{}
+
+// AllRateLimits queries all rate limits.
+func (k Querier) AllRateLimits(goCtx context.Context, _ *types.QueryAllRateLimitsRequest) (*types.QueryAllRateLimitsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	rateLimits := k.GetAllRateLimits(ctx)
 	return &types.QueryAllRateLimitsResponse{RateLimits: rateLimits}, nil
 }
 
-// Query a rate limit by denom and channelID
-func (k Keeper) RateLimit(goCtx context.Context, req *types.QueryRateLimitRequest) (*types.QueryRateLimitResponse, error) {
+// RateLimit queries a rate limit by denom and channel id.
+func (k Querier) RateLimit(goCtx context.Context, req *types.QueryRateLimitRequest) (*types.QueryRateLimitResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	rateLimit, found := k.GetRateLimit(ctx, req.Denom, req.ChannelID)
 	if !found {
@@ -30,8 +35,8 @@ func (k Keeper) RateLimit(goCtx context.Context, req *types.QueryRateLimitReques
 	return &types.QueryRateLimitResponse{RateLimit: &rateLimit}, nil
 }
 
-// Query all rate limits for a given chain
-func (k Keeper) RateLimitsByChainID(goCtx context.Context, req *types.QueryRateLimitsByChainIDRequest) (*types.QueryRateLimitsByChainIDResponse, error) {
+// RateLimitsByChainID queries all rate limits for a given chain.
+func (k Querier) RateLimitsByChainID(goCtx context.Context, req *types.QueryRateLimitsByChainIDRequest) (*types.QueryRateLimitsByChainIDResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	rateLimits := []types.RateLimit{}
@@ -56,8 +61,8 @@ func (k Keeper) RateLimitsByChainID(goCtx context.Context, req *types.QueryRateL
 	return &types.QueryRateLimitsByChainIDResponse{RateLimits: rateLimits}, nil
 }
 
-// Query all rate limits for a given channel
-func (k Keeper) RateLimitsByChannelID(goCtx context.Context, req *types.QueryRateLimitsByChannelIDRequest) (*types.QueryRateLimitsByChannelIDResponse, error) {
+// RateLimitsByChannelID queries all rate limits for a given channel.
+func (k Querier) RateLimitsByChannelID(goCtx context.Context, req *types.QueryRateLimitsByChannelIDRequest) (*types.QueryRateLimitsByChannelIDResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	rateLimits := []types.RateLimit{}
@@ -71,8 +76,8 @@ func (k Keeper) RateLimitsByChannelID(goCtx context.Context, req *types.QueryRat
 	return &types.QueryRateLimitsByChannelIDResponse{RateLimits: rateLimits}, nil
 }
 
-// Query all whitelisted addresses
-func (k Keeper) AllWhitelistedAddresses(goCtx context.Context, _ *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
+// AllWhitelistedAddresses queries all whitelisted addresses.
+func (k Querier) AllWhitelistedAddresses(goCtx context.Context, _ *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	whitelistedAddresses := k.GetAllWhitelistedAddressPairs(ctx)
 	return &types.QueryAllWhitelistedAddressesResponse{AddressPairs: whitelistedAddresses}, nil
