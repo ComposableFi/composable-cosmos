@@ -8,14 +8,20 @@ import (
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 )
 
+var (
+	_ sdk.Msg = &MsgAddRateLimit{}
+	_ sdk.Msg = &MsgUpdateRateLimit{}
+	_ sdk.Msg = &MsgRemoveRateLimit{}
+	_ sdk.Msg = &MsgResetRateLimit{}
+)
+
+// Message types for the module
 const (
 	TypeMsgAddRateLimit    = "add_rate_limit"
 	TypeMsgUpdateRateLimit = "update_rate_limit"
 	TypeMsgRemoveRateLimit = "remove_rate_limit"
 	TypeMsgResetRateLimit  = "reset_rate_limit"
 )
-
-var _ sdk.Msg = &MsgAddRateLimit{}
 
 func NewMsgAddRateLimit(
 	authority string,
@@ -54,12 +60,10 @@ func (msg *MsgAddRateLimit) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgAddRateLimit) ValidateBasic() error {
-	// validate authority
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIDs
 	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
@@ -86,8 +90,6 @@ func (msg *MsgAddRateLimit) ValidateBasic() error {
 
 	return nil
 }
-
-var _ sdk.Msg = &MsgUpdateRateLimit{}
 
 func NewMsgUpdateRateLimit(
 	authority string,
@@ -126,12 +128,10 @@ func (msg *MsgUpdateRateLimit) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgUpdateRateLimit) ValidateBasic() error {
-	// validate authority
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIDs
 	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
 		return err
 	}
@@ -158,8 +158,6 @@ func (msg *MsgUpdateRateLimit) ValidateBasic() error {
 
 	return nil
 }
-
-var _ sdk.Msg = &MsgRemoveRateLimit{}
 
 func NewMsgRemoveRateLimit(
 	authority string,
@@ -192,18 +190,16 @@ func (msg *MsgRemoveRateLimit) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgRemoveRateLimit) ValidateBasic() error {
-	// validate authority
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIDs
-	err := host.ChannelIdentifierValidator(msg.ChannelID)
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
-
-var _ sdk.Msg = &MsgResetRateLimit{}
 
 func NewMsgResetRateLimit(
 	authority string,
@@ -236,13 +232,13 @@ func (msg *MsgResetRateLimit) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic does a sanity check on the provided data.
 func (msg *MsgResetRateLimit) ValidateBasic() error {
-	// validate authority
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	// validate channelIDs
-	err := host.ChannelIdentifierValidator(msg.ChannelID)
+	if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
