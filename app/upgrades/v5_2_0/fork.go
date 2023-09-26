@@ -71,7 +71,7 @@ func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper
 	}
 
 	if err := subjectClientState.CheckSubstituteAndUpdateState(ctx, codec, subjectClientStore, substituteClientStore, substituteClientState); err != nil {
-		return err
+		panic("cannot update client with ID")
 	}
 
 	ctx.Logger().Info("client updated after governance proposal passed", "client-id", subjectClientId)
