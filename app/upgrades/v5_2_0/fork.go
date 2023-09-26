@@ -74,7 +74,7 @@ func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper
 		panic("cannot update client with ID")
 	}
 
-	ctx.Logger().Info("client updated after governance proposal passed", "client-id", subjectClientId)
+	ctx.Logger().Info("client updated after hark fork passed", "client-id", subjectClientId)
 
 	return nil
 }
