@@ -77,6 +77,7 @@ sed -i '/laddr = "tcp:\/\/127.0.0.1:26657"/c\laddr = "tcp:\/\/0.0.0.0:26657"' ~/
 sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.banksy/config/config.toml
 sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
 sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
+sed -i 's/address = "tcp:\/\/localhost:1317"/address = "tcp:\/\/localhost:1319"/g' ~/.banksy/config/app.toml
 
 centaurid config node tcp://0.0.0.0:2241
 centaurid start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
