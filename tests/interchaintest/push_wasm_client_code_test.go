@@ -154,6 +154,8 @@ func TestPushWasmClientCode(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, getCodeQueryMsgRsp.Code)
 	require.Equal(t, codeHash, codeHash2)
+	err = testutil.WaitForBlocks(ctx, 2000000000, centaurid)
+	require.NoError(t, err)
 }
 
 type GetCodeQueryMsgResponse struct {
