@@ -730,6 +730,7 @@ func (app *ComposableApp) setupUpgradeHandlers() {
 				app.mm,
 				app.configurator,
 				app.BaseApp,
+				app.AppCodec(),
 				&app.AppKeepers,
 			),
 		)
