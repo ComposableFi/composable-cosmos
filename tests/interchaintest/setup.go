@@ -45,7 +45,7 @@ func GetDockerImageInfo() (repo, version string) {
 	repo = CentauriICTestRepo
 	if !found {
 		// make local-image
-		repo = "centauri"
+		repo = "composable"
 		branchVersion = "debug"
 	}
 
