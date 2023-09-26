@@ -45,9 +45,9 @@ func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper, wasmKeeper
 
 func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper.Keeper, subjectClientId string, substituteClientId string) error {
 	subjectClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, subjectClientId)
-	// if !found {
-	// 	return sdkerrors.Wrapf(types.ErrClientNotFound, "subject client with ID %s", subjectClientId)
-	// }
+	if !found {
+		panic("cannot update client with ID")
+	}
 
 	subjectClientStore := ibckeeper.ClientKeeper.ClientStore(ctx, subjectClientId)
 
