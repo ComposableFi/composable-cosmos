@@ -49,8 +49,8 @@ func (s *KeeperTestSuite) addRateLimit(
 	channelID string,
 	maxPercentSend sdkmath.Int,
 	maxPercentRecv sdkmath.Int,
-	MinRateLimitAmount sdkmath.Int,
-	DurationHours uint64,
+	minRateLimitAmount sdkmath.Int,
+	durationHours uint64,
 ) {
 	s.T().Helper()
 
@@ -60,8 +60,8 @@ func (s *KeeperTestSuite) addRateLimit(
 		ChannelID:          channelID,
 		MaxPercentSend:     maxPercentSend,
 		MaxPercentRecv:     maxPercentRecv,
-		MinRateLimitAmount: MinRateLimitAmount,
-		DurationHours:      DurationHours,
+		MinRateLimitAmount: minRateLimitAmount,
+		DurationHours:      durationHours,
 	})
 	s.Require().NoError(err)
 }
