@@ -12,7 +12,7 @@ import (
 )
 
 // TestStartCentauri is a basic test to assert that spinning up a Composable network with 1 validator works properly.
-func TestBasicCentauri(t *testing.T) {
+func TestBasicComposable(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -27,8 +27,8 @@ func TestBasicCentauri(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "centauri",
-			ChainConfig:   centauriConfig,
+			Name:          "composable",
+			ChainConfig:   composableConfig,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},
@@ -38,13 +38,13 @@ func TestBasicCentauri(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	centauri := chains[0].(*cosmos.CosmosChain)
+	composable := chains[0].(*cosmos.CosmosChain)
 
 	// Relayer Factory
 	client, network := interchaintest.DockerSetup(t)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(centauri)
+	ic := interchaintest.NewInterchain().AddChain(composable)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)

@@ -19,7 +19,7 @@ var (
 		UidGid:     "1025:1025",
 	}
 
-	centauriConfig = ibc.ChainConfig{
+	composableConfig = ibc.ChainConfig{
 		Type:                "cosmos",
 		Name:                "composable",
 		ChainID:             "composable-2",
