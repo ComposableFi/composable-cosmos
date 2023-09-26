@@ -16,6 +16,7 @@ import (
 )
 
 var govAuthorityAddress = "composable10556m38z4x6pqalr9rl5ytf3cff8q46nnngqs2" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
+
 type TransferTestSuite struct {
 	suite.Suite
 

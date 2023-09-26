@@ -21,11 +21,11 @@ var (
 
 	centauriConfig = ibc.ChainConfig{
 		Type:                "cosmos",
-		Name:                "centauri",
-		ChainID:             "centauri-2",
+		Name:                "composable",
+		ChainID:             "composable-2",
 		Images:              []ibc.DockerImage{CentauriImage},
-		Bin:                 "centaurid",
-		Bech32Prefix:        "centauri",
+		Bin:                 "composabled",
+		Bech32Prefix:        "composable",
 		Denom:               "stake",
 		CoinType:            "118",
 		GasPrices:           "0.0stake",
