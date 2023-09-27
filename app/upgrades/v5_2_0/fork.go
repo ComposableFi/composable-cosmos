@@ -3,7 +3,9 @@ package v5_2_0
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
@@ -15,7 +17,7 @@ import (
 const (
 	newWasmCodeID      = ""
 	clientId           = "08-wasm-05"
-	substituteClientId = "08-wasm-06"
+	substituteClientId = "08-wasm-132"
 )
 
 func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
@@ -24,7 +26,11 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	)
 
 	UpdateWasmContract(ctx, keepers.IBCKeeper, keepers.Wasm08Keeper)
-	ClientUpdate(ctx, keepers.IBCKeeper.Codec(), keepers.IBCKeeper, clientId, substituteClientId)
+
+	err := ClientUpdate(ctx, keepers.IBCKeeper.Codec(), keepers.IBCKeeper, clientId, substituteClientId)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper, wasmKeeper wasm08keeper.Keeper) {
@@ -46,32 +52,32 @@ func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper, wasmKeeper
 func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper.Keeper, subjectClientId string, substituteClientId string) error {
 	subjectClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, subjectClientId)
 	if !found {
-		panic("cannot update client with ID")
+		return sdkerrors.Wrapf(clienttypes.ErrClientNotFound, "subject client with ID %s", subjectClientId)
 	}
 
 	subjectClientStore := ibckeeper.ClientKeeper.ClientStore(ctx, subjectClientId)
 
 	if status := ibckeeper.ClientKeeper.GetClientStatus(ctx, subjectClientState, subjectClientId); status == exported.Active {
-		panic("cannot update client with ID")
+		return sdkerrors.Wrap(clienttypes.ErrInvalidUpdateClientProposal, "cannot update Active subject client")
 	}
 
 	substituteClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, substituteClientId)
 	if !found {
-		panic("cannot update client with ID")
+		return sdkerrors.Wrapf(clienttypes.ErrClientNotFound, "substitute client with ID %s", substituteClientId)
 	}
 
 	if subjectClientState.GetLatestHeight().GTE(substituteClientState.GetLatestHeight()) {
-		panic("cannot update client with ID")
+		return sdkerrors.Wrapf(clienttypes.ErrInvalidHeight, "subject client state latest height is greater or equal to substitute client state latest height (%s >= %s)", subjectClientState.GetLatestHeight(), substituteClientState.GetLatestHeight())
 	}
 
 	substituteClientStore := ibckeeper.ClientKeeper.ClientStore(ctx, substituteClientId)
 
 	if status := ibckeeper.ClientKeeper.GetClientStatus(ctx, substituteClientState, substituteClientId); status != exported.Active {
-		panic("cannot update client with ID")
+		return sdkerrors.Wrapf(clienttypes.ErrClientNotActive, "substitute client is not Active, status is %s", status)
 	}
 
 	if err := subjectClientState.CheckSubstituteAndUpdateState(ctx, codec, subjectClientStore, substituteClientStore, substituteClientState); err != nil {
-		panic("cannot update client with ID")
+		return err
 	}
 
 	ctx.Logger().Info("client updated after hark fork passed", "client-id", subjectClientId)
