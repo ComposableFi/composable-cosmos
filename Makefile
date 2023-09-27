@@ -133,7 +133,7 @@ proto-check-breaking:
 
 # Executes start chain tests via interchaintest
 ictest-start-cosmos:
-	cd tests/interchaintest && go test -race -v -run TestStartCentauri .
+	cd tests/interchaintest && go test -race -v -run TestStartComposable .
 
 ictest-validator:
 	cd tests/interchaintest && go test -race -v -run TestValidator .
@@ -144,11 +144,11 @@ ictest-start-polkadot:
 
 # Executes IBC tests via interchaintest
 ictest-ibc:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriPicassoIBCTransfer .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposablePicassoIBCTransfer .
 
 # Executes Basic Upgrade Chain tests via interchaintest
 ictest-upgrade:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriUpgrade .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposableUpgrade .
 
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
