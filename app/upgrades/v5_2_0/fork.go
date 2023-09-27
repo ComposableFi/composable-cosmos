@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	newWasmCodeID      = ""
+	newWasmCodeID      = "ad84ee3292e28b4e46da16974c118d40093e1a6e28a083f2f045f68fde7fb575"
 	clientId           = "08-wasm-05"
 	substituteClientId = "08-wasm-132"
 )
