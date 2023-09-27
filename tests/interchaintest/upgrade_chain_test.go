@@ -18,7 +18,7 @@ const (
 	blocksAfterUpgrade = uint64(10)
 )
 
-func TestCentauriUpgrade(t *testing.T) {
+func TestComposableUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
 	CosmosChainUpgradeTest(t, repo, version, "composable")
 }
