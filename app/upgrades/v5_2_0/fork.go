@@ -8,7 +8,6 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	"github.com/notional-labs/centauri/v5/app/keepers"
@@ -25,7 +24,7 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 		"Upgrade 08-wasm contract",
 	)
 
-	UpdateWasmContract(ctx, keepers.IBCKeeper, keepers.Wasm08Keeper)
+	UpdateWasmContract(ctx, keepers.IBCKeeper)
 
 	err := ClientUpdate(ctx, keepers.IBCKeeper.Codec(), keepers.IBCKeeper, clientId, substituteClientId)
 	if err != nil {
@@ -33,7 +32,7 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	}
 }
 
-func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper, wasmKeeper wasm08keeper.Keeper) {
+func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper) {
 	unknownClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, clientId)
 	if !found {
 		panic("cannot update client with ID")
