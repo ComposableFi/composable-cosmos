@@ -57,10 +57,6 @@ func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper
 
 	subjectClientStore := ibckeeper.ClientKeeper.ClientStore(ctx, subjectClientId)
 
-	if status := ibckeeper.ClientKeeper.GetClientStatus(ctx, subjectClientState, subjectClientId); status == exported.Active {
-		return sdkerrors.Wrap(clienttypes.ErrInvalidUpdateClientProposal, "cannot update Active subject client")
-	}
-
 	substituteClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, substituteClientId)
 	if !found {
 		return sdkerrors.Wrapf(clienttypes.ErrClientNotFound, "substitute client with ID %s", substituteClientId)
