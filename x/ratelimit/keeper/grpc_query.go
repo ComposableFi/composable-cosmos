@@ -6,7 +6,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
@@ -39,33 +38,43 @@ func (q queryServer) AllRateLimits(c context.Context, req *types.QueryAllRateLim
 
 // RateLimit queries a rate limit by denom and channel id.
 func (q queryServer) RateLimit(c context.Context, req *types.QueryRateLimitRequest) (*types.QueryRateLimitResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
 	ctx := sdk.UnwrapSDKContext(c)
+
 	rateLimit, found := q.GetRateLimit(ctx, req.Denom, req.ChannelID)
 	if !found {
-		return &types.QueryRateLimitResponse{}, nil
+		return nil, status.Errorf(codes.NotFound, "rate limit by denom %s and channel id %s not found", req.Denom, req.ChannelID)
 	}
 	return &types.QueryRateLimitResponse{RateLimit: &rateLimit}, nil
 }
 
 // RateLimitsByChainID queries all rate limits for a given chain.
 func (q queryServer) RateLimitsByChainID(c context.Context, req *types.QueryRateLimitsByChainIDRequest) (*types.QueryRateLimitsByChainIDResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
 	ctx := sdk.UnwrapSDKContext(c)
+
+	chainId := req.ChainId
 
 	rateLimits := []types.RateLimit{}
 	for _, rateLimit := range q.GetAllRateLimits(ctx) {
-
-		// Determine the client state from the channel Id
 		_, clientState, err := q.channelKeeper.GetChannelClientState(ctx, transfertypes.PortID, rateLimit.Path.ChannelID)
 		if err != nil {
-			return &types.QueryRateLimitsByChainIDResponse{}, errorsmod.Wrapf(types.ErrInvalidClientState, "Unable to fetch client state from channelID")
-		}
-		client, ok := clientState.(*ibctmtypes.ClientState)
-		if !ok {
-			return &types.QueryRateLimitsByChainIDResponse{}, errorsmod.Wrapf(types.ErrInvalidClientState, "Client state is not tendermint")
+			return nil, status.Errorf(codes.NotFound, "unable to fetch client state by port id %s and channel id: %s", transfertypes.PortID, rateLimit.Path.ChannelID)
 		}
 
-		// If the chain ID matches, add the rate limit to the returned list
-		if client.ChainId == req.ChainId {
+		client, ok := clientState.(*ibctmtypes.ClientState)
+		if !ok {
+			return nil, status.Error(codes.InvalidArgument, "invalid client state")
+		}
+
+		// Append the rate limit when it matches with the requested chain id
+		if client.ChainId == chainId {
 			rateLimits = append(rateLimits, rateLimit)
 		}
 	}
@@ -75,6 +84,10 @@ func (q queryServer) RateLimitsByChainID(c context.Context, req *types.QueryRate
 
 // RateLimitsByChannelID queries all rate limits for a given channel.
 func (q queryServer) RateLimitsByChannelID(c context.Context, req *types.QueryRateLimitsByChannelIDRequest) (*types.QueryRateLimitsByChannelIDResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
 	ctx := sdk.UnwrapSDKContext(c)
 
 	rateLimits := []types.RateLimit{}
@@ -89,7 +102,11 @@ func (q queryServer) RateLimitsByChannelID(c context.Context, req *types.QueryRa
 }
 
 // AllWhitelistedAddresses queries all whitelisted addresses.
-func (q queryServer) AllWhitelistedAddresses(c context.Context, _ *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
+func (q queryServer) AllWhitelistedAddresses(c context.Context, req *types.QueryAllWhitelistedAddressesRequest) (*types.QueryAllWhitelistedAddressesResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
 	ctx := sdk.UnwrapSDKContext(c)
 	whitelistedAddresses := q.GetAllWhitelistedAddressPairs(ctx)
 	return &types.QueryAllWhitelistedAddressesResponse{AddressPairs: whitelistedAddresses}, nil
