@@ -36,12 +36,12 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper) {
 	unknownClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, clientId)
 	if !found {
-		panic("cannot update client with ID")
+		panic("cannot update client with ID and without found")
 	}
 
 	clientState, ok := unknownClientState.(*wasm08types.ClientState)
 	if !ok {
-		panic("cannot update client with ID")
+		panic("cannot update client with unknownClientState")
 	}
 
 	code, err := transfertypes.ParseHexHash(newWasmCodeID)
@@ -51,7 +51,7 @@ func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper) {
 
 	clientState.CodeId = code
 
-	ibckeeper.ClientKeeper.SetClientState(ctx, clientId, clientState)
+	ibckeeper.ClientKeeper.SetClientState(ctx, substituteClientId, clientState)
 }
 
 func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper.Keeper, subjectClientId string, substituteClientId string) error {
