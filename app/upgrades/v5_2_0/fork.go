@@ -16,7 +16,7 @@ import (
 
 const (
 	newWasmCodeID      = "ad84ee3292e28b4e46da16974c118d40093e1a6e28a083f2f045f68fde7fb575"
-	clientId           = "08-wasm-5"
+	subjectClientId    = "08-wasm-5"
 	substituteClientId = "08-wasm-133"
 )
 
@@ -27,14 +27,14 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 
 	UpdateWasmContract(ctx, keepers.IBCKeeper)
 
-	err := ClientUpdate(ctx, keepers.IBCKeeper.Codec(), keepers.IBCKeeper, clientId, substituteClientId)
+	err := ClientUpdate(ctx, keepers.IBCKeeper.Codec(), keepers.IBCKeeper, subjectClientId, substituteClientId)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper) {
-	unknownClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, clientId)
+	unknownClientState, found := ibckeeper.ClientKeeper.GetClientState(ctx, subjectClientId)
 	if !found {
 		panic("substitute client client not found ")
 	}
