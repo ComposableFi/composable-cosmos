@@ -67,10 +67,6 @@ func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper
 		return sdkerrors.Wrapf(clienttypes.ErrClientNotFound, "substitute client with ID %s", substituteClientId)
 	}
 
-	if subjectClientState.GetLatestHeight().GTE(substituteClientState.GetLatestHeight()) {
-		return sdkerrors.Wrapf(clienttypes.ErrInvalidHeight, "subject client state latest height is greater or equal to substitute client state latest height (%s >= %s)", subjectClientState.GetLatestHeight(), substituteClientState.GetLatestHeight())
-	}
-
 	substituteClientStore := ibckeeper.ClientKeeper.ClientStore(ctx, substituteClientId)
 
 	if status := ibckeeper.ClientKeeper.GetClientStatus(ctx, substituteClientState, substituteClientId); status != exported.Active {
