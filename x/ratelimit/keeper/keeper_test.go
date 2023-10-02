@@ -11,10 +11,12 @@ import (
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	ibctesting "github.com/cosmos/ibc-go/v7/testing"
+
+	// ibctesting "github.com/cosmos/ibc-go/v7/testing"
 
 	"github.com/notional-labs/centauri/v5/app"
 	"github.com/notional-labs/centauri/v5/app/helpers"
+	ibctesting "github.com/notional-labs/centauri/v5/app/ibctesting"
 	"github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
 	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
@@ -87,8 +89,8 @@ func (s *KeeperTestSuite) SetupTest() {
 
 	// Creates a coordinator with 2 test chains
 	s.coordinator = ibctesting.NewCoordinator(s.T(), 2)
-	s.chainA = s.coordinator.GetChain(ibctesting.GetChainID(1))
-	s.chainB = s.coordinator.GetChain(ibctesting.GetChainID(2))
+	s.chainA = s.coordinator.GetChain(ibctesting.GetChainID(0))
+	s.chainB = s.coordinator.GetChain(ibctesting.GetChainID(1))
 
 	// Commit some blocks so that QueryProof returns valid proof (cannot return valid query if height <= 1)
 	s.coordinator.CommitNBlocks(s.chainA, 2)
@@ -137,7 +139,7 @@ func (s *KeeperTestSuite) addRateLimit(
 ) {
 	s.T().Helper()
 
-	// Add new RateLimit requires total supply of the given denom
+	// Increase total supply since adding new rate limit requires total supply of the given denom
 	s.fundAddr(s.addr(0), sdk.NewCoins(sdk.NewCoin(denom, sdk.NewInt(100_000_000_000))))
 
 	err := s.keeper.AddRateLimit(s.ctx, &types.MsgAddRateLimit{
