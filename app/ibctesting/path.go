@@ -1,6 +1,7 @@
 package ibctesting
 
 import (
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 )
 
@@ -24,6 +25,12 @@ func NewPath(chainA, chainB *TestChain) *Path {
 		EndpointA: endpointA,
 		EndpointB: endpointB,
 	}
+}
+
+// SetChannelOrdered sets the channel order for both endpoints to ORDERED.
+func (path *Path) SetChannelOrdered() {
+	path.EndpointA.ChannelConfig.Order = channeltypes.ORDERED
+	path.EndpointB.ChannelConfig.Order = channeltypes.ORDERED
 }
 
 // NewDefaultEndpoint constructs a new endpoint using default values.

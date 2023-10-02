@@ -33,7 +33,6 @@ bin/*
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-
 .DS_Store
 .terraform
 *.pem
@@ -44,3 +43,6 @@ bin/*
 vendor
 go.work
 go.work.sum
+
+# Testing
+coverage.txt

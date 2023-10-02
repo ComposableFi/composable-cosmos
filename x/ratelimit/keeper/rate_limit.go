@@ -180,7 +180,7 @@ func (k Keeper) GetRateLimit(ctx sdk.Context, denom, channelID string) (rateLimi
 	return rateLimit, true
 }
 
-// AddRateLimit
+// AddRateLimit adds new rate limit
 func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error {
 	// Check if this is denom - channel transfer from Picasso
 	denom := msg.Denom
@@ -190,6 +190,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 			denom = tokenInfo.IbcDenom
 		}
 	}
+
 	// Confirm the channel value is not zero
 	channelValue := k.GetChannelValue(ctx, denom)
 	if channelValue.IsZero() {
