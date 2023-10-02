@@ -51,7 +51,7 @@ func UpdateWasmContract(ctx sdk.Context, ibckeeper *ibckeeper.Keeper) {
 
 	clientState.CodeId = code
 
-	ibckeeper.ClientKeeper.SetClientState(ctx, substituteClientId, clientState)
+	ibckeeper.ClientKeeper.SetClientState(ctx, subjectClientId, clientState)
 }
 
 func ClientUpdate(ctx sdk.Context, codec codec.BinaryCodec, ibckeeper *ibckeeper.Keeper, subjectClientId string, substituteClientId string) error {
