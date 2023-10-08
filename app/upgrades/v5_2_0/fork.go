@@ -1,3 +1,4 @@
+//nolint:all
 package v5_2_0
 
 import (
