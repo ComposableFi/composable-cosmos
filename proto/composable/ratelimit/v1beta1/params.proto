@@ -1,0 +1,10 @@
+syntax = "proto3";
+package composable.ratelimit.v1beta1;
+
+option go_package = "x/ratelimit/types";
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+// Params holds parameters for the mint module.
+message Params {}

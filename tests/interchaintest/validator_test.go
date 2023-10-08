@@ -30,8 +30,8 @@ func TestValidator(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "centauri",
-			ChainConfig:   centauriConfig,
+			Name:          "composable",
+			ChainConfig:   composableConfig,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},

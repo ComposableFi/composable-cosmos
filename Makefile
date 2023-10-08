@@ -58,8 +58,8 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=centauri \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=composable \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=composabled \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
@@ -86,13 +86,13 @@ endif
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/centaurid
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/composabled
 
 build:
-	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
+	go build $(BUILD_FLAGS) -o bin/composabled ./cmd/composabled
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t composable:debug -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
@@ -133,7 +133,7 @@ proto-check-breaking:
 
 # Executes start chain tests via interchaintest
 ictest-start-cosmos:
-	cd tests/interchaintest && go test -race -v -run TestStartCentauri .
+	cd tests/interchaintest && go test -race -v -run TestStartComposable .
 
 ictest-validator:
 	cd tests/interchaintest && go test -race -v -run TestValidator .
@@ -144,11 +144,11 @@ ictest-start-polkadot:
 
 # Executes IBC tests via interchaintest
 ictest-ibc:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriPicassoIBCTransfer .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposablePicassoIBCTransfer .
 
 # Executes Basic Upgrade Chain tests via interchaintest
 ictest-upgrade:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriUpgrade .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposableUpgrade .
 
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc

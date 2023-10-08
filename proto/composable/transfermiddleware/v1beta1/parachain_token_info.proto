@@ -1,0 +1,36 @@
+syntax = "proto3";
+package composable.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// ParachainIBCTokenInfo represents information about transferable IBC tokens
+// from Parachain.
+message ParachainIBCTokenInfo {
+  // ibc_denom is the denomination of the ibced token transferred from the
+  // dotsama chain.
+  string ibc_denom = 1 [ (gogoproto.moretags) = "yaml:\"ibc_denom\"" ];
+  // channel_id is source channel in IBC connection from composable chain
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+  // native denom is new native minted denom in composable chain.
+  string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+  // asset id is the id of the asset on Picasso
+  string asset_id = 4 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
+}
+
+message RemoveParachainIBCTokenInfo {
+  // native denom is new native minted denom in composable chain.
+  string native_denom = 1 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
+  //
+  // remove_time is the time at which the parachain token info will be removed.
+  google.protobuf.Timestamp remove_time = 2 [
+    (gogoproto.stdtime) = true,
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"start_time\""
+  ];
+}
