@@ -79,9 +79,9 @@ sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
 sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
 sed -i 's/address = "tcp:\/\/localhost:1317"/address = "tcp:\/\/localhost:1319"/g' ~/.banksy/config/app.toml
 sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "localhost:6066"/g' ~/.banksy/config/config.toml
-sed -i 's/max_body_bytes = 1000000/max_body_bytes = 1000000000/g' ~/.banksy/config/config.toml
-sed -i 's/max_tx_bytes = 1048576/max_tx_bytes = 1048576000/g' ~/.banksy/config/config.toml
-sed -i 's/rpc-max-body-bytes = 1000000/rpc-max-body-bytes = 1000000000/g' ~/.banksy/config/app.toml
+sed -i '' 's/max_body_bytes = 1000000/max_body_bytes = 1000000000/g' ~/.banksy/config/config.toml
+sed -i '' 's/max_tx_bytes = 1048576/max_tx_bytes = 1048576000/g' ~/.banksy/config/config.toml
+sed -i '' 's/rpc-max-body-bytes = 1000000/rpc-max-body-bytes = 1000000000/g' ~/.banksy/config/app.toml
 
 centaurid config node tcp://0.0.0.0:2241
 centaurid start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
@@ -89,3 +89,6 @@ centaurid start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp:/
 #MEMO='{"forward":{"receiver":"cosmos18p5cs3z0q68hq7q0d8tr8kp3ldnqkx2fx3f88w","port":"transfer","channel":"channel-0","timeout":600000000000,"retries":0,"next":"{}"}'
 #hermes --config scripts/relayer_hermes/config_compose_gaia.toml create channel --a-chain centaurid-t1 --b-chain gaiad-t1 --a-port transfer --b-port transfer --new-client-connection --yes
 #centaurid tx ibc-transfer transfer transfer channel-0 cosmos1alc8mjana7ssgeyffvlfza08gu6rtav8rmj6nv 10000000stake --from myaccount --keyring-backend test --chain-id centaurid-t1 --yes --fees 5000stake
+
+
+ centaurid  tx 08-wasm push-wasm contracts/new_ics10_grandpa_cw.opt.wasm --from test --keyring-backend test --gas 902152622 --fees 920166stake --chain-id centaurid-t1 -y 
