@@ -965,8 +965,8 @@ github.com/nishanths/predeclared v0.2.2 h1:V2EPdZPliZymNAn79T8RkNApBjMmVKh5XRpLm
 github.com/nishanths/predeclared v0.2.2/go.mod h1:RROzoN6TnGQupbC+lqggsOlcgysk3LMK/HI84Mp280c=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc1NGpU8TntXwM/s7Z/whsKNDVPiLim35HLBAzA=
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
-github.com/notional-labs/ibc-go/v7 v7.2.1-0.20230916094126-bdea9fee17dd h1:2f2oB1gUgw3u1iyt9t3mj50ZboVxvCyP4guGmvmTKME=
-github.com/notional-labs/ibc-go/v7 v7.2.1-0.20230916094126-bdea9fee17dd/go.mod h1:hjcl3RPLSDf0LSXrFyk2iTQCCFs5pfLbJb8h/5gJ2Vg=
+github.com/notional-labs/ibc-go/v7 v7.2.1-0.20230926033419-9267213cb130 h1:M9sqzYDYPn/Zn8EDNlhjnyTBHOYBLBzp/ukhr80P9i4=
+github.com/notional-labs/ibc-go/v7 v7.2.1-0.20230926033419-9267213cb130/go.mod h1:hjcl3RPLSDf0LSXrFyk2iTQCCFs5pfLbJb8h/5gJ2Vg=
 github.com/notional-labs/interchain-security/v3 v3.0.0-20230916095915-6ebb16c60de1 h1:hTmJPfohtG7XxmnI2TPJQ1KyqNxAMkEFQB60R+NXTCM=
 github.com/notional-labs/interchain-security/v3 v3.0.0-20230916095915-6ebb16c60de1/go.mod h1:2fILBgypEZcwR3BSzKDw+EsYtMKv9Z6cYXfouh4xTYU=
 github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230921184903-f09128a3ed26 h1:M5zhyqP311vK9HVH8qATriKWZctCtlBejZJ7d/yfjCY=
