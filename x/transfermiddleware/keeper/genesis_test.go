@@ -5,12 +5,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	helpers "github.com/notional-labs/centauri/v5/app/helpers"
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	helpers "github.com/notional-labs/composable/v5/app/helpers"
+	"github.com/notional-labs/composable/v5/x/transfermiddleware/types"
 )
 
 func TestTFMInitGenesis(t *testing.T) {
-	app := helpers.SetupCentauriAppWithValSet(t)
+	app := helpers.SetupComposableAppWithValSet(t)
 	ctx := helpers.NewContextForApp(*app)
 
 	tokenInfos := make([]types.ParachainIBCTokenInfo, 1)
@@ -34,7 +34,7 @@ func TestTFMInitGenesis(t *testing.T) {
 }
 
 func TestTFMExportGenesis(t *testing.T) {
-	app := helpers.SetupCentauriAppWithValSet(t)
+	app := helpers.SetupComposableAppWithValSet(t)
 	ctx := helpers.NewContextForApp(*app)
 
 	err := app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test", "channel-0", "pica", "1")
@@ -55,7 +55,7 @@ func TestTFMExportGenesis(t *testing.T) {
 }
 
 func TestIterateParaTokenInfos(t *testing.T) {
-	app := helpers.SetupCentauriAppWithValSet(t)
+	app := helpers.SetupComposableAppWithValSet(t)
 	ctx := helpers.NewContextForApp(*app)
 
 	err := app.TransferMiddlewareKeeper.AddParachainIBCInfo(ctx, "ibc-test", "channel-0", "pica", "1")

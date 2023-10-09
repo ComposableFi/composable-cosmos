@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	"github.com/notional-labs/composable/v5/x/ratelimit/types"
 )
 
 // GetTxCmd returns the tx commands for router
