@@ -29,6 +29,8 @@ var WhiteListModule = map[string]struct{}{
 	"/centauri.transfermiddleware.v1beta1.MsgAddParachainIBCTokenInfo":    {},
 	"/centauri.transfermiddleware.v1beta1.MsgRemoveParachainIBCTokenInfo": {},
 	"/centauri.transfermiddleware.v1beta1.MsgAddRlyAddress":               {},
+	"/ibc.lightclients.wasm.v1.MsgPushNewWasmCode":                        {},
+	"/ibc.lightclients.wasm.v1.MsgUpdateWasmCodeId":                       {},
 }
 
 func IsModuleWhiteList(typeUrl string) bool {
