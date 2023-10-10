@@ -8,7 +8,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/composable/v5/x/mint/types"
 )
 
 // Simulation operation weights constants

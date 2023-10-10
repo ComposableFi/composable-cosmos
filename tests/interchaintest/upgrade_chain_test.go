@@ -18,9 +18,9 @@ const (
 	blocksAfterUpgrade = uint64(10)
 )
 
-func TestCentauriUpgrade(t *testing.T) {
+func TestComposableUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, repo, version, "v5")
+	CosmosChainUpgradeTest(t, repo, version, "composable")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -39,7 +39,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 				Images: []ibc.DockerImage{
 					{
 						Repository: "ghcr.io/notional-labs/centauri",
-						Version:    "4.5.1",
+						Version:    "6.0",
 						UidGid:     "1025:1025",
 					},
 				},
