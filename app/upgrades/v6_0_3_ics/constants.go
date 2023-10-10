@@ -7,7 +7,7 @@ import (
 
 const (
 	// UpgradeName defines the on-chain upgrade name for the Centauri upgrade.
-	UpgradeName = "v6.0.2-ics"
+	UpgradeName = "v6.0.3-ics"
 )
 
 var Upgrade = upgrades.Upgrade{
