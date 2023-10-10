@@ -27,10 +27,10 @@ func init() {
 
 // RegisterLegacyAminoCodec registers concrete types on the LegacyAmino codec
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(Params{}, "composable/x/mintParams", nil)
-	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "composable/MsgUpdateParams")
-	cdc.RegisterConcrete(&MsgFundModuleAccount{}, "composable/FundModuleAccount", nil)
-	cdc.RegisterConcrete(&MsgAddAccountToFundModuleSet{}, "composable/MsgAddAccountToFundModuleSet", nil)
+	cdc.RegisterConcrete(Params{}, "centauri/x/mintParams", nil)
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "centauri/MsgUpdateParams")
+	cdc.RegisterConcrete(&MsgFundModuleAccount{}, "centauri/FundModuleAccount", nil)
+	cdc.RegisterConcrete(&MsgAddAccountToFundModuleSet{}, "centauri/MsgAddAccountToFundModuleSet", nil)
 }
 
 // RegisterInterfaces registers the interfaces types with the interface registry.

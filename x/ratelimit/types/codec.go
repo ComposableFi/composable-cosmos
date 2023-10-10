@@ -16,10 +16,10 @@ import (
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	legacy.RegisterAminoMsg(cdc, &MsgAddRateLimit{}, "composable/MsgAddRateLimit")
-	legacy.RegisterAminoMsg(cdc, &MsgUpdateRateLimit{}, "composable/MsgUpdateRateLimit")
-	legacy.RegisterAminoMsg(cdc, &MsgRemoveRateLimit{}, "composable/MsgRemoveRateLimit")
-	legacy.RegisterAminoMsg(cdc, &MsgResetRateLimit{}, "composable/MsgResetRateLimit")
+	legacy.RegisterAminoMsg(cdc, &MsgAddRateLimit{}, "centauri/MsgAddRateLimit")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateRateLimit{}, "centauri/MsgUpdateRateLimit")
+	legacy.RegisterAminoMsg(cdc, &MsgRemoveRateLimit{}, "centauri/MsgRemoveRateLimit")
+	legacy.RegisterAminoMsg(cdc, &MsgResetRateLimit{}, "centauri/MsgResetRateLimit")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {

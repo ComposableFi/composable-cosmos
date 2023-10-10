@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/notional-labs/composable/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 func TestValidateBasic(t *testing.T) {
