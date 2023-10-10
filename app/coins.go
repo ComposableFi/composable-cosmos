@@ -6,7 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 )
 
-// BaseDenomUnit defines the base denomination unit for Centauri.
+// BaseDenomUnit defines the base denomination unit for Composable.
 // 1 pica = 1x10^{BaseDenomUnit} ppica
 var BaseDenomUnit = 12
 

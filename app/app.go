@@ -32,9 +32,9 @@ import (
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
-	"github.com/notional-labs/centauri/v5/app/keepers"
-	v4 "github.com/notional-labs/centauri/v5/app/upgrades/v4"
-	v5 "github.com/notional-labs/centauri/v5/app/upgrades/v5"
+	"github.com/notional-labs/composable/v5/app/keepers"
+	v4 "github.com/notional-labs/composable/v5/app/upgrades/v4"
+	v5 "github.com/notional-labs/composable/v5/app/upgrades/v5"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -92,42 +92,37 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	custombankmodule "github.com/notional-labs/centauri/v5/custom/bank"
+	custombankmodule "github.com/notional-labs/composable/v5/custom/bank"
 
-	"github.com/notional-labs/centauri/v5/app/ante"
-	transfermiddleware "github.com/notional-labs/centauri/v5/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/composable/v5/app/ante"
+	transfermiddleware "github.com/notional-labs/composable/v5/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v5/x/transfermiddleware/types"
 
-	txBoundary "github.com/notional-labs/centauri/v5/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	txBoundary "github.com/notional-labs/composable/v5/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/composable/v5/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/centauri/v5/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/composable/v5/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v5/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/centauri/v5/x/mint"
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/composable/v5/x/mint"
+	minttypes "github.com/notional-labs/composable/v5/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/centauri/v5/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/composable/v5/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/composable/v5/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	v4_5 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5"
-	v4_5_1 "github.com/notional-labs/centauri/v5/app/upgrades/v4_5_1"
-	v5_1_0 "github.com/notional-labs/centauri/v5/app/upgrades/v5_1_0"
-	v5_2_0 "github.com/notional-labs/centauri/v5/app/upgrades/v5_2_0"
-
-	upgrades "github.com/notional-labs/centauri/v5/app/upgrades"
+	upgrades "github.com/notional-labs/composable/v5/app/upgrades"
 )
 
 const (
-	Name       = "centauri"
+	Name       = "composable"
 	dirName    = "banksy"
 	ForkHeight = 244008
 )
@@ -142,7 +137,7 @@ var (
 	EnableSpecificProposals = ""
 
 	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade}
-	Forks    = []upgrades.Fork{v4_5.Fork, v4_5_1.Fork, v5_1_0.Fork, v5_2_0.Fork}
+	Forks    = []upgrades.Fork{}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
@@ -242,7 +237,7 @@ var (
 	}
 )
 
-var _ servertypes.Application = (*CentauriApp)(nil)
+var _ servertypes.Application = (*ComposableApp)(nil)
 
 func init() {
 	userHomeDir, err := os.UserHomeDir()
@@ -255,10 +250,10 @@ func init() {
 	sdk.DefaultPowerReduction = PowerReduction
 }
 
-// CentauriApp extends an ABCI application, but with most of its parameters exported.
+// ComposableApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type CentauriApp struct {
+type ComposableApp struct {
 	*baseapp.BaseApp
 	keepers.AppKeepers
 
@@ -275,7 +270,7 @@ type CentauriApp struct {
 
 // RUN GOSEC
 // New returns a reference to an initialized blockchain app
-func NewCentauriApp(
+func NewComposableApp(
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -288,7 +283,7 @@ func NewCentauriApp(
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *CentauriApp {
+) *ComposableApp {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -298,7 +293,7 @@ func NewCentauriApp(
 	bApp.SetInterfaceRegistry(interfaceRegistry)
 	bApp.SetTxEncoder(encodingConfig.TxConfig.TxEncoder())
 
-	app := &CentauriApp{
+	app := &ComposableApp{
 		BaseApp:           bApp,
 		AppKeepers:        keepers.AppKeepers{},
 		cdc:               cdc,
@@ -560,50 +555,50 @@ func NewCentauriApp(
 }
 
 // Name returns the name of the App
-func (app *CentauriApp) Name() string { return app.BaseApp.Name() }
+func (app *ComposableApp) Name() string { return app.BaseApp.Name() }
 
 // GetBaseApp returns the base app of the application
-func (app *CentauriApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+func (app *ComposableApp) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // GetStakingKeeper implements the TestingApp interface.
-func (app *CentauriApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+func (app *ComposableApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 	return app.StakingKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *CentauriApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
+func (app *ComposableApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
 	return &app.TransferKeeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
-func (app *CentauriApp) GetIBCKeeper() *ibckeeper.Keeper {
+func (app *ComposableApp) GetIBCKeeper() *ibckeeper.Keeper {
 	return app.IBCKeeper
 }
 
 // GetScopedIBCKeeper implements the TestingApp interface.
-func (app *CentauriApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+func (app *ComposableApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *CentauriApp) GetTxConfig() client.TxConfig {
+func (app *ComposableApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
 
 // BeginBlocker application updates every begin block
-func (app *CentauriApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+func (app *ComposableApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	BeginBlockForks(ctx, app)
 	return app.mm.BeginBlock(ctx, req)
 }
 
 // EndBlocker application updates every end block
-func (app *CentauriApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+func (app *ComposableApp) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
 	return app.mm.EndBlock(ctx, req)
 }
 
 // InitChainer application update at chain initialization
-func (app *CentauriApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+func (app *ComposableApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
 	var genesisState GenesisState
 	if err := tmjson.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)
@@ -613,12 +608,12 @@ func (app *CentauriApp) InitChainer(ctx sdk.Context, req abci.RequestInitChain) 
 }
 
 // LoadHeight loads a particular height
-func (app *CentauriApp) LoadHeight(height int64) error {
+func (app *ComposableApp) LoadHeight(height int64) error {
 	return app.LoadVersion(height)
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *CentauriApp) ModuleAccountAddrs() map[string]bool {
+func (app *ComposableApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -632,7 +627,7 @@ func (app *CentauriApp) ModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *CentauriApp) LegacyAmino() *codec.LegacyAmino {
+func (app *ComposableApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
@@ -640,18 +635,18 @@ func (app *CentauriApp) LegacyAmino() *codec.LegacyAmino {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-func (app *CentauriApp) AppCodec() codec.Codec {
+func (app *ComposableApp) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
 // InterfaceRegistry returns an InterfaceRegistry
-func (app *CentauriApp) InterfaceRegistry() types.InterfaceRegistry {
+func (app *ComposableApp) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *CentauriApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
+func (app *ComposableApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -664,17 +659,17 @@ func (app *CentauriApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
-func (app *CentauriApp) RegisterTxService(clientCtx client.Context) {
+func (app *ComposableApp) RegisterTxService(clientCtx client.Context) {
 	authtx.RegisterTxService(app.BaseApp.GRPCQueryRouter(), clientCtx, app.BaseApp.Simulate, app.interfaceRegistry)
 }
 
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
-func (app *CentauriApp) RegisterTendermintService(clientCtx client.Context) {
+func (app *ComposableApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
 }
 
 // RegisterNodeService registers the node gRPC Query service.
-func (app *CentauriApp) RegisterNodeService(clientCtx client.Context) {
+func (app *ComposableApp) RegisterNodeService(clientCtx client.Context) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
@@ -688,12 +683,12 @@ func GetMaccPerms() map[string][]string {
 }
 
 // SimulationManager implements the SimulationApp interface
-func (app *CentauriApp) SimulationManager() *module.SimulationManager {
+func (app *ComposableApp) SimulationManager() *module.SimulationManager {
 	return app.sm
 }
 
 // configure store loader that checks if version == upgradeHeight and applies store upgrades
-func (app *CentauriApp) setupUpgradeStoreLoaders() {
+func (app *ComposableApp) setupUpgradeStoreLoaders() {
 	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
 	if err != nil {
 		panic(fmt.Sprintf("failed to read upgrade info from disk %s", err))
@@ -717,13 +712,13 @@ func (app *CentauriApp) setupUpgradeStoreLoaders() {
 	}
 }
 
-func (app *CentauriApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
+func (app *ComposableApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
 	// switch upgradeInfo.Name {
 	// default:
 	// }
 }
 
-func (app *CentauriApp) setupUpgradeHandlers() {
+func (app *ComposableApp) setupUpgradeHandlers() {
 	for _, upgrade := range Upgrades {
 		app.UpgradeKeeper.SetUpgradeHandler(
 			upgrade.UpgradeName,
@@ -731,6 +726,7 @@ func (app *CentauriApp) setupUpgradeHandlers() {
 				app.mm,
 				app.configurator,
 				app.BaseApp,
+				app.AppCodec(),
 				&app.AppKeepers,
 			),
 		)

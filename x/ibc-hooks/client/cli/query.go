@@ -9,9 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/ibc-hooks/keeper"
+	"github.com/notional-labs/composable/v5/x/ibc-hooks/keeper"
 
-	"github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	"github.com/notional-labs/composable/v5/x/ibc-hooks/types"
 )
 
 func indexRunCmd(cmd *cobra.Command, _ []string) error {
