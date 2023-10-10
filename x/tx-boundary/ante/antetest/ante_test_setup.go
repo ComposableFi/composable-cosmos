@@ -17,8 +17,8 @@ import (
 	xauthsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
-	"github.com/notional-labs/composable/v5/app"
-	"github.com/notional-labs/composable/v5/app/helpers"
+	"github.com/notional-labs/centauri/v5/app"
+	"github.com/notional-labs/centauri/v5/app/helpers"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -30,7 +30,7 @@ type AnteTestSuite struct {
 
 	ctx sdk.Context
 	// querier sdk.Querier
-	app           *app.ComposableApp
+	app           *app.CentauriApp
 	clientCtx     client.Context
 	txBuilder     client.TxBuilder
 	delegator     sdk.AccAddress
@@ -39,7 +39,7 @@ type AnteTestSuite struct {
 }
 
 func (suite *AnteTestSuite) SetupTest() {
-	suite.app, suite.delegator, suite.validators = helpers.SetupComposableAppWithValSetWithGenAccout(suite.T())
+	suite.app, suite.delegator, suite.validators = helpers.SetupCentauriAppWithValSetWithGenAccout(suite.T())
 	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
 	app.FundAccount(suite.app.BankKeeper, suite.ctx, suite.delegator, BaseBalance)
 

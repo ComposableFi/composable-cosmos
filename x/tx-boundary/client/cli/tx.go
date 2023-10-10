@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/notional-labs/composable/v5/x/tx-boundary/types"
+	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
 	"github.com/spf13/cobra"
 )
 

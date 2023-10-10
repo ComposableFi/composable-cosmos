@@ -10,7 +10,7 @@ import (
 
 const (
 	// OldBech32Prefix defines the Bech32 prefix used for EthAccounts
-	OldBech32Prefix = "centauri"
+	OldBech32Prefix = "banksy"
 
 	// OldBech32PrefixAccAddr defines the Bech32 prefix of an account's address
 	OldBech32PrefixAccAddr = OldBech32Prefix

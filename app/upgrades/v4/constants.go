@@ -5,13 +5,13 @@ import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 
-	"github.com/notional-labs/composable/v5/app/upgrades"
-	ibchookstypes "github.com/notional-labs/composable/v5/x/ibc-hooks/types"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v5/x/ratelimit/types"
+	"github.com/notional-labs/centauri/v5/app/upgrades"
+	ibchookstypes "github.com/notional-labs/centauri/v5/x/ibc-hooks/types"
+	ratelimitmoduletypes "github.com/notional-labs/centauri/v5/x/ratelimit/types"
 )
 
 const (
-	// UpgradeName defines the on-chain upgrade name for the composable upgrade.
+	// UpgradeName defines the on-chain upgrade name for the Centauri upgrade.
 	UpgradeName = "v4"
 )
 

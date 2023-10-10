@@ -14,7 +14,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 
-	"github.com/notional-labs/composable/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
 )
 
 type Keeper struct {
@@ -154,29 +154,11 @@ func (keeper Keeper) SetAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
 	store.Set(types.GetKeyByRlyAddress(rlyAddress), []byte{1})
 }
 
-func (keeper Keeper) DeleteAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
-	store := ctx.KVStore(keeper.storeKey)
-	store.Delete(types.GetKeyByRlyAddress(rlyAddress))
-}
-
 func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool {
 	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyByRlyAddress(rlyAddress)
 
 	return store.Has(key)
-}
-
-func (keeper Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress string) (stop bool)) {
-	store := ctx.KVStore(keeper.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyRlyAddress)
-
-	defer iterator.Close()
-	for ; iterator.Valid(); iterator.Next() {
-		rlyAddress := string(iterator.Key())
-		if cb(rlyAddress) {
-			break
-		}
-	}
 }
 
 func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {

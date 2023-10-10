@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	ratelimitmodulekeeper "github.com/notional-labs/composable/v5/x/ratelimit/keeper"
+	ratelimitmodulekeeper "github.com/notional-labs/centauri/v5/x/ratelimit/keeper"
 
 	"cosmossdk.io/errors"
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -54,9 +54,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	composable "github.com/notional-labs/composable/v5/app"
-	"github.com/notional-labs/composable/v5/app/ibctesting/simapp"
-	routerKeeper "github.com/notional-labs/composable/v5/x/transfermiddleware/keeper"
+	centauri "github.com/notional-labs/centauri/v5/app"
+	"github.com/notional-labs/centauri/v5/app/ibctesting/simapp"
+	routerKeeper "github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
 )
 
 // TestChain is a testing struct that wraps a simapp with the last TM Header, the current ABCI
@@ -125,7 +125,7 @@ func NewTestChain(t *testing.T, coord *Coordinator, chainID string) *TestChain {
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amount)),
 	}
 
-	app := NewTestingAppDecorator(t, composable.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
+	app := NewTestingAppDecorator(t, centauri.SetupWithGenesisValSet(t, coord.CurrentTime.UTC(), valSet, []authtypes.GenesisAccount{acc}, balance))
 
 	// create current header and call begin block
 	header := tmproto.Header{
@@ -281,7 +281,7 @@ func (chain *TestChain) SendMsgs(msgs ...sdk.Msg) (*sdk.Result, error) {
 	// ensure the chain has the latest time
 	chain.Coordinator.UpdateTimeForChain(chain)
 
-	_, r, err := composable.SignAndDeliver(
+	_, r, err := centauri.SignAndDeliver(
 		chain.t,
 		chain.TxConfig,
 		chain.App.GetBaseApp(),
@@ -316,7 +316,7 @@ func (chain *TestChain) SendMsgsWithExpPass(expPass bool, msgs ...sdk.Msg) (*sdk
 	// ensure the chain has the latest time
 	chain.Coordinator.UpdateTimeForChain(chain)
 
-	_, r, err := composable.SignAndDeliver(
+	_, r, err := centauri.SignAndDeliver(
 		chain.t,
 		chain.TxConfig,
 		chain.App.GetBaseApp(),
@@ -635,7 +635,7 @@ func (chain *TestChain) GetBankKeeper() bankkeeper.Keeper {
 	return chain.GetTestSupport().BankKeeper()
 }
 
-func (chain TestChain) GetTestSupport() *composable.TestSupport {
+func (chain TestChain) GetTestSupport() *centauri.TestSupport {
 	return chain.App.(*TestingAppDecorator).TestSupport()
 }
 
@@ -709,13 +709,13 @@ func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content
 var _ ibctesting.TestingApp = TestingAppDecorator{}
 
 type TestingAppDecorator struct {
-	*composable.ComposableApp
+	*centauri.CentauriApp
 	t *testing.T
 }
 
-func NewTestingAppDecorator(t *testing.T, composable *composable.ComposableApp) *TestingAppDecorator {
+func NewTestingAppDecorator(t *testing.T, centauri *centauri.CentauriApp) *TestingAppDecorator {
 	t.Helper()
-	return &TestingAppDecorator{ComposableApp: composable, t: t}
+	return &TestingAppDecorator{CentauriApp: centauri, t: t}
 }
 
 func (a TestingAppDecorator) GetBaseApp() *baseapp.BaseApp {
@@ -750,8 +750,8 @@ func (a TestingAppDecorator) GetTxConfig() client.TxConfig {
 	return a.TestSupport().GetTxConfig()
 }
 
-func (a TestingAppDecorator) TestSupport() *composable.TestSupport {
-	return composable.NewTestSupport(a.t, a.ComposableApp)
+func (a TestingAppDecorator) TestSupport() *centauri.TestSupport {
+	return centauri.NewTestSupport(a.t, a.CentauriApp)
 }
 
 func (a TestingAppDecorator) GetWasmdKeeper() wasm.Keeper {
