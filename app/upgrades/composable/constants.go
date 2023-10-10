@@ -2,7 +2,7 @@ package composable
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/notional-labs/composable/v5/app/upgrades"
+	"github.com/notional-labs/composable/v6/app/upgrades"
 )
 
 const (

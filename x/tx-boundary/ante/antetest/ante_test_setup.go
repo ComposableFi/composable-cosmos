@@ -17,8 +17,8 @@ import (
 	xauthsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
-	"github.com/notional-labs/composable/v5/app"
-	"github.com/notional-labs/composable/v5/app/helpers"
+	"github.com/notional-labs/composable/v6/app"
+	"github.com/notional-labs/composable/v6/app/helpers"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )

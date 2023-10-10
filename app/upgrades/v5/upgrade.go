@@ -6,9 +6,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/notional-labs/composable/v5/app/keepers"
-	"github.com/notional-labs/composable/v5/app/upgrades"
-	"github.com/notional-labs/composable/v5/x/ratelimit/types"
+	"github.com/notional-labs/composable/v6/app/keepers"
+	"github.com/notional-labs/composable/v6/app/upgrades"
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 const (

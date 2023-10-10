@@ -1,4 +1,4 @@
-module github.com/notional-labs/composable/v5
+module github.com/notional-labs/composable/v6
 
 go 1.19
 

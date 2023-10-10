@@ -10,9 +10,9 @@ import (
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 
-	tfmwKeeper "github.com/notional-labs/composable/v5/x/transfermiddleware/keeper"
-	txBoundaryAnte "github.com/notional-labs/composable/v5/x/tx-boundary/ante"
-	txBoundaryKeeper "github.com/notional-labs/composable/v5/x/tx-boundary/keeper"
+	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	txBoundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
+	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 )
 
 // Link to default ante handler used by cosmos sdk:
