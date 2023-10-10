@@ -320,7 +320,7 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 	// ibc-go with wasm client
-	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20230926033419-9267213cb130
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 	// ics
 	github.com/cosmos/interchain-security/v3 => github.com/notional-labs/interchain-security/v3 v3.0.0-20230916095915-6ebb16c60de1
 
