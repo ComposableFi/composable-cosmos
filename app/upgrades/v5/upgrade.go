@@ -2,12 +2,13 @@ package v5
 
 import (
 	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/notional-labs/centauri/v5/app/keepers"
-	"github.com/notional-labs/centauri/v5/app/upgrades"
-	"github.com/notional-labs/centauri/v5/x/ratelimit/types"
+	"github.com/notional-labs/composable/v5/app/keepers"
+	"github.com/notional-labs/composable/v5/app/upgrades"
+	"github.com/notional-labs/composable/v5/x/ratelimit/types"
 )
 
 const (
@@ -22,6 +23,7 @@ func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
 	_ upgrades.BaseAppParamManager,
+	_ codec.Codec,
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {

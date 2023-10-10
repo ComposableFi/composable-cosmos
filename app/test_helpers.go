@@ -36,7 +36,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	minttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	minttypes "github.com/notional-labs/composable/v5/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
@@ -61,7 +61,7 @@ var DefaultConsensusParams = &tmproto.ConsensusParams{
 	},
 }
 
-func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, GenesisState) {
+func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*ComposableApp, GenesisState) {
 	tb.Helper()
 	nodeHome := tb.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
@@ -74,7 +74,7 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, 
 	})}
 	var wasmOpts []wasm.Option
 	db := dbm.NewMemDB()
-	app := NewCentauriApp(
+	app := NewComposableApp(
 		log.NewNopLogger(),
 		db, nil, true,
 		wasmtypes.EnableAllProposals,
@@ -101,7 +101,7 @@ func SetupWithGenesisValSet(
 	valSet *tmtypes.ValidatorSet,
 	genAccs []authtypes.GenesisAccount,
 	balances ...banktypes.Balance,
-) *CentauriApp {
+) *ComposableApp {
 	t.Helper()
 	app, genesisState := setup(t, true, 5)
 	// set genesis accounts
@@ -181,7 +181,7 @@ func SetupWithGenesisValSet(
 }
 
 // SetupWithEmptyStore setup a wasmd app instance with empty DB
-func SetupWithEmptyStore(tb testing.TB) *CentauriApp {
+func SetupWithEmptyStore(tb testing.TB) *ComposableApp {
 	tb.Helper()
 	app, _ := setup(tb, false, 0)
 	return app
@@ -229,7 +229,7 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 }
 
 // AddTestAddrsFromPubKeys adds the addresses into the WasmApp providing only the public keys.
-func AddTestAddrsFromPubKeys(app *CentauriApp, ctx sdk.Context, pubKeys []cryptotypes.PubKey, accAmt sdkmath.Int) {
+func AddTestAddrsFromPubKeys(app *ComposableApp, ctx sdk.Context, pubKeys []cryptotypes.PubKey, accAmt sdkmath.Int) {
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt))
 
 	for _, pk := range pubKeys {
@@ -239,17 +239,17 @@ func AddTestAddrsFromPubKeys(app *CentauriApp, ctx sdk.Context, pubKeys []crypto
 
 // AddTestAddrs constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrs(app *CentauriApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int) []sdk.AccAddress {
+func AddTestAddrs(app *ComposableApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int) []sdk.AccAddress {
 	return addTestAddrs(app, ctx, accNum, accAmt, createRandomAccounts)
 }
 
 // AddTestAddrs constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrsIncremental(app *CentauriApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int) []sdk.AccAddress {
+func AddTestAddrsIncremental(app *ComposableApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int) []sdk.AccAddress {
 	return addTestAddrs(app, ctx, accNum, accAmt, createIncrementalAccounts)
 }
 
-func addTestAddrs(app *CentauriApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int, strategy GenerateAccountStrategy) []sdk.AccAddress {
+func addTestAddrs(app *ComposableApp, ctx sdk.Context, accNum int, accAmt sdkmath.Int, strategy GenerateAccountStrategy) []sdk.AccAddress {
 	testAddrs := strategy(accNum)
 
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt))
@@ -262,7 +262,7 @@ func addTestAddrs(app *CentauriApp, ctx sdk.Context, accNum int, accAmt sdkmath.
 	return testAddrs
 }
 
-func initAccountWithCoins(app *CentauriApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
+func initAccountWithCoins(app *ComposableApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
 	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
 	if err != nil {
 		panic(err)
@@ -307,7 +307,7 @@ func TestAddr(addr, bech string) (sdk.AccAddress, error) {
 }
 
 // CheckBalance checks the balance of an account.
-func CheckBalance(t *testing.T, app *CentauriApp, addr sdk.AccAddress, balances sdk.Coins) {
+func CheckBalance(t *testing.T, app *ComposableApp, addr sdk.AccAddress, balances sdk.Coins) {
 	t.Helper()
 	ctxCheck := app.BaseApp.NewContext(true, tmproto.Header{})
 	require.True(t, balances.IsEqual(app.BankKeeper.GetAllBalances(ctxCheck, addr)))

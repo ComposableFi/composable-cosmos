@@ -16,9 +16,9 @@ import (
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "centauri/MsgAddParachainInfo")
-	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "centauri/MsgRemoveParachainInfo")
-	legacy.RegisterAminoMsg(cdc, &MsgAddRlyAddress{}, "centauri/MsgAddRlyAddress")
+	legacy.RegisterAminoMsg(cdc, &MsgAddParachainIBCTokenInfo{}, "composable/MsgAddParachainInfo")
+	legacy.RegisterAminoMsg(cdc, &MsgRemoveParachainIBCTokenInfo{}, "composable/MsgRemoveParachainInfo")
+	legacy.RegisterAminoMsg(cdc, &MsgAddRlyAddress{}, "composable/MsgAddRlyAddress")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
