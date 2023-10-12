@@ -33,10 +33,10 @@ import (
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
-	"github.com/notional-labs/composable/v5/app/keepers"
-	v4 "github.com/notional-labs/composable/v5/app/upgrades/v4"
-	v5 "github.com/notional-labs/composable/v5/app/upgrades/v5"
-	v6 "github.com/notional-labs/composable/v5/app/upgrades/v6"
+	"github.com/notional-labs/composable/v6/app/keepers"
+	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
+	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
+	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
@@ -96,33 +96,33 @@ import (
 	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	custombankmodule "github.com/notional-labs/composable/v5/custom/bank"
+	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 
-	"github.com/notional-labs/composable/v5/app/ante"
-	transfermiddleware "github.com/notional-labs/composable/v5/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/composable/v6/app/ante"
+	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 
-	txBoundary "github.com/notional-labs/composable/v5/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/composable/v5/x/tx-boundary/types"
+	txBoundary "github.com/notional-labs/composable/v6/x/tx-boundary"
+	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/composable/v5/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	"github.com/notional-labs/composable/v5/x/mint"
-	minttypes "github.com/notional-labs/composable/v5/x/mint/types"
+	"github.com/notional-labs/composable/v6/x/mint"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
 
-	ibc_hooks "github.com/notional-labs/composable/v5/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/composable/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	upgrades "github.com/notional-labs/composable/v5/app/upgrades"
+	upgrades "github.com/notional-labs/composable/v6/app/upgrades"
 )
 
 const (
