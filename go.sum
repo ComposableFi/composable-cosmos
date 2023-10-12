@@ -968,8 +968,8 @@ github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01 h1:koCsoc
 github.com/notional-labs/alliance v1.0.1-0.20230523105704-66dba9499c01/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
 github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f h1:Uw35VHCdLTsQf8B4UGTjHCR6HqcYFF6dwPW8uJzS0f4=
 github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f/go.mod h1:hjcl3RPLSDf0LSXrFyk2iTQCCFs5pfLbJb8h/5gJ2Vg=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230925110328-59a07f1412ec h1:WGvAaJ7QffvPrX9529lX1qTB7IiHC5i+3/0Ed3drico=
-github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20230925110328-59a07f1412ec/go.mod h1:Cf4EbaAH9U5sZGxMKsRTN6SVnXy9MjW6oauwkwFVtpU=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20231012044505-6ccaddcd4038 h1:JFoqbR/ZEtEKlsorh2qrd9DEeSuzxKQk/VjzMNGxdLA=
+github.com/notional-labs/packet-forward-middleware/v7 v7.0.0-20231012044505-6ccaddcd4038/go.mod h1:jCmuJN+6ecz4g1zuVtJKom6p4+xCm2xK+VHyS2RpdXU=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/oklog/oklog v0.3.2/go.mod h1:FCV+B7mhrz4o+ueLpx+KqkyXRGMWOYEvfiXtdGtbWGs=
@@ -1224,6 +1224,7 @@ github.com/tomarrell/wrapcheck/v2 v2.7.0/go.mod h1:ao7l5p0aOlUNJKI0qVwB4Yjlqutd0
 github.com/tommy-muehle/go-mnd/v2 v2.5.1 h1:NowYhSdyE/1zwK9QCLeRb6USWdoif80Ie+v+yU8u1Zw=
 github.com/tommy-muehle/go-mnd/v2 v2.5.1/go.mod h1:WsUAkMJMYww6l/ufffCD3m+P7LEvr8TnZn9lwVDlgzw=
 github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926/go.mod h1:9ESjWnEqriFuLhtthL60Sar/7RFoluCcXsuvEwTV5KM=
+github.com/ugorji/go v1.1.7 h1:/68gy2h+1mWMrwZFeD1kQialdSzAb432dtpeJ42ovdo=
 github.com/ugorji/go v1.1.7/go.mod h1:kZn38zHttfInRq0xu/PH0az30d+z6vm202qpg1oXVMw=
 github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=
 github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=
