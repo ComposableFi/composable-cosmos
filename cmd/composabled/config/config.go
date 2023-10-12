@@ -11,7 +11,7 @@ import (
 
 const (
 	// Bech32Prefix defines the Bech32 prefix used for EthAccounts
-	Bech32Prefix = "layer"
+	Bech32Prefix = "composable"
 
 	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address
 	Bech32PrefixAccAddr = Bech32Prefix
@@ -40,8 +40,8 @@ func SetupConfig() {
 	SetAddressPrefixes(config)
 	config.Seal()
 
-	version.AppName = "layer"
-	version.Name = "layerd"
+	version.AppName = "composable"
+	version.Name = "composabled"
 }
 
 // SetBech32Prefixes sets the global prefixes to be used when serializing addresses and public keys to Bech32 strings.
