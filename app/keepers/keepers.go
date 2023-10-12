@@ -52,6 +52,7 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	icahost "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
@@ -133,6 +134,7 @@ type AppKeepers struct {
 	ICQKeeper        icqkeeper.Keeper
 	ICAHostKeeper    icahostkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
+	AuthzKeeper      authzkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
 	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
 	WasmKeeper       wasm.Keeper
@@ -175,6 +177,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.BankKeeper = custombankkeeper.NewBaseKeeper(
 		appCodec, appKeepers.keys[banktypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BlacklistedModuleAccountAddrs(maccPerms), &appKeepers.TransferMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+
+	appKeepers.AuthzKeeper = authzkeeper.NewKeeper(
+		appKeepers.keys[authzkeeper.StoreKey],
+		appCodec,
+		bApp.MsgServiceRouter(),
+		appKeepers.AccountKeeper,
+	)
+
 	appKeepers.StakingKeeper = stakingkeeper.NewKeeper(
 		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
@@ -236,7 +246,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(

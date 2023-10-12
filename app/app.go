@@ -10,6 +10,7 @@ import (
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
@@ -33,11 +34,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/notional-labs/composable/v5/app/keepers"
-	"github.com/notional-labs/composable/v5/app/upgrades/composable"
 	v4 "github.com/notional-labs/composable/v5/app/upgrades/v4"
 	v5 "github.com/notional-labs/composable/v5/app/upgrades/v5"
+	v6 "github.com/notional-labs/composable/v5/app/upgrades/v6"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
+	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
@@ -137,7 +140,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, composable.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
@@ -197,6 +200,7 @@ var (
 		params.AppModuleBasic{},
 		crisis.AppModuleBasic{},
 		slashing.AppModuleBasic{},
+		authzmodule.AppModuleBasic{},
 		feegrantmodule.AppModuleBasic{},
 		groupmodule.AppModuleBasic{},
 		ibc.AppModuleBasic{},
@@ -359,6 +363,7 @@ func NewComposableApp(
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
@@ -404,6 +409,7 @@ func NewComposableApp(
 		govtypes.ModuleName,
 		crisistypes.ModuleName,
 		genutiltypes.ModuleName,
+		authz.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		paramstypes.ModuleName,
@@ -428,6 +434,7 @@ func NewComposableApp(
 		vestingtypes.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
+		authz.ModuleName,
 		feegrant.ModuleName,
 		group.ModuleName,
 		paramstypes.ModuleName,
@@ -466,6 +473,7 @@ func NewComposableApp(
 		ibchost.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
+		authz.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,

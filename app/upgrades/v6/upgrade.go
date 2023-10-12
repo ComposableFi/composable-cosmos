@@ -1,4 +1,4 @@
-package composable
+package v6
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
