@@ -3,8 +3,10 @@ package keepers
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
@@ -27,16 +29,16 @@ import (
 	routertypes "github.com/strangelove-ventures/packet-forward-middleware/v7/router/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	ibchookstypes "github.com/notional-labs/composable/v5/x/ibc-hooks/types"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v5/x/ratelimit/types"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v5/x/transfermiddleware/types"
-	txBoundaryTypes "github.com/notional-labs/composable/v5/x/tx-boundary/types"
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
-	minttypes "github.com/notional-labs/composable/v5/x/mint/types"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
@@ -51,6 +53,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
 		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
+		authzkeeper.StoreKey,
 	)
 
 	// Define transient store keys

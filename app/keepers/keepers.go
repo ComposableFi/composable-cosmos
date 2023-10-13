@@ -52,6 +52,7 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	icahost "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
@@ -66,7 +67,7 @@ import (
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	custombankkeeper "github.com/notional-labs/composable/v5/custom/bank/keeper"
+	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
 
 	"github.com/strangelove-ventures/packet-forward-middleware/v7/router"
 	routerkeeper "github.com/strangelove-ventures/packet-forward-middleware/v7/router/keeper"
@@ -76,22 +77,22 @@ import (
 	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
-	transfermiddleware "github.com/notional-labs/composable/v5/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/composable/v5/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v5/x/transfermiddleware/types"
+	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 
-	txBoundaryKeeper "github.com/notional-labs/composable/v5/x/tx-boundary/keeper"
-	txBoundaryTypes "github.com/notional-labs/composable/v5/x/tx-boundary/types"
+	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 
-	ratelimitmodule "github.com/notional-labs/composable/v5/x/ratelimit"
-	ratelimitmodulekeeper "github.com/notional-labs/composable/v5/x/ratelimit/keeper"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v5/x/ratelimit/types"
+	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
+	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 
 	consensusparamkeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	mintkeeper "github.com/notional-labs/composable/v5/x/mint/keeper"
-	minttypes "github.com/notional-labs/composable/v5/x/mint/types"
+	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -99,9 +100,9 @@ import (
 	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
-	ibc_hooks "github.com/notional-labs/composable/v5/x/ibc-hooks"
-	ibchookskeeper "github.com/notional-labs/composable/v5/x/ibc-hooks/keeper"
-	ibchookstypes "github.com/notional-labs/composable/v5/x/ibc-hooks/types"
+	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 )
 
 const (
@@ -133,6 +134,7 @@ type AppKeepers struct {
 	ICQKeeper        icqkeeper.Keeper
 	ICAHostKeeper    icahostkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
+	AuthzKeeper      authzkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
 	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
 	WasmKeeper       wasm.Keeper
@@ -175,6 +177,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.BankKeeper = custombankkeeper.NewBaseKeeper(
 		appCodec, appKeepers.keys[banktypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BlacklistedModuleAccountAddrs(maccPerms), &appKeepers.TransferMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+
+	appKeepers.AuthzKeeper = authzkeeper.NewKeeper(
+		appKeepers.keys[authzkeeper.StoreKey],
+		appCodec,
+		bApp.MsgServiceRouter(),
+		appKeepers.AccountKeeper,
+	)
+
 	appKeepers.StakingKeeper = stakingkeeper.NewKeeper(
 		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
@@ -236,7 +246,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath)
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(

@@ -3,8 +3,8 @@ package v4_5_1
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/notional-labs/composable/v5/app/keepers"
-	rateLimitKeeper "github.com/notional-labs/composable/v5/x/ratelimit/keeper"
+	"github.com/notional-labs/composable/v6/app/keepers"
+	rateLimitKeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 )
 
 func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {

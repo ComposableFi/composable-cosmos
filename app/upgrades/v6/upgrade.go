@@ -1,14 +1,29 @@
-package v5
+package v6
 
 import (
 	"cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
+
+	bech32authmigration "github.com/notional-labs/composable/v6/bech32-migration/auth"
+	bech32govmigration "github.com/notional-labs/composable/v6/bech32-migration/gov"
+	bech32slashingmigration "github.com/notional-labs/composable/v6/bech32-migration/slashing"
+	bech32stakingmigration "github.com/notional-labs/composable/v6/bech32-migration/staking"
+
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+
+	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 )
 
 const (
@@ -23,11 +38,31 @@ func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
 	_ upgrades.BaseAppParamManager,
-	_ codec.Codec,
+	cdc codec.Codec,
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
-		// add min amount for rate limit
+		// Migration prefix
+		ctx.Logger().Info("First step: Migrate addresses stored in bech32 form to use new prefix")
+		keys := keepers.GetKVStoreKey()
+		bech32stakingmigration.MigrateAddressBech32(ctx, keys[stakingtypes.StoreKey], cdc)
+		bech32slashingmigration.MigrateAddressBech32(ctx, keys[slashingtypes.StoreKey], cdc)
+		bech32govmigration.MigrateAddressBech32(ctx, keys[govtypes.StoreKey], cdc)
+		bech32authmigration.MigrateAddressBech32(ctx, keys[authtypes.StoreKey], cdc)
+
+		// allowed relayer address
+		tfmdk := keepers.TransferMiddlewareKeeper
+		tfmdk.IterateAllowRlyAddress(ctx, func(rlyAddress string) bool {
+			// Delete old address
+			tfmdk.DeleteAllowRlyAddress(ctx, rlyAddress)
+
+			// add new address
+			newRlyAddress := utils.ConvertAccAddr(rlyAddress)
+			tfmdk.SetAllowRlyAddress(ctx, newRlyAddress)
+			return false
+		})
+
+		// update rate limit to 50k
 		rlKeeper := keepers.RatelimitKeeper
 		// add uatom
 		uatomRateLimit, found := rlKeeper.GetRateLimit(ctx, uatom, "channel-2")
@@ -52,11 +87,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(1282_000_000), // decimal 6
+				MinRateLimitAmount: sdk.NewInt(1282_000_000 * 5), // 1282_000_000 * 5
 			}
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		} else {
-			uatomRateLimit.MinRateLimitAmount = sdk.NewInt(1282_000_000)
+			uatomRateLimit.MinRateLimitAmount = sdk.NewInt(1282_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		}
 		// add dot
@@ -82,11 +117,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(22_670_000_000_000), // decimal 10
+				MinRateLimitAmount: sdk.NewInt(22_670_000_000_000 * 5), // 22_670_000_000_000 * 5
 			}
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		} else {
-			dotRateLimit.MinRateLimitAmount = sdk.NewInt(22_670_000_000_000)
+			dotRateLimit.MinRateLimitAmount = sdk.NewInt(22_670_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		}
 		// add ksm
@@ -112,11 +147,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(510_000_000_000_000), // decimal 12
+				MinRateLimitAmount: sdk.NewInt(510_000_000_000_000 * 5), // 510_000_000_000_000*5
 			}
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		} else {
-			ksmRateLimit.MinRateLimitAmount = sdk.NewInt(510_000_000_000_000)
+			ksmRateLimit.MinRateLimitAmount = sdk.NewInt(510_000_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		}
 		// add usdt
@@ -142,11 +177,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(10_000_000_000), // decimal 6
+				MinRateLimitAmount: sdk.NewInt(10_000_000_000 * 5), // 10_000_000_000 * 5
 			}
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		} else {
-			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000)
+			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		}
 
