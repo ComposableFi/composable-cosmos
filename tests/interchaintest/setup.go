@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	CentauriMainRepo   = "ghcr.io/notional-labs/composable"
-	CentauriICTestRepo = "ghcr.io/notional-labs/composable-ictest"
+	CentauriMainRepo   = "ghcr.io/notional-labs/layer"
+	CentauriICTestRepo = "ghcr.io/notional-labs/layer-ictest"
 
 	repo, version = GetDockerImageInfo()
 
