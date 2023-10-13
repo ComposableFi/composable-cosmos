@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	CentauriMainRepo   = "ghcr.io/notional-labs/composable"
-	CentauriICTestRepo = "ghcr.io/notional-labs/composable-ictest"
+	CentauriMainRepo   = "ghcr.io/notional-labs/layer"
+	CentauriICTestRepo = "ghcr.io/notional-labs/layer-ictest"
 
 	repo, version = GetDockerImageInfo()
 
@@ -24,8 +24,8 @@ var (
 		Name:                "composable",
 		ChainID:             "composable-2",
 		Images:              []ibc.DockerImage{CentauriImage},
-		Bin:                 "composabled",
-		Bech32Prefix:        "composable",
+		Bin:                 "layerd",
+		Bech32Prefix:        "layer",
 		Denom:               "stake",
 		CoinType:            "118",
 		GasPrices:           "0.0stake",
@@ -45,7 +45,7 @@ func GetDockerImageInfo() (repo, version string) {
 	repo = CentauriICTestRepo
 	if !found {
 		// make local-image
-		repo = "composable"
+		repo = "layer"
 		branchVersion = "debug"
 	}
 

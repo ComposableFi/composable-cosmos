@@ -58,8 +58,8 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=composable \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=composabled \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=layer \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=layerd \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
@@ -86,13 +86,13 @@ endif
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/composabled
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/layerd
 
 build:
-	go build $(BUILD_FLAGS) -o bin/composabled ./cmd/composabled
+	go build $(BUILD_FLAGS) -o bin/layerd ./cmd/layerd
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t composable:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t layer:debug -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
