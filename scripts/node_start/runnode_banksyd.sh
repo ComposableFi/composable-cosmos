@@ -79,9 +79,9 @@ sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
 sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
 sed -i 's/address = "tcp:\/\/localhost:1317"/address = "tcp:\/\/localhost:1319"/g' ~/.banksy/config/app.toml
 sed -i 's/pprof_laddr = "localhost:6060"/pprof_laddr = "localhost:6066"/g' ~/.banksy/config/config.toml
-sed -i '' 's/max_body_bytes = 1000000/max_body_bytes = 1000000000/g' ~/.banksy/config/config.toml
-sed -i '' 's/max_tx_bytes = 1048576/max_tx_bytes = 1048576000/g' ~/.banksy/config/config.toml
-sed -i '' 's/rpc-max-body-bytes = 1000000/rpc-max-body-bytes = 1000000000/g' ~/.banksy/config/app.toml
+sed -i 's/max_body_bytes = 1000000/max_body_bytes = 1000000000/g' ~/.banksy/config/config.toml
+sed -i 's/max_tx_bytes = 1048576/max_tx_bytes = 1048576000/g' ~/.banksy/config/config.toml
+sed -i 's/rpc-max-body-bytes = 1000000/rpc-max-body-bytes = 1000000000/g' ~/.banksy/config/app.toml
 
 layerd config node tcp://0.0.0.0:2241
 layerd start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
