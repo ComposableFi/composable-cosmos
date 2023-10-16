@@ -13,6 +13,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/consensus"
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
+	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -539,6 +541,7 @@ func NewCentauriApp(
 	if manager := app.SnapshotManager(); manager != nil {
 		err := manager.RegisterExtensions(
 			wasmkeeper.NewWasmSnapshotter(app.CommitMultiStore(), &app.WasmKeeper),
+			wasm08keeper.NewWasmSnapshotter(app.CommitMultiStore(), &app.Wasm08Keeper),
 		)
 		if err != nil {
 			panic(fmt.Errorf("failed to register snapshot extension: %s", err))
