@@ -107,7 +107,7 @@ import (
 
 const (
 	AccountAddressPrefix = "composable"
-	authorityAddress     = "layer10556m38z4x6pqalr9rl5ytf3cff8q46nz002d6" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
+	authorityAddress     = "layer1hj5fveer5cjtn4wd6wstzugjfdxzl0xpkwyjq3" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 )
 
 type AppKeepers struct {
