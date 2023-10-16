@@ -76,7 +76,7 @@ func CreateUpgradeHandler(
 			quota := types.Quota{
 				MaxPercentSend: sdk.NewInt(30),
 				MaxPercentRecv: sdk.NewInt(30),
-				DurationHours:  24,
+				DurationHours:  1,
 			}
 			flow := types.Flow{
 				Inflow:       math.ZeroInt(),
@@ -91,6 +91,12 @@ func CreateUpgradeHandler(
 			}
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		} else {
+			quota := types.Quota{
+				MaxPercentSend: sdk.NewInt(30),
+				MaxPercentRecv: sdk.NewInt(30),
+				DurationHours:  1,
+			}
+			uatomRateLimit.Quota = &quota
 			uatomRateLimit.MinRateLimitAmount = sdk.NewInt(1282_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		}
@@ -106,7 +112,7 @@ func CreateUpgradeHandler(
 			quota := types.Quota{
 				MaxPercentSend: sdk.NewInt(30),
 				MaxPercentRecv: sdk.NewInt(30),
-				DurationHours:  24,
+				DurationHours:  1,
 			}
 			flow := types.Flow{
 				Inflow:       math.ZeroInt(),
@@ -121,6 +127,12 @@ func CreateUpgradeHandler(
 			}
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		} else {
+			quota := types.Quota{
+				MaxPercentSend: sdk.NewInt(30),
+				MaxPercentRecv: sdk.NewInt(30),
+				DurationHours:  1,
+			}
+			dotRateLimit.Quota = &quota
 			dotRateLimit.MinRateLimitAmount = sdk.NewInt(22_670_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		}
@@ -136,7 +148,7 @@ func CreateUpgradeHandler(
 			quota := types.Quota{
 				MaxPercentSend: sdk.NewInt(30),
 				MaxPercentRecv: sdk.NewInt(30),
-				DurationHours:  24,
+				DurationHours:  1,
 			}
 			flow := types.Flow{
 				Inflow:       math.ZeroInt(),
@@ -151,6 +163,12 @@ func CreateUpgradeHandler(
 			}
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		} else {
+			quota := types.Quota{
+				MaxPercentSend: sdk.NewInt(30),
+				MaxPercentRecv: sdk.NewInt(30),
+				DurationHours:  1,
+			}
+			ksmRateLimit.Quota = &quota
 			ksmRateLimit.MinRateLimitAmount = sdk.NewInt(510_000_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		}
@@ -166,7 +184,7 @@ func CreateUpgradeHandler(
 			quota := types.Quota{
 				MaxPercentSend: sdk.NewInt(30),
 				MaxPercentRecv: sdk.NewInt(30),
-				DurationHours:  24,
+				DurationHours:  1,
 			}
 			flow := types.Flow{
 				Inflow:       math.ZeroInt(),
@@ -181,6 +199,12 @@ func CreateUpgradeHandler(
 			}
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		} else {
+			quota := types.Quota{
+				MaxPercentSend: sdk.NewInt(30),
+				MaxPercentRecv: sdk.NewInt(30),
+				DurationHours:  1,
+			}
+			usdtRateLimit.Quota = &quota
 			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000 * 5)
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		}
