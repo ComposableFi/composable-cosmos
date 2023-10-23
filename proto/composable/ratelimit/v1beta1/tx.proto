@@ -37,13 +37,13 @@ message MsgAddRateLimit {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // Duration of rate limit. The rate limit will reset when reach the duration.
+  uint64 duration_hours = 6;
   // Min amount of rate limit (allow transfer max(min-amout, rate-limit))
-  string min_rate_limit_amount = 6 [
+  string min_rate_limit_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // Duration of rate limit. The rate limit will reset when reach the duration.
-  uint64 duration_hours = 7;
 }
 
 message MsgAddRateLimitResponse {}
