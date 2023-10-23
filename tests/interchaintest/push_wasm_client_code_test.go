@@ -66,8 +66,8 @@ func TestPushWasmClientCode(t *testing.T) {
 		{
 			ChainConfig: ibc.ChainConfig{
 				Type:           "cosmos",
-				Name:           "composable",
-				ChainID:        "centaurid",
+				Name:           "layer",
+				ChainID:        "layerd",
 				Images:         []ibc.DockerImage{CentauriImage},
 				Bin:            "layerd",
 				Bech32Prefix:   "layer",
@@ -87,11 +87,11 @@ func TestPushWasmClientCode(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	composabled := chains[0]
+	layerd := chains[0]
 
 	t.Logf("NewInterchain")
 	ic := interchaintest.NewInterchain().
-		AddChain(composabled)
+		AddChain(layerd)
 
 	t.Logf("Interchain build options")
 	require.NoError(t, ic.Build(ctx, eRep, interchaintest.InterchainBuildOptions{
@@ -108,46 +108,46 @@ func TestPushWasmClientCode(t *testing.T) {
 
 	// Create and Fund User Wallets
 	fundAmount := int64(10_000_000_000)
-	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", int64(fundAmount), composabled)
+	users := interchaintest.GetAndFundTestUsers(t, ctx, "default", int64(fundAmount), layerd)
 	centaurid1User := users[0]
 
-	err = testutil.WaitForBlocks(ctx, 10, composabled)
+	err = testutil.WaitForBlocks(ctx, 10, layerd)
 	require.NoError(t, err)
 
-	centaurid1UserBalInitial, err := composabled.GetBalance(ctx, centaurid1User.FormattedAddress(), composabled.Config().Denom)
+	centaurid1UserBalInitial, err := layerd.GetBalance(ctx, centaurid1User.FormattedAddress(), layerd.Config().Denom)
 	require.NoError(t, err)
 	require.Equal(t, fundAmount, centaurid1UserBalInitial)
 
-	composabledChain := composabled.(*cosmos.CosmosChain)
+	layerdChain := layerd.(*cosmos.CosmosChain)
 
 	// Verify a normal user cannot push a wasm light client contract
-	_, err = composabledChain.StoreClientContract(ctx, centaurid1User.KeyName(), "ics10_grandpa_cw.wasm")
+	_, err = layerdChain.StoreClientContract(ctx, centaurid1User.KeyName(), "ics10_grandpa_cw.wasm")
 	require.ErrorContains(t, err, "invalid authority")
 
 	proposal := cosmos.TxProposalv1{
 		Metadata: "none",
-		Deposit:  "500000000" + composabledChain.Config().Denom, // greater than min deposit
+		Deposit:  "500000000" + layerdChain.Config().Denom, // greater than min deposit
 		Title:    "Grandpa Contract",
 		Summary:  "new grandpa contract",
 	}
 
-	proposalTx, codeHash, err := composabledChain.PushNewWasmClientProposal(ctx, centaurid1User.KeyName(), "ics10_grandpa_cw.wasm", proposal)
+	proposalTx, codeHash, err := layerdChain.PushNewWasmClientProposal(ctx, centaurid1User.KeyName(), "ics10_grandpa_cw.wasm", proposal)
 	require.NoError(t, err, "error submitting new wasm contract proposal tx")
 
-	height, err := composabledChain.Height(ctx)
+	height, err := layerdChain.Height(ctx)
 	require.NoError(t, err, "error fetching height before submit upgrade proposal")
 
-	err = composabledChain.VoteOnProposalAllValidators(ctx, proposalTx.ProposalID, cosmos.ProposalVoteYes)
+	err = layerdChain.VoteOnProposalAllValidators(ctx, proposalTx.ProposalID, cosmos.ProposalVoteYes)
 	require.NoError(t, err, "failed to submit votes")
 
-	_, err = cosmos.PollForProposalStatus(ctx, composabledChain, height, height+heightDelta, proposalTx.ProposalID, cosmos.ProposalStatusPassed)
+	_, err = cosmos.PollForProposalStatus(ctx, layerdChain, height, height+heightDelta, proposalTx.ProposalID, cosmos.ProposalStatusPassed)
 	require.NoError(t, err, "proposal status did not change to passed in expected number of blocks")
 
-	err = testutil.WaitForBlocks(ctx, 2, composabledChain)
+	err = testutil.WaitForBlocks(ctx, 2, layerdChain)
 	require.NoError(t, err)
 
 	var getCodeQueryMsgRsp GetCodeQueryMsgResponse
-	err = composabledChain.QueryClientContractCode(ctx, codeHash, &getCodeQueryMsgRsp)
+	err = layerdChain.QueryClientContractCode(ctx, codeHash, &getCodeQueryMsgRsp)
 	codeHashByte32 := sha256.Sum256(getCodeQueryMsgRsp.Code)
 	codeHash2 := hex.EncodeToString(codeHashByte32[:])
 	t.Logf("Contract codeHash from code: %s", codeHash2)
