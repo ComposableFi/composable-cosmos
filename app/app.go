@@ -39,6 +39,7 @@ import (
 	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
 	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
@@ -601,6 +602,27 @@ func (app *ComposableApp) GetTxConfig() client.TxConfig {
 // BeginBlocker application updates every begin block
 func (app *ComposableApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	BeginBlockForks(ctx, app)
+
+	if ctx.BlockHeight() == 328435 {
+		utils.IterateStoreByPrefix(ctx, app.GetKVStoreKey()[stakingtypes.StoreKey], stakingtypes.ValidatorQueueKey, func(value []byte) (bz []byte) {
+			addrs := stakingtypes.ValAddresses{}
+			app.appCodec.MustUnmarshal(bz, &addrs)
+
+			newAddrs := stakingtypes.ValAddresses{}
+			for _, addr := range addrs.Addresses {
+				newAddrs.Addresses = append(newAddrs.Addresses, utils.ConvertValAddr(addr))
+			}
+
+			newBz, err := newAddrs.Marshal()
+			if err != nil {
+				panic(err)
+			}
+
+			return newBz
+		})
+
+	}
+
 	return app.mm.BeginBlock(ctx, req)
 }
 
