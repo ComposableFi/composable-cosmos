@@ -52,6 +52,24 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		historicalInfoCount++
 		return cdc.MustMarshal(&historicalInfo)
 	})
+
+	utils.IterateStoreByPrefix(ctx, storeKey, types.ValidatorQueueKey, func(value []byte) (bz []byte) {
+		addrs := types.ValAddresses{}
+		cdc.MustUnmarshal(bz, &addrs)
+
+		newAddrs := types.ValAddresses{}
+		for _, addr := range addrs.Addresses {
+			newAddrs.Addresses = append(newAddrs.Addresses, utils.ConvertValAddr(addr))
+		}
+
+		newBz, err := newAddrs.Marshal()
+		if err != nil {
+			panic(err)
+		}
+
+		return newBz
+	})
+
 	ctx.Logger().Info(
 		"Migration of address bech32 for staking module done",
 		"validator_count", validatorCount,
