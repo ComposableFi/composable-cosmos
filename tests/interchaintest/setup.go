@@ -19,10 +19,10 @@ var (
 		UidGid:     "1025:1025",
 	}
 
-	composableConfig = ibc.ChainConfig{
+	layerConfig = ibc.ChainConfig{
 		Type:                "cosmos",
-		Name:                "composable",
-		ChainID:             "composable-2",
+		Name:                "layer",
+		ChainID:             "layer-2",
 		Images:              []ibc.DockerImage{CentauriImage},
 		Bin:                 "layerd",
 		Bech32Prefix:        "layer",

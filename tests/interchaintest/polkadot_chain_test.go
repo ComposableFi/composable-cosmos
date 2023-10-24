@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-func TestPolkadotComposableChainStart(t *testing.T) {
+func TestPolkadotLayerChainStart(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping in short mode")
 	}

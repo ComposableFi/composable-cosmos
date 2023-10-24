@@ -18,7 +18,7 @@ const (
 	blocksAfterUpgrade = uint64(10)
 )
 
-func TestComposableUpgrade(t *testing.T) {
+func TestLayerUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
 	CosmosChainUpgradeTest(t, repo, version, "v6")
 }

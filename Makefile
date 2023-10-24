@@ -16,7 +16,7 @@ SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
-HTTPS_GIT := https://github.com/notional-labs/composable-testnet/.git
+HTTPS_GIT := https://github.com/notional-labs/composable-centauri.git
 
 export GO111MODULE = on
 
@@ -133,22 +133,22 @@ proto-check-breaking:
 
 # Executes start chain tests via interchaintest
 ictest-start-cosmos:
-	cd tests/interchaintest && go test -race -v -run TestStartComposable .
+	cd tests/interchaintest && go test -race -v -run TestStartLayer .
 
 ictest-validator:
 	cd tests/interchaintest && go test -race -v -run TestValidator .
 
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotLayerChainStart .
 
 # Executes IBC tests via interchaintest
 ictest-ibc:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposablePicassoIBCTransfer .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestLayerPicassoIBCTransfer .
 
 # Executes Basic Upgrade Chain tests via interchaintest
 ictest-upgrade:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestComposableUpgrade .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestLayerUpgrade .
 
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
