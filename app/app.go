@@ -602,7 +602,7 @@ func (app *ComposableApp) GetTxConfig() client.TxConfig {
 // BeginBlocker application updates every begin block
 func (app *ComposableApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
 	BeginBlockForks(ctx, app)
-
+	fmt.Println("current block is ::::: ", ctx.BlockHeight())
 	if ctx.BlockHeight() == 328435 {
 		utils.IterateStoreByPrefix(ctx, app.GetKVStoreKey()[stakingtypes.StoreKey], stakingtypes.ValidatorQueueKey, func(value []byte) (bz []byte) {
 			addrs := stakingtypes.ValAddresses{}
