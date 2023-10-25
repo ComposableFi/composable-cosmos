@@ -41,7 +41,7 @@ func (k Keeper) RelayerAccount(c context.Context, req *types.QueryIBCWhiteListRe
 	iter := prefixStore.Iterator(nil, nil)
 	defer iter.Close()
 
-	pageRes, err := sdkquery.FilteredPaginate(prefixStore, req.Pagination, func(key []byte, _ []byte, accumulate bool) (bool, error) {
+	pageRes, err := sdkquery.FilteredPaginate(prefixStore, req.Pagination, func(key, _ []byte, accumulate bool) (bool, error) {
 		if accumulate {
 			whiteList = append(whiteList, string(key))
 		}
