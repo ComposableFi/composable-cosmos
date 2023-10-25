@@ -22,6 +22,7 @@ func GetQueryCmd() *cobra.Command {
 	queryCmd.AddCommand(
 		GetCmdParaTokenInfo(),
 		GetEscowAddress(),
+		GetRelayerAccount()
 	)
 
 	return queryCmd
@@ -70,6 +71,30 @@ func GetEscowAddress() *cobra.Command {
 			res, err := queryClient.EscrowAddress(cmd.Context(), &types.QueryEscrowAddressRequest{
 				ChannelID: args[0],
 			})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func GetRelayerAccount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "relayer-account ",
+		Short: "Query the relayer account ",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+			res, err := queryClient.RelayerAccount(cmd.Context(), &types.QueryIBCWhiteListRequest{})
 			if err != nil {
 				return err
 			}

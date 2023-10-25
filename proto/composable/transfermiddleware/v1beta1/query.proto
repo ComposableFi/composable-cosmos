@@ -3,6 +3,7 @@ package composable.transfermiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
 
 option go_package = "x/transfermiddleware/types";
 
@@ -16,6 +17,11 @@ service Query {
   rpc EscrowAddress(QueryEscrowAddressRequest)
       returns (QueryEscrowAddressResponse) {
     option (google.api.http).get = "/composable/escrowaddress";
+  }
+
+  rpc RelayerAccount(QueryIBCWhiteListRequest)
+      returns (QueryIBCWhiteListResponse) {
+    option (google.api.http).get = "/composable/ibcwhitelist";
   }
 }
 
@@ -49,4 +55,19 @@ message QueryParaTokenInfoResponse {
   ];
   string native_denom = 3 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];
   string asset_id = 4 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
+}
+
+// QueryIBCWhiteListRequest is the response type for the QueryIBCWhiteListRequest
+// RPC method.
+message QueryIBCWhiteListRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryIBCWhiteListResponse is the response type for the QueryIBCWhiteListRequest
+// RPC method.
+message QueryIBCWhiteListResponse {
+  repeated string white_list = 1 [ (gogoproto.moretags) = "yaml:\"white_list\"" ];
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+
 }
