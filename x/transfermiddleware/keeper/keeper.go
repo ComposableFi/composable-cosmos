@@ -4,6 +4,7 @@ import (
 	"time"
 
 	errorsmod "cosmossdk.io/errors"
+	"cosmossdk.io/store/prefix"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -168,7 +169,8 @@ func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool
 
 func (keeper Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress string) (stop bool)) {
 	store := ctx.KVStore(keeper.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyRlyAddress)
+	prefixStore := prefix.NewStore(store, types.KeyRlyAddress)
+	iterator := sdk.KVStorePrefixIterator(prefixStore, nil)
 
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
