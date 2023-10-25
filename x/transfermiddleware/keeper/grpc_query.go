@@ -3,9 +3,10 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkquery "github.com/cosmos/cosmos-sdk/types/query"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-
 	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
@@ -26,5 +27,32 @@ func (k Keeper) EscrowAddress(_ context.Context, req *types.QueryEscrowAddressRe
 
 	return &types.QueryEscrowAddressResponse{
 		EscrowAddress: escrowAddress.String(),
+	}, nil
+}
+
+func (k Keeper) RelayerAccount(c context.Context, req *types.QueryIBCWhiteListRequest) (*types.QueryIBCWhiteListResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	var whiteList []string
+
+	store := ctx.KVStore(k.storeKey)
+	prefixStore := prefix.NewStore(store, types.KeyRlyAddress)
+
+	iter := prefixStore.Iterator(nil, nil)
+	defer iter.Close()
+
+	pageRes, err := sdkquery.FilteredPaginate(prefixStore, req.Pagination, func(key []byte, _ []byte, accumulate bool) (bool, error) {
+		if accumulate {
+			whiteList = append(whiteList, string(key))
+		}
+		return true, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryIBCWhiteListResponse{
+		WhiteList:  whiteList,
+		Pagination: pageRes,
 	}, nil
 }
