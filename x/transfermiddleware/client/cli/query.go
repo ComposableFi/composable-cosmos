@@ -22,7 +22,7 @@ func GetQueryCmd() *cobra.Command {
 	queryCmd.AddCommand(
 		GetCmdParaTokenInfo(),
 		GetEscowAddress(),
-		GetRelayerAccount()
+		GetRelayerAccount(),
 	)
 
 	return queryCmd
