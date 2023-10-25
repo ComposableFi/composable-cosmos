@@ -17,6 +17,7 @@ func GetQueryCmd() *cobra.Command {
 		Use:                        types.ModuleName,
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
+		Short:                      "Query for transfer middleware module",
 	}
 
 	queryCmd.AddCommand(
@@ -87,7 +88,7 @@ func GetRelayerAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "relayer-account ",
 		Short: "Query the relayer account ",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
