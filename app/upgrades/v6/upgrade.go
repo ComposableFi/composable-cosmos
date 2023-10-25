@@ -1,6 +1,8 @@
 package v6
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -21,6 +23,10 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/notional-labs/composable/v6/bech32-migration/utils"
+)
+
+var (
+	rlyAddress1 = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 )
 
 func CreateUpgradeHandler(
@@ -45,12 +51,11 @@ func CreateUpgradeHandler(
 			// Delete old address
 			tfmdk.DeleteAllowRlyAddress(ctx, rlyAddress)
 
-			// add new address
 			newRlyAddress := utils.ConvertAccAddr(rlyAddress)
+			fmt.Println("New Rly Address", newRlyAddress)
 			tfmdk.SetAllowRlyAddress(ctx, newRlyAddress)
 			return false
 		})
-
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }

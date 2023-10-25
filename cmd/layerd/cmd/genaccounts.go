@@ -204,6 +204,7 @@ func CovertPrefixAddr() *cobra.Command {
 		Short: "Convert prefix from centauri to layer",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			fmt.Println(args[0])
 			newAddr := utils.ConvertAccAddr(args[0])
 			fmt.Println(newAddr)
 
