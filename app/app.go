@@ -128,7 +128,7 @@ import (
 )
 
 const (
-	Name       = "layer"
+	Name       = "centauri"
 	dirName    = "banksy"
 	ForkHeight = 244008
 )
