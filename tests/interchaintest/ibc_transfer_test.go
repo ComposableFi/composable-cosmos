@@ -29,7 +29,7 @@ import (
 // * create client, connection, and channel in relayer
 // * start relayer
 // * send transfer over ibc
-func TestLayerPicassoIBCTransfer(t *testing.T) {
+func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -97,8 +97,8 @@ func TestLayerPicassoIBCTransfer(t *testing.T) {
 				Name:           "centauri",
 				ChainID:        "centaurid",
 				Images:         []ibc.DockerImage{CentauriImage},
-				Bin:            "layerd",
-				Bech32Prefix:   "layer",
+				Bin:            "centaurid",
+				Bech32Prefix:   "centauri",
 				Denom:          "stake",
 				GasPrices:      "0.00stake",
 				GasAdjustment:  1.3,
