@@ -128,7 +128,7 @@ import (
 )
 
 const (
-	Name       = "layer"
+	Name       = "composable"
 	dirName    = "banksy"
 	ForkHeight = 244008
 )

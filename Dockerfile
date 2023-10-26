@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     linux-headers
 
 # Download go dependencies
-WORKDIR /layer
+WORKDIR /composable
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
@@ -43,15 +43,15 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="layer" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="layerd" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="composable" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="composabled" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /layer/build/layerd \
-        /layer/cmd/layerd
+        -o /composable/build/composabled \
+        /composable/cmd/composabled
 
 # --------------------------------------------------------
 # Runner
@@ -59,9 +59,9 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 FROM ${RUNNER_IMAGE}
 
-COPY --from=builder /layer/build/layerd /bin/layerd
+COPY --from=builder /composable/build/composabled /bin/composabled
 
-ENV HOME /layer
+ENV HOME /composable
 WORKDIR $HOME
 
 # rest server
@@ -72,4 +72,4 @@ EXPOSE 26656
 EXPOSE 26657
 # grpc
 EXPOSE 9090
-ENTRYPOINT ["layerd"]
+ENTRYPOINT ["composabled"]
