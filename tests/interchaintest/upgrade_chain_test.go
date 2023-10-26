@@ -18,7 +18,7 @@ const (
 	blocksAfterUpgrade = uint64(10)
 )
 
-func TestLayerUpgrade(t *testing.T) {
+func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
 	CosmosChainUpgradeTest(t, repo, version, "v6")
 }
@@ -43,8 +43,8 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 						UidGid:     "1025:1025",
 					},
 				},
-				Bin:            "layerd",
-				Bech32Prefix:   "layer",
+				Bin:            "centaurid",
+				Bech32Prefix:   "centauri",
 				Denom:          "ppica",
 				GasPrices:      "0.00ppica",
 				GasAdjustment:  1.3,

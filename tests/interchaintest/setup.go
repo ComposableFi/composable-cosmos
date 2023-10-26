@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	CentauriMainRepo   = "ghcr.io/notional-labs/layer"
-	CentauriICTestRepo = "ghcr.io/notional-labs/layer-ictest"
+	CentauriMainRepo   = "ghcr.io/notional-labs/centauri"
+	CentauriICTestRepo = "ghcr.io/notional-labs/centauri-ictest"
 
 	repo, version = GetDockerImageInfo()
 
@@ -19,13 +19,13 @@ var (
 		UidGid:     "1025:1025",
 	}
 
-	layerConfig = ibc.ChainConfig{
+	centauriConfig = ibc.ChainConfig{
 		Type:                "cosmos",
-		Name:                "layer",
-		ChainID:             "layer-2",
+		Name:                "centauri",
+		ChainID:             "centauri-2",
 		Images:              []ibc.DockerImage{CentauriImage},
-		Bin:                 "layerd",
-		Bech32Prefix:        "layer",
+		Bin:                 "centaurid",
+		Bech32Prefix:        "centauri",
 		Denom:               "stake",
 		CoinType:            "118",
 		GasPrices:           "0.0stake",
@@ -45,7 +45,7 @@ func GetDockerImageInfo() (repo, version string) {
 	repo = CentauriICTestRepo
 	if !found {
 		// make local-image
-		repo = "layer"
+		repo = "centauri"
 		branchVersion = "debug"
 	}
 

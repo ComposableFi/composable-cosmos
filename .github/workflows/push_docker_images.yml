@@ -1,11 +1,11 @@
-# This workflow pushes new layer docker images on every new tag.
+# This workflow pushes new centauri docker images on every new tag.
 #
 # On every new `vX.Y.Z` tag the following images are pushed:
 #
-# notional-labs/layer:X.Y.Z    # is pushed
-# notional-labs/layer:X.Y      # is updated to X.Y.Z
-# notional-labs/layer:X        # is updated to X.Y.Z
-# notional-labs/layer:latest   # is updated to X.Y.Z
+# notional-labs/centauri:X.Y.Z    # is pushed
+# notional-labs/centauri:X.Y      # is updated to X.Y.Z
+# notional-labs/centauri:X        # is updated to X.Y.Z
+# notional-labs/centauri:latest   # is updated to X.Y.Z
 # 
 # All the images above have support for linux/amd64 and linux/arm64.
 #
@@ -66,6 +66,6 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/notional-labs/layer:${{ env.MAJOR_VERSION }}
-            ghcr.io/notional-labs/layer:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
-            ghcr.io/notional-labs/layer:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}
+            ghcr.io/notional-labs/centauri:${{ env.MAJOR_VERSION }}
+            ghcr.io/notional-labs/centauri:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
+            ghcr.io/notional-labs/centauri:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}

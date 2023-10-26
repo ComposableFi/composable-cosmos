@@ -27,18 +27,18 @@
             run: docker-compose up -d
     
           - name: Copy binary
-            run: docker cp composable-centauri_node_1:/bin/layerd ./layerd
+            run: docker cp composable-centauri_node_1:/bin/centaurid ./centaurid
     
           - name: Save sha256 sum
-            run: sha256sum ./layerd > ./layerd_sha256.txt
+            run: sha256sum ./centaurid > ./centaurid_sha256.txt
     
           - name: Release
             uses: softprops/action-gh-release@v1        
             with:
               token: ${{ github.token }}
               files: |
-                layerd
-                layerd_sha256.txt
+                centaurid
+                centaurid_sha256.txt
     
           - name: Dump docker logs on failure
             if: failure()
