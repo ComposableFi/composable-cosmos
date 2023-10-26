@@ -538,6 +538,9 @@ func NewComposableApp(
 	app.SetAnteHandler(ante.NewAnteHandler(
 		appOpts,
 		app.AccountKeeper,
+		app.BankKeeper,
+		app.FeeGrantKeeper,
+		nil,
 		authante.DefaultSigVerificationGasConsumer,
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,

@@ -9,7 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
-
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	txBoundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
 	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
@@ -18,8 +18,11 @@ import (
 // Link to default ante handler used by cosmos sdk:
 // https://github.com/cosmos/cosmos-sdk/blob/v0.43.0/x/auth/ante/ante.go#L41
 func NewAnteHandler(
-	_ servertypes.AppOptions,
+	options servertypes.AppOptions,
 	ak ante.AccountKeeper,
+	bk authtypes.BankKeeper,
+	feegrantKeeper ante.FeegrantKeeper,
+	txFeeChecker ante.TxFeeChecker,
 	sigGasConsumer ante.SignatureVerificationGasConsumer,
 	signModeHandler signing.SignModeHandler,
 	channelKeeper *ibckeeper.Keeper,
@@ -30,6 +33,8 @@ func NewAnteHandler(
 	return sdk.ChainAnteDecorators(
 		ante.NewSetUpContextDecorator(), //  // outermost AnteDecorator. SetUpContext must be called first
 		ante.NewValidateBasicDecorator(),
+		ante.NewConsumeGasForTxSizeDecorator(ak),
+		ante.NewDeductFeeDecorator(ak, bk, feegrantKeeper, txFeeChecker),
 		ante.NewTxTimeoutHeightDecorator(),
 		ante.NewValidateMemoDecorator(ak),
 		ante.NewConsumeGasForTxSizeDecorator(ak),
