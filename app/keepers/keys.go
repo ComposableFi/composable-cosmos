@@ -26,7 +26,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
-	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/router/types"
+	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
