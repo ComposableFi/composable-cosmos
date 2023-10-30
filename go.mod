@@ -26,7 +26,7 @@ require (
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	golang.org/x/tools v0.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529
-	google.golang.org/grpc v1.56.2
+	google.golang.org/grpc v1.56.3
 	gotest.tools/v3 v3.5.0
 	mvdan.cc/gofumpt v0.4.0
 )
