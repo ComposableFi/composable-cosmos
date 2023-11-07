@@ -31,10 +31,14 @@ func (AppModuleBasic) Name() string {
 }
 
 // RegisterLegacyAminoCodec registers the ibc-hooks module's types on the given LegacyAmino codec.
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	types.RegisterLegacyAminoCodec(cdc)
+}
 
 // RegisterInterfaces registers module concrete types into protobuf Any.
-func (AppModuleBasic) RegisterInterfaces(reg codectypes.InterfaceRegistry) {}
+func (AppModuleBasic) RegisterInterfaces(reg codectypes.InterfaceRegistry) {
+	types.RegisterInterfaces(reg)
+}
 
 // DefaultGenesis returns default genesis state as raw bytes for the ibc
 // router module.
