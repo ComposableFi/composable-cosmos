@@ -622,6 +622,21 @@ func (app *ComposableApp) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlo
 
 	}
 
+	if ctx.BlockHeight() == 555181 {
+		utils.IterateStoreByPrefix(ctx, app.GetKVStoreKey()[stakingtypes.StoreKey], stakingtypes.RedelegationQueueKey, func(bz []byte) []byte {
+			triplets := stakingtypes.DVVTriplets{}
+			app.appCodec.MustUnmarshal(bz, &triplets)
+
+			for i, triplet := range triplets.Triplets {
+				triplets.Triplets[i].DelegatorAddress = utils.ConvertAccAddr(triplet.DelegatorAddress)
+				triplets.Triplets[i].ValidatorDstAddress = utils.ConvertValAddr(triplet.ValidatorDstAddress)
+				triplets.Triplets[i].ValidatorSrcAddress = utils.ConvertValAddr(triplet.ValidatorSrcAddress)
+			}
+
+			return app.appCodec.MustMarshal(&triplets)
+		})
+	}
+
 	return app.mm.BeginBlock(ctx, req)
 }
 
