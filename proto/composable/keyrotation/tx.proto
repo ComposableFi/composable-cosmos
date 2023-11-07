@@ -1,0 +1,14 @@
+syntax = "proto3";
+package composable.keyrotation.v1beta1;
+
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "x/keyrotation/types";
+
+// Msg defines the x/mint Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+}

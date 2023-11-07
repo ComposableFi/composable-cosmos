@@ -1,0 +1,9 @@
+syntax = "proto3";
+package composable.keyrotation.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "x/keyrotation/types";
+
+// GenesisState defines the mint module's genesis state.
+message GenesisState {}
