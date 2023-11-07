@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/notional-labs/composable/v6/x/keyrotation/keeper"
 	"github.com/notional-labs/composable/v6/x/keyrotation/types"
 	"github.com/spf13/cobra"
 
@@ -66,12 +67,14 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule represents the AppModule for this module
 type AppModule struct {
 	AppModuleBasic
+	keeper *keeper.Keeper
 }
 
 // NewAppModule creates a new router module
-func NewAppModule() AppModule {
+func NewAppModule(k *keeper.Keeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
+		keeper:         k,
 	}
 }
 
