@@ -41,6 +41,7 @@ func CreateUpgradeHandler(
 		ctx.Logger().Info("First step: Migrate addresses stored in bech32 form to use new prefix")
 		keys := keepers.GetKVStoreKey()
 		bech32stakingmigration.MigrateAddressBech32(ctx, keys[stakingtypes.StoreKey], cdc)
+		bech32stakingmigration.MigrateUnbonding(ctx, keys[stakingtypes.StoreKey], cdc)
 		bech32slashingmigration.MigrateAddressBech32(ctx, keys[slashingtypes.StoreKey], cdc)
 		bech32govmigration.MigrateAddressBech32(ctx, keys[govtypes.StoreKey], cdc)
 		bech32authmigration.MigrateAddressBech32(ctx, keys[authtypes.StoreKey], cdc)
