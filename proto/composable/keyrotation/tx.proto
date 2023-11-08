@@ -12,3 +12,8 @@ option go_package = "x/keyrotation/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 }
+
+message MsgRotateConsPubKey {
+  string val_address = 1;
+  
+}
