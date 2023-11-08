@@ -8,7 +8,7 @@ import (
 
 const (
 	// UpgradeName defines the on-chain upgrade name for the composable upgrade.
-	UpgradeName = "v6.2.0"
+	UpgradeName = "v6"
 )
 
 var Upgrade = upgrades.Upgrade{
