@@ -6,5 +6,5 @@ import (
 )
 
 func (k Keeper) EndBlock(ctx sdk.Context) []abci.ValidatorUpdate {
-
+	return nil
 }
