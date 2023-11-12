@@ -72,15 +72,15 @@ func (k Keeper) handleMsgRotateConsPubKey(ctx sdk.Context, valAddress sdk.ValAdd
 	}
 
 	// wrap pubkey to types any
-	pkAny, err := codectypes.NewAnyWithValue(pubKey)
+	newPkAny, err := codectypes.NewAnyWithValue(pubKey)
 	if err != nil {
 		return err
 	}
 
-	oldpkAny := validator.ConsensusPubkey
+	oldPkAny := validator.ConsensusPubkey
 
 	// replace pubkey
-	validator.ConsensusPubkey = pkAny
+	validator.ConsensusPubkey = newPkAny
 
 	// NOTE: staking module do not support DeleteValidatorByConsAddr method for Validator types
 	// we need to record all the rotated pubkey in keyrotation store so when we can delete later
@@ -93,8 +93,8 @@ func (k Keeper) handleMsgRotateConsPubKey(ctx sdk.Context, valAddress sdk.ValAdd
 	// Set rotation history
 	consPubKeyRotationHistory := types.ConsPubKeyRotationHistory{
 		OperatorAddress: valAddress.String(),
-		OldKey:          oldpkAny,
-		NewKey:          pkAny,
+		OldKey:          oldPkAny,
+		NewKey:          newPkAny,
 		BlockHeight:     uint64(ctx.BlockHeight()),
 	}
 
