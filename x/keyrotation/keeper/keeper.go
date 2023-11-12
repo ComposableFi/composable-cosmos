@@ -77,6 +77,8 @@ func (k Keeper) handleMsgRotateConsPubKey(ctx sdk.Context, valAddress sdk.ValAdd
 		return err
 	}
 
+	oldpkAny := validator.ConsensusPubkey
+
 	// replace pubkey
 	validator.ConsensusPubkey = pkAny
 
@@ -87,6 +89,16 @@ func (k Keeper) handleMsgRotateConsPubKey(ctx sdk.Context, valAddress sdk.ValAdd
 	// set validator
 	k.sk.SetValidator(ctx, validator)
 	k.sk.SetValidatorByConsAddr(ctx, validator)
+
+	// Set rotation history
+	consPubKeyRotationHistory := types.ConsPubKeyRotationHistory{
+		OperatorAddress: valAddress.String(),
+		OldKey:          oldpkAny,
+		NewKey:          pkAny,
+		BlockHeight:     uint64(ctx.BlockHeight()),
+	}
+
+	k.SetKeyRotationHistory(ctx, consPubKeyRotationHistory)
 
 	return nil
 }

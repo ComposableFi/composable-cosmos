@@ -17,7 +17,7 @@ service Msg {
 }
 
 message MsgRotateConsPubKey {
-  string validator_address = 1;
+  string validator_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   google.protobuf.Any pubkey = 2 [(cosmos_proto.accepts_interface) = "cosmos.crypto.PubKey"];
 }
 
