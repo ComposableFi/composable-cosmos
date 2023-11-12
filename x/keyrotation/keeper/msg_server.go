@@ -3,10 +3,10 @@ package keeper
 import (
 	"context"
 
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/notional-labs/composable/v6/x/keyrotation/types"
 
-	errorsmod "cosmossdk.io/errors"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -32,9 +32,15 @@ func (k Keeper) RotateConsPubKey(goCtx context.Context, msg *types.MsgRotateCons
 		return nil, err
 	}
 
-	// check to see if the validator not exist
-	if _, found := k.sk.GetValidator(ctx, valAddr); !found {
-		return nil, errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "validator not exists")
+	// get pubkey
+	pk, ok := msg.Pubkey.GetCachedValue().(cryptotypes.PubKey)
+	if !ok {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "Expecting cryptotypes.PubKey, got %T", pk)
+	}
+
+	err = k.handleMsgRotateConsPubKey(ctx, valAddr, pk)
+	if err != nil {
+		return nil, err
 	}
 
 	return &types.MsgRotateConsPubKeyResponse{}, nil
