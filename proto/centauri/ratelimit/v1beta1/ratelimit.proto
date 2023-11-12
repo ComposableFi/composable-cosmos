@@ -1,5 +1,5 @@
 syntax = "proto3";
-package composable.ratelimit.v1beta1;
+package centauri.ratelimit.v1beta1;
 
 import "gogoproto/gogo.proto";
 

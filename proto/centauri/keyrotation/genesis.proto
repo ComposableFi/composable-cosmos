@@ -1,5 +1,5 @@
 syntax = "proto3";
-package composable.keyrotation.v1beta1;
+package centauri.keyrotation.v1beta1;
 
 import "gogoproto/gogo.proto";
 

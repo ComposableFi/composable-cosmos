@@ -1,9 +1,9 @@
 syntax = "proto3";
-package composable.mint.v1beta1;
+package centauri.mint.v1beta1;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "composable/mint/v1beta1/mint.proto";
+import "centauri/mint/v1beta1/mint.proto";
 
 option go_package = "x/mint/types";
 

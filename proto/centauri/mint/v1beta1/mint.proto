@@ -1,5 +1,5 @@
 syntax = "proto3";
-package composable.mint.v1beta1;
+package centauri.mint.v1beta1;
 
 option go_package = "x/mint/types";
 
