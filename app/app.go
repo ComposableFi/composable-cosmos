@@ -129,7 +129,7 @@ import (
 
 const (
 	Name       = "centauri"
-	dirName    = "banksy"
+	dirName    = "centauri"
 	ForkHeight = 244008
 )
 
