@@ -15,7 +15,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/client/cli"
 	"github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
@@ -76,12 +75,12 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 
 // GetTxCmd returns no root tx command for the tx-boundary module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	return cli.GetTxCmd()
+	return nil
 }
 
 // GetQueryCmd returns the root query command for the tx-boundary module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd()
+	return nil
 }
 
 // AppModule implements an application module for the tx-boundary module.
