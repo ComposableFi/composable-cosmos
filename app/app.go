@@ -546,7 +546,6 @@ func NewComposableApp(
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
-		app.TxBoundaryKeepper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
