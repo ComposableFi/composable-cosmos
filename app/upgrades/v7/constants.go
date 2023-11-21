@@ -4,6 +4,7 @@ import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	"github.com/notional-labs/composable/v6/app/upgrades"
+	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
@@ -15,6 +16,7 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added: []string{authz.ModuleName},
+		Added:   []string{authz.ModuleName},
+		Deleted: []string{alliancetypes.ModuleName},
 	},
 }
