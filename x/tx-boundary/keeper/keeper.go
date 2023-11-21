@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/cometbft/cometbft/libs/log"
@@ -179,4 +180,62 @@ func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
 		k.SetLimitPerAddr(ctx, addr, limitPerAddr)
 		return
 	}
+}
+
+func (k Keeper) PushChangeValSetTxs(ctx sdk.Context, txs [][]byte) {
+	store := ctx.KVStore(k.storeKey)
+	for _, tx := range txs {
+		byteCount := k.IncrementTxCount(ctx)
+		txKey := append(types.TxKey, byteCount...)
+
+		store.Set(txKey, tx)
+	}
+
+}
+
+func (k Keeper) GetChangeValSetTxs(ctx sdk.Context) (txs [][]byte) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.TxKey)
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		txs = append(txs, iterator.Value())
+	}
+	return txs
+}
+
+func (k Keeper) ResetChangeValSetTxs(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.TxKey)
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		store.Delete(iterator.Key())
+	}
+
+}
+
+func (k Keeper) IncrementTxCount(ctx sdk.Context) []byte {
+	count := uint64(0)
+
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.TxCountKey)
+
+	if bz != nil {
+		count = binary.LittleEndian.Uint64(bz) + 1
+	}
+
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, count)
+
+	store.Set(types.TxCountKey, b)
+
+	return b
+}
+
+func (k Keeper) ResetTxCount(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.TxCountKey)
 }
