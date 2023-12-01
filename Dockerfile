@@ -43,15 +43,15 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="composable" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="composabled" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="layer" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="layerd" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /composable/build/composabled \
-        /composable/cmd/composabled
+        -o /composable/build/layerd \
+        /composable/cmd/layerd
 
 # --------------------------------------------------------
 # Runner
@@ -59,7 +59,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 FROM ${RUNNER_IMAGE}
 
-COPY --from=builder /composable/build/composabled /bin/composabled
+COPY --from=builder /composable/build/layerd /bin/layerd
 
 ENV HOME /composable
 WORKDIR $HOME
@@ -72,4 +72,4 @@ EXPOSE 26656
 EXPOSE 26657
 # grpc
 EXPOSE 9090
-ENTRYPOINT ["composabled"]
+ENTRYPOINT ["layerd"]
