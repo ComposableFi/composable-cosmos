@@ -41,7 +41,7 @@ fi
 # update request max size so that we can upload the light client
 # '' -e is a must have params on mac, if use linux please delete before run
 sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.toml
-cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
+# cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
 centaurid start --pruning=nothing  --minimum-gas-prices=0stake 

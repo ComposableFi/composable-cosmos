@@ -1,0 +1,12 @@
+{
+    "title": "MaxValidators to 64",
+    "description": "MaxValidators to 64",
+    "changes": [
+      {
+        "subspace": "staking",
+        "key": "max_entries",
+        "value": 64
+      }
+    ],
+    "deposit": "10000000stake"
+  }
