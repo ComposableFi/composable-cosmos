@@ -20,7 +20,7 @@ const (
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, repo, version, "v6")
+	CosmosChainUpgradeTest(t, repo, version, "v7")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -43,8 +43,8 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 						UidGid:     "1025:1025",
 					},
 				},
-				Bin:            "centaurid",
-				Bech32Prefix:   "centauri",
+				Bin:            "picad",
+				Bech32Prefix:   "pica",
 				Denom:          "ppica",
 				GasPrices:      "0.00ppica",
 				GasAdjustment:  1.3,
