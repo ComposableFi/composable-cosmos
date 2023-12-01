@@ -164,7 +164,16 @@ func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool
 	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyByRlyAddress(rlyAddress)
 
-	return store.Has(key)
+	if store.Has(key) {
+		return true
+	}
+
+	prefixStore := prefix.NewStore(store, types.KeyRlyAddress)
+	iter := prefixStore.Iterator(nil, nil)
+	defer iter.Close()
+
+	// there are not records => so it is permissionless
+	return !iter.Valid()
 }
 
 func (keeper Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress string) (stop bool)) {

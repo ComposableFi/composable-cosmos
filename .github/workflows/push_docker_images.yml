@@ -2,10 +2,9 @@
 #
 # On every new `vX.Y.Z` tag the following images are pushed:
 #
-# ghcr.io/composablefi/centauri:X.Y.Z    # is pushed
-# ghcr.io/composablefi/centauri:X.Y      # is updated to X.Y.Z
-# ghcr.io/composablefi/centauri:X        # is updated to X.Y.Z
-# ghcr.io/composablefi/centauri:latest   # is updated to X.Y.Z
+# ghcr.io/composablefi/composable-cosmos:X.Y.Z    # is pushed
+# ghcr.io/composablefi/composable-cosmos:X.Y      # is updated to X.Y.Z
+# ghcr.io/composablefi/composable-cosmos:X        # is updated to X.Y.Z
 # 
 # All the images above have support for linux/amd64 and linux/arm64.
 #
@@ -61,6 +60,6 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/composablefi/centauri:${{ env.MAJOR_VERSION }}
-            ghcr.io/composablefi/centauri:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
-            ghcr.io/composablefi/centauri:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}
+            ghcr.io/composablefi/composable-cosmos:${{ env.MAJOR_VERSION }}
+            ghcr.io/composablefi/composable-cosmos:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}
+            ghcr.io/composablefi/composable-cosmos:${{ env.MAJOR_VERSION }}.${{ env.MINOR_VERSION }}.${{ env.PATCH_VERSION }}

@@ -28,7 +28,7 @@ var _ = time.Kitchen
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // ParachainIBCTokenInfo represents information about transferable IBC tokens
-// from Parachain.
+// from Parachain(Substrate based network).
 type ParachainIBCTokenInfo struct {
 	// ibc_denom is the denomination of the ibced token transferred from the
 	// dotsama chain.
