@@ -36,6 +36,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/notional-labs/composable/v6/app/keepers"
+	"github.com/notional-labs/composable/v6/app/prepare"
 	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
 	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
@@ -545,10 +546,17 @@ func NewComposableApp(
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
-		app.TxBoundaryKeepper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
+
+	app.SetPrepareProposal(
+		prepare.PrepareProposalHandler(
+			encodingConfig.TxConfig,
+			appCodec,
+			app.TxBoundaryKeepper,
+		),
+	)
 
 	if manager := app.SnapshotManager(); manager != nil {
 		err := manager.RegisterExtensions(
