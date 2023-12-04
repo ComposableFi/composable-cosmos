@@ -12,7 +12,6 @@ import (
 // FilterChangeValSetMsgs slpit list txs to 2 set : filteredTxs, changeValSetTxs
 func FilterChangeValSetMsgs(ctx sdk.Context, cdc codec.BinaryCodec, decoder sdk.TxDecoder, txs [][]byte) [][]byte {
 	var filteredTxs [][]byte
-	var changeValSetTxs [][]byte
 	for _, txBytes := range txs {
 		// Decode tx so we can read msgs.
 		tx, err := decoder(txBytes)
@@ -33,7 +32,6 @@ func FilterChangeValSetMsgs(ctx sdk.Context, cdc codec.BinaryCodec, decoder sdk.
 		// If tx contains disallowed msg, skip it.
 		if containsChangeValsetMsg {
 			ctx.Logger().Info("Found change valset msg")
-			changeValSetTxs = append(changeValSetTxs, txBytes)
 			continue // continue to next tx.
 		}
 
