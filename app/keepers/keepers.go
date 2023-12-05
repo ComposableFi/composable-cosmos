@@ -102,7 +102,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "composable"                                  //?should we change this to pica?
+	AccountAddressPrefix = "composable"
 	authorityAddress     = "pica10556m38z4x6pqalr9rl5ytf3cff8q46nf36090" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 )
 
