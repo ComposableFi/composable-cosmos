@@ -23,7 +23,6 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897
 	github.com/stretchr/testify v1.8.4
-	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	golang.org/x/tools v0.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529
 	google.golang.org/grpc v1.56.2
