@@ -53,16 +53,30 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         -o /centauri/build/centaurid \
         /centauri/cmd/centaurid
 
+
+# --------------------------------------------------------
+# toolkit
+# --------------------------------------------------------
+
+FROM busybox:1.35.0-uclibc as busybox
+RUN addgroup --gid 1025 -S composable && adduser --uid 1025 -S composable -G composable
+
+
 # --------------------------------------------------------
 # Runner
 # --------------------------------------------------------
-
 FROM ${RUNNER_IMAGE}
+
+COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/sh
 
 COPY --from=builder /centauri/build/centaurid /bin/centaurid
 
-ENV HOME /centauri
-WORKDIR $HOME
+# Install composable user
+COPY --from=busybox /etc/passwd /etc/passwd
+COPY --from=busybox --chown=1025:1025 /home/composable /home/composable
+
+WORKDIR /home/composable
+USER composable
 
 # rest server
 EXPOSE 1317
@@ -72,4 +86,5 @@ EXPOSE 26656
 EXPOSE 26657
 # grpc
 EXPOSE 9090
+
 ENTRYPOINT ["centaurid"]
