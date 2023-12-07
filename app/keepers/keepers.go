@@ -114,7 +114,6 @@ import (
 
 const (
 	AccountAddressPrefix = "composable"
-	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 )
 
 type AppKeepers struct {
@@ -268,7 +267,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasm08types.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
+
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasm08types.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -306,13 +307,13 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper.Keeper,
 		appKeepers.BankKeeper,
-		authorityAddress,
+		govModuleAuthority,
 	)
 
 	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[txBoundaryTypes.StoreKey],
-		authorityAddress,
+		govModuleAuthority,
 	)
 
 	appKeepers.TransferKeeper = customibctransferkeeper.NewKeeper(
@@ -434,7 +435,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	govKeeper := *govkeeper.NewKeeper(
 		appCodec, appKeepers.keys[govtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
-		appKeepers.StakingKeeper, bApp.MsgServiceRouter(), govtypes.DefaultConfig(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appKeepers.StakingKeeper, bApp.MsgServiceRouter(), govtypes.DefaultConfig(), govModuleAuthority,
 	)
 
 	govKeeper.SetLegacyRouter(govRouter)
