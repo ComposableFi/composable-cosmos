@@ -18,13 +18,13 @@ import (
 // AppModule wraps around the bank module and the bank keeper to return the right total supply
 type AppModule struct {
 	stakingmodule.AppModule
-	keeper   keeper.Keeper
+	keeper   customstakingkeeper.Keeper
 	subspace exported.Subspace
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, accountKeeper types.AccountKeeper, bankKeeper types.BankKeeper, ss exported.Subspace) AppModule {
-	stakingModule := stakingmodule.NewAppModule(cdc, &keeper, accountKeeper, bankKeeper, ss)
+func NewAppModule(cdc codec.Codec, keeper customstakingkeeper.Keeper, accountKeeper types.AccountKeeper, bankKeeper types.BankKeeper, ss exported.Subspace) AppModule {
+	stakingModule := stakingmodule.NewAppModule(cdc, &keeper.Keeper, accountKeeper, bankKeeper, ss)
 	return AppModule{
 		AppModule: stakingModule,
 		keeper:    keeper,
@@ -37,11 +37,11 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, accountKeeper types.Acc
 // when trying to force this custom keeper into a bankkeeper.BaseKeeper
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	// types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(&am.keeper))
-	types.RegisterMsgServer(cfg.MsgServer(), customstakingkeeper.NewMsgServerImpl(am.keeper))
-	querier := keeper.Querier{Keeper: &am.keeper}
+	types.RegisterMsgServer(cfg.MsgServer(), customstakingkeeper.NewMsgServerImpl(am.keeper.Keeper))
+	querier := keeper.Querier{Keeper: &am.keeper.Keeper}
 	types.RegisterQueryServer(cfg.QueryServer(), querier)
 
-	m := stakingkeeper.NewMigrator(&am.keeper, am.subspace)
+	m := stakingkeeper.NewMigrator(&am.keeper.Keeper, am.subspace)
 	if err := cfg.RegisterMigration(types.ModuleName, 1, m.Migrate1to2); err != nil {
 		panic(fmt.Sprintf("failed to migrate x/staking from version 1 to 2: %v", err))
 	}
