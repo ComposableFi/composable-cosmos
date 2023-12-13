@@ -100,6 +100,8 @@ import (
 	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+
+	customstakingtypes "github.com/notional-labs/composable/v6/custom/staking/types"
 )
 
 const (
@@ -186,7 +188,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	appKeepers.CustomStakingKeeper = customstaking.NewBaseKeeper2(
-		*appKeepers.StakingKeeper, appKeepers.AccountKeeper,
+		appCodec, appKeepers.keys[customstakingtypes.StoreKey], *appKeepers.StakingKeeper, appKeepers.AccountKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.MintKeeper = mintkeeper.NewKeeper(
