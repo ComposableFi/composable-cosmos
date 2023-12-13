@@ -7,8 +7,7 @@ import (
 
 // MinterKey is the key to use for the keeper store.
 var (
-	MinterKey         = []byte{0x00}
-	AllowedAddressKey = []byte{0x01}
+	DelegationKey = []byte{0x37} // key for a delegation
 )
 
 const (
@@ -27,9 +26,7 @@ const (
 	// QueryAnnualProvisions = "annual_provisions"
 )
 
-var (
-	DelegationKey = []byte{0x31} // key for a delegation
-)
+var ()
 
 // GetDelegationKey creates the key for delegator bond with validator
 // VALUE: staking/Delegation

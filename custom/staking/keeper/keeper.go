@@ -37,9 +37,9 @@ var _ stakingkeeper.Keeper = stakingkeeper.Keeper{} //???
 // }
 
 func NewBaseKeeper2(
+	cdc codec.BinaryCodec,
 	keys storetypes.StoreKey,
 	staking stakingkeeper.Keeper,
-	cdc codec.BinaryCodec,
 	acck accountkeeper.AccountKeeper,
 	authority string,
 ) Keeper {
