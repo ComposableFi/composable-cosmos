@@ -113,31 +113,31 @@ type AppKeepers struct {
 	memKeys map[string]*storetypes.MemoryStoreKey
 
 	// keepers
-	AccountKeeper    authkeeper.AccountKeeper
-	BankKeeper       custombankkeeper.Keeper
-	CapabilityKeeper *capabilitykeeper.Keeper
-	StakingKeeper    *stakingkeeper.Keeper
-	Customstaking    customstaking.Keeper
-	SlashingKeeper   slashingkeeper.Keeper
-	MintKeeper       mintkeeper.Keeper
-	DistrKeeper      distrkeeper.Keeper
-	GovKeeper        govkeeper.Keeper
-	CrisisKeeper     *crisiskeeper.Keeper
-	UpgradeKeeper    *upgradekeeper.Keeper
-	ParamsKeeper     paramskeeper.Keeper
-	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	EvidenceKeeper   evidencekeeper.Keeper
-	TransferKeeper   ibctransferkeeper.Keeper
-	ICQKeeper        icqkeeper.Keeper
-	ICAHostKeeper    icahostkeeper.Keeper
-	FeeGrantKeeper   feegrantkeeper.Keeper
-	AuthzKeeper      authzkeeper.Keeper
-	GroupKeeper      groupkeeper.Keeper
-	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
-	WasmKeeper       wasm.Keeper
-	IBCHooksKeeper   *ibchookskeeper.Keeper
-	Ics20WasmHooks   *ibc_hooks.WasmHooks
-	HooksICS4Wrapper ibc_hooks.ICS4Middleware
+	AccountKeeper       authkeeper.AccountKeeper
+	BankKeeper          custombankkeeper.Keeper
+	CapabilityKeeper    *capabilitykeeper.Keeper
+	StakingKeeper       *stakingkeeper.Keeper
+	CustomStakingKeeper customstaking.Keeper
+	SlashingKeeper      slashingkeeper.Keeper
+	MintKeeper          mintkeeper.Keeper
+	DistrKeeper         distrkeeper.Keeper
+	GovKeeper           govkeeper.Keeper
+	CrisisKeeper        *crisiskeeper.Keeper
+	UpgradeKeeper       *upgradekeeper.Keeper
+	ParamsKeeper        paramskeeper.Keeper
+	IBCKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	EvidenceKeeper      evidencekeeper.Keeper
+	TransferKeeper      ibctransferkeeper.Keeper
+	ICQKeeper           icqkeeper.Keeper
+	ICAHostKeeper       icahostkeeper.Keeper
+	FeeGrantKeeper      feegrantkeeper.Keeper
+	AuthzKeeper         authzkeeper.Keeper
+	GroupKeeper         groupkeeper.Keeper
+	Wasm08Keeper        wasm08Keeper.Keeper // TODO: use this name ?
+	WasmKeeper          wasm.Keeper
+	IBCHooksKeeper      *ibchookskeeper.Keeper
+	Ics20WasmHooks      *ibc_hooks.WasmHooks
+	HooksICS4Wrapper    ibc_hooks.ICS4Middleware
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -183,6 +183,10 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	appKeepers.StakingKeeper = stakingkeeper.NewKeeper(
 		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.CustomStakingKeeper = customstaking.NewBaseKeeper2(
+		*appKeepers.StakingKeeper, appKeepers.AccountKeeper,
 	)
 
 	appKeepers.MintKeeper = mintkeeper.NewKeeper(
