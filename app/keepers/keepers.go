@@ -186,7 +186,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	appKeepers.CustomStakingKeeper = customstaking.NewBaseKeeper2(
-		*appKeepers.StakingKeeper, appKeepers.AccountKeeper,
+		*appKeepers.StakingKeeper, appKeepers.AccountKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.MintKeeper = mintkeeper.NewKeeper(
