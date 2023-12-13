@@ -31,6 +31,17 @@ func NewBaseKeeper(
 	return keeper
 }
 
+func NewBaseKeeper2(
+	staking stakingkeeper.Keeper,
+	acck accountkeeper.AccountKeeper,
+) Keeper {
+	keeper := Keeper{
+		Keeper: staking,
+		acck:   acck,
+	}
+	return keeper
+}
+
 // func (k *Keeper) RegisterKeepers(akk banktypes.StakingKeeper) {
 // 	k.acck = sk
 // }
