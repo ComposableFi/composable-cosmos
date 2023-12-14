@@ -3,23 +3,20 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	accountkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	"github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	customstakingtypes "github.com/notional-labs/composable/v6/custom/staking/types"
+	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
 )
 
 type Keeper struct {
 	stakingkeeper.Keeper
-	cdc       codec.BinaryCodec
-	storeKey  storetypes.StoreKey
-	acck      accountkeeper.AccountKeeper
-	authority string
+	cdc        codec.BinaryCodec
+	storeKey   storetypes.StoreKey
+	acck       accountkeeper.AccountKeeper
+	mintkeeper mintkeeper.Keeper
+	authority  string
 }
-
-var _ stakingkeeper.Keeper = stakingkeeper.Keeper{} //???
 
 // func NewBaseKeeper(
 // 	cdc codec.BinaryCodec,
@@ -36,17 +33,19 @@ var _ stakingkeeper.Keeper = stakingkeeper.Keeper{} //???
 // 	return keeper
 // }
 
-func NewBaseKeeper2(
+func NewBaseKeeper(
 	cdc codec.BinaryCodec,
-	keys storetypes.StoreKey,
+	// keys storetypes.StoreKey,
 	staking stakingkeeper.Keeper,
 	acck accountkeeper.AccountKeeper,
+	mintkeeper mintkeeper.Keeper,
 	authority string,
 ) Keeper {
 	keeper := Keeper{
-		Keeper:    staking,
-		acck:      acck,
-		authority: authority,
+		Keeper:     staking,
+		acck:       acck,
+		authority:  authority,
+		mintkeeper: mintkeeper,
 	}
 	return keeper
 }
@@ -55,10 +54,10 @@ func NewBaseKeeper2(
 // 	k.acck = sk
 // }
 
-func (k Keeper) StoreDelegation(ctx sdk.Context, delegation types.Delegation) {
-	delegatorAddress := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
+// func (k Keeper) StoreDelegation(ctx sdk.Context, delegation types.Delegation) {
+// 	delegatorAddress := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
 
-	store := ctx.KVStore(k.storeKey)
-	b := types.MustMarshalDelegation(k.cdc, delegation)
-	store.Set(customstakingtypes.GetDelegationKey(delegatorAddress, delegation.GetValidatorAddr()), b)
-}
+// 	store := ctx.KVStore(k.storeKey)
+// 	b := types.MustMarshalDelegation(k.cdc, delegation)
+// 	store.Set(customstakingtypes.GetDelegationKey(delegatorAddress, delegation.GetValidatorAddr()), b)
+// }

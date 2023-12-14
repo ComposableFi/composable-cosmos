@@ -8,6 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 
 	"github.com/notional-labs/composable/v6/x/mint/types"
+
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // NewDecodeStore returns a decoder function closure that unmarshals the KVPair's
@@ -22,6 +24,14 @@ func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
 			cdc.MustUnmarshal(kvA.Value, &minterA)
 			cdc.MustUnmarshal(kvB.Value, &minterB)
 			return fmt.Sprintf("%v\n%v", minterA, minterB)
+
+		case bytes.Equal(kvA.Key[:1], types.DelegationKey):
+			var delegationA, delegationB stakingtypes.Delegation
+
+			cdc.MustUnmarshal(kvA.Value, &delegationA)
+			cdc.MustUnmarshal(kvB.Value, &delegationB)
+
+			return fmt.Sprintf("%v\n%v", delegationA, delegationB)
 
 		// case bytes.Equal(kvA.Key[:1], types.ParamsKey):
 		// 	var paramsA, paramsB types.Params
