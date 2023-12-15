@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 
 	errorsmod "cosmossdk.io/errors"
@@ -9,7 +10,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
@@ -92,14 +92,23 @@ func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, n
 // TODO: testing
 // AddParachainIBCInfoToRemoveList add parachain token information token to remove list.
 func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
-	params := keeper.GetParams(ctx)
+	// params := keeper.GetParams(ctx)
+	log := keeper.Logger(ctx)
+	log.Info("k.storeKey", keeper.storeKey)
+	log.Info("ctx", ctx)
+	fmt.Println("k.storeKey", keeper.storeKey)
+	fmt.Println("ctx", ctx)
+	fmt.Println("k.storeKey", keeper)
+	fmt.Println("keeper", keeper)
+	log.Info("keeper", keeper)
 	store := ctx.KVStore(keeper.storeKey)
-	if !store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
-		return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
-	}
+
+	// if !store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
+	// 	return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
+	// }
 
 	// Add to remove list
-	removeTime := ctx.BlockTime().Add(params.Duration)
+	removeTime := ctx.BlockTime()
 	removeToken := types.RemoveParachainIBCTokenInfo{
 		NativeDenom: nativeDenom,
 		RemoveTime:  removeTime,

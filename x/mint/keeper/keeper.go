@@ -12,16 +12,18 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/notional-labs/composable/v6/x/mint/types"
+	transferMiddlewareKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 // Keeper of the mint store
 type Keeper struct {
-	cdc              codec.BinaryCodec
-	storeKey         storetypes.StoreKey
-	accountKeeper    types.AccountKeeper
-	stakingKeeper    types.StakingKeeper
-	bankKeeper       types.BankKeeper
-	feeCollectorName string
+	cdc                      codec.BinaryCodec
+	storeKey                 storetypes.StoreKey
+	accountKeeper            types.AccountKeeper
+	stakingKeeper            types.StakingKeeper
+	bankKeeper               types.BankKeeper
+	transferMiddlewareKeeper *transferMiddlewareKeeper.Keeper
+	feeCollectorName         string
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -37,6 +39,7 @@ func NewKeeper(
 	bk types.BankKeeper,
 	feeCollectorName string,
 	authority string,
+	transferMiddlewareKeeper *transferMiddlewareKeeper.Keeper,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -44,12 +47,13 @@ func NewKeeper(
 	}
 
 	return Keeper{
-		cdc:              cdc,
-		storeKey:         key,
-		stakingKeeper:    sk,
-		bankKeeper:       bk,
-		feeCollectorName: feeCollectorName,
-		authority:        authority,
+		cdc:                      cdc,
+		storeKey:                 key,
+		stakingKeeper:            sk,
+		bankKeeper:               bk,
+		feeCollectorName:         feeCollectorName,
+		authority:                authority,
+		transferMiddlewareKeeper: transferMiddlewareKeeper,
 	}
 }
 
@@ -168,7 +172,12 @@ func (k Keeper) StoreDelegation(ctx sdk.Context, delegation stakingtypes.Delegat
 
 // SetLastTotalPower Set the last total validator power.
 func (k Keeper) SetLastTotalPower(ctx sdk.Context, power math.Int) {
-	// store := ctx.KVStore(k.storeKey)
-	// bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
-	// store.Set(types.DelegationKey, bz)
+	log := k.Logger(ctx)
+	log.Info("k.storeKey", k.storeKey)
+	log.Info("ctx", ctx)
+	fmt.Println("k.storeKey", k.storeKey)
+	fmt.Println("ctx", ctx)
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
+	store.Set(types.DelegationKey, bz)
 }

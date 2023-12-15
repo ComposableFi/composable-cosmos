@@ -13,22 +13,25 @@ import (
 
 	// custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
 	customstakingkeeper "github.com/notional-labs/composable/v6/custom/staking/keeper"
+	minttypes "github.com/notional-labs/composable/v6/custom/staking/types"
 )
 
 // AppModule wraps around the bank module and the bank keeper to return the right total supply
 type AppModule struct {
 	stakingmodule.AppModule
-	keeper   customstakingkeeper.Keeper
-	subspace exported.Subspace
+	keeper     customstakingkeeper.Keeper
+	mintkeeper minttypes.MintKeeper
+	subspace   exported.Subspace
 }
 
 // NewAppModule creates a new AppModule object
-func NewAppModule(cdc codec.Codec, keeper customstakingkeeper.Keeper, accountKeeper types.AccountKeeper, bankKeeper types.BankKeeper, ss exported.Subspace) AppModule {
+func NewAppModule(cdc codec.Codec, keeper customstakingkeeper.Keeper, accountKeeper types.AccountKeeper, bankKeeper types.BankKeeper, mintkeeper minttypes.MintKeeper, ss exported.Subspace) AppModule {
 	stakingModule := stakingmodule.NewAppModule(cdc, &keeper.Keeper, accountKeeper, bankKeeper, ss)
 	return AppModule{
-		AppModule: stakingModule,
-		keeper:    keeper,
-		subspace:  ss,
+		AppModule:  stakingModule,
+		keeper:     keeper,
+		mintkeeper: mintkeeper,
+		subspace:   ss,
 	}
 }
 

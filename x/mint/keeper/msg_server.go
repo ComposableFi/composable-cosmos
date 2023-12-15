@@ -4,7 +4,6 @@ import (
 	"context"
 
 	errorsmod "cosmossdk.io/errors"
-	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
@@ -44,8 +43,11 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 	// Unwrap context
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	ms.SetLastTotalPower(ctx, math.Int{})
-	return nil, errorsmod.Wrapf(types.ErrInvalidAddress, "Custom error: nikita")
+	ms.transferMiddlewareKeeper.AddParachainIBCInfoToRemoveList(ctx, "pica")
+
+	// ms.SetLastTotalPower(ctx, math.Int{})
+	// return nil, errorsmod.Wrapf(types.ErrInvalidAddress, "Custom error: nikita")
+	return &types.MsgFundModuleAccountResponse{}, nil
 	// Check sender address
 	sender, err := sdk.AccAddressFromBech32(req.FromAddress)
 	if err != nil {

@@ -3,18 +3,18 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	accountkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 
+	accountkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
 )
 
 type Keeper struct {
 	stakingkeeper.Keeper
+	keys       storetypes.StoreKey
 	cdc        codec.BinaryCodec
-	storeKey   storetypes.StoreKey
-	acck       accountkeeper.AccountKeeper
 	mintkeeper mintkeeper.Keeper
+	acck       accountkeeper.AccountKeeper
 	authority  string
 }
 
@@ -35,7 +35,7 @@ type Keeper struct {
 
 func NewBaseKeeper(
 	cdc codec.BinaryCodec,
-	// keys storetypes.StoreKey,
+	keys storetypes.StoreKey,
 	staking stakingkeeper.Keeper,
 	acck accountkeeper.AccountKeeper,
 	mintkeeper mintkeeper.Keeper,
@@ -43,6 +43,7 @@ func NewBaseKeeper(
 ) Keeper {
 	keeper := Keeper{
 		Keeper:     staking,
+		keys:       keys,
 		acck:       acck,
 		authority:  authority,
 		mintkeeper: mintkeeper,
