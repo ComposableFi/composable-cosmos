@@ -1,0 +1,28 @@
+syntax = "proto3";
+package centauri.stakingmiddleware.v1beta1;
+
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "x/stakingmiddleware/types";
+
+// Msg defines the x/stakingmiddleware Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc SetPower(MsgSetPower) returns (MsgSetPowerResponse);
+}
+
+// MsgSetPower is the Msg/SetPower request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgSetPower {
+}
+
+// MsgSetPowerResponse defines the response structure for executing a
+// MsgSetPower message.
+//
+// Since: cosmos-sdk 0.47
+message MsgSetPowerResponse {}

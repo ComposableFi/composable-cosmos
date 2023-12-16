@@ -3,6 +3,7 @@ package centauri.stakingmiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
 
+
 option go_package = "x/stakingmiddleware/types";
 
 // GenesisState defines the stakingmiddleware module's genesis state.
