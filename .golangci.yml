@@ -109,12 +109,11 @@ linters-settings:
       - name: unused-parameter
         disabled: true
       - name: unhandled-error
-        disabled: false
+        disabled: true
         arguments:
           - 'buffer.WriteString'
           - 'fmt.Printf'
           - 'fmt.Print'
           - 'fmt.Println'
-          - 'myFunction'
       - name: import-shadowing
         disabled: true

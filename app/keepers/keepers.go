@@ -75,7 +75,7 @@ import (
 	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
 	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"

@@ -98,13 +98,13 @@ import (
 	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
-	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	"github.com/notional-labs/composable/v6/x/mint"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 	txBoundary "github.com/notional-labs/composable/v6/x/tx-boundary"
 	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
@@ -197,7 +197,7 @@ var (
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
 		ica.AppModuleBasic{},
-		ibc_hooks.AppModuleBasic{},
+		ibchooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
 		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
@@ -314,7 +314,7 @@ func NewComposableApp(
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
-	ibcHooksModule := ibc_hooks.NewAppModule()
+	ibcHooksModule := ibchooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
 	/****  Module Options ****/
 

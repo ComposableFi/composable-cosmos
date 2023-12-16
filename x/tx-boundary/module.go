@@ -1,4 +1,4 @@
-package tx_boundary
+package txboundary
 
 import (
 	"context"
