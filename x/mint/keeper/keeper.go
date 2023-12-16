@@ -168,7 +168,7 @@ func (k Keeper) StoreDelegation(ctx sdk.Context, delegation stakingtypes.Delegat
 
 // SetLastTotalPower Set the last total validator power.
 func (k Keeper) SetLastTotalPower(ctx sdk.Context, power math.Int) {
-	// store := ctx.KVStore(k.storeKey)
-	// bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
-	// store.Set(types.DelegationKey, bz)
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
+	store.Set(types.DelegationKey, bz)
 }

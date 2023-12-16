@@ -16,8 +16,8 @@ type msgServer struct {
 
 var _ types.MsgServer = msgServer{}
 
-func NewMsgServerImpl(stakingKeeper stakingkeeper.Keeper) types.MsgServer {
-	return &msgServer{msgServer: stakingkeeper.NewMsgServerImpl(&stakingKeeper)}
+func NewMsgServerImpl(stakingKeeper stakingkeeper.Keeper, customstakingkeeper Keeper) types.MsgServer {
+	return &msgServer{Keeper: customstakingkeeper, msgServer: stakingkeeper.NewMsgServerImpl(&stakingKeeper)}
 }
 
 func (k msgServer) CreateValidator(goCtx context.Context, msg *types.MsgCreateValidator) (*types.MsgCreateValidatorResponse, error) {
