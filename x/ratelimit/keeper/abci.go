@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
-
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 // BeginBlocker of epochs module.

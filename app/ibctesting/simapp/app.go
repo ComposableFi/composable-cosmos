@@ -9,17 +9,6 @@ import (
 	"path/filepath"
 
 	"github.com/gorilla/mux"
-	simappparams "github.com/notional-labs/composable/v6/app/ibctesting/simapp/params"
-	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
-	v6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
-	v7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
-	// TODO: mint module not complete yet,
-	"github.com/notional-labs/composable/v6/x/mint"
-	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
-	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
 
@@ -132,6 +121,18 @@ import (
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	ibcmock "github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
+
+	simappparams "github.com/notional-labs/composable/v6/app/ibctesting/simapp/params"
+	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
+	v6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
+	v7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
+	// TODO: mint module not complete yet,
+	"github.com/notional-labs/composable/v6/x/mint"
+	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
+	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 const appName = "SimApp"

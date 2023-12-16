@@ -115,3 +115,5 @@ linters-settings:
           - 'fmt.Print'
           - 'fmt.Println'
           - 'myFunction'
+      - name: import-shadowing
+        disabled: true

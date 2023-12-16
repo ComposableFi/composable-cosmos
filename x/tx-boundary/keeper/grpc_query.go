@@ -3,9 +3,9 @@ package keeper
 import (
 	"context"
 
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 var _ types.QueryServer = Keeper{}

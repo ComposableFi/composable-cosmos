@@ -3,8 +3,6 @@ package ante
 import (
 	"fmt"
 
-	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-
 	errorsmod "cosmossdk.io/errors"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -12,6 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+
+	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 type IBCPermissionDecorator struct {

@@ -1,8 +1,6 @@
 package transfermiddleware
 
 import (
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-
 	"cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,6 +12,8 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 var _ porttypes.Middleware = &IBCMiddleware{}

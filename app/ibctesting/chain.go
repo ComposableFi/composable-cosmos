@@ -11,10 +11,6 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	composable "github.com/notional-labs/composable/v6/app"
-	"github.com/notional-labs/composable/v6/app/ibctesting/simapp"
-	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	routerKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
@@ -58,6 +54,11 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v7/testing"
 	"github.com/cosmos/ibc-go/v7/testing/mock"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
+
+	composable "github.com/notional-labs/composable/v6/app"
+	"github.com/notional-labs/composable/v6/app/ibctesting/simapp"
+	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	routerKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 // TestChain is a testing struct that wraps a simapp with the last TM Header, the current ABCI

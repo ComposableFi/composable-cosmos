@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {

@@ -1,17 +1,17 @@
 package ante
 
 import (
-	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
+	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+
+	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 // Link to default ante handler used by cosmos sdk:
@@ -25,7 +25,7 @@ func NewAnteHandler(
 	sigGasConsumer ante.SignatureVerificationGasConsumer,
 	signModeHandler signing.SignModeHandler,
 	channelKeeper *ibckeeper.Keeper,
-	tfmwKeeper tfmwKeeper.Keeper,
+	tfmwKeeper tfmwkeeper.Keeper,
 	codec codec.BinaryCodec,
 ) sdk.AnteHandler {
 	return sdk.ChainAnteDecorators(

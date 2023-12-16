@@ -13,7 +13,6 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/errors"
@@ -40,6 +39,8 @@ import (
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	tmtypes "github.com/cometbft/cometbft/types"
+
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in

@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	"github.com/notional-labs/composable/v6/app"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
@@ -33,6 +32,8 @@ import (
 	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cometbft/cometbft/libs/log"
+
+	"github.com/notional-labs/composable/v6/app"
 )
 
 var ChainID string

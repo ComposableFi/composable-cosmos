@@ -3,9 +3,6 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
-	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,6 +11,9 @@ import (
 	"github.com/cometbft/cometbft/libs/log"
 
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 type Keeper struct {

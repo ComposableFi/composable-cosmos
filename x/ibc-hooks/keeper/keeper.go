@@ -3,13 +3,13 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/notional-labs/composable/v6/x/ibc-hooks/types"
-
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 
 	"github.com/cometbft/cometbft/libs/log"
+
+	"github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 )
 
 type (

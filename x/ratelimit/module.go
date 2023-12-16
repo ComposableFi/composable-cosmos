@@ -7,9 +7,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/composable/v6/x/ratelimit/client/cli"
-	"github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -20,6 +17,10 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/client/cli"
+	"github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 var (

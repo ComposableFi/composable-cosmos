@@ -3,11 +3,6 @@ package keepers
 import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
-	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -32,6 +27,12 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 // GenerateKeys generates new keys (KV Store, Transient store, and memory store).

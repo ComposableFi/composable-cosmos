@@ -3,12 +3,12 @@ package keeper
 import (
 	"context"
 
-	"github.com/notional-labs/composable/v6/x/mint/types"
-
 	errorsmod "cosmossdk.io/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+
+	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 var _ types.MsgServer = msgServer{}

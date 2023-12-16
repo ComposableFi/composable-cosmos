@@ -3,8 +3,6 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/notional-labs/composable/v6/x/mint/types"
-
 	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -12,6 +10,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cometbft/cometbft/libs/log"
+
+	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 // Keeper of the mint store

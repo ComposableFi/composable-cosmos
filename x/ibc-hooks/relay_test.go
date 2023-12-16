@@ -5,14 +5,15 @@ import (
 	"testing"
 	"time"
 
-	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
-	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+
+	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
+	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 )
 
 // TODO: use testsuite here.

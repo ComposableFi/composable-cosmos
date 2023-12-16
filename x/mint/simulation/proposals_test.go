@@ -4,8 +4,6 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/notional-labs/composable/v6/x/mint/simulation"
-	"github.com/notional-labs/composable/v6/x/mint/types"
 	"gotest.tools/v3/assert"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,6 +11,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
+	"github.com/notional-labs/composable/v6/x/mint/simulation"
+	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 func TestProposalMsgs(t *testing.T) {

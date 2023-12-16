@@ -7,7 +7,6 @@ import (
 	"os"
 	"testing"
 
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -35,6 +34,8 @@ import (
 
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 // Get flags every time the simulator is run

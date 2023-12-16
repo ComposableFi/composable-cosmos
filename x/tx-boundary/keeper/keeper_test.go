@@ -4,14 +4,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/notional-labs/composable/v6/app"
-	"github.com/notional-labs/composable/v6/app/helpers"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	"github.com/stretchr/testify/suite"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+
+	"github.com/notional-labs/composable/v6/app"
+	"github.com/notional-labs/composable/v6/app/helpers"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 type KeeperTestSuite struct {

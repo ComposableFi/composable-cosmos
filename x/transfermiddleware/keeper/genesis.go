@@ -1,9 +1,9 @@
 package keeper
 
 import (
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 // TODO: add init genesis logic

@@ -3,8 +3,6 @@ package keeper
 import (
 	"context"
 
-	banktypes "github.com/notional-labs/composable/v6/custom/bank/types"
-	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -15,6 +13,9 @@ import (
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+
+	banktypes "github.com/notional-labs/composable/v6/custom/bank/types"
+	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 type Keeper struct {

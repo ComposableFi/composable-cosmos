@@ -8,7 +8,6 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	composable "github.com/notional-labs/composable/v6/app"
 	"github.com/stretchr/testify/require"
 
 	"cosmossdk.io/math"
@@ -31,6 +30,8 @@ import (
 	tmtypes "github.com/cometbft/cometbft/types"
 
 	"github.com/cosmos/ibc-go/v7/testing/mock"
+
+	composable "github.com/notional-labs/composable/v6/app"
 )
 
 // SimAppChainID hardcoded chainID for simulation

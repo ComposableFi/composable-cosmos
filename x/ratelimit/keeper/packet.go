@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
-
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 
@@ -17,6 +15,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 type RateLimitedPacketInfo struct {

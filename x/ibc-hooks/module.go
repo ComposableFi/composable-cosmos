@@ -5,8 +5,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/notional-labs/composable/v6/x/ibc-hooks/client/cli"
-	"github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -16,6 +14,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+
+	"github.com/notional-labs/composable/v6/x/ibc-hooks/client/cli"
+	"github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 )
 
 var (

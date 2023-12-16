@@ -3,11 +3,12 @@ package cli
 import (
 	"fmt"
 
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module.
