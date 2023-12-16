@@ -111,6 +111,7 @@ linters-settings:
       - name: unhandled-error
         disabled: false
         arguments:
+          - 'buffer.WriteString'
           - 'fmt.Printf'
           - 'fmt.Print'
           - 'fmt.Println'

@@ -140,7 +140,7 @@ func (k Keeper) GetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) (limitPerA
 	}
 	bz := store.Get(addr)
 	k.cdc.MustUnmarshal(bz, &limitPerAddr)
-	return
+	return limitPerAddr
 }
 
 func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {
