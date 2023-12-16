@@ -126,6 +126,7 @@ import (
 	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
 	v6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
 	v7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
+
 	// TODO: mint module not complete yet,
 	"github.com/notional-labs/composable/v6/x/mint"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
@@ -747,7 +748,7 @@ func (app *SimApp) LoadHeight(height int64) error {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *SimApp) ModuleAccountAddrs() map[string]bool {
+func (*SimApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
 		// do not add the following modules to blocked addresses
@@ -857,7 +858,7 @@ func (app *SimApp) SimulationManager() *module.SimulationManager {
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *SimApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
+func (*SimApp) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)

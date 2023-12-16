@@ -61,7 +61,7 @@ func (k Keeper) GetDelegateBoundary(ctx sdk.Context) (boundary types.Boundary) {
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetRedelegateBoundary sets the delegate boundary.
@@ -84,7 +84,7 @@ func (k Keeper) GetRedelegateBoundary(ctx sdk.Context) (boundary types.Boundary)
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetDelegateCount set the number of delegate tx for a given address

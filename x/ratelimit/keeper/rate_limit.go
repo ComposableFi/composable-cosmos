@@ -43,7 +43,7 @@ func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelID string, d
 }
 
 // Adds an amount to the flow in either the SEND or RECV direction
-func (k Keeper) UpdateFlow(_ sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
+func (Keeper) UpdateFlow(_ sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
 	switch direction {
 	case types.PACKET_SEND:
 		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota, rateLimit.MinRateLimitAmount)

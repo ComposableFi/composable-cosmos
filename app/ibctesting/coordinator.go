@@ -207,7 +207,7 @@ func (coord *Coordinator) CommitNBlocks(chain *TestChain, n uint64) {
 
 // ConnOpenInitOnBothChains initializes a connection on both endpoints with the state INIT
 // using the OpenInit handshake call.
-func (coord *Coordinator) ConnOpenInitOnBothChains(path *Path) error {
+func (*Coordinator) ConnOpenInitOnBothChains(path *Path) error {
 	err := path.EndpointA.ConnOpenInit()
 	if err != nil {
 		return err
@@ -232,7 +232,7 @@ func (coord *Coordinator) ConnOpenInitOnBothChains(path *Path) error {
 
 // ChanOpenInitOnBothChains initializes a channel on the source chain and counterparty chain
 // with the state INIT using the OpenInit handshake call.
-func (coord *Coordinator) ChanOpenInitOnBothChains(path *Path) error {
+func (*Coordinator) ChanOpenInitOnBothChains(path *Path) error {
 	// NOTE: only creation of a capability for a transfer or mock port is supported
 	// Other applications must bind to the port in InitGenesis or modify this code.
 

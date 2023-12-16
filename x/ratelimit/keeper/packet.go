@@ -37,7 +37,7 @@ type RateLimitedPacketInfo struct {
 //
 // For NATIVE denoms, return as is (e.g. ustrd)
 // For NON-NATIVE denoms, take the ibc hash (e.g. hash "transfer/channel-2/usoms" into "ibc/...")
-func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
 	// Determine the denom by looking at the denom trace path
 	denomTrace := transfertypes.ParseDenomTrace(packet.Denom)
 
