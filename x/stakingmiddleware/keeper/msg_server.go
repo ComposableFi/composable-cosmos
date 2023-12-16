@@ -21,7 +21,7 @@ func NewMsgServerImpl(k Keeper) types.MsgServer {
 }
 
 // UpdateParams updates the params.
-func (ms msgServer) SetPower(goCtx context.Context, req *types.MsgSetPower) (*types.MsgUpdateParamsResponse, error) {
+func (ms msgServer) SetPower(goCtx context.Context, req *types.MsgSetPower) (*types.MsgSetPowerResponse, error) {
 
 	return &types.MsgSetPowerResponse{}, nil
 }
