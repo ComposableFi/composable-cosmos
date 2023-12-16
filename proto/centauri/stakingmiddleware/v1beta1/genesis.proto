@@ -1,0 +1,16 @@
+syntax = "proto3";
+package centauri.stakingmiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "x/stakingmiddleware/types";
+
+// GenesisState defines the stakingmiddleware module's genesis state.
+message GenesisState {
+  // last_total_power tracks the total amounts of bonded tokens recorded during
+  // the previous end block.
+  bytes last_total_power = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false
+  ];
+}
