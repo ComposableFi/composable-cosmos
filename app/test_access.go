@@ -19,7 +19,7 @@ import (
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 
 	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	tfmdKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	tfmdkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {
@@ -84,7 +84,7 @@ func (s TestSupport) GetTxConfig() client.TxConfig {
 	return s.app.GetTxConfig()
 }
 
-func (s TestSupport) TransferMiddleware() tfmdKeeper.Keeper {
+func (s TestSupport) TransferMiddleware() tfmdkeeper.Keeper {
 	return s.app.TransferMiddlewareKeeper
 }
 

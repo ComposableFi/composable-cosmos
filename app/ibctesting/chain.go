@@ -58,7 +58,7 @@ import (
 	composable "github.com/notional-labs/composable/v6/app"
 	"github.com/notional-labs/composable/v6/app/ibctesting/simapp"
 	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	routerKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	routerkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 // TestChain is a testing struct that wraps a simapp with the last TM Header, the current ABCI
@@ -617,7 +617,7 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 	return capability
 }
 
-func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
+func (chain *TestChain) TransferMiddleware() routerkeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 

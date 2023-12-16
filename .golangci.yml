@@ -117,3 +117,7 @@ linters-settings:
           - 'fmt.Println'
       - name: import-shadowing
         disabled: true
+      - name: get-return
+        disabled: true
+      - name: redundant-import-alias
+        disabled: true

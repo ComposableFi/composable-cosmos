@@ -126,11 +126,12 @@ import (
 	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
 	v6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
 	v7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
+
 	// TODO: mint module not complete yet,
 	"github.com/notional-labs/composable/v6/x/mint"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )

@@ -63,11 +63,11 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	wasmclientkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasmclienttypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
 	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
-	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
@@ -112,11 +112,11 @@ type AppKeepers struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	AuthzKeeper      authzkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
-	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
+	Wasm08Keeper     wasmclientkeeper.Keeper
 	WasmKeeper       wasm.Keeper
 	IBCHooksKeeper   *ibchookskeeper.Keeper
-	Ics20WasmHooks   *ibc_hooks.WasmHooks
-	HooksICS4Wrapper ibc_hooks.ICS4Middleware
+	Ics20WasmHooks   *ibchooks.WasmHooks
+	HooksICS4Wrapper ibchooks.ICS4Middleware
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -213,7 +213,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeper(appCodec, appKeepers.keys[wasmclienttypes.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -237,9 +237,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.IBCHooksKeeper = &hooksKeeper
 
 	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	wasmHooks := ibc_hooks.NewWasmHooks(&hooksKeeper, nil, composablePrefix) // The contract keeper needs to be set later
+	wasmHooks := ibchooks.NewWasmHooks(&hooksKeeper, nil, composablePrefix) // The contract keeper needs to be set later
 	appKeepers.Ics20WasmHooks = &wasmHooks
-	appKeepers.HooksICS4Wrapper = ibc_hooks.NewICS4Middleware(
+	appKeepers.HooksICS4Wrapper = ibchooks.NewICS4Middleware(
 		appKeepers.IBCKeeper.ChannelKeeper,
 		appKeepers.Ics20WasmHooks,
 	)
@@ -318,7 +318,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
-	hooksTransferMiddleware := ibc_hooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
+	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
