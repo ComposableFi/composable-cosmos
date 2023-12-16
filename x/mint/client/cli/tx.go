@@ -1,13 +1,13 @@
 package cli
 
 import (
+	"github.com/notional-labs/composable/v6/x/mint/types"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/spf13/cobra"
-
-	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 // GetTxCmd returns the tx commands for mint

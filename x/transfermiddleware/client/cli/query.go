@@ -3,12 +3,12 @@ package cli
 import (
 	"fmt"
 
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/spf13/cobra"
-
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 // GetQueryCmd returns the query commands for router

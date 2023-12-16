@@ -1,8 +1,7 @@
 package ante
 
 import (
-	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
-	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -10,7 +9,9 @@ import (
 	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+
+	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
+	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 )
 
 // Link to default ante handler used by cosmos sdk:
