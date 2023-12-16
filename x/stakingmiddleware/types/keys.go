@@ -12,7 +12,7 @@ var (
 
 const (
 	// module name
-	ModuleName = "mint"
+	ModuleName = "customstaking"
 
 	// StoreKey is the default store key for mint
 	StoreKey = ModuleName

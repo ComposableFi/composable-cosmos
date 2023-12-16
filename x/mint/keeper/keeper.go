@@ -172,3 +172,17 @@ func (k Keeper) SetLastTotalPower(ctx sdk.Context, power math.Int) {
 	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
 	store.Set(types.DelegationKey, bz)
 }
+
+func (k Keeper) GetLastTotalPower(ctx sdk.Context) math.Int {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.DelegationKey)
+
+	if bz == nil {
+		return math.ZeroInt()
+	}
+
+	ip := sdk.IntProto{}
+	k.cdc.MustUnmarshal(bz, &ip)
+
+	return ip.Int
+}
