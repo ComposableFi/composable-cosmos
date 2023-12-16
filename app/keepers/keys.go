@@ -32,7 +32,7 @@ import (
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 // GenerateKeys generates new keys (KV Store, Transient store, and memory store).
@@ -43,7 +43,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txboundarytypes.StoreKey,
 		authzkeeper.StoreKey,
 	)
 

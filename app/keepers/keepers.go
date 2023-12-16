@@ -78,8 +78,8 @@ import (
 	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 const (
@@ -126,7 +126,7 @@ type AppKeepers struct {
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
-	TxBoundaryKeepper        txBoundaryKeeper.Keeper
+	TxBoundaryKeepper        txboundarykeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 }
@@ -254,9 +254,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		govModuleAuthority,
 	)
 
-	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
+	appKeepers.TxBoundaryKeepper = txboundarykeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[txBoundaryTypes.StoreKey],
+		appKeepers.keys[txboundarytypes.StoreKey],
 		govModuleAuthority,
 	)
 

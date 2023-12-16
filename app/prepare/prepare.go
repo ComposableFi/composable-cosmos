@@ -10,7 +10,7 @@ import (
 	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 )
 
-func PrepareProposalHandler(
+func ProposalHandler(
 	txConfig client.TxConfig,
 	cdc codec.BinaryCodec,
 	txboundaryKeeper txboundarykeeper.Keeper,

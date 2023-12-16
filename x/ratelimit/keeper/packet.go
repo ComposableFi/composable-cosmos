@@ -84,7 +84,7 @@ func (Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketD
 //	       Packet Denom:      transfer/channel-X/transfer/channel-Z/ujuno
 //	        -> Remove Prefix: transfer/channel-Z/ujuno
 //	        -> Hash:          ibc/...
-func (k Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
 	// To determine the denom, first check whether Stride is acting as source
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), packetData.Denom) {
 		// Remove the source prefix (e.g. transfer/channel-X/transfer/channel-Z/ujuno -> transfer/channel-Z/ujuno)

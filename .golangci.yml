@@ -32,6 +32,13 @@ linters:
 
 issues:
   exclude-rules:
+    - text: 'should not use underscores in package names'
+      linters:
+        - stylecheck
+    - text: 'use an underscore in package name'
+      linters:
+        - revive
+        - stylecheck
     - text: 'differs only by capitalization to method'
       linters:
         - revive
@@ -105,7 +112,6 @@ linters-settings:
         disabled: true
       - name: defer
         disabled: true
-      # Disabled in favour of unparam.
       - name: unused-parameter
         disabled: true
       - name: unhandled-error
@@ -120,4 +126,6 @@ linters-settings:
       - name: get-return
         disabled: true
       - name: redundant-import-alias
+        disabled: true
+      - name: unchecked-type-assertion
         disabled: true

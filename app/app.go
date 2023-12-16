@@ -523,7 +523,7 @@ func NewComposableApp(
 	app.SetEndBlocker(app.EndBlocker)
 
 	app.SetPrepareProposal(
-		prepare.PrepareProposalHandler(
+		prepare.ProposalHandler(
 			encodingConfig.TxConfig,
 			appCodec,
 			app.TxBoundaryKeepper,

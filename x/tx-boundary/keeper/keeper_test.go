@@ -23,9 +23,9 @@ type KeeperTestSuite struct {
 	app *app.ComposableApp
 }
 
-func (suite *KeeperTestSuite) SetupTest() {
-	suite.app = helpers.SetupComposableAppWithValSet(suite.T())
-	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
+func (s *KeeperTestSuite) SetupTest() {
+	s.app = helpers.SetupComposableAppWithValSet(s.T())
+	s.ctx = s.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
 }
 
 func TestKeeperTestSuite(t *testing.T) {
@@ -47,7 +47,7 @@ var (
 	}
 )
 
-func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
+func (s *KeeperTestSuite) TestSetDelegateBoundary() {
 	for _, tc := range []struct {
 		desc             string
 		expectedBoundary types.Boundary
@@ -59,7 +59,7 @@ func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
 			desc:             "Case success",
 			expectedBoundary: newBoundary,
 			malleate: func() error {
-				return suite.app.TxBoundaryKeepper.SetDelegateBoundary(suite.ctx, newBoundary)
+				return s.app.TxBoundaryKeepper.SetDelegateBoundary(s.ctx, newBoundary)
 			},
 			shouldErr: false,
 		},
@@ -67,7 +67,7 @@ func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
 			desc:             "Case fail",
 			expectedBoundary: failBoundary,
 			malleate: func() error {
-				return suite.app.TxBoundaryKeepper.SetDelegateBoundary(suite.ctx, failBoundary)
+				return s.app.TxBoundaryKeepper.SetDelegateBoundary(s.ctx, failBoundary)
 			},
 			shouldErr:   true,
 			expectedErr: "BlocksPerGeneration must not be zero",
@@ -82,21 +82,21 @@ func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
 		},
 	} {
 		tc := tc
-		suite.Run(tc.desc, func() {
-			suite.SetupTest()
+		s.Run(tc.desc, func() {
+			s.SetupTest()
 			err := tc.malleate()
 			if !tc.shouldErr {
-				res := suite.app.TxBoundaryKeepper.GetDelegateBoundary(suite.ctx)
-				suite.Equal(res, tc.expectedBoundary)
+				res := s.app.TxBoundaryKeepper.GetDelegateBoundary(s.ctx)
+				s.Equal(res, tc.expectedBoundary)
 			} else {
-				suite.Equal(err.Error(), tc.expectedErr)
+				s.Equal(err.Error(), tc.expectedErr)
 			}
 		})
 	}
 }
 
-func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
-	suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, types.Boundary{
+func (s *KeeperTestSuite) TestSetRedelegateBoundary() {
+	s.app.TxBoundaryKeepper.SetRedelegateBoundary(s.ctx, types.Boundary{ //nolint:errcheck
 		TxLimit:             10,
 		BlocksPerGeneration: 5,
 	})
@@ -112,7 +112,7 @@ func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
 			desc:             "Case success",
 			expectedBoundary: newBoundary,
 			malleate: func() error {
-				return suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, newBoundary)
+				return s.app.TxBoundaryKeepper.SetRedelegateBoundary(s.ctx, newBoundary)
 			},
 			shouldErr: false,
 		},
@@ -120,7 +120,7 @@ func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
 			desc:             "Success",
 			expectedBoundary: failBoundary,
 			malleate: func() error {
-				return suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, failBoundary)
+				return s.app.TxBoundaryKeepper.SetRedelegateBoundary(s.ctx, failBoundary)
 			},
 			shouldErr:   true,
 			expectedErr: "BlocksPerGeneration must not be zero",
@@ -135,14 +135,14 @@ func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
 		},
 	} {
 		tc := tc
-		suite.Run(tc.desc, func() {
-			suite.SetupTest()
+		s.Run(tc.desc, func() {
+			s.SetupTest()
 			err := tc.malleate()
 			if !tc.shouldErr {
-				res := suite.app.TxBoundaryKeepper.GetRedelegateBoundary(suite.ctx)
-				suite.Equal(res, tc.expectedBoundary)
+				res := s.app.TxBoundaryKeepper.GetRedelegateBoundary(s.ctx)
+				s.Equal(res, tc.expectedBoundary)
 			} else {
-				suite.Equal(err.Error(), tc.expectedErr)
+				s.Equal(err.Error(), tc.expectedErr)
 			}
 		})
 	}

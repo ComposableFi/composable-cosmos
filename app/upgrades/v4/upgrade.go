@@ -29,7 +29,7 @@ func CreateUpgradeHandler(
 		var wasmdParams wasmtypes.Params
 		wasmdParams.CodeUploadAccess = wasmtypes.AccessConfig{Permission: wasmtypes.AccessTypeNobody}
 		wasmdParams.InstantiateDefaultPermission = wasmtypes.AccessTypeNobody
-		keepers.WasmKeeper.SetParams(ctx, wasmdParams)
+		keepers.WasmKeeper.SetParams(ctx, wasmdParams) //nolint:errcheck
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
