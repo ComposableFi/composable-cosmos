@@ -12,10 +12,11 @@ var (
 
 const (
 	// module name
-	ModuleName = "customstaking"
+	ModuleName = "stakingmiddleware"
 
 	// StoreKey is the default store key for mint
-	StoreKey = ModuleName
+
+	StoreKey = "customstmiddleware" // not using the module name because of collisions with key "ibc"
 )
 
 // GetDelegationKey creates the key for delegator bond with validator
