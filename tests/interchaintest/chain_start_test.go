@@ -11,8 +11,8 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-// TestStartcentauri is a basic test to assert that spinning up a layer network with 1 validator works properly.
-func TestStartLayer(t *testing.T) {
+// TestStartcentauri is a basic test to assert that spinning up a centauri network with 1 validator works properly.
+func TestStartCentauri(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
 	}
@@ -27,8 +27,8 @@ func TestStartLayer(t *testing.T) {
 
 	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
 		{
-			Name:          "layer",
-			ChainConfig:   layerConfig,
+			Name:          "centauri",
+			ChainConfig:   centauriConfig,
 			NumValidators: &numVals,
 			NumFullNodes:  &numFullNodes,
 		},
@@ -38,13 +38,13 @@ func TestStartLayer(t *testing.T) {
 	chains, err := cf.Chains(t.Name())
 	require.NoError(t, err)
 
-	layer := chains[0].(*cosmos.CosmosChain)
+	centauri := chains[0].(*cosmos.CosmosChain)
 
 	// Relayer Factory
 	client, network := interchaintest.DockerSetup(t)
 
 	// Create a new Interchain object which describes the chains, relayers, and IBC connections we want to use
-	ic := interchaintest.NewInterchain().AddChain(layer)
+	ic := interchaintest.NewInterchain().AddChain(centauri)
 
 	rep := testreporter.NewNopReporter()
 	eRep := rep.RelayerExecReporter(t)

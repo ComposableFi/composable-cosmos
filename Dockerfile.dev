@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     linux-headers
 
 # Download go dependencies
-WORKDIR /layer
+WORKDIR /centauri
 COPY go.mod go.sum ./
 
 # Cosmwasm - Download correct libwasmvm version
@@ -38,15 +38,15 @@ RUN GOWORK=off go build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="layer" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="layerd" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="centauri" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="centaurid" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /layer/build/layerd \
-        /layer/cmd/layerd
+        -o /centauri/build/centaurid \
+        /centauri/cmd/centaurid
 
 # --------------------------------------------------------
 # Runner
@@ -54,13 +54,13 @@ RUN GOWORK=off go build \
 
 FROM ${RUNNER_IMAGE}
 
-COPY --from=builder /layer/build/layerd /bin/layerd
+COPY --from=builder /centauri/build/centaurid /bin/centaurid
 
-ENV HOME /layer
+ENV HOME /centauri
 
 WORKDIR $HOME
 
-COPY scripts/* /layer/
+COPY scripts/* /centauri/
 # rest server
 EXPOSE 1317
 # tendermint p2p

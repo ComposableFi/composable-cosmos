@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     linux-headers
 
 # Download go dependencies
-WORKDIR /layer
+WORKDIR /centauri
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
@@ -43,26 +43,40 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="layer" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="layerd" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="centauri" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="centaurid" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /layer/build/layerd \
-        /layer/cmd/layerd
+        -o /centauri/build/centaurid \
+        /centauri/cmd/centaurid
+
+
+# --------------------------------------------------------
+# toolkit
+# --------------------------------------------------------
+
+FROM busybox:1.35.0-uclibc as busybox
+RUN addgroup --gid 1025 -S composable && adduser --uid 1025 -S composable -G composable
+
 
 # --------------------------------------------------------
 # Runner
 # --------------------------------------------------------
-
 FROM ${RUNNER_IMAGE}
 
-COPY --from=builder /layer/build/layerd /bin/layerd
+COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/sh
 
-ENV HOME /layer
-WORKDIR $HOME
+COPY --from=builder /centauri/build/centaurid /bin/centaurid
+
+# Install composable user
+COPY --from=busybox /etc/passwd /etc/passwd
+COPY --from=busybox --chown=1025:1025 /home/composable /home/composable
+
+WORKDIR /home/composable
+USER composable
 
 # rest server
 EXPOSE 1317
@@ -72,4 +86,5 @@ EXPOSE 26656
 EXPOSE 26657
 # grpc
 EXPOSE 9090
-ENTRYPOINT ["layerd"]
+
+ENTRYPOINT ["centaurid"]

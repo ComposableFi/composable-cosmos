@@ -1,0 +1,16 @@
+syntax = "proto3";
+package centauri.transfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "centauri/transfermiddleware/v1beta1/params.proto";
+import "centauri/transfermiddleware/v1beta1/parachain_token_info.proto";
+
+option go_package = "x/transfermiddleware/types";
+
+// GenesisState defines the module various parameters when first
+// initialized
+message GenesisState {
+  repeated ParachainIBCTokenInfo token_infos = 1
+      [ (gogoproto.nullable) = false ];
+  Params params = 2 [ (gogoproto.nullable) = false ];
+}

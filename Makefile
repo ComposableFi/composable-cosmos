@@ -58,8 +58,8 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=layer \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=layerd \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=centauri \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
@@ -86,13 +86,13 @@ endif
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/layerd
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/centaurid
 
 build:
-	go build $(BUILD_FLAGS) -o bin/layerd ./cmd/layerd
+	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t layer:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
@@ -133,22 +133,22 @@ proto-check-breaking:
 
 # Executes start chain tests via interchaintest
 ictest-start-cosmos:
-	cd tests/interchaintest && go test -race -v -run TestStartLayer .
+	cd tests/interchaintest && go test -race -v -run TestStartCentauri .
 
 ictest-validator:
 	cd tests/interchaintest && go test -race -v -run TestValidator .
 
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotLayerChainStart .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotcentauriChainStart .
 
 # Executes IBC tests via interchaintest
 ictest-ibc:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestLayerPicassoIBCTransfer .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriPicassoIBCTransfer .
 
 # Executes Basic Upgrade Chain tests via interchaintest
 ictest-upgrade:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestLayerUpgrade .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestCentauriUpgrade .
 
 # Executes all tests via interchaintest after compling a local image as juno:local
 ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
