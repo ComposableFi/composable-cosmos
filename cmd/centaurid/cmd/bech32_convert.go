@@ -43,7 +43,7 @@ Example:
 		},
 	}
 
-	cmd.Flags().StringP(flagBech32Prefix, "p", "centauri", "Bech32 Prefix to encode to")
+	cmd.Flags().StringP(flagBech32Prefix, "p", "composable", "Bech32 Prefix to encode to")
 
 	return cmd
 }

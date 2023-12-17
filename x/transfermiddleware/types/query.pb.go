@@ -6,6 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	query "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
 	proto "github.com/cosmos/gogoproto/proto"
@@ -31,7 +32,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // message QueryEscrowAddressRequest
 type QueryEscrowAddressRequest struct {
-	ChannelID string `protobuf:"bytes,1,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 }
 
 func (m *QueryEscrowAddressRequest) Reset()         { *m = QueryEscrowAddressRequest{} }
@@ -169,7 +170,7 @@ func (m *QueryParaTokenInfoRequest) GetNativeDenom() string {
 // RPC method.
 type QueryParaTokenInfoResponse struct {
 	IbcDenom    string `protobuf:"bytes,1,opt,name=ibc_denom,json=ibcDenom,proto3" json:"ibc_denom,omitempty" yaml:"ibc_denom"`
-	ChannelID   string `protobuf:"bytes,2,opt,name=channel_id,json=channelID,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	ChannelID   string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
 	NativeDenom string `protobuf:"bytes,3,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`
 	AssetId     string `protobuf:"bytes,4,opt,name=asset_id,json=assetId,proto3" json:"asset_id,omitempty" yaml:"asset_id"`
 }
@@ -235,11 +236,114 @@ func (m *QueryParaTokenInfoResponse) GetAssetId() string {
 	return ""
 }
 
+// QueryIBCWhiteListRequest is the response type for the QueryIBCWhiteListRequest
+// RPC method.
+type QueryIBCWhiteListRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryIBCWhiteListRequest) Reset()         { *m = QueryIBCWhiteListRequest{} }
+func (m *QueryIBCWhiteListRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryIBCWhiteListRequest) ProtoMessage()    {}
+func (*QueryIBCWhiteListRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cc2bc06232cb63aa, []int{4}
+}
+func (m *QueryIBCWhiteListRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryIBCWhiteListRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryIBCWhiteListRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryIBCWhiteListRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryIBCWhiteListRequest.Merge(m, src)
+}
+func (m *QueryIBCWhiteListRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryIBCWhiteListRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryIBCWhiteListRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryIBCWhiteListRequest proto.InternalMessageInfo
+
+func (m *QueryIBCWhiteListRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryIBCWhiteListResponse is the response type for the QueryIBCWhiteListRequest
+// RPC method.
+type QueryIBCWhiteListResponse struct {
+	WhiteList []string `protobuf:"bytes,1,rep,name=white_list,json=whiteList,proto3" json:"white_list,omitempty" yaml:"white_list"`
+	// pagination defines an optional pagination for the request.
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryIBCWhiteListResponse) Reset()         { *m = QueryIBCWhiteListResponse{} }
+func (m *QueryIBCWhiteListResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryIBCWhiteListResponse) ProtoMessage()    {}
+func (*QueryIBCWhiteListResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cc2bc06232cb63aa, []int{5}
+}
+func (m *QueryIBCWhiteListResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryIBCWhiteListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryIBCWhiteListResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryIBCWhiteListResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryIBCWhiteListResponse.Merge(m, src)
+}
+func (m *QueryIBCWhiteListResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryIBCWhiteListResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryIBCWhiteListResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryIBCWhiteListResponse proto.InternalMessageInfo
+
+func (m *QueryIBCWhiteListResponse) GetWhiteList() []string {
+	if m != nil {
+		return m.WhiteList
+	}
+	return nil
+}
+
+func (m *QueryIBCWhiteListResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryEscrowAddressRequest)(nil), "centauri.transfermiddleware.v1beta1.QueryEscrowAddressRequest")
 	proto.RegisterType((*QueryEscrowAddressResponse)(nil), "centauri.transfermiddleware.v1beta1.QueryEscrowAddressResponse")
 	proto.RegisterType((*QueryParaTokenInfoRequest)(nil), "centauri.transfermiddleware.v1beta1.QueryParaTokenInfoRequest")
 	proto.RegisterType((*QueryParaTokenInfoResponse)(nil), "centauri.transfermiddleware.v1beta1.QueryParaTokenInfoResponse")
+	proto.RegisterType((*QueryIBCWhiteListRequest)(nil), "centauri.transfermiddleware.v1beta1.QueryIBCWhiteListRequest")
+	proto.RegisterType((*QueryIBCWhiteListResponse)(nil), "centauri.transfermiddleware.v1beta1.QueryIBCWhiteListResponse")
 }
 
 func init() {
@@ -247,37 +351,48 @@ func init() {
 }
 
 var fileDescriptor_cc2bc06232cb63aa = []byte{
-	// 472 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0xcb, 0x6e, 0xd3, 0x40,
-	0x14, 0x8d, 0xc3, 0xab, 0x19, 0x28, 0x0f, 0xb7, 0x55, 0x89, 0x85, 0x6c, 0x34, 0x6c, 0x58, 0xd9,
-	0x0a, 0x74, 0xd5, 0x05, 0x8f, 0x0a, 0x16, 0xd9, 0x51, 0x0b, 0x09, 0x89, 0x05, 0xd1, 0x8d, 0x7d,
-	0x1b, 0x46, 0x24, 0x33, 0xee, 0xcc, 0xa4, 0x25, 0x5b, 0xbe, 0x00, 0x89, 0x2f, 0xe1, 0x2f, 0x58,
-	0x56, 0x62, 0xc3, 0xca, 0x42, 0x09, 0x7b, 0x84, 0xbf, 0x00, 0xd9, 0x33, 0xa1, 0x4d, 0x6b, 0xa4,
-	0xb4, 0xbb, 0xb9, 0x3a, 0x73, 0xce, 0x9c, 0x7b, 0x7d, 0xae, 0x49, 0x94, 0x20, 0xd7, 0x30, 0x96,
-	0x2c, 0xd2, 0x12, 0xb8, 0xda, 0x43, 0x39, 0x62, 0x69, 0x3a, 0xc4, 0x43, 0x90, 0x18, 0x1d, 0x74,
-	0xfa, 0xa8, 0xa1, 0x13, 0xed, 0x8f, 0x51, 0x4e, 0xc2, 0x4c, 0x0a, 0x2d, 0xdc, 0x07, 0x73, 0x42,
-	0x78, 0x96, 0x10, 0x5a, 0x82, 0xb7, 0x3e, 0x10, 0x03, 0x51, 0xdd, 0x8f, 0xca, 0x93, 0xa1, 0x7a,
-	0xf7, 0x06, 0x42, 0x0c, 0x86, 0x18, 0x41, 0xc6, 0x22, 0xe0, 0x5c, 0x68, 0xd0, 0x4c, 0x70, 0x65,
-	0x50, 0xba, 0x4b, 0xda, 0xbb, 0xe5, 0x3b, 0x2f, 0x55, 0x22, 0xc5, 0xe1, 0xf3, 0x34, 0x95, 0xa8,
-	0x54, 0x8c, 0xfb, 0x63, 0x54, 0xda, 0xdd, 0x22, 0x24, 0x79, 0x0f, 0x9c, 0xe3, 0xb0, 0xc7, 0xd2,
-	0xbb, 0xce, 0x7d, 0xe7, 0x61, 0x6b, 0x67, 0xa3, 0xc8, 0x83, 0x3b, 0x13, 0x18, 0x0d, 0xb7, 0xe9,
-	0x31, 0x46, 0xe3, 0x96, 0x2d, 0xba, 0x29, 0x7d, 0x47, 0xbc, 0x3a, 0x49, 0x95, 0x09, 0xae, 0xd0,
-	0x7d, 0x46, 0x6e, 0x62, 0x05, 0xf4, 0xc0, 0x20, 0x56, 0xb7, 0x5d, 0xe4, 0xc1, 0x86, 0xd1, 0x5d,
-	0xc4, 0x69, 0xbc, 0x8a, 0x27, 0x95, 0xe8, 0x1b, 0x6b, 0xf9, 0x15, 0x48, 0x78, 0x2d, 0x3e, 0x20,
-	0xef, 0xf2, 0x3d, 0x31, 0xb7, 0xbc, 0x4d, 0x6e, 0x70, 0xd0, 0xec, 0x00, 0x7b, 0x29, 0x72, 0x31,
-	0xb2, 0xe2, 0x9b, 0x45, 0x1e, 0xac, 0x19, 0xf1, 0x93, 0x28, 0x8d, 0xaf, 0x9b, 0xf2, 0x45, 0x55,
-	0xfd, 0x71, 0xac, 0xf3, 0x53, 0xca, 0xd6, 0x79, 0x87, 0xb4, 0x58, 0x3f, 0x59, 0xd0, 0x5d, 0x2f,
-	0xf2, 0xe0, 0xb6, 0xd1, 0xfd, 0x07, 0xd1, 0x78, 0x85, 0xf5, 0x93, 0x4a, 0xf1, 0xd4, 0x00, 0x9b,
-	0xcb, 0x0d, 0xf0, 0x4c, 0x0f, 0x97, 0x96, 0xef, 0xc1, 0x0d, 0xc9, 0x0a, 0x28, 0x85, 0xba, 0x7c,
-	0xef, 0x72, 0xc5, 0x5b, 0x2b, 0xf2, 0xe0, 0x96, 0xe1, 0xcd, 0x11, 0x1a, 0x5f, 0xab, 0x8e, 0xdd,
-	0xf4, 0xd1, 0xef, 0x26, 0xb9, 0x52, 0xf5, 0xec, 0x7e, 0x75, 0xc8, 0xea, 0x42, 0xe3, 0xee, 0x93,
-	0x70, 0x89, 0xd4, 0x85, 0xff, 0xfd, 0x16, 0xde, 0xd3, 0x0b, 0xf3, 0xcd, 0xc4, 0x69, 0xf0, 0xe9,
-	0xfb, 0xaf, 0x2f, 0xcd, 0xb6, 0xbb, 0x79, 0xbc, 0x2f, 0x19, 0x48, 0xd0, 0xe5, 0x45, 0x56, 0x3a,
-	0x2c, 0x3d, 0x2f, 0xc4, 0xec, 0x3c, 0x9e, 0xeb, 0x22, 0x7f, 0x1e, 0xcf, 0xb5, 0xf9, 0xae, 0xf3,
-	0x6c, 0xe2, 0x6b, 0xe3, 0xbc, 0xb3, 0xf5, 0x6d, 0xea, 0x3b, 0x47, 0x53, 0xdf, 0xf9, 0x39, 0xf5,
-	0x9d, 0xcf, 0x33, 0xbf, 0x71, 0x34, 0xf3, 0x1b, 0x3f, 0x66, 0x7e, 0xe3, 0xad, 0xf7, 0xb1, 0xee,
-	0x77, 0xa0, 0x27, 0x19, 0xaa, 0xfe, 0xd5, 0x6a, 0x5d, 0x1f, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff,
-	0x9f, 0xa5, 0xa0, 0xee, 0x3a, 0x04, 0x00, 0x00,
+	// 642 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x55, 0x41, 0x4f, 0x13, 0x41,
+	0x14, 0x66, 0x01, 0x95, 0x0e, 0x82, 0xba, 0x80, 0x94, 0xc6, 0xec, 0x92, 0x31, 0x51, 0xe2, 0x61,
+	0x37, 0x20, 0x27, 0x12, 0x51, 0x0a, 0x6a, 0x9a, 0x78, 0xc0, 0x8d, 0x09, 0x89, 0x07, 0x9a, 0xd9,
+	0xdd, 0x47, 0x99, 0xd8, 0xce, 0x94, 0x9d, 0x29, 0xb5, 0x57, 0x7f, 0x81, 0x89, 0x37, 0x6f, 0xfe,
+	0x02, 0xe3, 0xbf, 0xf0, 0x48, 0xe2, 0xc5, 0x53, 0x63, 0x8a, 0xbf, 0xa0, 0x3f, 0xc0, 0x98, 0x9d,
+	0x99, 0xd2, 0x16, 0xd6, 0x08, 0xbd, 0xed, 0xcc, 0x7b, 0xdf, 0xf7, 0xbe, 0xf7, 0xfa, 0xbd, 0x29,
+	0xf2, 0x23, 0x60, 0x92, 0x34, 0x12, 0xea, 0xcb, 0x84, 0x30, 0x71, 0x00, 0x49, 0x8d, 0xc6, 0x71,
+	0x15, 0x9a, 0x24, 0x01, 0xff, 0x78, 0x35, 0x04, 0x49, 0x56, 0xfd, 0xa3, 0x06, 0x24, 0x2d, 0xaf,
+	0x9e, 0x70, 0xc9, 0xed, 0xfb, 0x3d, 0x80, 0x77, 0x11, 0xe0, 0x19, 0x40, 0x61, 0xbe, 0xc2, 0x2b,
+	0x5c, 0xe5, 0xfb, 0xe9, 0x97, 0x86, 0x16, 0xee, 0x55, 0x38, 0xaf, 0x54, 0xc1, 0x27, 0x75, 0xea,
+	0x13, 0xc6, 0xb8, 0x24, 0x92, 0x72, 0x26, 0x4c, 0xf4, 0x51, 0xc4, 0x45, 0x8d, 0x0b, 0x3f, 0x24,
+	0x02, 0x74, 0xc5, 0xb3, 0xfa, 0x75, 0x52, 0xa1, 0x4c, 0x25, 0xeb, 0x5c, 0xbc, 0x8f, 0x96, 0x5e,
+	0xa7, 0x19, 0xcf, 0x45, 0x94, 0xf0, 0xe6, 0x56, 0x1c, 0x27, 0x20, 0x44, 0x00, 0x47, 0x0d, 0x10,
+	0xd2, 0xde, 0x42, 0x28, 0x3a, 0x24, 0x8c, 0x41, 0xb5, 0x4c, 0xe3, 0xbc, 0xb5, 0x6c, 0xad, 0xe4,
+	0x8a, 0xb8, 0xd3, 0x76, 0x73, 0xdb, 0xfa, 0xb6, 0xb4, 0xd3, 0x6d, 0xbb, 0x77, 0x5a, 0xa4, 0x56,
+	0xdd, 0xc0, 0xfd, 0x44, 0x1c, 0xe4, 0xcc, 0xa1, 0x14, 0xe3, 0x7d, 0x54, 0xc8, 0xe2, 0x17, 0x75,
+	0xce, 0x04, 0xd8, 0xcf, 0xd0, 0x2c, 0xa8, 0x40, 0x99, 0xe8, 0x88, 0x29, 0xb2, 0xd4, 0x6d, 0xbb,
+	0x0b, 0x9a, 0x77, 0x38, 0x8e, 0x83, 0x19, 0x18, 0x64, 0xc2, 0x7b, 0x46, 0xff, 0x2e, 0x49, 0xc8,
+	0x1b, 0xfe, 0x0e, 0x58, 0x89, 0x1d, 0xf0, 0x9e, 0xfe, 0x0d, 0x74, 0x33, 0x6d, 0xf6, 0x18, 0xca,
+	0x31, 0x30, 0x5e, 0x33, 0xe4, 0x8b, 0xdd, 0xb6, 0x3b, 0xa7, 0xc9, 0x07, 0xa3, 0x38, 0x98, 0xd6,
+	0xc7, 0x1d, 0x75, 0xfa, 0x63, 0x19, 0xe5, 0xe7, 0x98, 0x8d, 0xf2, 0x55, 0x94, 0xa3, 0x61, 0x34,
+	0xc4, 0x3b, 0xdf, 0x6d, 0xbb, 0xb7, 0x35, 0xef, 0x59, 0x08, 0x07, 0x53, 0x34, 0x8c, 0x14, 0xe3,
+	0xb9, 0x69, 0x8e, 0x8f, 0x30, 0xcd, 0x0b, 0x0d, 0x4d, 0x5c, 0xbe, 0x21, 0xdb, 0x43, 0x53, 0x44,
+	0x08, 0x90, 0x69, 0xf1, 0x49, 0x85, 0x9b, 0xeb, 0xb6, 0xdd, 0x5b, 0x1a, 0xd7, 0x8b, 0xe0, 0xe0,
+	0x86, 0xfa, 0x2c, 0xc5, 0x38, 0x44, 0x79, 0xd5, 0x7f, 0xa9, 0xb8, 0xbd, 0x77, 0x48, 0x25, 0xbc,
+	0xa2, 0x42, 0xf6, 0x06, 0xfb, 0x02, 0xa1, 0xbe, 0x93, 0x54, 0xfb, 0xd3, 0x6b, 0x0f, 0x3c, 0x6d,
+	0x3b, 0x2f, 0xb5, 0x9d, 0xa7, 0x8d, 0x6e, 0x6c, 0xe7, 0xed, 0x92, 0x0a, 0x18, 0x6c, 0x30, 0x80,
+	0xc4, 0x9f, 0x2d, 0xf3, 0xf3, 0x0d, 0x17, 0x31, 0x33, 0x5e, 0x47, 0xa8, 0x99, 0x5e, 0x96, 0xab,
+	0x54, 0xc8, 0xbc, 0xb5, 0x3c, 0xb1, 0x92, 0x2b, 0x2e, 0xf4, 0x67, 0xd4, 0x8f, 0xe1, 0x20, 0xd7,
+	0xec, 0xa1, 0xed, 0x97, 0x43, 0xda, 0xc6, 0x95, 0xb6, 0x87, 0xff, 0xd5, 0xa6, 0x4b, 0x0e, 0x8a,
+	0x5b, 0xfb, 0x32, 0x89, 0xae, 0x29, 0x71, 0xf6, 0x37, 0x0b, 0xcd, 0x0c, 0xd9, 0xc0, 0xde, 0xf4,
+	0x2e, 0xb1, 0xbc, 0xde, 0x3f, 0x9d, 0x59, 0x78, 0x3a, 0x32, 0x5e, 0x0b, 0xc5, 0xee, 0x87, 0x1f,
+	0xbf, 0x3f, 0x8d, 0x2f, 0xd9, 0x8b, 0xfd, 0x67, 0xa7, 0x4e, 0x12, 0x22, 0xd3, 0x44, 0x9a, 0x2a,
+	0x4c, 0x35, 0x0f, 0x2d, 0xdd, 0x55, 0x34, 0x67, 0xbd, 0x06, 0x57, 0xd1, 0x9c, 0xb9, 0xed, 0x59,
+	0x9a, 0xf5, 0x32, 0x9b, 0xe5, 0xb6, 0xbf, 0x5a, 0x68, 0x36, 0x80, 0x2a, 0x69, 0x41, 0xb2, 0x15,
+	0x45, 0xbc, 0xc1, 0xa4, 0xfd, 0xe4, 0xf2, 0x45, 0x33, 0x8c, 0x5a, 0xd8, 0x1c, 0x15, 0x6e, 0x24,
+	0x3b, 0x4a, 0x72, 0xde, 0xbe, 0xdb, 0x97, 0x4c, 0xc3, 0x48, 0x99, 0x2d, 0x35, 0x5e, 0x71, 0xfd,
+	0x7b, 0xc7, 0xb1, 0x4e, 0x3a, 0x8e, 0xf5, 0xab, 0xe3, 0x58, 0x1f, 0x4f, 0x9d, 0xb1, 0x93, 0x53,
+	0x67, 0xec, 0xe7, 0xa9, 0x33, 0xf6, 0xb6, 0xf0, 0x3e, 0xeb, 0x7f, 0x40, 0xb6, 0xea, 0x20, 0xc2,
+	0xeb, 0xea, 0xed, 0x7d, 0xfc, 0x37, 0x00, 0x00, 0xff, 0xff, 0x78, 0xf6, 0x39, 0x56, 0x33, 0x06,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -295,6 +410,7 @@ type QueryClient interface {
 	// ParaTokenInfo queries all token info of a native denom.
 	ParaTokenInfo(ctx context.Context, in *QueryParaTokenInfoRequest, opts ...grpc.CallOption) (*QueryParaTokenInfoResponse, error)
 	EscrowAddress(ctx context.Context, in *QueryEscrowAddressRequest, opts ...grpc.CallOption) (*QueryEscrowAddressResponse, error)
+	RelayerAccount(ctx context.Context, in *QueryIBCWhiteListRequest, opts ...grpc.CallOption) (*QueryIBCWhiteListResponse, error)
 }
 
 type queryClient struct {
@@ -323,11 +439,21 @@ func (c *queryClient) EscrowAddress(ctx context.Context, in *QueryEscrowAddressR
 	return out, nil
 }
 
+func (c *queryClient) RelayerAccount(ctx context.Context, in *QueryIBCWhiteListRequest, opts ...grpc.CallOption) (*QueryIBCWhiteListResponse, error) {
+	out := new(QueryIBCWhiteListResponse)
+	err := c.cc.Invoke(ctx, "/centauri.transfermiddleware.v1beta1.Query/RelayerAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// ParaTokenInfo queries all token info of a native denom.
 	ParaTokenInfo(context.Context, *QueryParaTokenInfoRequest) (*QueryParaTokenInfoResponse, error)
 	EscrowAddress(context.Context, *QueryEscrowAddressRequest) (*QueryEscrowAddressResponse, error)
+	RelayerAccount(context.Context, *QueryIBCWhiteListRequest) (*QueryIBCWhiteListResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -339,6 +465,9 @@ func (*UnimplementedQueryServer) ParaTokenInfo(ctx context.Context, req *QueryPa
 }
 func (*UnimplementedQueryServer) EscrowAddress(ctx context.Context, req *QueryEscrowAddressRequest) (*QueryEscrowAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EscrowAddress not implemented")
+}
+func (*UnimplementedQueryServer) RelayerAccount(ctx context.Context, req *QueryIBCWhiteListRequest) (*QueryIBCWhiteListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RelayerAccount not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -381,6 +510,24 @@ func _Query_EscrowAddress_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_RelayerAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryIBCWhiteListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RelayerAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/centauri.transfermiddleware.v1beta1.Query/RelayerAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RelayerAccount(ctx, req.(*QueryIBCWhiteListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "centauri.transfermiddleware.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -392,6 +539,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EscrowAddress",
 			Handler:    _Query_EscrowAddress_Handler,
+		},
+		{
+			MethodName: "RelayerAccount",
+			Handler:    _Query_RelayerAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -539,6 +690,85 @@ func (m *QueryParaTokenInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryIBCWhiteListRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryIBCWhiteListRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryIBCWhiteListRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryIBCWhiteListResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryIBCWhiteListResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryIBCWhiteListResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.WhiteList) > 0 {
+		for iNdEx := len(m.WhiteList) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.WhiteList[iNdEx])
+			copy(dAtA[i:], m.WhiteList[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.WhiteList[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -609,6 +839,38 @@ func (m *QueryParaTokenInfoResponse) Size() (n int) {
 	}
 	l = len(m.AssetId)
 	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryIBCWhiteListRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryIBCWhiteListResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.WhiteList) > 0 {
+		for _, s := range m.WhiteList {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
@@ -1022,6 +1284,210 @@ func (m *QueryParaTokenInfoResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.AssetId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryIBCWhiteListRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryIBCWhiteListRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryIBCWhiteListRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryIBCWhiteListResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryIBCWhiteListResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryIBCWhiteListResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field WhiteList", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.WhiteList = append(m.WhiteList, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

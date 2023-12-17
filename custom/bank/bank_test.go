@@ -9,7 +9,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/stretchr/testify/suite"
 
-	customibctesting "github.com/notional-labs/centauri/v5/app/ibctesting"
+	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
 type CustomBankTestSuite struct {

@@ -16,9 +16,9 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/client/cli"
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/keeper"
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/client/cli"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/bech32-migration/utils"
+	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -201,7 +201,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 func CovertPrefixAddr() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "convert [address]",
-		Short: "Convert prefix from banksy to centauri",
+		Short: "Convert prefix from layer to centauri",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			newAddr := utils.ConvertAccAddr(args[0])

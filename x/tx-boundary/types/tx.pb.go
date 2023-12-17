@@ -92,8 +92,8 @@ func (m *MsgUpdateDelegateBoundary) GetBoundary() Boundary {
 	return Boundary{}
 }
 
-// MsgUpdateDelegateBoundaryResponse defines the response structure for executing a
-// MsgUpdateDelegateBoundary message.
+// MsgUpdateDelegateBoundaryResponse defines the response structure for
+// executing a MsgUpdateDelegateBoundary message.
 //
 // Since: cosmos-sdk 0.47
 type MsgUpdateDelegateBoundaryResponse struct {
@@ -132,7 +132,8 @@ func (m *MsgUpdateDelegateBoundaryResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateDelegateBoundaryResponse proto.InternalMessageInfo
 
-// MsgUpdateRedelegateBoundary is the Msg/MsgUpdateRedelegateBoundary request type.
+// MsgUpdateRedelegateBoundary is the Msg/MsgUpdateRedelegateBoundary request
+// type.
 //
 // Since: cosmos-sdk 0.47
 type MsgUpdateRedelegateBoundary struct {
@@ -192,8 +193,8 @@ func (m *MsgUpdateRedelegateBoundary) GetBoundary() Boundary {
 	return Boundary{}
 }
 
-// MsgUpdateRedelegateBoundaryResponse defines the response structure for executing a
-// MsgUpdateRedelegateBoundary message.
+// MsgUpdateRedelegateBoundaryResponse defines the response structure for
+// executing a MsgUpdateRedelegateBoundary message.
 //
 // Since: cosmos-sdk 0.47
 type MsgUpdateRedelegateBoundaryResponse struct {

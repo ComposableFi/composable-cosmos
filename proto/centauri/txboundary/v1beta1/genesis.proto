@@ -18,4 +18,3 @@ message GenesisState {
     (gogoproto.nullable) = false
   ];
 }
-

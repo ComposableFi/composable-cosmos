@@ -1,9 +1,9 @@
 package v45
 
-import "github.com/notional-labs/centauri/v5/app/upgrades"
+import "github.com/notional-labs/composable/v6/app/upgrades"
 
 const (
-	// UpgradeName defines the on-chain upgrade name for the Centauri upgrade.
+	// UpgradeName defines the on-chain upgrade name for the composable upgrade.
 	UpgradeName   = "v4_5"
 	UpgradeHeight = 967554
 )

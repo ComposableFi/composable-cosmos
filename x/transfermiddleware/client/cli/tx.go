@@ -9,13 +9,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 // GetTxCmd returns the tx commands for router
 func GetTxCmd() *cobra.Command {
 	txCmd := &cobra.Command{
-		Use:                        "transfermiddleware",
+		Use:                        types.ModuleName,
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		Short:                      "Registry and remove IBC dotsama chain information",

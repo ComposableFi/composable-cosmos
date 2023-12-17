@@ -12,10 +12,10 @@ import (
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 	"github.com/stretchr/testify/suite"
 
-	customibctesting "github.com/notional-labs/centauri/v5/app/ibctesting"
+	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
-var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
+var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 
 type TransferTestSuite struct {
 	suite.Suite

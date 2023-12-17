@@ -16,7 +16,7 @@ SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
-HTTPS_GIT := https://github.com/notional-labs/composable-testnet/.git
+HTTPS_GIT := https://github.com/notional-labs/composable-centauri.git
 
 export GO111MODULE = on
 
@@ -140,7 +140,7 @@ ictest-validator:
 
 # Executes start chain tests via interchaintest
 ictest-start-polkadot:
-	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotComposableChainStart .
+	cd tests/interchaintest && go test -timeout=25m -race -v -run TestPolkadotcentauriChainStart .
 
 # Executes IBC tests via interchaintest
 ictest-ibc:

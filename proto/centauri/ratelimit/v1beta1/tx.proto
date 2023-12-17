@@ -9,9 +9,12 @@ option go_package = "x/ratelimit/types";
 // Msg defines the transfer middleware Msg service.
 service Msg {
   rpc AddTransferRateLimit(MsgAddRateLimit) returns (MsgAddRateLimitResponse);
-  rpc UpdateTransferRateLimit(MsgUpdateRateLimit) returns (MsgUpdateRateLimitResponse);
-  rpc RemoveTransferRateLimit(MsgRemoveRateLimit) returns (MsgRemoveRateLimitResponse);
-  rpc ResetTransferRateLimit(MsgResetRateLimit) returns (MsgResetRateLimitResponse);
+  rpc UpdateTransferRateLimit(MsgUpdateRateLimit)
+      returns (MsgUpdateRateLimitResponse);
+  rpc RemoveTransferRateLimit(MsgRemoveRateLimit)
+      returns (MsgRemoveRateLimitResponse);
+  rpc ResetTransferRateLimit(MsgResetRateLimit)
+      returns (MsgResetRateLimitResponse);
 }
 
 message MsgAddRateLimit {
@@ -23,7 +26,7 @@ message MsgAddRateLimit {
   // denom of the token that is limited
   string denom = 2;
   // The channel that is limited when transferr ICS 20 packet of denom
-  string channel_id = 3;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
   // Max rate limit send
   string max_percent_send = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -34,13 +37,13 @@ message MsgAddRateLimit {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // Duration of rate limit. The rate limit will reset when reach the duration.
+  uint64 duration_hours = 6;
   // Min amount of rate limit (allow transfer max(min-amout, rate-limit))
-  string min_rate_limit_amount = 6 [
+  string min_rate_limit_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // Duration of rate limit. The rate limit will reset when reach the duration.
-  uint64 duration_hours = 7;
 }
 
 message MsgAddRateLimitResponse {}
@@ -52,7 +55,7 @@ message MsgUpdateRateLimit {
   // overwritten).
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
   string denom = 2;
-  string channel_id = 3;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
   string max_percent_send = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -77,7 +80,7 @@ message MsgRemoveRateLimit {
   // overwritten).
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
   string denom = 2;
-  string channel_id = 3;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
 }
 
 message MsgRemoveRateLimitResponse {}
@@ -89,7 +92,7 @@ message MsgResetRateLimit {
   // overwritten).
   string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
   string denom = 2;
-  string channel_id = 3;
+  string channel_id = 3 [ (gogoproto.customname) = "ChannelID" ];
 }
 
 message MsgResetRateLimitResponse {}

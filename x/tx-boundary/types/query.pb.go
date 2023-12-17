@@ -29,7 +29,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryDelegateBoundaryRequest is the request type for the Query/DelegateBoundary RPC method.
+// QueryDelegateBoundaryRequest is the request type for the
+// Query/DelegateBoundary RPC method.
 type QueryDelegateBoundaryRequest struct {
 }
 
@@ -66,7 +67,8 @@ func (m *QueryDelegateBoundaryRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryDelegateBoundaryRequest proto.InternalMessageInfo
 
-// QueryDelegateBoundaryResponse is the response type for the Query/DelegateBoundary RPC method.
+// QueryDelegateBoundaryResponse is the response type for the
+// Query/DelegateBoundary RPC method.
 type QueryDelegateBoundaryResponse struct {
 	// boundary defines the boundary for the delegate tx
 	Boundary Boundary `protobuf:"bytes,1,opt,name=boundary,proto3" json:"boundary"`
@@ -112,7 +114,8 @@ func (m *QueryDelegateBoundaryResponse) GetBoundary() Boundary {
 	return Boundary{}
 }
 
-// QueryRedelegateBoundaryRequest is the request type for the Query/ReDelegateBoundary RPC method.
+// QueryRedelegateBoundaryRequest is the request type for the
+// Query/ReDelegateBoundary RPC method.
 type QueryRedelegateBoundaryRequest struct {
 }
 
@@ -149,8 +152,8 @@ func (m *QueryRedelegateBoundaryRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryRedelegateBoundaryRequest proto.InternalMessageInfo
 
-// QueryRedelegateBoundaryResponse is the response type for the Query/ReDelegateBoundary RPC
-// method.
+// QueryRedelegateBoundaryResponse is the response type for the
+// Query/ReDelegateBoundary RPC method.
 type QueryRedelegateBoundaryResponse struct {
 	// boundary defines the boundary for the redelegate tx
 	Boundary Boundary `protobuf:"bytes,1,opt,name=boundary,proto3" json:"boundary"`

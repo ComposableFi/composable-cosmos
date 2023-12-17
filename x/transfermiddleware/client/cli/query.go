@@ -8,20 +8,22 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/notional-labs/centauri/v5/x/transfermiddleware/types"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 // GetQueryCmd returns the query commands for router
 func GetQueryCmd() *cobra.Command {
 	queryCmd := &cobra.Command{
-		Use:                        "transfermiddleware",
+		Use:                        types.ModuleName,
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
+		Short:                      "Query for transfer middleware module",
 	}
 
 	queryCmd.AddCommand(
 		GetCmdParaTokenInfo(),
 		GetEscowAddress(),
+		GetRelayerAccount(),
 	)
 
 	return queryCmd
@@ -70,6 +72,30 @@ func GetEscowAddress() *cobra.Command {
 			res, err := queryClient.EscrowAddress(cmd.Context(), &types.QueryEscrowAddressRequest{
 				ChannelID: args[0],
 			})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func GetRelayerAccount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "relayer-account ",
+		Short: "Query the relayer account ",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+			res, err := queryClient.RelayerAccount(cmd.Context(), &types.QueryIBCWhiteListRequest{})
 			if err != nil {
 				return err
 			}

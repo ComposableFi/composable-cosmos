@@ -14,4 +14,3 @@ message GenesisState {
       [ (gogoproto.nullable) = false ];
   Params params = 2 [ (gogoproto.nullable) = false ];
 }
-

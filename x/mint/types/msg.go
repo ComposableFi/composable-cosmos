@@ -68,14 +68,14 @@ func (m MsgAddAccountToFundModuleSet) GetSignBytes() []byte {
 
 // ValidateBasic does a sanity check on the provided data.
 func (m MsgAddAccountToFundModuleSet) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(m.AllowedAddress)
+	_, err := sdk.AccAddressFromBech32(m.Authority)
 	if err != nil {
-		return errorsmod.Wrap(err, "from address must be valid address")
+		return errorsmod.Wrap(err, "authority must be valid address")
 	}
 
 	_, err = sdk.AccAddressFromBech32(m.AllowedAddress)
 	if err != nil {
-		return errorsmod.Wrap(err, "from address must be valid address")
+		return errorsmod.Wrap(err, "allowed address must be valid address")
 	}
 
 	return nil

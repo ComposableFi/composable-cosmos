@@ -10,8 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 
-	"github.com/notional-labs/centauri/v5/x/mint/simulation"
-	centauriminttypes "github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/composable/v6/x/mint/simulation"
+	composableminttypes "github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {
@@ -20,7 +20,7 @@ func TestDecodeStore(t *testing.T) {
 
 	kvPairs := kv.Pairs{
 		Pairs: []kv.Pair{
-			{Key: centauriminttypes.MinterKey, Value: cdc.MustMarshal(&centauriminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)})},
+			{Key: composableminttypes.MinterKey, Value: cdc.MustMarshal(&composableminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)})},
 			{Key: []byte{0x99}, Value: []byte{0x99}},
 		},
 	}
@@ -29,7 +29,7 @@ func TestDecodeStore(t *testing.T) {
 		name        string
 		expectedLog string
 	}{
-		{"Minter", fmt.Sprintf("%v\n%v", centauriminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)}, centauriminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)})},
+		{"Minter", fmt.Sprintf("%v\n%v", composableminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)}, composableminttypes.Minter{Inflation: sdk.NewDec(13), AnnualProvisions: sdk.NewDec(1)})},
 		{"other", ""},
 	}
 	for i, tt := range tests {

@@ -21,7 +21,7 @@ func TestBasicCentauri(t *testing.T) {
 
 	ctx := context.Background()
 
-	// Create chain factory with Centauri
+	// Create chain factory with centauri
 	numVals := 3
 	numFullNodes := 3
 

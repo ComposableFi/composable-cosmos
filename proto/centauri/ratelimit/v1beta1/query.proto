@@ -15,20 +15,22 @@ service Query {
   }
   rpc RateLimit(QueryRateLimitRequest) returns (QueryRateLimitResponse) {
     option (google.api.http).get =
-        "/centauri/ratelimit/ratelimit/{channel_id}/by_denom";
+        "/centauri/ratelimit/ratelimit/{ChannelID}/by_denom";
   }
   rpc RateLimitsByChainID(QueryRateLimitsByChainIDRequest)
       returns (QueryRateLimitsByChainIDResponse) {
-    option (google.api.http).get = "/centauri/ratelimit/ratelimits/{chain_id}";
+    option (google.api.http).get =
+        "/centauri/ratelimit/ratelimits/{chain_id}";
   }
   rpc RateLimitsByChannelID(QueryRateLimitsByChannelIDRequest)
       returns (QueryRateLimitsByChannelIDResponse) {
     option (google.api.http).get =
-        "/centauri/ratelimit/ratelimits/{channel_id}";
+        "/centauri/ratelimit/ratelimits/{ChannelID}";
   }
   rpc AllWhitelistedAddresses(QueryAllWhitelistedAddressesRequest)
       returns (QueryAllWhitelistedAddressesResponse) {
-    option (google.api.http).get = "/centauri/ratelimit/whitelisted_addresses";
+    option (google.api.http).get =
+        "/centauri/ratelimit/whitelisted_addresses";
   }
 }
 
@@ -39,7 +41,7 @@ message QueryAllRateLimitsResponse {
 
 message QueryRateLimitRequest {
   string denom = 1;
-  string channel_id = 2;
+  string ChannelID = 2 [ (gogoproto.customname) = "ChannelID" ];
 }
 message QueryRateLimitResponse { RateLimit rate_limit = 1; }
 
@@ -48,7 +50,7 @@ message QueryRateLimitsByChainIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryRateLimitsByChannelIDRequest { string channel_id = 1; }
+message QueryRateLimitsByChannelIDRequest { string ChannelID = 1 [ (gogoproto.customname) = "ChannelID" ]; }
 message QueryRateLimitsByChannelIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }

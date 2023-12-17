@@ -4,7 +4,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/notional-labs/centauri/v5/x/tx-boundary/types"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 )
 
 var _ types.QueryServer = Keeper{}

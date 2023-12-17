@@ -8,7 +8,7 @@ import (
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/notional-labs/centauri/v5/x/mint/types"
+	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 var _ types.MsgServer = msgServer{}
@@ -70,10 +70,6 @@ func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundM
 
 func (ms msgServer) AddAccountToFundModuleSet(goCtx context.Context, req *types.MsgAddAccountToFundModuleSet) (*types.MsgAddAccountToFundModuleSetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	err := req.ValidateBasic()
-	if err != nil {
-		return nil, errorsmod.Wrapf(types.ErrValidationMsg, "invalid req msg %v - err %v", req, err)
-	}
 
 	if ms.authority != req.Authority {
 		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)

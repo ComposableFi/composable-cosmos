@@ -143,7 +143,7 @@ func TestPushWasmClientCode(t *testing.T) {
 	_, err = cosmos.PollForProposalStatus(ctx, centauridChain, height, height+heightDelta, proposalTx.ProposalID, cosmos.ProposalStatusPassed)
 	require.NoError(t, err, "proposal status did not change to passed in expected number of blocks")
 
-	err = testutil.WaitForBlocks(ctx, 2, centaurid)
+	err = testutil.WaitForBlocks(ctx, 2, centauridChain)
 	require.NoError(t, err)
 
 	var getCodeQueryMsgRsp GetCodeQueryMsgResponse
