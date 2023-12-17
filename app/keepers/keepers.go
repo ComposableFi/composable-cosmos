@@ -100,6 +100,8 @@ import (
 	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
+	stakingmiddlewaretypes "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
 const (
@@ -150,6 +152,7 @@ type AppKeepers struct {
 	TxBoundaryKeepper        txBoundaryKeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
+	StakingMiddlewareKeeper  stakingmiddleware.Keeper
 }
 
 // InitNormalKeepers initializes all 'normal' keepers.
@@ -193,6 +196,8 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.CustomStakingKeeper = customstaking.NewKeeper(
 		appCodec /*appKeepers.keys[stakingtypes.StoreKey],*/, *appKeepers.StakingKeeper, appKeepers.AccountKeeper, &appKeepers.MintKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+
+	appKeepers.StakingMiddlewareKeeper = stakingmiddleware.NewKeeper(appCodec, appKeepers.keys[stakingmiddlewaretypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, appKeepers.keys[distrtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,

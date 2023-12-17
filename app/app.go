@@ -101,6 +101,7 @@ import (
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 
 	"github.com/notional-labs/composable/v6/app/ante"
+	"github.com/notional-labs/composable/v6/x/stakingmiddleware"
 	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 
@@ -125,6 +126,7 @@ import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	upgrades "github.com/notional-labs/composable/v6/app/upgrades"
+	stakingmiddlewaretypes "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
 const (
@@ -219,6 +221,7 @@ var (
 		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
+		stakingmiddleware.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -359,6 +362,7 @@ func NewComposableApp(
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName)),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		customstaking.NewAppModule(appCodec, *&app.CustomStakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		stakingmiddleware.NewAppModule(appCodec, app.StakingMiddlewareKeeper),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
@@ -412,6 +416,7 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
+		stakingmiddlewaretypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -445,6 +450,7 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
+		stakingmiddlewaretypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -482,6 +488,7 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
+		stakingmiddlewaretypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
