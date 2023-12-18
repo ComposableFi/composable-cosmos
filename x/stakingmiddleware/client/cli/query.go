@@ -21,7 +21,7 @@ func GetQueryCmd() *cobra.Command {
 	}
 
 	mintingQueryCmd.AddCommand(
-		GetCmdQueryParams(),
+		GetCmdQueryPower(),
 	)
 
 	return mintingQueryCmd
@@ -29,16 +29,19 @@ func GetQueryCmd() *cobra.Command {
 
 // GetCmdQueryParams implements a command to return the current minting
 // parameters.
-func GetCmdQueryParams() *cobra.Command {
+func GetCmdQueryPower() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "params",
-		Short: "Query the current minting parameters",
+		Use:   "power",
+		Short: "Query the current power",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
 				return err
 			}
+
+			return clientCtx.PrintString(fmt.Sprintf("%s\n", "hello world"))
+
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryPowerRequest{}

@@ -6,14 +6,16 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
+	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 )
 
 type Keeper struct {
 	stakingkeeper.Keeper
-	cdc        codec.BinaryCodec
-	acck       accountkeeper.AccountKeeper
-	mintkeeper *mintkeeper.Keeper
-	authority  string
+	cdc               codec.BinaryCodec
+	acck              accountkeeper.AccountKeeper
+	mintkeeper        *mintkeeper.Keeper
+	stakingmiddleware *stakingmiddleware.Keeper
+	authority         string
 }
 
 // func NewBaseKeeper(
@@ -36,14 +38,16 @@ func NewKeeper(
 	staking stakingkeeper.Keeper,
 	acck accountkeeper.AccountKeeper,
 	mintkeeper *mintkeeper.Keeper,
+	stakingmiddleware *stakingmiddleware.Keeper,
 	authority string,
 ) Keeper {
 	keeper := Keeper{
-		Keeper:     staking,
-		acck:       acck,
-		authority:  authority,
-		mintkeeper: mintkeeper,
-		cdc:        cdc,
+		Keeper:            staking,
+		acck:              acck,
+		authority:         authority,
+		mintkeeper:        mintkeeper,
+		stakingmiddleware: stakingmiddleware,
+		cdc:               cdc,
 	}
 	return keeper
 }
