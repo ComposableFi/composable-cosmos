@@ -2,6 +2,8 @@ syntax = "proto3";
 package centauri.stakingmiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
+import "centauri/stakingmiddleware/v1beta1/stakingmiddleware.proto";
+import "amino/amino.proto";
 
 
 option go_package = "x/stakingmiddleware/types";
@@ -14,4 +16,7 @@ message GenesisState {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false
   ];
+
+  // delegations defines the delegations active at genesis.
+  repeated Delegation delegations = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];  
 }
