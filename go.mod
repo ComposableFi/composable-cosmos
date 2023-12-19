@@ -1,6 +1,8 @@
 module github.com/notional-labs/composable/v6
 
-go 1.19
+go 1.21
+
+toolchain go1.21.5
 
 require (
 	cosmossdk.io/math v1.1.2
