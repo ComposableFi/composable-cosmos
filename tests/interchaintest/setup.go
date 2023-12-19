@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	CentauriMainRepo   = "ghcr.io/notional-labs/centauri"
-	CentauriICTestRepo = "ghcr.io/notional-labs/centauri-ictest"
+	CentauriGhcr    = "ghcr.io/composablefi/composable-cosmos"
+	CentauriICTGhcr = "ghcr.io/composablefi/composable-cosmos/centauri-ictest"
 
 	repo, version = GetDockerImageInfo()
 
@@ -42,7 +42,7 @@ var (
 // If testing locally, user should run `make docker-build-debug` and interchaintest will use the local image.
 func GetDockerImageInfo() (repo, version string) {
 	branchVersion, found := os.LookupEnv("BRANCH_CI")
-	repo = CentauriICTestRepo
+	repo = CentauriGhcr
 	if !found {
 		// make local-image
 		repo = "centauri"
