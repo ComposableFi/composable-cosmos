@@ -3,14 +3,14 @@ package bank
 import (
 	"fmt"
 
+	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	bankmodule "github.com/cosmos/cosmos-sdk/x/bank"
 	"github.com/cosmos/cosmos-sdk/x/bank/exported"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
-
-	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
 )
 
 // AppModule wraps around the bank module and the bank keeper to return the right total supply

@@ -1,11 +1,13 @@
 package prepare
 
 import (
-	abci "github.com/cometbft/cometbft/abci/types"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+
+	abci "github.com/cometbft/cometbft/abci/types"
 )
 
 func PrepareProposalHandler(

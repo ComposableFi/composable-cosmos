@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gogo/protobuf/proto"
-
 	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

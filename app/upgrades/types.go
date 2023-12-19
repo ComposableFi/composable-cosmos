@@ -1,14 +1,15 @@
 package upgrades
 
 import (
-	types "github.com/cometbft/cometbft/proto/tendermint/types"
+	"github.com/notional-labs/composable/v6/app/keepers"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	store "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
-	"github.com/notional-labs/composable/v6/app/keepers"
+	types "github.com/cometbft/cometbft/proto/tendermint/types"
 )
 
 // BaseAppParamManager defines an interrace that BaseApp is expected to fullfil

@@ -1,9 +1,10 @@
 package v5
 
 import (
-	store "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 	txboundary "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+
+	store "github.com/cosmos/cosmos-sdk/store/types"
 )
 
 const (

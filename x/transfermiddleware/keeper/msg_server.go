@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 
 	"cosmossdk.io/errors"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 var _ types.MsgServer = msgServer{}

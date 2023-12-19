@@ -3,13 +3,13 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/cometbft/cometbft/libs/log"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/cometbft/cometbft/libs/log"
 )
 
 // Keeper struct
@@ -61,7 +61,7 @@ func (k Keeper) GetDelegateBoundary(ctx sdk.Context) (boundary types.Boundary) {
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetRedelegateBoundary sets the delegate boundary.
@@ -84,7 +84,7 @@ func (k Keeper) GetRedelegateBoundary(ctx sdk.Context) (boundary types.Boundary)
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetDelegateCount set the number of delegate tx for a given address
