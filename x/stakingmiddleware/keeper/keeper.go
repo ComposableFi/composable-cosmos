@@ -124,6 +124,28 @@ func (k Keeper) IterateDelegations(ctx sdk.Context, fn func(index int64, ubd typ
 	}
 }
 
+// DequeueAllMatureUBDQueue returns a concatenated list of all the timeslices inclusively previous to
+// currTime, and deletes the timeslices from the queue.
+func (k Keeper) DequeueAllDelegation(ctx sdk.Context) (delegations []types.Delegation) {
+	store := ctx.KVStore(k.storeKey)
+
+	// gets an iterator for all timeslices from time 0 until the current Blockheader time
+	delegationIterator := sdk.KVStorePrefixIterator(store, types.DelegationKey)
+	defer delegationIterator.Close()
+
+	for ; delegationIterator.Valid(); delegationIterator.Next() {
+		delegation := types.Delegation{}
+		value := delegationIterator.Value()
+		k.cdc.MustUnmarshal(value, &delegation)
+
+		delegations = append(delegations, delegation)
+
+		store.Delete(delegationIterator.Key())
+	}
+
+	return delegations
+}
+
 func GetValidatorAddr(d types.Delegation) sdk.ValAddress {
 	addr, err := sdk.ValAddressFromBech32(d.ValidatorAddress)
 	if err != nil {
