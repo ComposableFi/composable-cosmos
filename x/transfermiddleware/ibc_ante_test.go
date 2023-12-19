@@ -15,7 +15,12 @@ import (
 	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
-var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
+// NOTE: This is the address of the gov authority on the chain that is being tested.
+// This means that we need to check bech32 .... everywhere.
+var govAuthorityAddress = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
+
+// ORIGINAL NOTES:
+// convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 
 type TransferTestSuite struct {
 	suite.Suite
