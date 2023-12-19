@@ -109,10 +109,39 @@ func (k Keeper) SetDelegation(ctx sdk.Context, sourceDelegatorAddress, validator
 	store.Set(types.GetDelegationKey(delegatorAddress, GetValidatorAddr(delegation)), b)
 }
 
+func (k Keeper) IterateDelegations(ctx sdk.Context, fn func(index int64, ubd types.Delegation) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+
+	iterator := sdk.KVStorePrefixIterator(store, types.DelegationKey)
+	defer iterator.Close()
+
+	for i := int64(0); iterator.Valid(); iterator.Next() {
+		ubd := MustUnmarshalUBD(k.cdc, iterator.Value())
+		if stop := fn(i, ubd); stop {
+			break
+		}
+		i++
+	}
+}
+
 func GetValidatorAddr(d types.Delegation) sdk.ValAddress {
 	addr, err := sdk.ValAddressFromBech32(d.ValidatorAddress)
 	if err != nil {
 		panic(err)
 	}
 	return addr
+}
+
+func UnmarshalBD(cdc codec.BinaryCodec, value []byte) (ubd types.Delegation, err error) {
+	err = cdc.Unmarshal(value, &ubd)
+	return ubd, err
+}
+
+func MustUnmarshalUBD(cdc codec.BinaryCodec, value []byte) types.Delegation {
+	ubd, err := UnmarshalBD(cdc, value)
+	if err != nil {
+		panic(err)
+	}
+
+	return ubd
 }
