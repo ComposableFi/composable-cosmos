@@ -29,7 +29,6 @@ func (k msgServer) EditValidator(goCtx context.Context, msg *types.MsgEditValida
 }
 
 func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*types.MsgDelegateResponse, error) {
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// bondDenom := k.BondDenom(ctx)

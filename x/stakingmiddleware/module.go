@@ -20,7 +20,6 @@ import (
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/client/cli"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
-	middlewarestaking "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
 var (
@@ -38,7 +37,7 @@ var _ module.AppModuleBasic = AppModuleBasic{}
 
 // Name returns the mint module's name.
 func (AppModuleBasic) Name() string {
-	return middlewarestaking.ModuleName
+	return types.ModuleName
 }
 
 // RegisterLegacyAminoCodec registers the mint module's types on the given LegacyAmino codec.

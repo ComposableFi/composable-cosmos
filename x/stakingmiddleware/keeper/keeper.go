@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"cosmossdk.io/math"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 
@@ -9,7 +8,6 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	// "github.com/notional-labs/composable/v6/x/mint/types"
 	sdkmath "cosmossdk.io/math"
 )
 
@@ -82,18 +80,18 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 // }
 
 // SetLastTotalPower Set the last total validator power.
-func (k Keeper) SetLastTotalPower(ctx sdk.Context, power math.Int) {
+func (k Keeper) SetLastTotalPower(ctx sdk.Context, power sdkmath.Int) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
 	store.Set(types.DelegationKey, bz)
 }
 
-func (k Keeper) GetLastTotalPower(ctx sdk.Context) math.Int {
+func (k Keeper) GetLastTotalPower(ctx sdk.Context) sdkmath.Int {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.DelegationKey)
 
 	if bz == nil {
-		return math.ZeroInt()
+		return sdkmath.ZeroInt()
 	}
 
 	ip := sdk.IntProto{}
@@ -102,8 +100,8 @@ func (k Keeper) GetLastTotalPower(ctx sdk.Context) math.Int {
 	return ip.Int
 }
 
-func (k Keeper) SetDelegation(ctx sdk.Context, DelegatorAddress string, ValidatorAddress string, Denom string, Amount sdkmath.Int) {
-	delegation := types.Delegation{DelegatorAddress: DelegatorAddress, ValidatorAddress: ValidatorAddress, Amount: sdk.NewCoin(Denom, Amount)}
+func (k Keeper) SetDelegation(ctx sdk.Context, sourceDelegatorAddress, validatorAddress, denom string, amount sdkmath.Int) {
+	delegation := types.Delegation{DelegatorAddress: sourceDelegatorAddress, ValidatorAddress: validatorAddress, Amount: sdk.NewCoin(denom, amount)}
 	delegatorAddress := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
 
 	store := ctx.KVStore(k.storeKey)
