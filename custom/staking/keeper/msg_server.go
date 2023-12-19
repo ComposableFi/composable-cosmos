@@ -5,6 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -47,6 +48,12 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 	k.stakingmiddleware.SetLastTotalPower(ctx, math.Int{})
 
 	k.stakingmiddleware.SetDelegation(ctx, msg.DelegatorAddress, msg.ValidatorAddress, msg.Amount.Denom, msg.Amount.Amount)
+	delegations := k.stakingmiddleware.DequeueAllDelegation(ctx)
+	if len(delegations) >= 1 {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest, "should always be less then 2 : got %s, expected %s", len(delegations),
+		)
+	}
 
 	return &types.MsgDelegateResponse{}, nil
 	// return nil, fmt.Errorf("My custom error: Nikita")
