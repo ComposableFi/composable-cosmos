@@ -3,12 +3,14 @@ package keeper
 import (
 	"cosmossdk.io/math"
 	"github.com/cometbft/cometbft/libs/log"
-	"github.com/notional-labs/composable/v6/x/mint/types"
+	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	// "github.com/notional-labs/composable/v6/x/mint/types"
+	sdkmath "cosmossdk.io/math"
 )
 
 // Keeper of the staking middleware store
@@ -98,4 +100,21 @@ func (k Keeper) GetLastTotalPower(ctx sdk.Context) math.Int {
 	k.cdc.MustUnmarshal(bz, &ip)
 
 	return ip.Int
+}
+
+func (k Keeper) SetDelegation(ctx sdk.Context, DelegatorAddress string, ValidatorAddress string, Denom string, Amount sdkmath.Int) {
+	delegation := types.Delegation{DelegatorAddress: DelegatorAddress, ValidatorAddress: ValidatorAddress, Amount: sdk.NewCoin(Denom, Amount)}
+	delegatorAddress := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
+
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&delegation)
+	store.Set(types.GetDelegationKey(delegatorAddress, GetValidatorAddr(delegation)), b)
+}
+
+func GetValidatorAddr(d types.Delegation) sdk.ValAddress {
+	addr, err := sdk.ValAddressFromBech32(d.ValidatorAddress)
+	if err != nil {
+		panic(err)
+	}
+	return addr
 }

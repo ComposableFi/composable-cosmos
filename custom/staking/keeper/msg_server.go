@@ -47,6 +47,8 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 	k.mintkeeper.SetLastTotalPower(ctx, math.Int{})
 	k.stakingmiddleware.SetLastTotalPower(ctx, math.Int{})
 
+	k.stakingmiddleware.SetDelegation(ctx, msg.DelegatorAddress, msg.ValidatorAddress, msg.Amount.Denom, msg.Amount.Amount)
+
 	return &types.MsgDelegateResponse{}, nil
 	// return nil, fmt.Errorf("My custom error: Nikita")
 	// return k.msgServer.Delegate(goCtx, msg)
