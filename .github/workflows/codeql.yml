@@ -2,15 +2,8 @@ name: "CodeQL"
 
 on:
   pull_request:
-    paths:
-      - "**.go"
-  push:
-    # The branches below must be a subset of the branches above
     branches:
-      - main
-      - release/**
-    paths:
-      - "**.go"
+      - master
 
 jobs:
   analyze:
