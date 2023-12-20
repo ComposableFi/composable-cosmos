@@ -14,7 +14,7 @@ type Keeper struct {
 	cdc               codec.BinaryCodec
 	acck              accountkeeper.AccountKeeper
 	mintkeeper        *mintkeeper.Keeper
-	stakingmiddleware *stakingmiddleware.Keeper
+	Stakingmiddleware *stakingmiddleware.Keeper
 	authority         string
 }
 
@@ -46,7 +46,7 @@ func NewKeeper(
 		acck:              acck,
 		authority:         authority,
 		mintkeeper:        mintkeeper,
-		stakingmiddleware: stakingmiddleware,
+		Stakingmiddleware: stakingmiddleware,
 		cdc:               cdc,
 	}
 	return keeper
