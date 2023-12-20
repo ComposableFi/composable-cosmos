@@ -37,7 +37,7 @@ func (k Keeper) GetAuthority() string {
 }
 
 // Logger returns logger
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+func (Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
@@ -61,7 +61,7 @@ func (k Keeper) GetDelegateBoundary(ctx sdk.Context) (boundary types.Boundary) {
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetRedelegateBoundary sets the delegate boundary.
@@ -84,7 +84,7 @@ func (k Keeper) GetRedelegateBoundary(ctx sdk.Context) (boundary types.Boundary)
 	}
 
 	k.cdc.MustUnmarshal(bz, &boundary)
-	return
+	return boundary
 }
 
 // SetDelegateCount set the number of delegate tx for a given address
@@ -140,7 +140,7 @@ func (k Keeper) GetLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) (limitPerA
 	}
 	bz := store.Get(addr)
 	k.cdc.MustUnmarshal(bz, &limitPerAddr)
-	return
+	return limitPerAddr
 }
 
 func (k Keeper) UpdateLimitPerAddr(ctx sdk.Context, addr sdk.AccAddress) {

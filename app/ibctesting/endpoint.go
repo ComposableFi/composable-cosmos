@@ -66,11 +66,15 @@ func (endpoint *Endpoint) CreateClient() (err error) {
 		tmConfig, ok := endpoint.ClientConfig.(*ibctesting.TendermintConfig)
 		require.True(endpoint.Chain.t, ok)
 
-		height := endpoint.Counterparty.Chain.LastHeader.GetHeight().(clienttypes.Height)
+		height, ok := endpoint.Counterparty.Chain.LastHeader.GetHeight().(clienttypes.Height)
+		if !ok {
+			return fmt.Errorf("type assertion to clienttypes.Height failed")
+		}
 		clientState = ibctmtypes.NewClientState(
 			endpoint.Counterparty.Chain.ChainID, tmConfig.TrustLevel, tmConfig.TrustingPeriod, tmConfig.UnbondingPeriod, tmConfig.MaxClockDrift,
 			height, commitmenttypes.GetSDKSpecs(), ibctesting.UpgradePath,
 		)
+
 		consensusState = endpoint.Counterparty.Chain.LastHeader.ConsensusState()
 	case exported.Solomachine:
 		// TODO
