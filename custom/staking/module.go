@@ -3,6 +3,7 @@ package bank
 import (
 	"fmt"
 
+	abcitype "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	stakingmodule "github.com/cosmos/cosmos-sdk/x/staking"
@@ -11,6 +12,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	// custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	customstakingkeeper "github.com/notional-labs/composable/v6/custom/staking/keeper"
 )
 
@@ -52,4 +54,38 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	if err := cfg.RegisterMigration(stakingtypes.ModuleName, 3, m.Migrate3to4); err != nil {
 		panic(fmt.Sprintf("failed to migrate x/staking from version 3 to 4: %v", err))
 	}
+}
+
+// func (am AppModule) BeginBlock(ctx sdk.Context, _abc abcitype.RequestBeginBlock) {
+// 	//Define the logic around the batching.
+// 	am.AppModule.BeginBlock(ctx, _abc)
+// }
+
+func (am AppModule) EndBlock(ctx sdk.Context, _abc abcitype.RequestEndBlock) []abcitype.ValidatorUpdate {
+	//Define the logic around the batching.
+	//TODO!!!
+
+	println("EndBlock Custom Staking Module")
+
+	delegations := am.keeper.Stakingmiddleware.DequeueAllDelegation(ctx)
+	println("Delegations: ", delegations)
+	println("Delegations len: ", len(delegations))
+	//for delegations print the delegator address and the validator address
+	for _, delegation := range delegations {
+		println("Delegator Address: ", delegation.DelegatorAddress)
+		println("Validator Address: ", delegation.ValidatorAddress)
+		fmt.Println("Amount", delegation.Amount.Amount)
+	}
+
+	// am.keeper.Delegate()
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			"DequeueAllDelegation",
+			// sdk.NewAttribute(sdk.AttributeKeyAmount, balances.String()),
+			// sdk.NewAttribute(types.AttributeKeyValidator, dvPair.ValidatorAddress),
+			// sdk.NewAttribute(types.AttributeKeyDelegator, dvPair.DelegatorAddress),
+		),
+	)
+
+	return am.AppModule.EndBlock(ctx, _abc)
 }
