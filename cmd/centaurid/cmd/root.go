@@ -89,9 +89,12 @@ func NewRootCmd() (*cobra.Command, app.EncodingConfig) {
 func initTendermintConfig() *tmcfg.Config {
 	cfg := tmcfg.DefaultConfig()
 
-	// these values put a higher strain on node memory
-	// cfg.P2P.MaxNumInboundPeers = 100
-	// cfg.P2P.MaxNumOutboundPeers = 40
+	// Increase default inbound and outbound peers
+	cfg.P2P.MaxNumInboundPeers = 100
+	cfg.P2P.MaxNumOutboundPeers = 40
+
+	// add some default seeds
+	cfg.P2P.Seeds = "ebc272824924ea1a27ea3183dd0b9ba713494f83@composable-mainnet-seed.autostake.com:26976,20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:22256,d2362ebcdd562500ac8c4cfa2214a89ad811033c@seeds.whispernode.com:22256"
 
 	return cfg
 }
