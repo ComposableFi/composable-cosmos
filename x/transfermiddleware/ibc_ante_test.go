@@ -5,14 +5,15 @@ import (
 	"os"
 	"testing"
 
+	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
+	"github.com/stretchr/testify/suite"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 	wasmkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
-	"github.com/stretchr/testify/suite"
-
-	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
 // NOTE: This is the address of the gov authority on the chain that is being tested.

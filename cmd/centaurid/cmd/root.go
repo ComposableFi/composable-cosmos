@@ -6,9 +6,7 @@ import (
 	"os"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	dbm "github.com/cometbft/cometbft-db"
-	tmcli "github.com/cometbft/cometbft/libs/cli"
-	"github.com/cometbft/cometbft/libs/log"
+	"github.com/notional-labs/composable/v6/app"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
@@ -28,14 +26,13 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
-
-	tmcfg "github.com/cometbft/cometbft/config"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
-	"github.com/notional-labs/composable/v6/app"
-	// "github.com/notional-labs/composable/v6/app/params"
-	// this line is used by starport scaffolding # stargate/root/import
+	dbm "github.com/cometbft/cometbft-db"
+	tmcfg "github.com/cometbft/cometbft/config"
+	tmcli "github.com/cometbft/cometbft/libs/cli"
+	"github.com/cometbft/cometbft/libs/log"
 )
 
 var ChainID string
