@@ -7,7 +7,7 @@ require (
 	cosmossdk.io/simapp v0.0.0-20230608160436-666c345ad23d
 	github.com/CosmWasm/wasmd v0.40.1
 	github.com/cometbft/cometbft v0.37.4
-	github.com/cometbft/cometbft-db v0.8.0
+	github.com/cometbft/cometbft-db v0.9.1
 	github.com/cosmos/cosmos-proto v1.0.0-beta.2
 	github.com/cosmos/cosmos-sdk v0.47.7
 	github.com/cosmos/gogoproto v1.4.10
@@ -23,11 +23,12 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	google.golang.org/genproto/googleapis/api v0.0.0-20231002182017-d307bd883b97
-	google.golang.org/grpc v1.58.3
+	google.golang.org/grpc v1.59.0
 	gotest.tools/v3 v3.5.0
 )
 
 require (
+	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/cockroachdb/errors v1.10.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b // indirect
 	github.com/cockroachdb/redact v1.1.5 // indirect
@@ -35,7 +36,7 @@ require (
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/linxGnu/grocksdb v1.7.16 // indirect
+	github.com/linxGnu/grocksdb v1.8.6 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
 	google.golang.org/genproto v0.0.0-20231012201019-e917dd12ba7a // indirect
@@ -59,7 +60,7 @@ require (
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.3.1 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -77,7 +78,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
+	golang.org/x/oauth2 v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.128.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
@@ -89,7 +90,7 @@ require (
 	cosmossdk.io/core v0.5.1 // indirect
 	cosmossdk.io/depinject v1.0.0-alpha.4 // indirect
 	cosmossdk.io/errors v1.0.0
-	cosmossdk.io/tools/rosetta v0.2.1
+	cosmossdk.io/tools/rosetta v0.2.1 // indirect
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v1.0.0 // indirect
@@ -144,7 +145,6 @@ require (
 	github.com/improbable-eng/grpc-web v0.15.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
-	github.com/keybase/go-keychain v0.0.0-20190712205309-48d3d31d256d // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/lib/pq v1.10.7 // indirect
 	github.com/libp2p/go-buffer-pool v0.1.0 // indirect
@@ -176,13 +176,13 @@ require (
 	github.com/tidwall/btree v1.6.0 // indirect
 	github.com/zondax/hid v0.9.2 // indirect
 	github.com/zondax/ledger-go v0.14.3 // indirect
-	go.etcd.io/bbolt v1.3.7 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
+	go.etcd.io/bbolt v1.3.8 // indirect
+	golang.org/x/crypto v0.15.0 // indirect
 	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb // indirect
-	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/term v0.14.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -192,15 +192,25 @@ require (
 )
 
 replace (
-	// Use the keyring specified by the cosmos-sdk
-	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
+	// use cosmos fork of keyring
+	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
+	// packet forward middleware (need to move to mainline)
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
-	// ibc-go with wasm client
+	// ibc-go with wasm client (need to move to mainline)
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 
+	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
+	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
+	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2
+
+	// Fix upstream GHSA-h395-qcrw-5vmq and GHSA-3vp4-m3rf-835h vulnerabilities.
+	// TODO Remove it: https://github.com/cosmos/cosmos-sdk/issues/10409
+	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.0
+
+	// replace broken goleveldb
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647
 )
