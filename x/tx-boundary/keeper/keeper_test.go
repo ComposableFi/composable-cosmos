@@ -95,10 +95,11 @@ func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
 }
 
 func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
-	suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, types.Boundary{
+	err := suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, types.Boundary{
 		TxLimit:             10,
 		BlocksPerGeneration: 5,
 	})
+	suite.NoError(err)
 
 	for _, tc := range []struct {
 		desc             string

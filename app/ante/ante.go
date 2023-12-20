@@ -3,7 +3,7 @@ package ante
 import (
 	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	txboundaryante "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
-	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -28,7 +28,7 @@ func NewAnteHandler(
 	signModeHandler signing.SignModeHandler,
 	channelKeeper *ibckeeper.Keeper,
 	tfmwKeeper tfmwkeeper.Keeper,
-	txBoundaryKeeper txBoundaryKeeper.Keeper,
+	txBoundaryKeeper txboundarykeeper.Keeper,
 	codec codec.BinaryCodec,
 ) sdk.AnteHandler {
 	return sdk.ChainAnteDecorators(

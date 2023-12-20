@@ -10,7 +10,7 @@ import (
 	routerkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
-	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookskeeper "github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
@@ -18,11 +18,11 @@ import (
 	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
 	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
@@ -118,8 +118,8 @@ type AppKeepers struct {
 	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
 	WasmKeeper       wasm.Keeper
 	IBCHooksKeeper   *ibchookskeeper.Keeper
-	Ics20WasmHooks   *ibc_hooks.WasmHooks
-	HooksICS4Wrapper ibc_hooks.ICS4Middleware
+	Ics20WasmHooks   *ibchooks.WasmHooks
+	HooksICS4Wrapper ibchooks.ICS4Middleware
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -129,7 +129,7 @@ type AppKeepers struct {
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
-	TxBoundaryKeepper        txBoundaryKeeper.Keeper
+	TxBoundaryKeepper        txboundarykeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
@@ -249,9 +249,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.IBCHooksKeeper = &hooksKeeper
 
 	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	wasmHooks := ibc_hooks.NewWasmHooks(&hooksKeeper, nil, composablePrefix) // The contract keeper needs to be set later
+	wasmHooks := ibchooks.NewWasmHooks(&hooksKeeper, nil, composablePrefix) // The contract keeper needs to be set later
 	appKeepers.Ics20WasmHooks = &wasmHooks
-	appKeepers.HooksICS4Wrapper = ibc_hooks.NewICS4Middleware(
+	appKeepers.HooksICS4Wrapper = ibchooks.NewICS4Middleware(
 		appKeepers.IBCKeeper.ChannelKeeper,
 		appKeepers.Ics20WasmHooks,
 	)
@@ -266,9 +266,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authorityAddress,
 	)
 
-	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
+	appKeepers.TxBoundaryKeepper = txboundarykeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[txBoundaryTypes.StoreKey],
+		appKeepers.keys[txboundarytypes.StoreKey],
 		authorityAddress,
 	)
 
@@ -330,7 +330,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
-	hooksTransferMiddleware := ibc_hooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
+	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(

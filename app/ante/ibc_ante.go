@@ -3,7 +3,7 @@ package ante
 import (
 	"fmt"
 
-	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 
 	errorsmod "cosmossdk.io/errors"
 
@@ -16,10 +16,10 @@ import (
 
 type IBCPermissionDecorator struct {
 	cdc        codec.BinaryCodec
-	tfmwKeeper tfmwKeeper.Keeper
+	tfmwKeeper tfmwkeeper.Keeper
 }
 
-func NewIBCPermissionDecorator(cdc codec.BinaryCodec, keeper tfmwKeeper.Keeper) IBCPermissionDecorator {
+func NewIBCPermissionDecorator(cdc codec.BinaryCodec, keeper tfmwkeeper.Keeper) IBCPermissionDecorator {
 	return IBCPermissionDecorator{
 		cdc:        cdc,
 		tfmwKeeper: keeper,

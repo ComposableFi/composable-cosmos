@@ -17,10 +17,10 @@ import (
 )
 
 func TestAnteTestSuite(t *testing.T) {
-	suite.Run(t, new(AnteTestSuite))
+	suite.Run(t, new(TestSuite))
 }
 
-func (s *AnteTestSuite) TestStakingAnteBasic() {
+func (s *TestSuite) TestStakingAnteBasic() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 	msgDelegateAny, err := cdctypes.NewAnyWithValue(delegateMsg)
@@ -101,7 +101,8 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
@@ -121,7 +122,7 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	}
 }
 
-func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
+func (s *TestSuite) TestStakingAnteUpdateLimit() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 
@@ -225,7 +226,8 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
