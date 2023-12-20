@@ -3,12 +3,14 @@ package keeper
 import (
 	"context"
 
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+
 	errorsmod "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 var _ types.QueryServer = Keeper{}

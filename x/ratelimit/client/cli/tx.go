@@ -3,9 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
-
 	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+	"github.com/spf13/cobra"
 )
 
 // GetTxCmd returns the tx commands for router

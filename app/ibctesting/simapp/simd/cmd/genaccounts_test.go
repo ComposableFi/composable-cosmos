@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cometbft/cometbft/libs/log"
+	"github.com/spf13/viper"
+	"github.com/stretchr/testify/require"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -13,8 +15,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltest "github.com/cosmos/cosmos-sdk/x/genutil/client/testutil"
-	"github.com/spf13/viper"
-	"github.com/stretchr/testify/require"
+
+	"github.com/cometbft/cometbft/libs/log"
 
 	"github.com/cosmos/ibc-go/v7/testing/simapp"
 	simcmd "github.com/cosmos/ibc-go/v7/testing/simapp/simd/cmd"

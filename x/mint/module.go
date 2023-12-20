@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/notional-labs/composable/v6/x/mint/client/cli"
+	"github.com/notional-labs/composable/v6/x/mint/keeper"
+	"github.com/notional-labs/composable/v6/x/mint/simulation"
+	"github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -16,10 +19,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/notional-labs/composable/v6/x/mint/client/cli"
-	"github.com/notional-labs/composable/v6/x/mint/keeper"
-	"github.com/notional-labs/composable/v6/x/mint/simulation"
-	"github.com/notional-labs/composable/v6/x/mint/types"
+	abci "github.com/cometbft/cometbft/abci/types"
 )
 
 var (
