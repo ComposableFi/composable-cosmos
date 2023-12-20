@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"testing"
 
-	helpers "github.com/notional-labs/composable/v6/app/helpers"
+	"github.com/notional-labs/composable/v6/app/helpers"
 	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 	"github.com/stretchr/testify/require"
 )
