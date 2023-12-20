@@ -186,6 +186,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		txCommand(),
 		keys.Commands(simapp.DefaultNodeHome),
 	)
+
 }
 
 func addModuleInitFlags(startCmd *cobra.Command) {

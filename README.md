@@ -1,4 +1,5 @@
 # Centauri
+
 Cosmos blockchain with IBC-v7 and wasm client enable.
 
 ## Hardware Recommendation
@@ -15,6 +16,7 @@ Requires [Go 1.21](https://go.dev/doc/install) or higher.
 make install
 centaurid version
 ```
+
 Then you can run a node with a single command.
 
 ```bash
@@ -26,6 +28,7 @@ If you have Docker installed, then you can run a local node with a single comman
 ```bash
 docker compose up -d
 ```
+
 and remove all node running with
 
 ```bash

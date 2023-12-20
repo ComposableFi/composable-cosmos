@@ -87,10 +87,10 @@ require (
 
 require (
 	cosmossdk.io/api v0.3.1
-	cosmossdk.io/core v0.5.1 // indirect
-	cosmossdk.io/depinject v1.0.0-alpha.4 // indirect
-	cosmossdk.io/errors v1.0.0
-	cosmossdk.io/tools/rosetta v0.2.1 // indirect
+	cosmossdk.io/core v0.5.1
+	cosmossdk.io/depinject v1.0.0-alpha.4
+	cosmossdk.io/math v1.2.0
+	cosmossdk.io/tools/rosetta v0.2.1
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v1.0.0 // indirect
@@ -191,17 +191,11 @@ require (
 	sigs.k8s.io/yaml v1.3.0
 )
 
+
+// standard cosmos-sdk replaces
 replace (
 	// use cosmos fork of keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
-
-	// lock wasmvm so we do not break the grandpa contract
-	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
-
-	// packet forward middleware (need to move to mainline)
-	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
-	// ibc-go with wasm client (need to move to mainline)
-	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 
 	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
 	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
@@ -213,4 +207,16 @@ replace (
 
 	// replace broken goleveldb
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+)
+
+// replaces specific to composable
+replace (
+	// lock wasmvm so we do not break the grandpa contract
+	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
+
+	// packet forward middleware (need to move to mainline)
+	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
+
+	// ibc-go with wasm client (need to move to mainline)
+	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 )
