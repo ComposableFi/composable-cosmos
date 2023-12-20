@@ -256,3 +256,6 @@ replace (
 replace github.com/notional-labs/composable-testnet => ../../
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+
+// rosetta sdk
+replace github.com/coinbase/rosetta-sdk-go/types => github.com/coinbase/rosetta-sdk-go/types v1.0.0
