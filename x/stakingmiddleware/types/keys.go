@@ -11,6 +11,7 @@ var (
 	BeginRedelegateKey           = []byte{0x02} // key for a delegation
 	UndelegateKey                = []byte{0x03} // key for a delegation
 	CancelUnbondingDelegationKey = []byte{0x04} // key for a delegation
+	ParamsKey                    = []byte{0x05} // key for global staking middleware params in the keeper store
 )
 
 const (

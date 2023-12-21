@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 
@@ -78,6 +80,35 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 // 	// log.Info()
 // 	store.Set(kkk, b)
 // }
+
+// SetParams sets the x/mint module parameters.
+func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
+	if p.BlocksPerEpoch < 5 {
+		//return error
+		return fmt.Errorf(
+			"BlocksPerEpoch must be greater than or equal to 5",
+		)
+
+	}
+
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&p)
+	store.Set(types.ParamsKey, bz)
+
+	return nil
+}
+
+// GetParams returns the current x/mint module parameters.
+func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.ParamsKey)
+	if bz == nil {
+		return p
+	}
+
+	k.cdc.MustUnmarshal(bz, &p)
+	return p
+}
 
 // SetLastTotalPower Set the last total validator power.
 func (k Keeper) SetLastTotalPower(ctx sdk.Context, power sdkmath.Int) {
