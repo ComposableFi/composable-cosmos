@@ -6,9 +6,10 @@ import (
 )
 
 // NewGenesisState creates a new GenesisState object
-func NewGenesisState(m math.Int) *GenesisState {
+func NewGenesisState(m math.Int, params Params) *GenesisState {
 	return &GenesisState{
 		LastTotalPower: m,
+		Params:         params,
 	}
 }
 
@@ -16,6 +17,7 @@ func NewGenesisState(m math.Int) *GenesisState {
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		LastTotalPower: sdk.ZeroInt(),
+		Params:         Params{BlocksPerEpoch: 10},
 	}
 }
 

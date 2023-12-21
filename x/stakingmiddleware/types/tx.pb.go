@@ -118,9 +118,111 @@ func (m *MsgSetPowerResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSetPowerResponse proto.InternalMessageInfo
 
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+type MsgUpdateEpochParams struct {
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// params defines the x/stakingmiddleware parameters to update.
+	//
+	// NOTE: All parameters must be supplied.
+	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+}
+
+func (m *MsgUpdateEpochParams) Reset()         { *m = MsgUpdateEpochParams{} }
+func (m *MsgUpdateEpochParams) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateEpochParams) ProtoMessage()    {}
+func (*MsgUpdateEpochParams) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d15665ac9877b062, []int{2}
+}
+func (m *MsgUpdateEpochParams) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateEpochParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateEpochParams.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateEpochParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateEpochParams.Merge(m, src)
+}
+func (m *MsgUpdateEpochParams) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateEpochParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateEpochParams.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateEpochParams proto.InternalMessageInfo
+
+func (m *MsgUpdateEpochParams) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgUpdateEpochParams) GetParams() Params {
+	if m != nil {
+		return m.Params
+	}
+	return Params{}
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+type MsgUpdateParamsEpochResponse struct {
+}
+
+func (m *MsgUpdateParamsEpochResponse) Reset()         { *m = MsgUpdateParamsEpochResponse{} }
+func (m *MsgUpdateParamsEpochResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParamsEpochResponse) ProtoMessage()    {}
+func (*MsgUpdateParamsEpochResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d15665ac9877b062, []int{3}
+}
+func (m *MsgUpdateParamsEpochResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParamsEpochResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParamsEpochResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParamsEpochResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParamsEpochResponse.Merge(m, src)
+}
+func (m *MsgUpdateParamsEpochResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParamsEpochResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParamsEpochResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParamsEpochResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgSetPower)(nil), "centauri.stakingmiddleware.v1beta1.MsgSetPower")
 	proto.RegisterType((*MsgSetPowerResponse)(nil), "centauri.stakingmiddleware.v1beta1.MsgSetPowerResponse")
+	proto.RegisterType((*MsgUpdateEpochParams)(nil), "centauri.stakingmiddleware.v1beta1.MsgUpdateEpochParams")
+	proto.RegisterType((*MsgUpdateParamsEpochResponse)(nil), "centauri.stakingmiddleware.v1beta1.MsgUpdateParamsEpochResponse")
 }
 
 func init() {
@@ -128,7 +230,7 @@ func init() {
 }
 
 var fileDescriptor_d15665ac9877b062 = []byte{
-	// 267 bytes of a gzipped FileDescriptorProto
+	// 422 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xd2, 0x4e, 0x4e, 0xcd, 0x2b,
 	0x49, 0x2c, 0x2d, 0xca, 0xd4, 0x2f, 0x2e, 0x49, 0xcc, 0xce, 0xcc, 0x4b, 0xcf, 0xcd, 0x4c, 0x49,
 	0xc9, 0x49, 0x2d, 0x4f, 0x2c, 0x4a, 0xd5, 0x2f, 0x33, 0x4c, 0x4a, 0x2d, 0x49, 0x34, 0xd4, 0x2f,
@@ -136,16 +238,26 @@ var fileDescriptor_d15665ac9877b062 = []byte{
 	0x55, 0x2c, 0x25, 0x9e, 0x9c, 0x5f, 0x9c, 0x9b, 0x5f, 0xac, 0x9f, 0x5b, 0x9c, 0xae, 0x5f, 0x66,
 	0x08, 0xa2, 0x20, 0x9a, 0xa5, 0x04, 0x13, 0x73, 0x33, 0xf3, 0xf2, 0xf5, 0xc1, 0x24, 0x54, 0x48,
 	0x24, 0x3d, 0x3f, 0x3d, 0x1f, 0xcc, 0xd4, 0x07, 0xb1, 0xa0, 0xa2, 0x92, 0x10, 0x13, 0xe2, 0x21,
-	0x12, 0x10, 0x0e, 0x44, 0x4a, 0xc9, 0x80, 0x8b, 0xdb, 0xb7, 0x38, 0x3d, 0x38, 0xb5, 0x24, 0x20,
-	0xbf, 0x3c, 0xb5, 0x48, 0x48, 0x91, 0x8b, 0x27, 0xad, 0x28, 0x3f, 0x37, 0x3e, 0x31, 0x25, 0xa5,
-	0x28, 0xb5, 0xb8, 0x58, 0x82, 0x51, 0x81, 0x51, 0x83, 0x33, 0x88, 0x1b, 0x24, 0xe6, 0x08, 0x11,
-	0x52, 0x12, 0xe5, 0x12, 0x46, 0xd2, 0x11, 0x94, 0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x6a, 0xd4,
-	0xc4, 0xc8, 0xc5, 0xec, 0x5b, 0x9c, 0x2e, 0x54, 0xc2, 0xc5, 0x01, 0x37, 0x4d, 0x5f, 0x8f, 0xb0,
-	0xf7, 0xf4, 0x90, 0x0c, 0x93, 0x32, 0x27, 0x51, 0x03, 0xcc, 0x76, 0x29, 0xd6, 0x86, 0xe7, 0x1b,
-	0xb4, 0x18, 0x9d, 0x8c, 0x4f, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39,
-	0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0xb2,
-	0x02, 0x4b, 0x74, 0x94, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x43, 0xc2, 0x18, 0x10, 0x00,
-	0x00, 0xff, 0xff, 0x23, 0x35, 0xc7, 0x70, 0xb9, 0x01, 0x00, 0x00,
+	0x12, 0x10, 0x0e, 0x54, 0xca, 0x8a, 0x08, 0xd7, 0x62, 0x3a, 0x0d, 0xac, 0x57, 0xc9, 0x80, 0x8b,
+	0xdb, 0xb7, 0x38, 0x3d, 0x38, 0xb5, 0x24, 0x20, 0xbf, 0x3c, 0xb5, 0x48, 0x48, 0x91, 0x8b, 0x27,
+	0xad, 0x28, 0x3f, 0x37, 0x3e, 0x31, 0x25, 0xa5, 0x28, 0xb5, 0xb8, 0x58, 0x82, 0x51, 0x81, 0x51,
+	0x83, 0x33, 0x88, 0x1b, 0x24, 0xe6, 0x08, 0x11, 0x52, 0x12, 0xe5, 0x12, 0x46, 0xd2, 0x11, 0x94,
+	0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0xaa, 0x74, 0x8f, 0x91, 0x4b, 0xc4, 0xb7, 0x38, 0x3d, 0xb4,
+	0x20, 0x25, 0xb1, 0x24, 0xd5, 0xb5, 0x20, 0x3f, 0x39, 0x23, 0x20, 0xb1, 0x28, 0x31, 0xb7, 0x58,
+	0xc8, 0x8c, 0x8b, 0x33, 0xb1, 0xb4, 0x24, 0x23, 0xbf, 0x28, 0xb3, 0xa4, 0x12, 0x62, 0x9e, 0x93,
+	0xc4, 0xa5, 0x2d, 0xba, 0x22, 0x50, 0x2f, 0x40, 0x8d, 0x0d, 0x2e, 0x29, 0xca, 0xcc, 0x4b, 0x0f,
+	0x42, 0x28, 0x15, 0xf2, 0xe5, 0x62, 0x2b, 0x00, 0x9b, 0x20, 0xc1, 0xa4, 0xc0, 0xa8, 0xc1, 0x6d,
+	0xa4, 0xa5, 0x47, 0x38, 0x9c, 0xf5, 0x20, 0x76, 0x3a, 0x71, 0x9e, 0xb8, 0x27, 0xcf, 0xb0, 0xe2,
+	0xf9, 0x06, 0x2d, 0xc6, 0x20, 0xa8, 0x21, 0x56, 0xf6, 0x4d, 0xcf, 0x37, 0x68, 0x21, 0x8c, 0xef,
+	0x7a, 0xbe, 0x41, 0x4b, 0x07, 0x1e, 0x6e, 0x15, 0x58, 0x42, 0x0e, 0xee, 0x19, 0x88, 0x99, 0x4a,
+	0x72, 0x5c, 0x32, 0x68, 0x42, 0x60, 0x5f, 0xc2, 0x02, 0xc0, 0x68, 0x0a, 0x13, 0x17, 0xb3, 0x6f,
+	0x71, 0xba, 0x50, 0x3f, 0x23, 0x97, 0x20, 0x66, 0x28, 0x58, 0x10, 0xe3, 0x7a, 0x6c, 0xe1, 0x27,
+	0xe5, 0x40, 0x92, 0x4e, 0x2c, 0x2e, 0x13, 0x2a, 0xe1, 0xe2, 0x80, 0x47, 0xb0, 0x3e, 0x91, 0xa6,
+	0xc1, 0x34, 0x48, 0x99, 0x93, 0xa8, 0x01, 0x66, 0xab, 0x14, 0x6b, 0x03, 0x28, 0xfc, 0x9d, 0x8c,
+	0x4f, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5,
+	0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x12, 0x5b, 0xa8, 0x97, 0x54,
+	0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x13, 0xa7, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x78, 0x25,
+	0x34, 0xad, 0x88, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -160,6 +272,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	UpdateEpochParams(ctx context.Context, in *MsgUpdateEpochParams, opts ...grpc.CallOption) (*MsgUpdateParamsEpochResponse, error)
 	SetPower(ctx context.Context, in *MsgSetPower, opts ...grpc.CallOption) (*MsgSetPowerResponse, error)
 }
 
@@ -169,6 +282,15 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) UpdateEpochParams(ctx context.Context, in *MsgUpdateEpochParams, opts ...grpc.CallOption) (*MsgUpdateParamsEpochResponse, error) {
+	out := new(MsgUpdateParamsEpochResponse)
+	err := c.cc.Invoke(ctx, "/centauri.stakingmiddleware.v1beta1.Msg/UpdateEpochParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) SetPower(ctx context.Context, in *MsgSetPower, opts ...grpc.CallOption) (*MsgSetPowerResponse, error) {
@@ -182,6 +304,7 @@ func (c *msgClient) SetPower(ctx context.Context, in *MsgSetPower, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	UpdateEpochParams(context.Context, *MsgUpdateEpochParams) (*MsgUpdateParamsEpochResponse, error)
 	SetPower(context.Context, *MsgSetPower) (*MsgSetPowerResponse, error)
 }
 
@@ -189,12 +312,33 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) UpdateEpochParams(ctx context.Context, req *MsgUpdateEpochParams) (*MsgUpdateParamsEpochResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEpochParams not implemented")
+}
 func (*UnimplementedMsgServer) SetPower(ctx context.Context, req *MsgSetPower) (*MsgSetPowerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPower not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_UpdateEpochParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateEpochParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateEpochParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/centauri.stakingmiddleware.v1beta1.Msg/UpdateEpochParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateEpochParams(ctx, req.(*MsgUpdateEpochParams))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_SetPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -219,6 +363,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "centauri.stakingmiddleware.v1beta1.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UpdateEpochParams",
+			Handler:    _Msg_UpdateEpochParams_Handler,
+		},
 		{
 			MethodName: "SetPower",
 			Handler:    _Msg_SetPower_Handler,
@@ -281,6 +429,69 @@ func (m *MsgSetPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgUpdateEpochParams) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateEpochParams) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateEpochParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateParamsEpochResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParamsEpochResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParamsEpochResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -306,6 +517,30 @@ func (m *MsgSetPower) Size() (n int) {
 }
 
 func (m *MsgSetPowerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgUpdateEpochParams) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Params.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgUpdateParamsEpochResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -429,6 +664,171 @@ func (m *MsgSetPowerResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgSetPowerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateEpochParams) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateEpochParams: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateEpochParams: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateParamsEpochResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParamsEpochResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParamsEpochResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

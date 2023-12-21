@@ -17,12 +17,14 @@ import (
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgSetPower{}, "composable/MsgSetPower")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateEpochParams{}, "composable/MsgUpdateEpochParams")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations(
 		(*sdk.Msg)(nil),
 		&MsgSetPower{},
+		&MsgUpdateEpochParams{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

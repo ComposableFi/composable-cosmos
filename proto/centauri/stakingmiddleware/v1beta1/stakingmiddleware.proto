@@ -69,3 +69,11 @@ message CancelUnbondingDelegation {
   int64 creation_height = 4;
 }
 
+
+
+// Params holds parameters for the stakingmiddleware module.
+message Params {
+  // expected blocks per year
+  uint64 blocks_per_epoch = 1;
+}
+
