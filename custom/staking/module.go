@@ -58,14 +58,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	}
 }
 
-// func (am AppModule) BeginBlock(ctx sdk.Context, _abc abcitype.RequestBeginBlock) {
-// 	//Define the logic around the batching.
-// 	am.AppModule.BeginBlock(ctx, _abc)
-// }
-
 func (am AppModule) EndBlock(ctx sdk.Context, _abc abcitype.RequestEndBlock) []abcitype.ValidatorUpdate {
-	//Define the logic around the batching.
-	//TODO!!!
 
 	println("EndBlock Custom Staking Module")
 
@@ -83,17 +76,62 @@ func (am AppModule) EndBlock(ctx sdk.Context, _abc abcitype.RequestEndBlock) []a
 		if err != nil {
 			println("Error for Delegator Address: ", delegation.DelegatorAddress)
 		}
-
 	}
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			"DequeueAllDelegation",
-			// sdk.NewAttribute(sdk.AttributeKeyAmount, balances.String()),
-			// sdk.NewAttribute(types.AttributeKeyValidator, dvPair.ValidatorAddress),
-			// sdk.NewAttribute(types.AttributeKeyDelegator, dvPair.DelegatorAddress),
-		),
-	)
+	beginredelegations := am.keeper.Stakingmiddleware.DequeueAllRedelegation(ctx)
+	println("BeginRedelegations: ", beginredelegations)
+	println("BeginRedelegations len: ", len(beginredelegations))
+	for _, beginredelegation := range beginredelegations {
+		println("Delegator Address: ", beginredelegation.DelegatorAddress)
+		println("Validator Address: ", beginredelegation.ValidatorSrcAddress)
+		// fmt.Println("Amount", delegation.Amount.Amount)
+
+		// msgDelegate := stakingtypes.MsgDelegate{DelegatorAddress: delegation.DelegatorAddress, ValidatorAddress: delegation.ValidatorAddress, Amount: delegation.Amount}
+		// _, err := am.msgServer.Delegate(ctx, &msgDelegate)
+		// if err != nil {
+		// 	println("Error for Delegator Address: ", delegation.DelegatorAddress)
+		// }
+	}
+
+	undelegations := am.keeper.Stakingmiddleware.DequeueAllUndelegation(ctx)
+	println("Undelegation: ", beginredelegations)
+	println("Undelegation len: ", len(beginredelegations))
+	for _, undelegation := range undelegations {
+		println("Undelegation Delegator Address: ", undelegation.DelegatorAddress)
+		println("Undelegation Validator Address: ", undelegation.ValidatorAddress)
+		// fmt.Println("Amount", delegation.Amount.Amount)
+
+		// msgDelegate := stakingtypes.MsgDelegate{DelegatorAddress: delegation.DelegatorAddress, ValidatorAddress: delegation.ValidatorAddress, Amount: delegation.Amount}
+		// _, err := am.msgServer.Delegate(ctx, &msgDelegate)
+		// if err != nil {
+		// 	println("Error for Delegator Address: ", delegation.DelegatorAddress)
+		// }
+	}
+
+	//DequeueAllCancelUnbondingDelegation
+	cancel_unbonding_delegations := am.keeper.Stakingmiddleware.DequeueAllCancelUnbondingDelegation(ctx)
+	println("Cancel Unbonding Delegations: ", cancel_unbonding_delegations)
+	println("Cancel Ubonding Delegations len: ", len(cancel_unbonding_delegations))
+	for _, undelegation := range cancel_unbonding_delegations {
+		println("Cancel Unbonding Delegation  Delegator Address: ", undelegation.DelegatorAddress)
+		println("Cancel Unbonding Delegations Validator Address: ", undelegation.ValidatorAddress)
+		// fmt.Println("Amount", delegation.Amount.Amount)
+
+		// msgDelegate := stakingtypes.MsgDelegate{DelegatorAddress: delegation.DelegatorAddress, ValidatorAddress: delegation.ValidatorAddress, Amount: delegation.Amount}
+		// _, err := am.msgServer.Delegate(ctx, &msgDelegate)
+		// if err != nil {
+		// 	println("Error for Delegator Address: ", delegation.DelegatorAddress)
+		// }
+	}
+
+	// ctx.EventManager().EmitEvent(
+	// 	sdk.NewEvent(
+	// 		"DequeueAllDelegation",
+	// 		// sdk.NewAttribute(sdk.AttributeKeyAmount, balances.String()),
+	// 		// sdk.NewAttribute(types.AttributeKeyValidator, dvPair.ValidatorAddress),
+	// 		// sdk.NewAttribute(types.AttributeKeyDelegator, dvPair.DelegatorAddress),
+	// 	),
+	// )
 
 	return am.AppModule.EndBlock(ctx, _abc)
 }

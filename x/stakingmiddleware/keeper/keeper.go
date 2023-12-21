@@ -83,12 +83,12 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 func (k Keeper) SetLastTotalPower(ctx sdk.Context, power sdkmath.Int) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
-	store.Set(types.DelegationKey, bz)
+	store.Set(types.DelegateKey, bz)
 }
 
 func (k Keeper) GetLastTotalPower(ctx sdk.Context) sdkmath.Int {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.DelegationKey)
+	bz := store.Get(types.DelegateKey)
 
 	if bz == nil {
 		return sdkmath.ZeroInt()
@@ -106,31 +106,40 @@ func (k Keeper) SetDelegation(ctx sdk.Context, sourceDelegatorAddress, validator
 
 	store := ctx.KVStore(k.storeKey)
 	b := k.cdc.MustMarshal(&delegation)
-	store.Set(types.GetDelegationKey(delegatorAddress, GetValidatorAddr(delegation)), b)
+	store.Set(types.GetDelegateKey(delegatorAddress, GetValidatorAddr(delegation)), b)
 }
 
-func (k Keeper) IterateDelegations(ctx sdk.Context, fn func(index int64, ubd types.Delegation) (stop bool)) {
+func (k Keeper) SetBeginRedelegation(ctx sdk.Context, sourceDelegatorAddress, validatorSrcAddress, validatorDstAddress, denom string, amount sdkmath.Int) {
+	begindelegation := types.BeginRedelegate{DelegatorAddress: sourceDelegatorAddress, ValidatorSrcAddress: validatorSrcAddress, ValidatorDstAddress: validatorDstAddress, Amount: sdk.NewCoin(denom, amount)}
+	delegatorAddress := sdk.MustAccAddressFromBech32(begindelegation.DelegatorAddress)
+
 	store := ctx.KVStore(k.storeKey)
-
-	iterator := sdk.KVStorePrefixIterator(store, types.DelegationKey)
-	defer iterator.Close()
-
-	for i := int64(0); iterator.Valid(); iterator.Next() {
-		ubd := MustUnmarshalUBD(k.cdc, iterator.Value())
-		if stop := fn(i, ubd); stop {
-			break
-		}
-		i++
-	}
+	b := k.cdc.MustMarshal(&begindelegation)
+	store.Set(types.GetBeginRedelegateKey(delegatorAddress, GetValidatorAddrFromStr(validatorSrcAddress)), b)
 }
 
-// DequeueAllMatureUBDQueue returns a concatenated list of all the timeslices inclusively previous to
-// currTime, and deletes the timeslices from the queue.
+func (k Keeper) SetUndelegation(ctx sdk.Context, sourceDelegatorAddress, validatorAddress, denom string, amount sdkmath.Int) {
+	undelegation := types.Undelegate{DelegatorAddress: sourceDelegatorAddress, ValidatorAddress: validatorAddress, Amount: sdk.NewCoin(denom, amount)}
+	delegatorAddress := sdk.MustAccAddressFromBech32(undelegation.DelegatorAddress)
+
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&undelegation)
+	store.Set(types.GetUndelegateKey(delegatorAddress, GetValidatorAddrFromStr(validatorAddress)), b)
+}
+
+func (k Keeper) SetCancelUndelegation(ctx sdk.Context, sourceDelegatorAddress, validatorAddress, denom string, amount sdkmath.Int, height int64) {
+	undelegation := types.CancelUnbondingDelegation{DelegatorAddress: sourceDelegatorAddress, ValidatorAddress: validatorAddress, Amount: sdk.NewCoin(denom, amount), CreationHeight: height}
+	delegatorAddress := sdk.MustAccAddressFromBech32(undelegation.DelegatorAddress)
+
+	store := ctx.KVStore(k.storeKey)
+	b := k.cdc.MustMarshal(&undelegation)
+	store.Set(types.GetCancelUnbondingDelegateKey(delegatorAddress, GetValidatorAddrFromStr(validatorAddress)), b)
+}
+
 func (k Keeper) DequeueAllDelegation(ctx sdk.Context) (delegations []types.Delegation) {
 	store := ctx.KVStore(k.storeKey)
 
-	// gets an iterator for all timeslices from time 0 until the current Blockheader time
-	delegationIterator := sdk.KVStorePrefixIterator(store, types.DelegationKey)
+	delegationIterator := sdk.KVStorePrefixIterator(store, types.DelegateKey)
 	defer delegationIterator.Close()
 
 	for ; delegationIterator.Valid(); delegationIterator.Next() {
@@ -144,6 +153,70 @@ func (k Keeper) DequeueAllDelegation(ctx sdk.Context) (delegations []types.Deleg
 	}
 
 	return delegations
+}
+
+func (k Keeper) DequeueAllRedelegation(ctx sdk.Context) (redelegations []types.BeginRedelegate) {
+	store := ctx.KVStore(k.storeKey)
+
+	redelegationIterator := sdk.KVStorePrefixIterator(store, types.BeginRedelegateKey)
+	defer redelegationIterator.Close()
+
+	for ; redelegationIterator.Valid(); redelegationIterator.Next() {
+		redelegation := types.BeginRedelegate{}
+		value := redelegationIterator.Value()
+		k.cdc.MustUnmarshal(value, &redelegation)
+
+		redelegations = append(redelegations, redelegation)
+
+		store.Delete(redelegationIterator.Key())
+	}
+
+	return redelegations
+}
+
+func (k Keeper) DequeueAllUndelegation(ctx sdk.Context) (undelegations []types.Undelegate) {
+	store := ctx.KVStore(k.storeKey)
+
+	undelegationIterator := sdk.KVStorePrefixIterator(store, types.UndelegateKey)
+	defer undelegationIterator.Close()
+
+	for ; undelegationIterator.Valid(); undelegationIterator.Next() {
+		undelegation := types.Undelegate{}
+		value := undelegationIterator.Value()
+		k.cdc.MustUnmarshal(value, &undelegation)
+
+		undelegations = append(undelegations, undelegation)
+
+		store.Delete(undelegationIterator.Key())
+	}
+
+	return undelegations
+}
+
+func (k Keeper) DequeueAllCancelUnbondingDelegation(ctx sdk.Context) (undelegations []types.CancelUnbondingDelegation) {
+	store := ctx.KVStore(k.storeKey)
+
+	cancelunbondingundelegationIterator := sdk.KVStorePrefixIterator(store, types.CancelUnbondingDelegationKey)
+	defer cancelunbondingundelegationIterator.Close()
+
+	for ; cancelunbondingundelegationIterator.Valid(); cancelunbondingundelegationIterator.Next() {
+		cancelunbondingdelegation := types.CancelUnbondingDelegation{}
+		value := cancelunbondingundelegationIterator.Value()
+		k.cdc.MustUnmarshal(value, &cancelunbondingdelegation)
+
+		undelegations = append(undelegations, cancelunbondingdelegation)
+
+		store.Delete(cancelunbondingundelegationIterator.Key())
+	}
+	return undelegations
+}
+
+func GetValidatorAddrFromStr(d string) sdk.ValAddress {
+	addr, err := sdk.ValAddressFromBech32(d)
+	if err != nil {
+		panic(err)
+	}
+	return addr
 }
 
 func GetValidatorAddr(d types.Delegation) sdk.ValAddress {
