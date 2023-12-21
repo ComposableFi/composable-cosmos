@@ -19,4 +19,7 @@ message GenesisState {
 
   // delegations defines the delegations active at genesis.
   repeated Delegation delegations = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];  
+  repeated BeginRedelegate begindelegations = 3 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];  
+  repeated Undelegate undelegates = 4 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];  
+  repeated CancelUnbondingDelegation cancelunbondingdelegations = 5 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];  
 }
