@@ -19,8 +19,9 @@ import (
 // AppModule wraps around the bank module and the bank keeper to return the right total supply
 type AppModule struct {
 	stakingmodule.AppModule
-	keeper   customstakingkeeper.Keeper
-	subspace exported.Subspace
+	keeper    customstakingkeeper.Keeper
+	subspace  exported.Subspace
+	msgServer stakingtypes.MsgServer
 }
 
 // NewAppModule creates a new AppModule object
@@ -30,6 +31,7 @@ func NewAppModule(cdc codec.Codec, keeper customstakingkeeper.Keeper, accountKee
 		AppModule: stakingModule,
 		keeper:    keeper,
 		subspace:  ss,
+		msgServer: stakingkeeper.NewMsgServerImpl(&keeper.Keeper),
 	}
 }
 
@@ -75,9 +77,15 @@ func (am AppModule) EndBlock(ctx sdk.Context, _abc abcitype.RequestEndBlock) []a
 		println("Delegator Address: ", delegation.DelegatorAddress)
 		println("Validator Address: ", delegation.ValidatorAddress)
 		fmt.Println("Amount", delegation.Amount.Amount)
+
+		msgDelegate := stakingtypes.MsgDelegate{DelegatorAddress: delegation.DelegatorAddress, ValidatorAddress: delegation.ValidatorAddress, Amount: delegation.Amount}
+		_, err := am.msgServer.Delegate(ctx, &msgDelegate)
+		if err != nil {
+			println("Error for Delegator Address: ", delegation.DelegatorAddress)
+		}
+
 	}
 
-	// am.keeper.Delegate()
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			"DequeueAllDelegation",
