@@ -36,8 +36,3 @@ func (ms msgServer) UpdateEpochParams(goCtx context.Context, req *types.MsgUpdat
 
 	return &types.MsgUpdateParamsEpochResponse{}, nil
 }
-
-// UpdateParams updates the params.
-func (ms msgServer) SetPower(goCtx context.Context, req *types.MsgSetPower) (*types.MsgSetPowerResponse, error) {
-	return &types.MsgSetPowerResponse{}, nil
-}
