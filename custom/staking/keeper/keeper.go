@@ -3,7 +3,6 @@ package keeper
 import (
 	abcicometbft "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
-	accountkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 
@@ -14,7 +13,6 @@ import (
 type Keeper struct {
 	stakingkeeper.Keeper
 	cdc               codec.BinaryCodec
-	acck              accountkeeper.AccountKeeper
 	Stakingmiddleware *stakingmiddleware.Keeper
 	authority         string
 }
@@ -110,13 +108,11 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicomet
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	staking stakingkeeper.Keeper,
-	acck accountkeeper.AccountKeeper,
 	stakingmiddleware *stakingmiddleware.Keeper,
 	authority string,
 ) Keeper {
 	keeper := Keeper{
 		Keeper:            staking,
-		acck:              acck,
 		authority:         authority,
 		Stakingmiddleware: stakingmiddleware,
 		cdc:               cdc,
