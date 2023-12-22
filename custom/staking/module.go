@@ -60,6 +60,8 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 func (am AppModule) EndBlock(ctx sdk.Context, _abc abcitype.RequestEndBlock) []abcitype.ValidatorUpdate {
 
+	return EndBlocker(ctx, &am.keeper)
+
 	println("EndBlock Custom Staking Module")
 	params := am.keeper.Stakingmiddleware.GetParams(ctx)
 	println("BlocksPerEpoch: ", params.BlocksPerEpoch)
