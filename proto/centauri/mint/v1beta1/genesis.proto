@@ -19,11 +19,4 @@ message GenesisState {
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false
   ];
-
-  // last_total_power tracks the total amounts of bonded tokens recorded during
-  // the previous end block.
-  bytes last_total_power = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
-  ];
 }

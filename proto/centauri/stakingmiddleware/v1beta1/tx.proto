@@ -14,22 +14,7 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc UpdateEpochParams(MsgUpdateEpochParams) returns (MsgUpdateParamsEpochResponse);
-
-  rpc SetPower(MsgSetPower) returns (MsgSetPowerResponse);
 }
-
-// MsgSetPower is the Msg/SetPower request type.
-//
-// Since: cosmos-sdk 0.47
-message MsgSetPower {
-  string from_address = 1;
-}
-
-// MsgSetPowerResponse defines the response structure for executing a
-// MsgSetPower message.
-//
-// Since: cosmos-sdk 0.47
-message MsgSetPowerResponse {}
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 //

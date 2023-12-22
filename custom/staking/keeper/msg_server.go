@@ -3,8 +3,6 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -29,55 +27,19 @@ func (k msgServer) EditValidator(goCtx context.Context, msg *types.MsgEditValida
 }
 
 func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*types.MsgDelegateResponse, error) {
-	//todo add validation. check that this account really has some coins
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	bondDenom := k.BondDenom(ctx)
-	if msg.Amount.Denom != bondDenom {
-		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidRequest, "invalid coin denomination: got %s, expected %s", msg.Amount.Denom, bondDenom,
-		)
-	}
-
-	// k.mintkeeper.SetLastTotalPower(ctx, math.Int{})
-	// k.stakingmiddleware.SetLastTotalPower(ctx, math.Int{})
-
-	// delegations := k.Stakingmiddleware.DequeueAllDelegation(ctx)
-	// if len(delegations) > 2 {
-	// 	return nil, sdkerrors.Wrapf(
-	// 		sdkerrors.ErrInvalidRequest, "should always be less then X : got %s, expected %s", len(delegations), 1,
-	// 	)
-	// }
-
-	k.Stakingmiddleware.SetDelegation(ctx, msg.DelegatorAddress, msg.ValidatorAddress, msg.Amount.Denom, msg.Amount.Amount)
-
-	return &types.MsgDelegateResponse{}, nil
-	// return nil, fmt.Errorf("My custom error: Nikita")
-	// return k.msgServer.Delegate(goCtx, msg)
+	return k.msgServer.Delegate(goCtx, msg)
 }
 
 func (k msgServer) BeginRedelegate(goCtx context.Context, msg *types.MsgBeginRedelegate) (*types.MsgBeginRedelegateResponse, error) {
-	//todo add validation. check that this account really has some coins staked with this validator
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	k.Stakingmiddleware.SetBeginRedelegation(ctx, msg.DelegatorAddress, msg.ValidatorSrcAddress, msg.ValidatorDstAddress, msg.Amount.Denom, msg.Amount.Amount)
-	return &types.MsgBeginRedelegateResponse{}, nil
-	// return k.msgServer.BeginRedelegate(goCtx, msg)
+	return k.msgServer.BeginRedelegate(goCtx, msg)
 }
 
 func (k msgServer) Undelegate(goCtx context.Context, msg *types.MsgUndelegate) (*types.MsgUndelegateResponse, error) {
-	//todo add validation. check that this account really has some coins staked with this validator
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	k.Stakingmiddleware.SetUndelegation(ctx, msg.DelegatorAddress, msg.ValidatorAddress, msg.Amount.Denom, msg.Amount.Amount)
-	return &types.MsgUndelegateResponse{}, nil
-	// return k.msgServer.Undelegate(goCtx, msg)
+	return k.msgServer.Undelegate(goCtx, msg)
 }
 
 func (k msgServer) CancelUnbondingDelegation(goCtx context.Context, msg *types.MsgCancelUnbondingDelegation) (*types.MsgCancelUnbondingDelegationResponse, error) {
-	//todo add validation. check that this account really has some coins staked with this validator
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	k.Stakingmiddleware.SetCancelUndelegation(ctx, msg.DelegatorAddress, msg.ValidatorAddress, msg.Amount.Denom, msg.Amount.Amount, msg.CreationHeight)
-	return &types.MsgCancelUnbondingDelegationResponse{}, nil
-	// return k.msgServer.CancelUnbondingDelegation(goCtx, msg)
+	return k.msgServer.CancelUnbondingDelegation(goCtx, msg)
 }
 
 func (ms msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {

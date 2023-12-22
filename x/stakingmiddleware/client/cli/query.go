@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -14,14 +12,14 @@ import (
 func GetQueryCmd() *cobra.Command {
 	mintingQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      "Querying commands for the minting module",
+		Short:                      "Querying commands for the staking middleware module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
 
 	mintingQueryCmd.AddCommand(
-		GetCmdQueryPower(),
+		GetCmdQueryParams(),
 	)
 
 	return mintingQueryCmd
@@ -29,31 +27,25 @@ func GetQueryCmd() *cobra.Command {
 
 // GetCmdQueryParams implements a command to return the current minting
 // parameters.
-func GetCmdQueryPower() *cobra.Command {
+func GetCmdQueryParams() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "power",
-		Short: "Query the current power",
+		Use:   "params",
+		Short: "Query the current minting parameters",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
 				return err
 			}
-
-			return clientCtx.PrintString(fmt.Sprintf("%s\n", "hello world"))
-
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryPowerRequest{}
-			res, err := queryClient.Power(cmd.Context(), params)
+			params := &types.QueryParamsRequest{}
+			res, err := queryClient.Params(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
-			_ = res
 
-			// return nil
-			return clientCtx.PrintString(fmt.Sprintf("%s\n", "hello world"))
-			// return clientCtx.PrintProto(&res.Power)
+			return clientCtx.PrintProto(&res.Params)
 		},
 	}
 
