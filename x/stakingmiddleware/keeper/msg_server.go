@@ -3,6 +3,9 @@ package keeper
 import (
 	"context"
 
+	errorsmod "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
@@ -21,7 +24,15 @@ func NewMsgServerImpl(k Keeper) types.MsgServer {
 }
 
 // UpdateParams updates the params.
-func (ms msgServer) SetPower(goCtx context.Context, req *types.MsgSetPower) (*types.MsgSetPowerResponse, error) {
+func (ms msgServer) UpdateEpochParams(goCtx context.Context, req *types.MsgUpdateEpochParams) (*types.MsgUpdateParamsEpochResponse, error) {
+	if ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
+	}
 
-	return &types.MsgSetPowerResponse{}, nil
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := ms.SetParams(ctx, req.Params); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgUpdateParamsEpochResponse{}, nil
 }

@@ -3,8 +3,6 @@ package keeper
 import (
 	"context"
 
-	"cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 )
@@ -29,27 +27,7 @@ func (k msgServer) EditValidator(goCtx context.Context, msg *types.MsgEditValida
 }
 
 func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*types.MsgDelegateResponse, error) {
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// bondDenom := k.BondDenom(ctx)
-	// if msg.Amount.Denom != bondDenom {
-	// 	return nil, sdkerrors.Wrapf(
-	// 		sdkerrors.ErrInvalidRequest, "invalid coin denomination: got %s, expected %s", msg.Amount.Denom, bondDenom,
-	// 	)
-	// }
-
-	// delegation := types.Delegation{
-	// 	DelegatorAddress: msg.DelegatorAddress,
-	// 	ValidatorAddress: msg.ValidatorAddress,
-	// 	Shares:           msg.Amount.Amount.ToLegacyDec(),
-	// }
-	k.mintkeeper.SetLastTotalPower(ctx, math.Int{})
-	k.stakingmiddleware.SetLastTotalPower(ctx, math.Int{})
-
-	return &types.MsgDelegateResponse{}, nil
-	// return nil, fmt.Errorf("My custom error: Nikita")
-	// return k.msgServer.Delegate(goCtx, msg)
+	return k.msgServer.Delegate(goCtx, msg)
 }
 
 func (k msgServer) BeginRedelegate(goCtx context.Context, msg *types.MsgBeginRedelegate) (*types.MsgBeginRedelegateResponse, error) {

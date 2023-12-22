@@ -5,6 +5,7 @@ import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "centauri/stakingmiddleware/v1beta1/stakingmiddleware.proto";
 
 option go_package = "x/stakingmiddleware/types";
 
@@ -12,18 +13,29 @@ option go_package = "x/stakingmiddleware/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
-  rpc SetPower(MsgSetPower) returns (MsgSetPowerResponse);
+  rpc UpdateEpochParams(MsgUpdateEpochParams) returns (MsgUpdateParamsEpochResponse);
 }
 
-// MsgSetPower is the Msg/SetPower request type.
+// MsgUpdateParams is the Msg/UpdateParams request type.
 //
 // Since: cosmos-sdk 0.47
-message MsgSetPower {
-  string from_address = 1;
+message MsgUpdateEpochParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "centauri/x/stakingmiddleware/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the x/stakingmiddleware parameters to update.
+  //
+  // NOTE: All parameters must be supplied.
+  Params params = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
-// MsgSetPowerResponse defines the response structure for executing a
-// MsgSetPower message.
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
 //
 // Since: cosmos-sdk 0.47
-message MsgSetPowerResponse {}
+message MsgUpdateParamsEpochResponse {}
