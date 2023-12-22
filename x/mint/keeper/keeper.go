@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/notional-labs/composable/v6/x/mint/types"
 )
@@ -153,36 +152,4 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 // AddCollectedFees to be used in BeginBlocker.
 func (k Keeper) AddCollectedFees(ctx sdk.Context, fees sdk.Coins) error {
 	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, fees)
-}
-
-func (k Keeper) StoreDelegation(ctx sdk.Context, delegation stakingtypes.Delegation) {
-	delegatorAddress := sdk.MustAccAddressFromBech32(delegation.DelegatorAddress)
-	log := k.Logger(ctx)
-	log.Info("StoreDelegation", "delegatorAddress", delegatorAddress, "validatorAddress", delegation.GetValidatorAddr())
-	store := ctx.KVStore(k.storeKey)
-	b := stakingtypes.MustMarshalDelegation(k.cdc, delegation)
-	kkk := types.GetDelegationKey(delegatorAddress, delegation.GetValidatorAddr())
-	// log.Info()
-	store.Set(kkk, b)
-}
-
-// SetLastTotalPower Set the last total validator power.
-func (k Keeper) SetLastTotalPower(ctx sdk.Context, power math.Int) {
-	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: power})
-	store.Set(types.DelegationKey, bz)
-}
-
-func (k Keeper) GetLastTotalPower(ctx sdk.Context) math.Int {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.DelegationKey)
-
-	if bz == nil {
-		return math.ZeroInt()
-	}
-
-	ip := sdk.IntProto{}
-	k.cdc.MustUnmarshal(bz, &ip)
-
-	return ip.Int
 }
