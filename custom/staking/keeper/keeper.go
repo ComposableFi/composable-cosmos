@@ -19,7 +19,7 @@ type Keeper struct {
 	authority         string
 }
 
-func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, hight int64) []abcicometbft.ValidatorUpdate {
+func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicometbft.ValidatorUpdate {
 	// Calculate validator set changes.
 	//
 	// NOTE: ApplyAndReturnValidatorSetUpdates has to come before
@@ -32,10 +32,10 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, hight int64) []abcicometb
 	println("BlockValidatorUpdates Custom Staking Module")
 	params := k.Stakingmiddleware.GetParams(ctx)
 	println("BlocksPerEpoch: ", params.BlocksPerEpoch)
-	should_execute_batch := (hight % int64(params.BlocksPerEpoch)) == 0
+	shouldExecuteBatch := (height % int64(params.BlocksPerEpoch)) == 0
 	var validatorUpdates []abcicometbft.ValidatorUpdate
-	if should_execute_batch {
-		println("Should Execute Batch: ", hight)
+	if shouldExecuteBatch {
+		println("Should Execute Batch: ", height)
 		v, err := k.ApplyAndReturnValidatorSetUpdates(ctx)
 		if err != nil {
 			panic(err)
