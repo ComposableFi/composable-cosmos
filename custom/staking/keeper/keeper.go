@@ -6,6 +6,7 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 )
@@ -27,13 +28,11 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicomet
 	// unbonded after the Endblocker (go from Bonded -> Unbonding during
 	// ApplyAndReturnValidatorSetUpdates and then Unbonding -> Unbonded during
 	// UnbondAllMatureValidatorQueue).
-	println("BlockValidatorUpdates Custom Staking Module")
 	params := k.Stakingmiddleware.GetParams(ctx)
-	println("BlocksPerEpoch: ", params.BlocksPerEpoch)
 	shouldExecuteBatch := (height % int64(params.BlocksPerEpoch)) == 0
 	var validatorUpdates []abcicometbft.ValidatorUpdate
 	if shouldExecuteBatch {
-		println("Should Execute Batch: ", height)
+		println("Should Execute ApplyAndReturnValidatorSetUpdates at height : ", height)
 		v, err := k.ApplyAndReturnValidatorSetUpdates(ctx)
 		if err != nil {
 			panic(err)
@@ -107,15 +106,17 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicomet
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	staking stakingkeeper.Keeper,
-	stakingmiddleware *stakingmiddleware.Keeper,
+	key storetypes.StoreKey,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
 	authority string,
-) Keeper {
+	stakingmiddleware *stakingmiddleware.Keeper,
+) *Keeper {
 	keeper := Keeper{
-		Keeper:            staking,
+		Keeper:            *stakingkeeper.NewKeeper(cdc, key, ak, bk, authority),
 		authority:         authority,
 		Stakingmiddleware: stakingmiddleware,
 		cdc:               cdc,
 	}
-	return keeper
+	return &keeper
 }
