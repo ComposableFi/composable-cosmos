@@ -45,7 +45,6 @@ import (
 	slashingkeeper "github.com/cosmos/cosmos-sdk/x/slashing/keeper"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	customstaking "github.com/notional-labs/composable/v6/custom/staking/keeper"
 
@@ -115,31 +114,30 @@ type AppKeepers struct {
 	memKeys map[string]*storetypes.MemoryStoreKey
 
 	// keepers
-	AccountKeeper       authkeeper.AccountKeeper
-	BankKeeper          custombankkeeper.Keeper
-	CapabilityKeeper    *capabilitykeeper.Keeper
-	StakingKeeper       *stakingkeeper.Keeper
-	CustomStakingKeeper customstaking.Keeper
-	SlashingKeeper      slashingkeeper.Keeper
-	MintKeeper          mintkeeper.Keeper
-	DistrKeeper         distrkeeper.Keeper
-	GovKeeper           govkeeper.Keeper
-	CrisisKeeper        *crisiskeeper.Keeper
-	UpgradeKeeper       *upgradekeeper.Keeper
-	ParamsKeeper        paramskeeper.Keeper
-	IBCKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	EvidenceKeeper      evidencekeeper.Keeper
-	TransferKeeper      ibctransferkeeper.Keeper
-	ICQKeeper           icqkeeper.Keeper
-	ICAHostKeeper       icahostkeeper.Keeper
-	FeeGrantKeeper      feegrantkeeper.Keeper
-	AuthzKeeper         authzkeeper.Keeper
-	GroupKeeper         groupkeeper.Keeper
-	Wasm08Keeper        wasm08Keeper.Keeper // TODO: use this name ?
-	WasmKeeper          wasm.Keeper
-	IBCHooksKeeper      *ibchookskeeper.Keeper
-	Ics20WasmHooks      *ibc_hooks.WasmHooks
-	HooksICS4Wrapper    ibc_hooks.ICS4Middleware
+	AccountKeeper    authkeeper.AccountKeeper
+	BankKeeper       custombankkeeper.Keeper
+	CapabilityKeeper *capabilitykeeper.Keeper
+	StakingKeeper    *customstaking.Keeper
+	SlashingKeeper   slashingkeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	DistrKeeper      distrkeeper.Keeper
+	GovKeeper        govkeeper.Keeper
+	CrisisKeeper     *crisiskeeper.Keeper
+	UpgradeKeeper    *upgradekeeper.Keeper
+	ParamsKeeper     paramskeeper.Keeper
+	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
+	EvidenceKeeper   evidencekeeper.Keeper
+	TransferKeeper   ibctransferkeeper.Keeper
+	ICQKeeper        icqkeeper.Keeper
+	ICAHostKeeper    icahostkeeper.Keeper
+	FeeGrantKeeper   feegrantkeeper.Keeper
+	AuthzKeeper      authzkeeper.Keeper
+	GroupKeeper      groupkeeper.Keeper
+	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
+	WasmKeeper       wasm.Keeper
+	IBCHooksKeeper   *ibchookskeeper.Keeper
+	Ics20WasmHooks   *ibc_hooks.WasmHooks
+	HooksICS4Wrapper ibc_hooks.ICS4Middleware
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper       capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper  capabilitykeeper.ScopedKeeper
@@ -184,8 +182,10 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 	)
 
-	appKeepers.StakingKeeper = stakingkeeper.NewKeeper(
-		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	appKeepers.StakingMiddlewareKeeper = stakingmiddleware.NewKeeper(appCodec, appKeepers.keys[stakingmiddlewaretypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
+
+	appKeepers.StakingKeeper = customstaking.NewKeeper(
+		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), &appKeepers.StakingMiddlewareKeeper,
 	)
 
 	appKeepers.MintKeeper = mintkeeper.NewKeeper(
@@ -193,11 +193,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	appKeepers.StakingMiddlewareKeeper = stakingmiddleware.NewKeeper(appCodec, appKeepers.keys[stakingmiddlewaretypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
-
-	appKeepers.CustomStakingKeeper = customstaking.NewKeeper(
-		appCodec, *appKeepers.StakingKeeper, &appKeepers.StakingMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
+	// appKeepers.CustomStakingKeeper = customstaking.NewKeeper(
+	// 	appCodec, *appKeepers.StakingKeeper, &appKeepers.StakingMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	// )
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, appKeepers.keys[distrtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
