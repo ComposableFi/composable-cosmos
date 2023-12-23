@@ -46,11 +46,9 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 // SetParams sets the x/mint module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	if p.BlocksPerEpoch < 5 {
-		//return error
 		return fmt.Errorf(
 			"BlocksPerEpoch must be greater than or equal to 5",
 		)
-
 	}
 
 	store := ctx.KVStore(k.storeKey)
