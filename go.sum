@@ -1121,8 +1121,6 @@ github.com/nishanths/exhaustive v0.9.5 h1:TzssWan6orBiLYVqewCG8faud9qlFntJE30ACp
 github.com/nishanths/exhaustive v0.9.5/go.mod h1:IbwrGdVMizvDcIxPYGVdQn5BqWJaOwpCvg4RGb8r/TA=
 github.com/nishanths/predeclared v0.2.2 h1:V2EPdZPliZymNAn79T8RkNApBjMmVKh5XRpLm/w98Vk=
 github.com/nishanths/predeclared v0.2.2/go.mod h1:RROzoN6TnGQupbC+lqggsOlcgysk3LMK/HI84Mp280c=
-github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647 h1:vCSokMIO60u0td51l7NB+pikUChJozIwIb4u8UeqTKI=
-github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
 github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9 h1:4rte3LTbrQnlu0Gnw6gouj2voGwgjweORA1dcgnQxlU=
 github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9/go.mod h1:3PHOr4UiPNtnZJutT22fm5+pjIefTlDEgtWGoOJg3A0=
 github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f h1:Uw35VHCdLTsQf8B4UGTjHCR6HqcYFF6dwPW8uJzS0f4=

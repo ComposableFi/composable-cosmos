@@ -36,6 +36,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/notional-labs/composable/v6/app/keepers"
+	"github.com/notional-labs/composable/v6/app/prepare"
 	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
 	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
@@ -94,9 +95,6 @@ import (
 
 	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8/packetforward"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8/packetforward/types"
-	alliancemodule "github.com/terra-money/alliance/x/alliance"
-	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
-	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 
@@ -175,9 +173,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.LegacyCancelProposalHandler,
 		ibcclientclient.UpdateClientProposalHandler,
 		ibcclientclient.UpgradeProposalHandler,
-		alliancemoduleclient.CreateAllianceProposalHandler,
-		alliancemoduleclient.UpdateAllianceProposalHandler,
-		alliancemoduleclient.DeleteAllianceProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -222,7 +217,6 @@ var (
 		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
-		alliancemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -231,15 +225,13 @@ var (
 		authtypes.FeeCollectorName: nil,
 		distrtypes.ModuleName:      nil,
 		// mint module needs burn access to remove excess validator tokens (it overallocates, then burns)
-		minttypes.ModuleName:                {authtypes.Minter},
-		stakingtypes.BondedPoolName:         {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:      {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                 {authtypes.Burner},
-		transfermiddlewaretypes.ModuleName:  {authtypes.Minter, authtypes.Burner},
-		ibctransfertypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
-		alliancemoduletypes.RewardsPoolName: nil,
-		icatypes.ModuleName:                 nil,
+		minttypes.ModuleName:               {authtypes.Minter},
+		stakingtypes.BondedPoolName:        {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:     {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                {authtypes.Burner},
+		transfermiddlewaretypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		ibctransfertypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+		icatypes.ModuleName:                nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -381,7 +373,6 @@ func NewComposableApp(
 		txBoundaryModule,
 		icaModule,
 		ratelimitModule,
-		alliancemodule.NewAppModule(appCodec, app.AllianceKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -419,7 +410,6 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
-		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -453,7 +443,6 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
-		alliancemoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -491,7 +480,6 @@ func NewComposableApp(
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
 		wasm.ModuleName,
-		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -545,10 +533,17 @@ func NewComposableApp(
 		encodingConfig.TxConfig.SignModeHandler(),
 		app.IBCKeeper,
 		app.TransferMiddlewareKeeper,
-		app.TxBoundaryKeepper,
 		appCodec,
 	))
 	app.SetEndBlocker(app.EndBlocker)
+
+	app.SetPrepareProposal(
+		prepare.PrepareProposalHandler(
+			encodingConfig.TxConfig,
+			appCodec,
+			app.TxBoundaryKeepper,
+		),
+	)
 
 	if manager := app.SnapshotManager(); manager != nil {
 		err := manager.RegisterExtensions(

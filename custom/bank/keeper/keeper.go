@@ -16,16 +16,12 @@ import (
 	banktypes "github.com/notional-labs/composable/v6/custom/bank/types"
 
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-
-	alliancekeeper "github.com/terra-money/alliance/x/alliance/keeper"
-	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 type Keeper struct {
 	bankkeeper.BaseKeeper
 
 	tfmk banktypes.TransferMiddlewareKeeper
-	ak   alliancekeeper.Keeper
 	sk   banktypes.StakingKeeper
 	acck accountkeeper.AccountKeeper
 }
@@ -42,7 +38,6 @@ func NewBaseKeeper(
 ) Keeper {
 	keeper := Keeper{
 		BaseKeeper: bankkeeper.NewBaseKeeper(cdc, storeKey, ak, blockedAddrs, authority),
-		ak:         alliancekeeper.Keeper{},
 		sk:         stakingkeeper.Keeper{},
 		tfmk:       tfmk,
 		acck:       ak,
@@ -50,8 +45,7 @@ func NewBaseKeeper(
 	return keeper
 }
 
-func (k *Keeper) RegisterKeepers(ak alliancekeeper.Keeper, sk banktypes.StakingKeeper) {
-	k.ak = ak
+func (k *Keeper) RegisterKeepers(sk banktypes.StakingKeeper) {
 	k.sk = sk
 }
 
@@ -68,16 +62,6 @@ func (k Keeper) SupplyOf(c context.Context, req *types.QuerySupplyOfRequest) (*t
 	ctx := sdk.UnwrapSDKContext(c)
 	supply := k.GetSupply(ctx, req.Denom)
 
-	if req.Denom == k.sk.BondDenom(ctx) {
-		assets := k.ak.GetAllAssets(ctx)
-		totalRewardWeights := sdk.ZeroDec()
-		for _, asset := range assets {
-			totalRewardWeights = totalRewardWeights.Add(asset.RewardWeight)
-		}
-		allianceBonded := k.ak.GetAllianceBondedAmount(ctx, k.acck.GetModuleAddress(alliancetypes.ModuleName))
-		supply.Amount = supply.Amount.Sub(allianceBonded)
-	}
-
 	return &types.QuerySupplyOfResponse{Amount: sdk.NewCoin(req.Denom, supply.Amount)}, nil
 }
 
@@ -92,12 +76,6 @@ func (k Keeper) TotalSupply(ctx context.Context, req *types.QueryTotalSupplyRequ
 	// Get duplicate token from transfermiddeware
 	duplicateCoins := k.tfmk.GetTotalEscrowedToken(sdkCtx)
 	totalSupply = totalSupply.Sub(duplicateCoins...)
-
-	allianceBonded := k.ak.GetAllianceBondedAmount(sdkCtx, k.acck.GetModuleAddress(alliancetypes.ModuleName))
-	bondDenom := k.sk.BondDenom(sdkCtx)
-	if totalSupply.AmountOf(bondDenom).IsPositive() {
-		totalSupply = totalSupply.Sub(sdk.NewCoin(bondDenom, allianceBonded))
-	}
 
 	return &types.QueryTotalSupplyResponse{Supply: totalSupply, Pagination: pageRes}, nil
 }

@@ -73,10 +73,6 @@ import (
 	routerkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8/packetforward/keeper"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8/packetforward/types"
 
-	alliancemodule "github.com/terra-money/alliance/x/alliance"
-	alliancemodulekeeper "github.com/terra-money/alliance/x/alliance/keeper"
-	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
-
 	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewarekeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
@@ -107,7 +103,6 @@ import (
 
 const (
 	AccountAddressPrefix = "composable"
-	authorityAddress     = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 )
 
 type AppKeepers struct {
@@ -153,7 +148,6 @@ type AppKeepers struct {
 	TxBoundaryKeepper        txBoundaryKeeper.Keeper
 	RouterKeeper             *routerkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
-	AllianceKeeper           alliancemodulekeeper.Keeper
 }
 
 // InitNormalKeepers initializes all 'normal' keepers.
@@ -222,21 +216,11 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, appKeepers.keys[feegrant.StoreKey], appKeepers.AccountKeeper)
 	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, appKeepers.keys[upgradetypes.StoreKey], appCodec, homePath, bApp, authtypes.NewModuleAddress(govtypes.ModuleName).String())
 
-	appKeepers.AllianceKeeper = alliancemodulekeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[alliancemoduletypes.StoreKey],
-		appKeepers.GetSubspace(alliancemoduletypes.ModuleName),
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.StakingKeeper,
-		appKeepers.DistrKeeper,
-	)
-
-	appKeepers.BankKeeper.RegisterKeepers(appKeepers.AllianceKeeper, appKeepers.StakingKeeper)
+	appKeepers.BankKeeper.RegisterKeepers(appKeepers.StakingKeeper)
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	appKeepers.StakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(appKeepers.DistrKeeper.Hooks(), appKeepers.SlashingKeeper.Hooks(), appKeepers.AllianceKeeper.StakingHooks()),
+		stakingtypes.NewMultiStakingHooks(appKeepers.DistrKeeper.Hooks(), appKeepers.SlashingKeeper.Hooks()),
 	)
 
 	// ... other modules keepers
@@ -246,7 +230,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
+
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -284,13 +270,13 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		&appKeepers.RatelimitKeeper,
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
-		authorityAddress,
+		govModuleAuthority,
 	)
 
 	appKeepers.TxBoundaryKeepper = txBoundaryKeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[txBoundaryTypes.StoreKey],
-		authorityAddress,
+		govModuleAuthority,
 	)
 
 	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
@@ -398,8 +384,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(appKeepers.ParamsKeeper)).
 		// AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(appKeepers.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(appKeepers.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper)).
-		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(appKeepers.AllianceKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper))
 
 	// The gov proposal types can be individually enabled
 	if len(enabledProposals) != 0 {
@@ -408,7 +393,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	govKeeper := *govkeeper.NewKeeper(
 		appCodec, appKeepers.keys[govtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
-		appKeepers.StakingKeeper, bApp.MsgServiceRouter(), govtypes.DefaultConfig(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appKeepers.StakingKeeper, bApp.MsgServiceRouter(), govtypes.DefaultConfig(), govModuleAuthority,
 	)
 
 	govKeeper.SetLegacyRouter(govRouter)
@@ -474,7 +459,6 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(icqtypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
-	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
 
