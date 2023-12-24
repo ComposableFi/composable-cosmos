@@ -1,9 +1,9 @@
 package v4
 
 import (
+	store "cosmossdk.io/store/types"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	store "github.com/cosmos/cosmos-sdk/store/types"
-	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
+	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
 
 	"github.com/notional-labs/composable/v6/app/upgrades"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"

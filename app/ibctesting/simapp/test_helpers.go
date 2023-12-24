@@ -24,7 +24,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cosmos/ibc-go/v7/testing/mock"
+	"github.com/cosmos/ibc-go/v8/testing/mock"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in

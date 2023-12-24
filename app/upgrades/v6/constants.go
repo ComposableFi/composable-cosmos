@@ -1,7 +1,7 @@
 package v6
 
 import (
-	store "github.com/cosmos/cosmos-sdk/store/types"
+	store "cosmossdk.io/store/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 )

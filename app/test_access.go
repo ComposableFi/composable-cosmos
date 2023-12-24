@@ -12,9 +12,9 @@ import (
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
-	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
+	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	wasm08 "github.com/cosmos/ibc-go/v8/modules/light-clients/08-wasm/keeper"
 
 	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 	tfmdKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"

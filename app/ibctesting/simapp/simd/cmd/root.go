@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	sdkcmd "cosmossdk.io/simapp/simd/cmd"
+	"cosmossdk.io/store"
 	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
 	dbm "github.com/cometbft/cometbft-db"
 	tmcfg "github.com/cometbft/cometbft/config"
@@ -24,7 +25,6 @@ import (
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	snapshottypes "github.com/cosmos/cosmos-sdk/snapshots/types"
-	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -36,8 +36,8 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
-	"github.com/cosmos/ibc-go/v7/testing/simapp"
-	"github.com/cosmos/ibc-go/v7/testing/simapp/params"
+	"github.com/cosmos/ibc-go/v8/testing/simapp"
+	"github.com/cosmos/ibc-go/v8/testing/simapp/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the

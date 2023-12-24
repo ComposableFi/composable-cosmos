@@ -21,12 +21,12 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
+	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	ibchost "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	icqtypes "github.com/strangelove-ventures/async-icq/v8/types"
 
-	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8/packetforward/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
@@ -36,12 +36,12 @@ import (
 
 	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	storetypes "cosmossdk.io/store/types"
 
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	wasm08types "github.com/cosmos/ibc-go/v8/modules/light-clients/08-wasm/types"
 )
 
 // GenerateKeys generates new keys (KV Store, Transient store, and memory store).
