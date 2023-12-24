@@ -1,7 +1,7 @@
 package v5_1_0
 
 import (
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/notional-labs/composable/v6/app/keepers"
@@ -34,8 +34,8 @@ func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 			DurationHours:  24,
 		}
 		flow := types.Flow{
-			Inflow:       math.ZeroInt(),
-			Outflow:      math.ZeroInt(),
+			Inflow:       sdkmath.ZeroInt(),
+			Outflow:      sdkmath.ZeroInt(),
 			ChannelValue: channelValue,
 		}
 		uosmoRateLimit = types.RateLimit{

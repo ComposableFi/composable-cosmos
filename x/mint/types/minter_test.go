@@ -11,7 +11,7 @@ import (
 // func TestNextInflation(t *testing.T) {
 // 	minter := DefaultInitialMinter()
 // 	params := DefaultParams()
-// 	blocksPerYr := sdk.NewDec(int64(params.BlocksPerYear))
+// 	blocksPerYr := sdkmath.LegacyNewDec(int64(params.BlocksPerYear))
 
 // 	// Governing Mechanism:
 // 	//    inflationRateChangePerYear = (1- BondedRatio/ GoalBonded) * MaxInflationRateChange
@@ -20,31 +20,31 @@ import (
 // 		bondedRatio, setInflation, expChange sdk.Dec
 // 	}{
 // 		// with 0% bonded atom supply the inflation should increase by InflationRateChange
-// 		{sdk.ZeroDec(), sdk.NewDecWithPrec(7, 2), params.InflationRateChange.Quo(blocksPerYr)},
+// 		{sdk.ZeroDec(), sdkmath.LegacyNewDecWithPrec(7, 2), params.InflationRateChange.Quo(blocksPerYr)},
 
 // 		// 100% bonded, starting at 20% inflation and being reduced
 // 		// (1 - (1/0.67))*(0.13/8667)
 // 		{
-// 			sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(20, 2),
+// 			sdkmath.LegacyOneDec(), sdkmath.LegacyNewDecWithPrec(20, 2),
 // 			sdkmath.LegacyOneDec().Sub(sdkmath.LegacyOneDec().Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
 // 		},
 
 // 		// 50% bonded, starting at 10% inflation and being increased
 // 		{
-// 			sdk.NewDecWithPrec(5, 1), sdk.NewDecWithPrec(10, 2),
-// 			sdkmath.LegacyOneDec().Sub(sdk.NewDecWithPrec(5, 1).Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
+// 			sdkmath.LegacyNewDecWithPrec(5, 1), sdkmath.LegacyNewDecWithPrec(10, 2),
+// 			sdkmath.LegacyOneDec().Sub(sdkmath.LegacyNewDecWithPrec(5, 1).Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
 // 		},
 
 // 		// test 7% minimum stop (testing with 100% bonded)
-// 		{sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(7, 2), sdk.ZeroDec()},
-// 		{sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(700000001, 10), sdk.NewDecWithPrec(-1, 10)},
+// 		{sdkmath.LegacyOneDec(), sdkmath.LegacyNewDecWithPrec(7, 2), sdk.ZeroDec()},
+// 		{sdkmath.LegacyOneDec(), sdkmath.LegacyNewDecWithPrec(700000001, 10), sdkmath.LegacyNewDecWithPrec(-1, 10)},
 
 // 		// test 20% maximum stop (testing with 0% bonded)
-// 		{sdk.ZeroDec(), sdk.NewDecWithPrec(20, 2), sdk.ZeroDec()},
-// 		{sdk.ZeroDec(), sdk.NewDecWithPrec(1999999999, 10), sdk.NewDecWithPrec(1, 10)},
+// 		{sdk.ZeroDec(), sdkmath.LegacyNewDecWithPrec(20, 2), sdk.ZeroDec()},
+// 		{sdk.ZeroDec(), sdkmath.LegacyNewDecWithPrec(1999999999, 10), sdkmath.LegacyNewDecWithPrec(1, 10)},
 
 // 		// perfect balance shouldn't change inflation
-// 		{sdk.NewDecWithPrec(67, 2), sdk.NewDecWithPrec(15, 2), sdk.ZeroDec()},
+// 		{sdkmath.LegacyNewDecWithPrec(67, 2), sdkmath.LegacyNewDecWithPrec(15, 2), sdk.ZeroDec()},
 // 	}
 // 	for i, tc := range tests {
 // 		minter.Inflation = tc.setInflation
@@ -58,7 +58,7 @@ import (
 // }
 
 // func TestBlockProvision(t *testing.T) {
-// 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
+// 	minter := InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 // 	params := DefaultParams()
 
 // 	secondsPerYear := int64(60 * 60 * 8766)
@@ -73,7 +73,7 @@ import (
 // 		{(secondsPerYear / 5) / 2, 0},
 // 	}
 // 	for i, tc := range tests {
-// 		minter.AnnualProvisions = sdk.NewDec(tc.annualProvisions)
+// 		minter.AnnualProvisions = sdkmath.LegacyNewDec(tc.annualProvisions)
 // 		provisions := minter.BlockProvision(params)
 
 // 		expProvisions := sdk.NewCoin(params.MintDenom,
@@ -93,12 +93,12 @@ import (
 // // BenchmarkBlockProvision-4 3000000 429 ns/op
 // func BenchmarkBlockProvision(b *testing.B) {
 // 	b.ReportAllocs()
-// 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
+// 	minter := InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 // 	params := DefaultParams()
 
 // 	s1 := rand.NewSource(100)
 // 	r1 := rand.New(s1)
-// 	minter.AnnualProvisions = sdk.NewDec(r1.Int63n(1000000))
+// 	minter.AnnualProvisions = sdkmath.LegacyNewDec(r1.Int63n(1000000))
 
 // 	// run the BlockProvision function b.N times
 // 	for n := 0; n < b.N; n++ {
@@ -110,9 +110,9 @@ import (
 // // BenchmarkNextInflation-4 1000000 1828 ns/op
 // func BenchmarkNextInflation(b *testing.B) {
 // 	b.ReportAllocs()
-// 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
+// 	minter := InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 // 	params := DefaultParams()
-// 	bondedRatio := sdk.NewDecWithPrec(1, 1)
+// 	bondedRatio := sdkmath.LegacyNewDecWithPrec(1, 1)
 
 // 	// run the NextInflationRate function b.N times
 // 	for n := 0; n < b.N; n++ {
@@ -124,7 +124,7 @@ import (
 // // BenchmarkNextAnnualProvisions-4 5000000 251 ns/op
 // func BenchmarkNextAnnualProvisions(b *testing.B) {
 // 	b.ReportAllocs()
-// 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
+// 	minter := InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 // 	params := DefaultParams()
 // 	totalSupply := sdkmath.NewInt(100000000000000)
 
@@ -143,12 +143,12 @@ func TestSimulateMint(t *testing.T) {
 
 	for i := 1; i <= int(params.BlocksPerYear); i++ {
 
-		stakingDiff := sdk.NewDec(int64(rand.Intn(10))).QuoInt(sdkmath.NewInt(1_000_000)).MulInt(totalSupply)
+		stakingDiff := sdkmath.LegacyNewDec(int64(rand.Intn(10))).QuoInt(sdkmath.NewInt(1_000_000)).MulInt(totalSupply)
 		if (rand.Float32() > 0.5 || totalStaked.Add(stakingDiff.RoundInt()).GT(totalSupply)) && !totalStaked.Sub(stakingDiff.RoundInt()).IsNegative() {
 			stakingDiff = stakingDiff.Neg()
 		}
 		totalStaked = totalStaked.Add(stakingDiff.RoundInt())
-		bondedRatio := sdk.NewDecFromInt(totalStaked).Quo(sdk.NewDecFromInt(totalSupply))
+		bondedRatio := sdkmath.LegacyNewDecFromInt(totalStaked).Quo(sdkmath.LegacyNewDecFromInt(totalSupply))
 		minter.Inflation = minter.NextInflationRate(params, bondedRatio, totalStaked)
 		minter.AnnualProvisions = minter.NextAnnualProvisions(params, totalStaked)
 

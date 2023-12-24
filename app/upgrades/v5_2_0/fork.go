@@ -2,9 +2,9 @@
 package v5_2_0
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/notional-labs/composable/v6/app/keepers"
 
 	wasm08types "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"

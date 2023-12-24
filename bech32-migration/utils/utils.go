@@ -55,7 +55,7 @@ func IterateStoreByPrefix(
 	fn func(value []byte) (newValue []byte),
 ) {
 	store := ctx.KVStore(storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, prefix)
+	iterator := storetypes.KVStorePrefixIterator(store, prefix)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

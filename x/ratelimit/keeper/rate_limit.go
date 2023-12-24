@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"context"
 	"encoding/binary"
 	"fmt"
 	"strings"
@@ -21,7 +22,7 @@ func GetRateLimitItemKey(denom, channelID string) []byte {
 
 // The total value on a given path (aka, the denominator in the percentage calculation)
 // is the total supply of the given denom
-func (k Keeper) GetChannelValue(ctx sdk.Context, denom string) math.Int {
+func (k Keeper) GetChannelValue(ctx context.Context, denom string) math.Int {
 	return k.bankKeeper.GetSupply(ctx, denom).Amount
 }
 
@@ -135,7 +136,7 @@ func (k Keeper) ResetRateLimit(ctx sdk.Context, denom, channelID string) error {
 }
 
 // Stores/Updates a rate limit object in the store
-func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
+func (k Keeper) SetRateLimit(ctx context.Context, rateLimit types.RateLimit) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
 	rateLimitKey := GetRateLimitItemKey(rateLimit.Path.Denom, rateLimit.Path.ChannelID)
@@ -145,7 +146,7 @@ func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 }
 
 // Removes a rate limit object from the store using denom and channel-id
-func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom, channelID string) error {
+func (k Keeper) RemoveRateLimit(ctx context.Context, denom, channelID string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
 		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if channelID == tokenInfo.ChannelID {
@@ -166,7 +167,7 @@ func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom, channelID string) error 
 }
 
 // Grabs and returns a rate limit object from the store using denom and channel-id
-func (k Keeper) GetRateLimit(ctx sdk.Context, denom, channelID string) (rateLimit types.RateLimit, found bool) {
+func (k Keeper) GetRateLimit(ctx context.Context, denom, channelID string) (rateLimit types.RateLimit, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
 	rateLimitKey := GetRateLimitItemKey(denom, channelID)
@@ -181,7 +182,7 @@ func (k Keeper) GetRateLimit(ctx sdk.Context, denom, channelID string) (rateLimi
 }
 
 // AddRateLimit
-func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error {
+func (k Keeper) AddRateLimit(ctx context.Context, msg *types.MsgAddRateLimit) error {
 	// Check if this is denom - channel transfer from Picasso
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
@@ -229,7 +230,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 }
 
 // UpdateRateLimit
-func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) error {
+func (k Keeper) UpdateRateLimit(ctx context.Context, msg *types.MsgUpdateRateLimit) error {
 	// Check if this is denom - channel transfer from Picasso
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
@@ -273,7 +274,7 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 }
 
 // Returns all rate limits stored
-func (k Keeper) GetAllRateLimits(ctx sdk.Context) []types.RateLimit {
+func (k Keeper) GetAllRateLimits(ctx context.Context) []types.RateLimit {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RateLimitKeyPrefix)
 
 	iterator := store.Iterator(nil, nil)
@@ -291,7 +292,7 @@ func (k Keeper) GetAllRateLimits(ctx sdk.Context) []types.RateLimit {
 }
 
 // Sets the sequence number of a packet that was just sent
-func (k Keeper) SetPendingSendPacket(ctx sdk.Context, channelID string, sequence uint64) {
+func (k Keeper) SetPendingSendPacket(ctx context.Context, channelID string, sequence uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 	key := types.GetPendingSendPacketKey(channelID, sequence)
 	store.Set(key, []byte{1})
@@ -299,7 +300,7 @@ func (k Keeper) SetPendingSendPacket(ctx sdk.Context, channelID string, sequence
 
 // Remove a pending packet sequence number from the store
 // Used after the ack or timeout for a packet has been received
-func (k Keeper) RemovePendingSendPacket(ctx sdk.Context, channelID string, sequence uint64) {
+func (k Keeper) RemovePendingSendPacket(ctx context.Context, channelID string, sequence uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 	key := types.GetPendingSendPacketKey(channelID, sequence)
 	store.Delete(key)
@@ -307,7 +308,7 @@ func (k Keeper) RemovePendingSendPacket(ctx sdk.Context, channelID string, seque
 
 // Checks whether the packet sequence number is in the store - indicating that it was
 // sent during the current quota
-func (k Keeper) CheckPacketSentDuringCurrentQuota(ctx sdk.Context, channelID string, sequence uint64) bool {
+func (k Keeper) CheckPacketSentDuringCurrentQuota(ctx context.Context, channelID string, sequence uint64) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 	key := types.GetPendingSendPacketKey(channelID, sequence)
 	valueBz := store.Get(key)
@@ -316,7 +317,7 @@ func (k Keeper) CheckPacketSentDuringCurrentQuota(ctx sdk.Context, channelID str
 }
 
 // Get all pending packet sequence numbers
-func (k Keeper) GetAllPendingSendPackets(ctx sdk.Context) []string {
+func (k Keeper) GetAllPendingSendPackets(ctx context.Context) []string {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 
 	iterator := store.Iterator(nil, nil)
@@ -339,7 +340,7 @@ func (k Keeper) GetAllPendingSendPackets(ctx sdk.Context) []string {
 
 // Remove all pending sequence numbers from the store
 // This is executed when the quota resets
-func (k Keeper) RemoveAllChannelPendingSendPackets(ctx sdk.Context, channelID string) {
+func (k Keeper) RemoveAllChannelPendingSendPackets(ctx context.Context, channelID string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingSendPacketPrefix)
 
 	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefix(channelID))

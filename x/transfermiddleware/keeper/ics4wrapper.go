@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"

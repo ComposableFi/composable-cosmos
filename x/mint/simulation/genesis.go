@@ -4,7 +4,9 @@ import (
 	"math/rand"
 
 	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -23,39 +25,39 @@ const (
 )
 
 // GenInflation randomized Inflation
-func GenInflation(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(r.Intn(99)), 2)
+func GenInflation(r *rand.Rand) sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(int64(r.Intn(99)), 2)
 }
 
 // GenInflationRateChange randomized InflationRateChange
-func GenInflationRateChange(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(r.Intn(99)), 2)
+func GenInflationRateChange(r *rand.Rand) sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(int64(r.Intn(99)), 2)
 }
 
 // GenInflationMax randomized InflationMax
-func GenInflationMax(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 10, 30)), 2)
+func GenInflationMax(r *rand.Rand) sdkmath.LegacyDec {
+	return sdkmath.LegacyNewDecWithPrec(int64(simtypes.RandIntBetween(r, 10, 30)), 2)
 }
 
 // GenAnnualProvisions randomized AnnualProvisions
 func GenAnnualProvisions(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
+	return sdkmath.LegacyNewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
 }
 
 // GenInflationMin randomized InflationMin
 func GenInflationMin(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
+	return sdkmath.LegacyNewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 10)), 2)
 }
 
 // GenGoalBonded randomized GoalBonded
 func GenGoalBonded(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 50, 100)), 2)
+	return sdkmath.LegacyNewDecWithPrec(int64(simtypes.RandIntBetween(r, 50, 100)), 2)
 }
 
 // RandomizeGenState generates a random GenesisState for wasm
 func RandomizedGenState(simState *module.SimulationState) {
 	// minter
-	var inflation sdk.Dec
+	var inflation sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, Inflation, &inflation, simState.Rand,
 		func(r *rand.Rand) { inflation = GenInflation(r) },

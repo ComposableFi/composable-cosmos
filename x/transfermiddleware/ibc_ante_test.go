@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	storetypes "cosmossdk.io/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	wasmkeeper "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/keeper"
 	wasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
@@ -46,7 +47,7 @@ func (suite *TransferTestSuite) SetupTest() {
 	err = json.Unmarshal(data, &suite.testData)
 	suite.Require().NoError(err)
 
-	suite.ctx = suite.chainB.GetContext().WithBlockGasMeter(sdk.NewInfiniteGasMeter())
+	suite.ctx = suite.chainB.GetContext().WithBlockGasMeter(storetypes.NewInfiniteGasMeter())
 	suite.store = suite.chainB.App.GetIBCKeeper().ClientKeeper.ClientStore(suite.ctx, "08-wasm-0")
 
 	wasmContract, err := os.ReadFile("../../contracts/ics10_grandpa_cw.wasm")

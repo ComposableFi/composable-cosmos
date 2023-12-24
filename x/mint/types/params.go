@@ -7,7 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
@@ -39,7 +39,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 func NewParams(
-	mintDenom string, inflationRateChange, _, _, goalBonded sdk.Dec, blocksPerYear uint64, tokenPerYear math.Int,
+	mintDenom string, inflationRateChange, _, _, goalBonded sdkmath.LegacyDec, blocksPerYear uint64, tokenPerYear sdkmath.Int,
 ) Params {
 	return Params{
 		MintDenom:           mintDenom,
@@ -55,8 +55,8 @@ func NewParams(
 func DefaultParams() Params {
 	return Params{
 		MintDenom:           sdk.DefaultBondDenom,
-		InflationRateChange: sdk.NewDecWithPrec(InflationRate, Precision),
-		GoalBonded:          sdk.NewDecWithPrec(DesiredRatio, Precision),
+		InflationRateChange: sdkmath.LegacyNewDecWithPrec(InflationRate, Precision),
+		GoalBonded:          sdkmath.LegacyNewDecWithPrec(DesiredRatio, Precision),
 		BlocksPerYear:       uint64(60 * 60 * 8766 / BlockTime),
 		MaxTokenPerYear:     sdkmath.NewIntFromUint64(MaxTokenPerYear),
 		MinTokenPerYear:     sdkmath.NewIntFromUint64(MinTokenPerYear),
@@ -122,7 +122,7 @@ func validateMintDenom(i interface{}) error {
 }
 
 func validateInflationRateChange(i interface{}) error {
-	v, ok := i.(sdk.Dec)
+	v, ok := i.(sdkmath.LegacyDec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
@@ -170,7 +170,7 @@ func validateInflationRateChange(i interface{}) error {
 // }
 
 func validateGoalBonded(i interface{}) error {
-	v, ok := i.(sdk.Dec)
+	v, ok := i.(sdkmath.LegacyDec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
