@@ -7,20 +7,20 @@ import (
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
+	evidencetypes "cosmossdk.io/x/evidence/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	"github.com/cosmos/cosmos-sdk/x/feegrant"
+	"cosmossdk.io/x/feegrant"
 	"github.com/cosmos/cosmos-sdk/x/group"
 
+	upgradetypes "cosmossdk.io/x/upgrade/types"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v8/modules/core/exported"

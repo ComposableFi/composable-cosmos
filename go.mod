@@ -6,7 +6,6 @@ toolchain go1.21.5
 
 require (
 	cosmossdk.io/math v1.2.0
-	cosmossdk.io/simapp v0.0.0-20230608160436-666c345ad23d
 	github.com/CosmWasm/wasmd v0.50.0
 	github.com/client9/misspell v0.3.4
 	github.com/cometbft/cometbft v0.38.2
@@ -14,7 +13,7 @@ require (
 	github.com/cosmos/cosmos-proto v1.0.0-beta.3
 	github.com/cosmos/cosmos-sdk v0.50.2
 	github.com/cosmos/gogoproto v1.4.11
-	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0
+	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v8 v8.0.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.3
 	github.com/golangci/golangci-lint v1.52.0
