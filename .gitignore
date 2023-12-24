@@ -42,4 +42,7 @@ bin/*
 !.vscode/settings.json
 .vendor
 vendor
+
+
+# Go workspaces - don't commit go.work.sum but do commit go.work
 go.work.sum
