@@ -41,7 +41,7 @@ func TestProposalMsgs(t *testing.T) {
 	assert.Equal(t, uint64(20546551), msgUpdateParams.Params.BlocksPerYear)
 	assert.DeepEqual(t, sdk.NewDecWithPrec(56, 2), msgUpdateParams.Params.GoalBonded)
 	assert.DeepEqual(t, sdk.NewDecWithPrec(1, 2), msgUpdateParams.Params.InflationRateChange)
-	assert.DeepEqual(t, sdk.NewInt(99997750760398084), msgUpdateParams.Params.MaxTokenPerYear)
-	assert.DeepEqual(t, sdk.NewInt(504064263676792), msgUpdateParams.Params.MinTokenPerYear)
+	assert.DeepEqual(t, sdkmath.NewInt(99997750760398084), msgUpdateParams.Params.MaxTokenPerYear)
+	assert.DeepEqual(t, sdkmath.NewInt(504064263676792), msgUpdateParams.Params.MinTokenPerYear)
 	assert.Equal(t, "XhhuTSkuxK", msgUpdateParams.Params.MintDenom)
 }

@@ -49,7 +49,7 @@ func TestKeeperTestSuite(t *testing.T) {
 
 func (suite *IBCHooksTestSuite) TestRecvHooks() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		timeoutHeight  = clienttypes.NewHeight(1, 110)
 	// when transfer via sdk transfer from A (module) -> B (contract)
 	// nativeTokenSendOnChainA = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
@@ -106,7 +106,7 @@ func (suite *IBCHooksTestSuite) TestRecvHooks() {
 
 func (suite *IBCHooksTestSuite) TestAckHooks() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		timeoutHeight  = clienttypes.NewHeight(0, 110)
 	// when transfer via sdk transfer from A (module) -> B (contract)
 	// nativeTokenSendOnChainA = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
@@ -183,7 +183,7 @@ func (suite *IBCHooksTestSuite) TestAckHooks() {
 
 func (suite *IBCHooksTestSuite) TestTimeoutHooks() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		timeoutHeight  = clienttypes.NewHeight(0, 500)
 	// when transfer via sdk transfer from A (module) -> B (contract)
 	// nativeTokenSendOnChainA = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)

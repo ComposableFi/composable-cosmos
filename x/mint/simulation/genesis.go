@@ -98,10 +98,10 @@ func RandomizedGenState(simState *module.SimulationState) {
 			InflationRateChange: inflationRateChange,
 			GoalBonded:          goalBonded,
 			BlocksPerYear:       blocksPerYear,
-			MaxTokenPerYear:     sdk.NewIntFromUint64(1000000000000000),
-			MinTokenPerYear:     sdk.NewIntFromUint64(800000000000000),
+			MaxTokenPerYear:     sdkmath.NewIntFromUint64(1000000000000000),
+			MinTokenPerYear:     sdkmath.NewIntFromUint64(800000000000000),
 		},
-		IncentivesSupply: sdk.NewCoin(stakingtypes.DefaultParams().BondDenom, sdk.NewInt(100000000000)),
+		IncentivesSupply: sdk.NewCoin(stakingtypes.DefaultParams().BondDenom, sdkmath.NewInt(100000000000)),
 	}
 
 	_, err := simState.Cdc.MarshalJSON(&mintGenesis)

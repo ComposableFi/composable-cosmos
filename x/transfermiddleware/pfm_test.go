@@ -89,7 +89,7 @@ func RandomBech32AccountAddress(tb testing.TB) string {
 
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		timeoutHeight  = clienttypes.NewHeight(1, 110)
 		pathAtoB       *customibctesting.Path
 		pathBtoC       *customibctesting.Path
@@ -234,7 +234,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM_ErrorAck() {
 
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
@@ -388,7 +388,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFM() {
 
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path
@@ -660,7 +660,7 @@ func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse_ErrorAck() 
 
 func (suite *TransferMiddlewareTestSuite) TestTransferWithPFMReverse() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		timeoutHeight = clienttypes.NewHeight(1, 110)
 		pathAtoB      *customibctesting.Path

@@ -165,7 +165,7 @@ func SetupComposableAppWithValSet(t *testing.T) *composable.ComposableApp {
 	// generate genesis account
 	senderPrivKey := secp256k1.GenPrivKey()
 	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
-	amount, ok := sdk.NewIntFromString("10000000000000000000")
+	amount, ok := sdkmath.NewIntFromString("10000000000000000000")
 	require.True(t, ok)
 
 	balance := banktypes.Balance{
@@ -191,7 +191,7 @@ func SetupComposableAppWithValSetWithGenAccout(t *testing.T) (*composable.Compos
 	// generate genesis account
 	senderPrivKey := secp256k1.GenPrivKey()
 	acc := authtypes.NewBaseAccount(senderPrivKey.PubKey().Address().Bytes(), senderPrivKey.PubKey(), 0, 0)
-	amount, ok := sdk.NewIntFromString("10000000000000000000")
+	amount, ok := sdkmath.NewIntFromString("10000000000000000000")
 	require.True(t, ok)
 
 	balance := banktypes.Balance{

@@ -47,11 +47,11 @@ func TestBankTestSuite(t *testing.T) {
 // TODO: use testsuite here.
 func (suite *CustomBankTestSuite) TestTotalSupply() {
 	var (
-		transferAmount = sdk.NewInt(1000000000)
+		transferAmount = sdkmath.NewInt(1000000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		coinToSendToB     = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 		timeoutHeight     = clienttypes.NewHeight(1, 110)
-		originAmt, err    = sdk.NewIntFromString("10000000001100000000000")
+		originAmt, err    = sdkmath.NewIntFromString("10000000001100000000000")
 		chainBOriginSuply = sdk.NewCoin("stake", originAmt)
 	)
 	suite.Require().True(err)
@@ -97,9 +97,9 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 			sdk.Coins{chainBOriginSuply.Add(sdk.NewCoin("stake", transferAmount))},
 			func() {
 				// Premint for escrow
-				err := suite.chainB.GetBankKeeper().MintCoins(suite.chainB.GetContext(), "mint", sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))))
+				err := suite.chainB.GetBankKeeper().MintCoins(suite.chainB.GetContext(), "mint", sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000000000))))
 				suite.Require().NoError(err)
-				err = suite.chainB.GetBankKeeper().SendCoinsFromModuleToAccount(suite.chainB.GetContext(), "mint", escrowAddr, sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))))
+				err = suite.chainB.GetBankKeeper().SendCoinsFromModuleToAccount(suite.chainB.GetContext(), "mint", escrowAddr, sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000000000))))
 				suite.Require().NoError(err)
 
 				// Add parachain token info
@@ -162,8 +162,8 @@ func (suite *CustomBankTestSuite) TestTotalSupply() {
 
 func (suite *CustomBankTestSuite) TestTotalSupply2() {
 	var (
-		transferAmount  = sdk.NewInt(1000000000)
-		transferAmount2 = sdk.NewInt(3500000000)
+		transferAmount  = sdkmath.NewInt(1000000000)
+		transferAmount2 = sdkmath.NewInt(3500000000)
 		// when transfer via sdk transfer from A (module) -> B (contract)
 		coinChainASendToB = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount)
 		coinChainCSentToB = sdk.NewCoin(sdk.DefaultBondDenom, transferAmount2)

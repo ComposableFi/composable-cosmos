@@ -48,7 +48,7 @@ var (
 	// DefaultTrustLevel sets params variables used to create a TM client
 	DefaultTrustLevel = ibctm.DefaultTrustLevel
 
-	TestCoin  = sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100))
+	TestCoin  = sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(100))
 	TestCoins = sdk.NewCoins(TestCoin)
 
 	UpgradePath = []string{"upgrade", "upgradedIBCState"}

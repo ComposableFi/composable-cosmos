@@ -29,8 +29,8 @@ func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 			ChannelID: "channel-2",
 		}
 		quota := types.Quota{
-			MaxPercentSend: sdk.NewInt(30),
-			MaxPercentRecv: sdk.NewInt(30),
+			MaxPercentSend: sdkmath.NewInt(30),
+			MaxPercentRecv: sdkmath.NewInt(30),
 			DurationHours:  24,
 		}
 		flow := types.Flow{
@@ -42,11 +42,11 @@ func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 			Path:               &path,
 			Quota:              &quota,
 			Flow:               &flow,
-			MinRateLimitAmount: sdk.NewInt(1), // decimal 6
+			MinRateLimitAmount: sdkmath.NewInt(1), // decimal 6
 		}
 		rlKeeper.SetRateLimit(ctx, uosmoRateLimit)
 	} else {
-		uosmoRateLimit.MinRateLimitAmount = sdk.NewInt(1)
+		uosmoRateLimit.MinRateLimitAmount = sdkmath.NewInt(1)
 		rlKeeper.SetRateLimit(ctx, uosmoRateLimit)
 	}
 
@@ -54,7 +54,7 @@ func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
 	allRateLiit := rlKeeper.GetAllRateLimits(ctx)
 	for _, ratelimit := range allRateLiit {
 		if ratelimit.MinRateLimitAmount.IsNil() {
-			ratelimit.MinRateLimitAmount = sdk.NewInt(1)
+			ratelimit.MinRateLimitAmount = sdkmath.NewInt(1)
 			rlKeeper.SetRateLimit(ctx, ratelimit)
 		}
 	}

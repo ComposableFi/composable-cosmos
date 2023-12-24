@@ -42,8 +42,8 @@ func TestRandomizedGenState(t *testing.T) {
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &mintGenesis)
 
 	dec1, _ := sdk.NewDecFromStr("0.940000000000000000")
-	int1 := sdk.NewIntFromUint64(1000000000000000)
-	int2 := sdk.NewIntFromUint64(800000000000000)
+	int1 := sdkmath.NewIntFromUint64(1000000000000000)
+	int2 := sdkmath.NewIntFromUint64(800000000000000)
 
 	require.Equal(t, uint64(6311520), mintGenesis.Params.BlocksPerYear)
 	require.Equal(t, dec1, mintGenesis.Params.GoalBonded)

@@ -1,10 +1,12 @@
 package v5
 
 import (
+	"context"
+
 	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 	"github.com/cosmos/cosmos-sdk/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
@@ -26,7 +28,7 @@ func CreateUpgradeHandler(
 	_ codec.Codec,
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
+	return func(ctx context.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		// add min amount for rate limit
 		rlKeeper := keepers.RatelimitKeeper
 		// add uatom
@@ -39,24 +41,24 @@ func CreateUpgradeHandler(
 				ChannelID: "channel-2",
 			}
 			quota := types.Quota{
-				MaxPercentSend: sdk.NewInt(30),
-				MaxPercentRecv: sdk.NewInt(30),
+				MaxPercentSend: sdkmath.NewInt(30),
+				MaxPercentRecv: sdkmath.NewInt(30),
 				DurationHours:  24,
 			}
 			flow := types.Flow{
-				Inflow:       math.ZeroInt(),
-				Outflow:      math.ZeroInt(),
+				Inflow:       sdkmath.ZeroInt(),
+				Outflow:      sdkmath.ZeroInt(),
 				ChannelValue: channelValue,
 			}
 			uatomRateLimit = types.RateLimit{
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(1282_000_000), // decimal 6
+				MinRateLimitAmount: sdkmath.NewInt(1282_000_000), // decimal 6
 			}
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		} else {
-			uatomRateLimit.MinRateLimitAmount = sdk.NewInt(1282_000_000)
+			uatomRateLimit.MinRateLimitAmount = sdkmath.NewInt(1282_000_000)
 			rlKeeper.SetRateLimit(ctx, uatomRateLimit)
 		}
 		// add dot
@@ -69,8 +71,8 @@ func CreateUpgradeHandler(
 				ChannelID: "channel-2",
 			}
 			quota := types.Quota{
-				MaxPercentSend: sdk.NewInt(30),
-				MaxPercentRecv: sdk.NewInt(30),
+				MaxPercentSend: sdkmath.NewInt(30),
+				MaxPercentRecv: sdkmath.NewInt(30),
 				DurationHours:  24,
 			}
 			flow := types.Flow{
@@ -82,11 +84,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(22_670_000_000_000), // decimal 10
+				MinRateLimitAmount: sdkmath.NewInt(22_670_000_000_000), // decimal 10
 			}
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		} else {
-			dotRateLimit.MinRateLimitAmount = sdk.NewInt(22_670_000_000_000)
+			dotRateLimit.MinRateLimitAmount = sdkmath.NewInt(22_670_000_000_000)
 			rlKeeper.SetRateLimit(ctx, dotRateLimit)
 		}
 		// add ksm
@@ -99,8 +101,8 @@ func CreateUpgradeHandler(
 				ChannelID: "channel-2",
 			}
 			quota := types.Quota{
-				MaxPercentSend: sdk.NewInt(30),
-				MaxPercentRecv: sdk.NewInt(30),
+				MaxPercentSend: sdkmath.NewInt(30),
+				MaxPercentRecv: sdkmath.NewInt(30),
 				DurationHours:  24,
 			}
 			flow := types.Flow{
@@ -112,11 +114,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(510_000_000_000_000), // decimal 12
+				MinRateLimitAmount: sdkmath.NewInt(510_000_000_000_000), // decimal 12
 			}
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		} else {
-			ksmRateLimit.MinRateLimitAmount = sdk.NewInt(510_000_000_000_000)
+			ksmRateLimit.MinRateLimitAmount = sdkmath.NewInt(510_000_000_000_000)
 			rlKeeper.SetRateLimit(ctx, ksmRateLimit)
 		}
 		// add usdt
@@ -129,8 +131,8 @@ func CreateUpgradeHandler(
 				ChannelID: "channel-2",
 			}
 			quota := types.Quota{
-				MaxPercentSend: sdk.NewInt(30),
-				MaxPercentRecv: sdk.NewInt(30),
+				MaxPercentSend: sdkmath.NewInt(30),
+				MaxPercentRecv: sdkmath.NewInt(30),
 				DurationHours:  24,
 			}
 			flow := types.Flow{
@@ -142,11 +144,11 @@ func CreateUpgradeHandler(
 				Path:               &path,
 				Quota:              &quota,
 				Flow:               &flow,
-				MinRateLimitAmount: sdk.NewInt(10_000_000_000), // decimal 6
+				MinRateLimitAmount: sdkmath.NewInt(10_000_000_000), // decimal 6
 			}
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		} else {
-			usdtRateLimit.MinRateLimitAmount = sdk.NewInt(10_000_000_000)
+			usdtRateLimit.MinRateLimitAmount = sdkmath.NewInt(10_000_000_000)
 			rlKeeper.SetRateLimit(ctx, usdtRateLimit)
 		}
 

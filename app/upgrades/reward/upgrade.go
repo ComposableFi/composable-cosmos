@@ -30,8 +30,8 @@ func CreateUpgradeHandler(
 
 		// enable staking reward
 		mintParam := mintKeeper.GetParams(ctx)
-		maxTokenPerYear, _ := sdk.NewIntFromString("99999999000000000000")
-		minTokenPerYear, _ := sdk.NewIntFromString("99999999000000000000")
+		maxTokenPerYear, _ := sdkmath.NewIntFromString("99999999000000000000")
+		minTokenPerYear, _ := sdkmath.NewIntFromString("99999999000000000000")
 
 		mintParam.MaxTokenPerYear = maxTokenPerYear
 		mintParam.MinTokenPerYear = minTokenPerYear

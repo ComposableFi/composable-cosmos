@@ -4,7 +4,7 @@ import (
 	// external libraries
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 
 	// ibc-go
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"

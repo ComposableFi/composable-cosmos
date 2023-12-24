@@ -25,19 +25,19 @@ import (
 // 		// 100% bonded, starting at 20% inflation and being reduced
 // 		// (1 - (1/0.67))*(0.13/8667)
 // 		{
-// 			sdk.OneDec(), sdk.NewDecWithPrec(20, 2),
-// 			sdk.OneDec().Sub(sdk.OneDec().Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
+// 			sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(20, 2),
+// 			sdkmath.LegacyOneDec().Sub(sdkmath.LegacyOneDec().Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
 // 		},
 
 // 		// 50% bonded, starting at 10% inflation and being increased
 // 		{
 // 			sdk.NewDecWithPrec(5, 1), sdk.NewDecWithPrec(10, 2),
-// 			sdk.OneDec().Sub(sdk.NewDecWithPrec(5, 1).Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
+// 			sdkmath.LegacyOneDec().Sub(sdk.NewDecWithPrec(5, 1).Quo(params.GoalBonded)).Mul(params.InflationRateChange).Quo(blocksPerYr),
 // 		},
 
 // 		// test 7% minimum stop (testing with 100% bonded)
-// 		{sdk.OneDec(), sdk.NewDecWithPrec(7, 2), sdk.ZeroDec()},
-// 		{sdk.OneDec(), sdk.NewDecWithPrec(700000001, 10), sdk.NewDecWithPrec(-1, 10)},
+// 		{sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(7, 2), sdk.ZeroDec()},
+// 		{sdkmath.LegacyOneDec(), sdk.NewDecWithPrec(700000001, 10), sdk.NewDecWithPrec(-1, 10)},
 
 // 		// test 20% maximum stop (testing with 0% bonded)
 // 		{sdk.ZeroDec(), sdk.NewDecWithPrec(20, 2), sdk.ZeroDec()},
@@ -77,7 +77,7 @@ import (
 // 		provisions := minter.BlockProvision(params)
 
 // 		expProvisions := sdk.NewCoin(params.MintDenom,
-// 			sdk.NewInt(tc.expProvisions))
+// 			sdkmath.NewInt(tc.expProvisions))
 
 // 		require.True(t, expProvisions.IsEqual(provisions),
 // 			"test: %v\n\tExp: %v\n\tGot: %v\n",
@@ -126,7 +126,7 @@ import (
 // 	b.ReportAllocs()
 // 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
 // 	params := DefaultParams()
-// 	totalSupply := sdk.NewInt(100000000000000)
+// 	totalSupply := sdkmath.NewInt(100000000000000)
 
 // 	// run the NextAnnualProvisions function b.N times
 // 	for n := 0; n < b.N; n++ {
@@ -137,13 +137,13 @@ import (
 func TestSimulateMint(t *testing.T) {
 	minter := DefaultInitialMinter()
 	params := DefaultParams()
-	totalSupply := sdk.NewInt(1_000_000_000_000_000_000)
-	totalStaked := sdk.NewInt(0)
-	tokenMinted := sdk.NewCoin("stake", sdk.NewInt(0))
+	totalSupply := sdkmath.NewInt(1_000_000_000_000_000_000)
+	totalStaked := sdkmath.NewInt(0)
+	tokenMinted := sdk.NewCoin("stake", sdkmath.NewInt(0))
 
 	for i := 1; i <= int(params.BlocksPerYear); i++ {
 
-		stakingDiff := sdk.NewDec(int64(rand.Intn(10))).QuoInt(sdk.NewInt(1_000_000)).MulInt(totalSupply)
+		stakingDiff := sdk.NewDec(int64(rand.Intn(10))).QuoInt(sdkmath.NewInt(1_000_000)).MulInt(totalSupply)
 		if (rand.Float32() > 0.5 || totalStaked.Add(stakingDiff.RoundInt()).GT(totalSupply)) && !totalStaked.Sub(stakingDiff.RoundInt()).IsNegative() {
 			stakingDiff = stakingDiff.Neg()
 		}

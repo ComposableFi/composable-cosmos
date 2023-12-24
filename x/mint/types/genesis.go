@@ -32,7 +32,7 @@ func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Minter:           DefaultInitialMinter(),
 		Params:           DefaultParams(),
-		IncentivesSupply: sdk.NewCoin(stakingtypes.DefaultParams().BondDenom, sdk.NewInt(IncentivesSupply)),
+		IncentivesSupply: sdk.NewCoin(stakingtypes.DefaultParams().BondDenom, sdkmath.NewInt(IncentivesSupply)),
 	}
 }
 
