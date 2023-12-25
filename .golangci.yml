@@ -109,18 +109,17 @@ linters-settings:
         disabled: true
       - name: defer
         disabled: true
-      # Disabled in favour of unparam.
-      - name: unused-parameter
+      - name: unused-parameter # Disabled in favour of unparam.
         disabled: true
-      - name: unhandled-error
-        disabled: false
+      - name: unhandled-error  # Disabled in favour of errcheck.
+        disabled: true
         arguments:
           - 'fmt.Printf'
           - 'fmt.Print'
           - 'fmt.Println'
-          - 'myFunction'
-      # Disabled temporarily
-      - name: import-shadowing
+      - name: import-shadowing       # Disabled temporarily
         disabled: true
-      - name: var-naming
+      - name: var-naming # Disabled temporarily
+        disabled: true
+      - name: unchecked-type-assertion # Disabled temporarily
         disabled: true

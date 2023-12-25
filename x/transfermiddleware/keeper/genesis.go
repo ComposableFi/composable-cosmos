@@ -12,7 +12,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	for _, tokenInfo := range genState.TokenInfos {
 		err := k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelID, tokenInfo.NativeDenom, tokenInfo.AssetId)
 		if err != nil {
-			panic(err) // TODO: propogate error up the stack
+			panic(err) // TODO: propagate error up the stack
 		}
 	}
 	k.SetParams(ctx, genState.Params)
