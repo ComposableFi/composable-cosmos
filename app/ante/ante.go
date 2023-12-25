@@ -2,8 +2,8 @@ package ante
 
 import (
 	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-	txboundaryante "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
-	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txboundaryante "github.com/notional-labs/composable/v6/x/txboundary/ante"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/txboundary/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"

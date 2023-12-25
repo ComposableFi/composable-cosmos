@@ -2,7 +2,7 @@ package v5
 
 import (
 	"github.com/notional-labs/composable/v6/app/upgrades"
-	txboundary "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	txboundary "github.com/notional-labs/composable/v6/x/txboundary/types"
 
 	store "github.com/cosmos/cosmos-sdk/store/types"
 )
