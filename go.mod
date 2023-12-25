@@ -3,7 +3,7 @@ module github.com/notional-labs/composable/v6
 go 1.19
 
 require (
-	cosmossdk.io/math v1.1.2
+	cosmossdk.io/math v1.2.0
 	cosmossdk.io/simapp v0.0.0-20230608160436-666c345ad23d
 	github.com/CosmWasm/wasmd v0.40.1
 	github.com/client9/misspell v0.3.4
