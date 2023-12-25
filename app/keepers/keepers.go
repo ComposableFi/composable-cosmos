@@ -80,8 +80,8 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	wasm08Keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	wasmclientkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasmclienttypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
 
 const (
@@ -115,7 +115,7 @@ type AppKeepers struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	AuthzKeeper      authzkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
-	Wasm08Keeper     wasm08Keeper.Keeper // TODO: use this name ?
+	Wasm08Keeper     wasmclientkeeper.Keeper // TODO: use this name ?
 	WasmKeeper       wasm.Keeper
 	IBCHooksKeeper   *ibchookskeeper.Keeper
 	Ics20WasmHooks   *ibchooks.WasmHooks
@@ -225,7 +225,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeper(appCodec, appKeepers.keys[wasmclienttypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
