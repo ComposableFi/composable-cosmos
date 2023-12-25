@@ -39,7 +39,6 @@ import (
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 )
 
 // DefaultConsensusParams defines the default Tendermint consensus params used in
@@ -77,7 +76,6 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*ComposableApp
 	app := NewComposableApp(
 		log.NewNopLogger(),
 		db, nil, true,
-		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
 		nodeHome,
 		invCheckPeriod,

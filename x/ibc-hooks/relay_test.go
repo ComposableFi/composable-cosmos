@@ -60,9 +60,7 @@ func (suite *IBCHooksTestSuite) TestRecvHooks() {
 	path := NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(path)
 
-	// store code
-	suite.chainB.StoreContractCode(&suite.Suite, "../../tests/ibc-hooks/bytecode/counter.wasm")
-	// instancetiate contract
+	// instantiate contract
 	addr := suite.chainB.InstantiateContract(&suite.Suite, `{"count": 0}`, 1)
 	suite.Require().NotEmpty(addr)
 
@@ -117,8 +115,6 @@ func (suite *IBCHooksTestSuite) TestAckHooks() {
 	path := NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(path)
 
-	// store code
-	suite.chainA.StoreContractCode(&suite.Suite, "../../tests/ibc-hooks/bytecode/counter.wasm")
 	// instancetiate contract
 	addr := suite.chainA.InstantiateContract(&suite.Suite, `{"count": 0}`, 1)
 	suite.Require().NotEmpty(addr)
@@ -194,8 +190,6 @@ func (suite *IBCHooksTestSuite) TestTimeoutHooks() {
 	path := NewTransferPath(suite.chainA, suite.chainB)
 	suite.coordinator.Setup(path)
 
-	// store code
-	suite.chainA.StoreContractCode(&suite.Suite, "../../tests/ibc-hooks/bytecode/counter.wasm")
 	// instancetiate contract
 	addr := suite.chainA.InstantiateContract(&suite.Suite, `{"count": 0}`, 1)
 	suite.Require().NotEmpty(addr)

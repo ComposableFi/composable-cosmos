@@ -2,9 +2,7 @@ package ibctesting
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"fmt"
-	"os"
 	"testing"
 	"time"
 
@@ -31,7 +29,6 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
@@ -644,24 +641,6 @@ func (chain *TestChain) QueryContract(suite *suite.Suite, contract sdk.AccAddres
 	state, err := wasmKeeper.QuerySmart(chain.GetContext(), contract, key)
 	suite.Require().NoError(err)
 	return string(state)
-}
-
-func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
-	govModuleAddress := chain.GetTestSupport().AccountKeeper().GetModuleAddress(govtypes.ModuleName)
-	wasmCode, err := os.ReadFile(path)
-	suite.Require().NoError(err)
-
-	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) { //nolint: staticcheck
-		p.RunAs = govModuleAddress.String()
-		p.WASMByteCode = wasmCode
-		checksum := sha256.Sum256(wasmCode)
-		p.CodeHash = checksum[:]
-	})
-
-	govKeeper := chain.GetTestSupport().GovKeeper()
-	// when
-	mustSubmitAndExecuteLegacyProposal(suite.T(), chain.GetContext(), src, chain.SenderAccount.GetAddress().String(), &govKeeper, govModuleAddress.String())
-	suite.Require().NoError(err)
 }
 
 func (chain *TestChain) InstantiateContract(suite *suite.Suite, msg string, codeID uint64) sdk.AccAddress {
