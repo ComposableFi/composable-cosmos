@@ -53,7 +53,7 @@ jobs:
           echo "PATCH_VERSION=$PATCH_VERSION" >> $GITHUB_ENV
       - name: Build and push 
         id: build_push_image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           file: Dockerfile
           context: .
