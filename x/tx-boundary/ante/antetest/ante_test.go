@@ -101,7 +101,8 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
@@ -225,7 +226,8 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}

@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	sdkcmd "cosmossdk.io/simapp/simd/cmd"
-	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
+	rosettacmd "cosmossdk.io/tools/rosetta/cmd"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -189,7 +189,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 	)
 
 	// add rosetta
-	rootCmd.AddCommand(rosettaCmd.RosettaCommand(encodingConfig.InterfaceRegistry, encodingConfig.Marshaler))
+	rootCmd.AddCommand(rosettacmd.RosettaCommand(encodingConfig.InterfaceRegistry, encodingConfig.Marshaler))
 }
 
 func addModuleInitFlags(startCmd *cobra.Command) {

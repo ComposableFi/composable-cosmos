@@ -14,7 +14,7 @@ import (
 	composable "github.com/notional-labs/composable/v6/app"
 	"github.com/notional-labs/composable/v6/app/ibctesting/simapp"
 	ratelimitmodulekeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	routerKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	routerkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
@@ -34,7 +34,7 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	teststaking "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -616,7 +616,7 @@ func (chain *TestChain) GetChannelCapability(portID, channelID string) *capabili
 	return capability
 }
 
-func (chain *TestChain) TransferMiddleware() routerKeeper.Keeper {
+func (chain *TestChain) TransferMiddleware() routerkeeper.Keeper {
 	return chain.GetTestSupport().TransferMiddleware()
 }
 
@@ -682,17 +682,17 @@ func mustSubmitAndExecuteLegacyProposal(t *testing.T, ctx sdk.Context, content v
 	contentMsg, err := submitLegacyProposal(t, ctx.WithEventManager(sdk.NewEventManager()), content, myActorAddress, authority, msgServer)
 	require.NoError(t, err)
 
-	_, err = msgServer.ExecLegacyContent(sdk.WrapSDKContext(ctx), v1.NewMsgExecLegacyContent(contentMsg.Content, authority))
+	_, err = msgServer.ExecLegacyContent(sdk.WrapSDKContext(ctx), govv1.NewMsgExecLegacyContent(contentMsg.Content, authority))
 	require.NoError(t, err)
 }
 
 // does not fail on submit proposal
-func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress, govAuthority string, msgServer v1.MsgServer) (*v1.MsgExecLegacyContent, error) {
+func submitLegacyProposal(t *testing.T, ctx sdk.Context, content v1beta1.Content, myActorAddress, govAuthority string, msgServer govv1.MsgServer) (*govv1.MsgExecLegacyContent, error) {
 	t.Helper()
-	contentMsg, err := v1.NewLegacyContent(content, govAuthority)
+	contentMsg, err := govv1.NewLegacyContent(content, govAuthority)
 	require.NoError(t, err)
 
-	proposal, err := v1.NewMsgSubmitProposal(
+	proposal, err := govv1.NewMsgSubmitProposal(
 		[]sdk.Msg{contentMsg},
 		sdk.Coins{},
 		myActorAddress,

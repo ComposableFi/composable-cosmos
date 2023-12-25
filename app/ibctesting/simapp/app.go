@@ -11,9 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	simappparams "github.com/notional-labs/composable/v6/app/ibctesting/simapp/params"
 	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
-	v6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
-	v7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
-
+	version6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
+	version7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
 	// TODO: mint module not complete yet,
 	"github.com/notional-labs/composable/v6/x/mint"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
@@ -557,7 +556,7 @@ func NewSimApp(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	/****  Module Options ****/
+	// ****  Module Options **** //
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
@@ -967,8 +966,8 @@ func (app *SimApp) setupUpgradeHandlers() {
 	// TODO: update git tag in link below
 	// See: https://github.com/cosmos/ibc-go/blob/v5.0.0-rc2/testing/simapp/app.go#L304
 	app.UpgradeKeeper.SetUpgradeHandler(
-		v6.UpgradeName,
-		v6.CreateUpgradeHandler(
+		version6.UpgradeName,
+		version6.CreateUpgradeHandler(
 			app.mm,
 			app.configurator,
 			app.appCodec,
@@ -979,8 +978,8 @@ func (app *SimApp) setupUpgradeHandlers() {
 	)
 
 	app.UpgradeKeeper.SetUpgradeHandler(
-		v7.UpgradeName,
-		v7.CreateUpgradeHandler(
+		version7.UpgradeName,
+		version7.CreateUpgradeHandler(
 			app.mm,
 			app.configurator,
 			app.appCodec,
@@ -998,7 +997,7 @@ func (app *SimApp) setupUpgradeStoreLoaders() {
 		tmos.Exit(fmt.Sprintf("failed to read upgrade info from disk %s", err))
 	}
 
-	if upgradeInfo.Name == v7.UpgradeName && !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+	if upgradeInfo.Name == version7.UpgradeName && !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
 		storeUpgrades := storetypes.StoreUpgrades{
 			Added: []string{
 				consensusparamtypes.StoreKey,

@@ -25,10 +25,10 @@ import (
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundary "github.com/notional-labs/composable/v6/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	txboundary "github.com/notional-labs/composable/v6/x/tx-boundary"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	"github.com/spf13/cast"
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
@@ -203,7 +203,7 @@ var (
 		ica.AppModuleBasic{},
 		ibchooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
-		txBoundary.AppModuleBasic{},
+		txboundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
@@ -318,7 +318,7 @@ func NewComposableApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
-	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
+	txBoundaryModule := txboundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibchooks.NewAppModule()
@@ -386,7 +386,7 @@ func NewComposableApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
@@ -428,7 +428,7 @@ func NewComposableApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
@@ -466,7 +466,7 @@ func NewComposableApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,

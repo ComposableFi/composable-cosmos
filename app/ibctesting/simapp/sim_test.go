@@ -39,7 +39,7 @@ import (
 
 // Get flags every time the simulator is run
 func init() {
-	GetSimulatorFlags()
+	SimulatorFlags()
 }
 
 type StoreKeysPrefixes struct {
