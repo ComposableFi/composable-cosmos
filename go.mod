@@ -26,7 +26,7 @@ require (
 	golang.org/x/tools v0.16.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20231002182017-d307bd883b97
 	google.golang.org/grpc v1.60.1
-	gotest.tools/v3 v3.5.0
+	gotest.tools/v3 v3.5.1
 	mvdan.cc/gofumpt v0.5.0
 )
 
