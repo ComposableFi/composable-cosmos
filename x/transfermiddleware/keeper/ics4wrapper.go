@@ -61,10 +61,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	}
 	// burn native token
 	// Get Coin from excrow address
-	err = keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
-	if err != nil {
-		return 0, err
-	}
+	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 
 	// release lock IBC token and send it to sender
 	// TODO: should we use a module address for this ?

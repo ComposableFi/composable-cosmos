@@ -62,8 +62,8 @@ func NewKeeper(
 
 // TODO: testing
 // AddParachainIBCTokenInfo add new parachain token information token to chain state.
-func (k Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom, assetID string) error {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, nativeDenom, assetID string) error {
+	store := ctx.KVStore(keeper.storeKey)
 	if store.Has(types.GetKeyParachainIBCTokenInfoByAssetID(assetID)) {
 		return errorsmod.Wrapf(types.ErrMultipleMapping, "duplicate assetID")
 	}
@@ -81,7 +81,7 @@ func (k Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, native
 		AssetId:     assetID,
 	}
 
-	bz, err := k.cdc.Marshal(&info)
+	bz, err := keeper.cdc.Marshal(&info)
 	if err != nil {
 		return err
 	}
@@ -94,9 +94,9 @@ func (k Keeper) AddParachainIBCInfo(ctx sdk.Context, ibcDenom, channelID, native
 
 // TODO: testing
 // AddParachainIBCInfoToRemoveList add parachain token information token to remove list.
-func (k Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
-	params := k.GetParams(ctx)
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom string) (time.Time, error) {
+	params := keeper.GetParams(ctx)
+	store := ctx.KVStore(keeper.storeKey)
 	if !store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)) {
 		return time.Time{}, errorsmod.Wrapf(sdkerrors.ErrKeyNotFound, "Token %v info not found", nativeDenom)
 	}
@@ -108,7 +108,7 @@ func (k Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom str
 		RemoveTime:  removeTime,
 	}
 
-	bz, err := k.cdc.Marshal(&removeToken)
+	bz, err := keeper.cdc.Marshal(&removeToken)
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -119,14 +119,14 @@ func (k Keeper) AddParachainIBCInfoToRemoveList(ctx sdk.Context, nativeDenom str
 
 // TODO: testing
 // IterateRemoveListInfo iterate all parachain token in remove list.
-func (k Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool)) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.RemoveParachainIBCTokenInfo) (stop bool)) {
+	store := ctx.KVStore(keeper.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.KeyParachainIBCTokenRemoveListByNativeDenom)
 
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var removeInfo types.RemoveParachainIBCTokenInfo
-		k.cdc.MustUnmarshal(iterator.Value(), &removeInfo)
+		keeper.cdc.MustUnmarshal(iterator.Value(), &removeInfo)
 		if cb(removeInfo) {
 			break
 		}
@@ -135,17 +135,17 @@ func (k Keeper) IterateRemoveListInfo(ctx sdk.Context, cb func(removeInfo types.
 
 // TODO: testing
 // RemoveParachainIBCTokenInfo remove parachain token information from chain state.
-func (k Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
-	if !k.hasParachainIBCTokenInfo(ctx, nativeDenom) {
+func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) error {
+	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return types.NotRegisteredNativeDenom
 	}
 
 	// get the IBCdenom
-	tokenInfo := k.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+	tokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 	ibcDenom := tokenInfo.IbcDenom
 	assetID := tokenInfo.AssetId
 
-	store := ctx.KVStore(k.storeKey)
+	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 	store.Delete(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 	store.Delete(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
@@ -153,25 +153,25 @@ func (k Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string) erro
 	return nil
 }
 
-func (k Keeper) SetAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) SetAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
+	store := ctx.KVStore(keeper.storeKey)
 	store.Set(types.GetKeyByRlyAddress(rlyAddress), []byte{1})
 }
 
-func (k Keeper) DeleteAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) DeleteAllowRlyAddress(ctx sdk.Context, rlyAddress string) {
+	store := ctx.KVStore(keeper.storeKey)
 	store.Delete(types.GetKeyByRlyAddress(rlyAddress))
 }
 
-func (k Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) HasAllowRlyAddress(ctx sdk.Context, rlyAddress string) bool {
+	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyByRlyAddress(rlyAddress)
 
 	return store.Has(key)
 }
 
-func (k Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress string) (stop bool)) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress string) (stop bool)) {
+	store := ctx.KVStore(keeper.storeKey)
 	prefixStore := prefix.NewStore(store, types.KeyRlyAddress)
 	iterator := sdk.KVStorePrefixIterator(prefixStore, nil)
 
@@ -184,15 +184,15 @@ func (k Keeper) IterateAllowRlyAddress(ctx sdk.Context, cb func(rlyAddress strin
 	}
 }
 
-func (k Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) HasParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) bool {
+	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom)
 
 	return store.Has(key)
 }
 
-func (k Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) bool {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) bool {
+	store := ctx.KVStore(keeper.storeKey)
 	key := types.GetKeyParachainIBCTokenInfoByAssetID(assetID)
 
 	return store.Has(key)
@@ -200,35 +200,35 @@ func (k Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID strin
 
 // TODO: testing
 // GetParachainIBCTokenInfo add new information about parachain token to chain state.
-func (k Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
+	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 
-	k.cdc.Unmarshal(bz, &info)
+	keeper.cdc.Unmarshal(bz, &info)
 
 	return info
 }
 
-func (k Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) (info types.ParachainIBCTokenInfo) {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) (info types.ParachainIBCTokenInfo) {
+	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 
-	k.cdc.Unmarshal(bz, &info)
+	keeper.cdc.Unmarshal(bz, &info)
 
 	return info
 }
 
-func (k Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibcDenom string) string {
-	store := ctx.KVStore(k.storeKey)
+func (keeper Keeper) GetNativeDenomByIBCDenomSecondaryIndex(ctx sdk.Context, ibcDenom string) string {
+	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.GetKeyNativeDenomAndIbcSecondaryIndex(ibcDenom))
 
 	return string(bz)
 }
 
-func (k Keeper) GetTotalEscrowedToken(ctx sdk.Context) (coins sdk.Coins) {
-	k.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
-		escrowIbcCoin := k.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.IbcDenom)
-		escrowNativeCoin := k.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.NativeDenom)
+func (keeper Keeper) GetTotalEscrowedToken(ctx sdk.Context) (coins sdk.Coins) {
+	keeper.IterateParaTokenInfos(ctx, func(index int64, info types.ParachainIBCTokenInfo) (stop bool) {
+		escrowIbcCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.IbcDenom)
+		escrowNativeCoin := keeper.bankKeeper.GetBalance(ctx, transfertypes.GetEscrowAddress(transfertypes.PortID, info.ChannelID), info.NativeDenom)
 		coins = append(coins, escrowIbcCoin, escrowNativeCoin)
 		return false
 	})

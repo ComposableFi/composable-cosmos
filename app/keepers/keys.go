@@ -7,7 +7,7 @@ import (
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txboundarytypes "github.com/notional-labs/composable/v6/x/txboundary/types"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
