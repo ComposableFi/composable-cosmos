@@ -10,4 +10,4 @@ mv genesis.json  ~/.banksy/config/genesis.json
 mv composable_2959777.tar.lz4 ~/.banksy/composable_2959777.tar.lz4
 cd ~/.banksy
 lz4 -d composable_2959777.tar.lz4 | tar -xvf -
-centaurid start
+timeout 5m centaurid start --p2p.seeds "ebc272824924ea1a27ea3183dd0b9ba713494f83@composable-mainnet-seed.autostake.com:26976,20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:22256,d2362ebcdd562500ac8c4cfa2214a89ad811033c@seeds.whispernode.com:22256"
