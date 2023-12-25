@@ -39,12 +39,12 @@ func CreateUpgradeHandler(
 		// Slashing params change
 		newParamsSet := slashingKeeper.GetParams(ctx)
 		newParamsSet.SlashFractionDowntime = math.LegacyNewDecWithPrec(1, 5)
-		slashingKeeper.SetParams(ctx, newParamsSet)
+		slashingKeeper.SetParams(ctx, newParamsSet) //nolint:errcheck // TODO: handle error
 
 		// Gov params change: minium deposit
 		newGovParamsSet := govkeeper.GetParams(ctx)
 		newGovParamsSet.MinInitialDepositRatio = sdk.NewDecWithPrec(1, 2).String() // this is 1%
-		govkeeper.SetParams(ctx, newGovParamsSet)
+		govkeeper.SetParams(ctx, newGovParamsSet)                                  //nolint:errcheck // TODO: handle error
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}

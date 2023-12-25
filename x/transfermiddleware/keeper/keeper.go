@@ -204,7 +204,7 @@ func (k Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDen
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 
-	k.cdc.Unmarshal(bz, &info)
+	k.cdc.Unmarshal(bz, &info) //nolint:errcheck // TODO: handle error
 
 	return info
 }
@@ -213,7 +213,7 @@ func (k Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID strin
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 
-	k.cdc.Unmarshal(bz, &info)
+	k.cdc.Unmarshal(bz, &info) //nolint:errcheck // TODO: handle error
 
 	return info
 }
