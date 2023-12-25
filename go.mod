@@ -331,9 +331,12 @@ replace (
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 
+	// lock the version of ledger-cosmos-so
 	github.com/cosmos/ledger-cosmos-go => github.com/cosmos/ledger-cosmos-go v0.12.4
 
+	// fix goleveldb at the same version to prevent apphashes
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
-	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647
+
+	// lock the version of ledger-go
 	github.com/zondax/ledger-go => github.com/zondax/ledger-go v0.14.3
 )
