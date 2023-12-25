@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/client/cli"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -15,9 +17,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/client/cli"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+
+	abci "github.com/cometbft/cometbft/abci/types"
 )
 
 var (

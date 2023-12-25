@@ -3,13 +3,13 @@ package cli
 import (
 	"fmt"
 
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/spf13/cobra"
-
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 // GetTxCmd returns the tx commands for router

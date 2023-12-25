@@ -3,16 +3,17 @@ package antetest
 import (
 	"testing"
 
+	txboundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	txboundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
 func TestAnteTestSuite(t *testing.T) {
