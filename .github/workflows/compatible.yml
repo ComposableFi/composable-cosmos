@@ -9,7 +9,8 @@ on:
 name: compatibility check
 # This CI job will do what many validators do: get a recent polkachu snapshot and run.  
 # For now, this ci job may need to be manually updated to keep the snapshot up to date. 
-# In a success case, this job will run the chain for five minutes, computing each block and arriving at the same block hash / app hash. 
+# In a success case, this job will run the chain for ten minutes, computing each block and arriving at the same block hash / app hash. 
+# This way, we can test various scenarios and know that changes are highly unlikely to be breaking. 
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,12 +28,12 @@ jobs:
           go-version: 1.19
       - run: |
           go install ./...
-          centaurid init
+          centaurid init github
           wget https://snapshots.polkachu.com/snapshots/composable/composable_3035461.tar.lz4
           wget https://raw.githubusercontent.com/notional-labs/composable-networks/main/mainnet/genesis.json
           mv genesis.json  ~/.banksy/config/genesis.json
           mv composable_3035461.tar.lz4 ~/.banksy/composable_3035461.tar.lz4
           cd ~/.banksy
           lz4 -d composable_3035461.tar.lz4 | tar -xvf -
-          timeout 5m centaurid start --p2p.seeds "ebc272824924ea1a27ea3183dd0b9ba713494f83@composable-mainnet-seed.autostake.com:26976,20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:22256,d2362ebcdd562500ac8c4cfa2214a89ad811033c@seeds.whispernode.com:22256"
+          timeout 10m centaurid start --p2p.seeds "ebc272824924ea1a27ea3183dd0b9ba713494f83@composable-mainnet-seed.autostake.com:26976,20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:22256,d2362ebcdd562500ac8c4cfa2214a89ad811033c@seeds.whispernode.com:22256"
         
