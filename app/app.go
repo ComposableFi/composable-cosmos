@@ -14,12 +14,12 @@ import (
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	"github.com/notional-labs/composable/v6/app/ante"
 	"github.com/notional-labs/composable/v6/app/keepers"
-	upgrades "github.com/notional-labs/composable/v6/app/upgrades"
-	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
-	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
-	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	"github.com/notional-labs/composable/v6/app/upgrades"
+	version4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
+	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
+	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
-	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	"github.com/notional-labs/composable/v6/x/mint"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
@@ -126,7 +126,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
+	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
@@ -201,7 +201,7 @@ var (
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
 		ica.AppModuleBasic{},
-		ibc_hooks.AppModuleBasic{},
+		ibchooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
 		txBoundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
@@ -321,9 +321,9 @@ func NewComposableApp(
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
-	ibcHooksModule := ibc_hooks.NewAppModule()
+	ibcHooksModule := ibchooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
-	/****  Module Options ****/
+	// ****  Module Options **** //
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.

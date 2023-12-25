@@ -3,7 +3,7 @@ package ante
 import (
 	"fmt"
 
-	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 
 	errorsmod "cosmossdk.io/errors"
 
@@ -15,10 +15,10 @@ import (
 
 type StakingPermissionDecorator struct {
 	cdc        codec.BinaryCodec
-	txBoundary txBoundaryKeeper.Keeper
+	txBoundary txboundarykeeper.Keeper
 }
 
-func NewStakingPermissionDecorator(cdc codec.BinaryCodec, keeper txBoundaryKeeper.Keeper) StakingPermissionDecorator {
+func NewStakingPermissionDecorator(cdc codec.BinaryCodec, keeper txboundarykeeper.Keeper) StakingPermissionDecorator {
 	return StakingPermissionDecorator{
 		cdc:        cdc,
 		txBoundary: keeper,

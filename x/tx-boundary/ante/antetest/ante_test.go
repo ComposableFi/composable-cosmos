@@ -3,7 +3,7 @@ package antetest
 import (
 	"testing"
 
-	txboundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
+	txboundaryante "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
 	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -106,7 +106,7 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
 
-		mfd := txboundaryAnte.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
+		mfd := txboundaryante.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
 		antehandler := sdk.ChainAnteDecorators(mfd)
 		s.Require().NoError(s.txBuilder.SetMsgs(tc.txMsg))
 
@@ -230,7 +230,7 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
 
-		mfd := txboundaryAnte.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
+		mfd := txboundaryante.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
 		antehandler := sdk.ChainAnteDecorators(mfd)
 		s.Require().NoError(s.txBuilder.SetMsgs(tc.txMsg))
 

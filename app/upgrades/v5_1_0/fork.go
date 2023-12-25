@@ -2,7 +2,7 @@ package v5_1_0
 
 import (
 	"github.com/notional-labs/composable/v6/app/keepers"
-	rateLimitKeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 
 	"cosmossdk.io/math"
@@ -20,7 +20,7 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	FixRateLimit(ctx, &keepers.RatelimitKeeper)
 }
 
-func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
+func FixRateLimit(ctx sdk.Context, rlKeeper *ratelimitkeeper.Keeper) {
 	uosmoRateLimit, found := rlKeeper.GetRateLimit(ctx, uosmo, "channel-2")
 	if !found {
 		channelValue := rlKeeper.GetChannelValue(ctx, uosmo)

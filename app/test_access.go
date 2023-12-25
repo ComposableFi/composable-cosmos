@@ -5,7 +5,7 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	tfmdKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	tfmdkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -83,7 +83,7 @@ func (s TestSupport) GetTxConfig() client.TxConfig {
 	return s.app.GetTxConfig()
 }
 
-func (s TestSupport) TransferMiddleware() tfmdKeeper.Keeper {
+func (s TestSupport) TransferMiddleware() tfmdkeeper.Keeper {
 	return s.app.TransferMiddlewareKeeper
 }
 
