@@ -42,6 +42,9 @@ issues:
     - linters:
         - staticcheck
       text: "SA1019:" # silence errors on usage of deprecated funcs
+    - linters:
+        - stylecheck
+      text: "ST1003:" # silence errors on usage of deprecated funcs
 
   max-issues-per-linter: 10000
   max-same-issues: 10000

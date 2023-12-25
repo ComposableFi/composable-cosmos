@@ -11,11 +11,11 @@ import (
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	err := k.SetDelegateBoundary(ctx, genState.DelegateBoundary)
 	if err != nil {
-		panic(err) //todo: handle error
+		panic(err) // todo: handle error
 	}
 	err = k.SetRedelegateBoundary(ctx, genState.RedelegateBoundary)
 	if err != nil {
-		panic(err) //todo: handle error
+		panic(err) // todo: handle error
 	}
 }
 

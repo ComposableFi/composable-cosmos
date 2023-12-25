@@ -29,7 +29,7 @@ import (
 
 var BaseBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000000)))
 
-type AnteTestSuite struct {
+type Suite struct {
 	suite.Suite
 
 	ctx sdk.Context
@@ -42,7 +42,7 @@ type AnteTestSuite struct {
 	newvalidators []stakingtypes.Validator
 }
 
-func (s *AnteTestSuite) SetupTest() {
+func (s *Suite) SetupTest() {
 	s.app, s.delegator, s.validators = helpers.SetupComposableAppWithValSetWithGenAccout(s.T())
 	s.ctx = s.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
 	err := app.FundAccount(s.app.BankKeeper, s.ctx, s.delegator, BaseBalance)
@@ -83,7 +83,7 @@ func (s *AnteTestSuite) SetupTest() {
 	s.clientCtx = client.Context{}.WithTxConfig(encodingConfig.TxConfig)
 }
 
-func (s *AnteTestSuite) CreateTestTx(privs []cryptotypes.PrivKey, accNums, accSeqs []uint64, chainID string) (xauthsigning.Tx, error) {
+func (s *Suite) CreateTestTx(privs []cryptotypes.PrivKey, accNums, accSeqs []uint64, chainID string) (xauthsigning.Tx, error) {
 	var sigsV2 []signing.SignatureV2
 	for i, priv := range privs {
 		sigV2 := signing.SignatureV2{

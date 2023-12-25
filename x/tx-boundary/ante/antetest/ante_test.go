@@ -17,10 +17,10 @@ import (
 )
 
 func TestAnteTestSuite(t *testing.T) {
-	suite.Run(t, new(AnteTestSuite))
+	suite.Run(t, new(Suite))
 }
 
-func (s *AnteTestSuite) TestStakingAnteBasic() {
+func (s *Suite) TestStakingAnteBasic() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 	msgDelegateAny, err := cdctypes.NewAnyWithValue(delegateMsg)
@@ -122,7 +122,7 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	}
 }
 
-func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
+func (s *Suite) TestStakingAnteUpdateLimit() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 
