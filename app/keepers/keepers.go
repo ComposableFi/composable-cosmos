@@ -278,6 +278,17 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		govModuleAuthority,
 	)
 
+	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[routertypes.StoreKey],
+		nil, // will be zero-value here, reference is set later on with SetTransferKeeper.
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.DistrKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
 	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, appKeepers.keys[ibctransfertypes.StoreKey],
 		appKeepers.GetSubspace(ibctransfertypes.ModuleName),
@@ -287,18 +298,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.ScopedTransferKeeper,
-	)
-
-	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[routertypes.StoreKey],
-		appKeepers.GetSubspace(routertypes.ModuleName),
-		appKeepers.TransferKeeper,
-		appKeepers.IBCKeeper.ChannelKeeper,
-		&appKeepers.DistrKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.TransferMiddlewareKeeper,
-		appKeepers.IBCKeeper.ChannelKeeper,
 	)
 
 	appKeepers.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(

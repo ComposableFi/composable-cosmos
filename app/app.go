@@ -291,6 +291,7 @@ func NewComposableApp(
 		homePath,
 	)
 	app.setupUpgradeStoreLoaders()
+
 	app.InitNormalKeepers(
 		appCodec,
 		cdc,
@@ -304,14 +305,15 @@ func NewComposableApp(
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
-	routerModule := router.NewAppModule(app.RouterKeeper)
+	routerModule := router.NewAppModule(app.RouterKeeper, app.GetSubspace(routertypes.ModuleName))
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
 	ibcHooksModule := ibc_hooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
-	/****  Module Options ****/
+
+	// ****  Module Options ****/
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
