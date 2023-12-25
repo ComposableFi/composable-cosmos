@@ -38,10 +38,10 @@ func NewMsgAddRateLimit(
 }
 
 // Route Implements Msg.
-func (msg MsgAddRateLimit) Route() string { return RouterKey }
+func (MsgAddRateLimit) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgAddRateLimit) Type() string { return TypeMsgAddRateLimit }
+func (MsgAddRateLimit) Type() string { return TypeMsgAddRateLimit }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgAddRateLimit) GetSignBytes() []byte {
@@ -110,10 +110,10 @@ func NewMsgUpdateRateLimit(
 }
 
 // Route Implements Msg.
-func (msg MsgUpdateRateLimit) Route() string { return RouterKey }
+func (MsgUpdateRateLimit) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgUpdateRateLimit) Type() string { return TypeMsgUpdateRateLimit }
+func (MsgUpdateRateLimit) Type() string { return TypeMsgUpdateRateLimit }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgUpdateRateLimit) GetSignBytes() []byte {
@@ -176,10 +176,10 @@ func NewMsgRemoveRateLimit(
 }
 
 // Route Implements Msg.
-func (msg MsgRemoveRateLimit) Route() string { return RouterKey }
+func (MsgRemoveRateLimit) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgRemoveRateLimit) Type() string { return TypeMsgRemoveRateLimit }
+func (MsgRemoveRateLimit) Type() string { return TypeMsgRemoveRateLimit }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgRemoveRateLimit) GetSignBytes() []byte {
@@ -220,10 +220,10 @@ func NewMsgResetRateLimit(
 }
 
 // Route Implements Msg.
-func (msg MsgResetRateLimit) Route() string { return RouterKey }
+func (MsgResetRateLimit) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgResetRateLimit) Type() string { return TypeMsgResetRateLimit }
+func (MsgResetRateLimit) Type() string { return TypeMsgResetRateLimit }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgResetRateLimit) GetSignBytes() []byte {

@@ -436,7 +436,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 }
 
 // initParamsKeeper init params keeper and its subspaces
-func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
+func (*AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino, key, tkey storetypes.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
 	paramsKeeper.Subspace(authtypes.ModuleName)
@@ -461,7 +461,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (appKeepers *AppKeepers) BlacklistedModuleAccountAddrs(maccPerms map[string][]string) map[string]bool {
+func (*AppKeepers) BlacklistedModuleAccountAddrs(maccPerms map[string][]string) map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {

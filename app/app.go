@@ -580,7 +580,7 @@ func (app *ComposableApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *ComposableApp) GetTxConfig() client.TxConfig {
+func (*ComposableApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
@@ -612,7 +612,7 @@ func (app *ComposableApp) LoadHeight(height int64) error {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *ComposableApp) ModuleAccountAddrs() map[string]bool {
+func (*ComposableApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -645,7 +645,7 @@ func (app *ComposableApp) InterfaceRegistry() types.InterfaceRegistry {
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *ComposableApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
+func (*ComposableApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -711,7 +711,7 @@ func (app *ComposableApp) setupUpgradeStoreLoaders() {
 	}
 }
 
-func (app *ComposableApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
+func (*ComposableApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
 	// switch upgradeInfo.Name {
 	// default:
 	// }

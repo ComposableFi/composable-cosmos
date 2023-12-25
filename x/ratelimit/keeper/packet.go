@@ -37,7 +37,7 @@ type RateLimitedPacketInfo struct {
 //
 // For NATIVE denoms, return as is (e.g. ustrd)
 // For NON-NATIVE denoms, take the ibc hash (e.g. hash "transfer/channel-2/usoms" into "ibc/...")
-func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
 	// Determine the denom by looking at the denom trace path
 	denomTrace := transfertypes.ParseDenomTrace(packet.Denom)
 
@@ -84,7 +84,7 @@ func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacke
 //	       Packet Denom:      transfer/channel-X/transfer/channel-Z/ujuno
 //	        -> Remove Prefix: transfer/channel-Z/ujuno
 //	        -> Hash:          ibc/...
-func (k Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
 	// To determine the denom, first check whether Stride is acting as source
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), packetData.Denom) {
 		// Remove the source prefix (e.g. transfer/channel-X/transfer/channel-Z/ujuno -> transfer/channel-Z/ujuno)
