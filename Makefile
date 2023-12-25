@@ -104,7 +104,7 @@ lint:
 ###                                  Proto                                  ###
 ###############################################################################
 
-protoVer=0.11.6
+protoVer=0.14.0
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 containerProtoGen=proto-gen-$(protoVer)
 containerProtoFmt=proto-fmt-$(protoVer)
@@ -128,6 +128,8 @@ proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
 .PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking 
+
+###############################################################################
 ###                             Interchain test                             ###
 ###############################################################################
 
