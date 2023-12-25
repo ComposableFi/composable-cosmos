@@ -79,6 +79,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	icq "github.com/cosmos/ibc-apps/modules/async-icq/v7"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
@@ -89,8 +91,6 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	"github.com/spf13/cast"
-	icq "github.com/strangelove-ventures/async-icq/v7"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
@@ -309,7 +309,7 @@ func NewComposableApp(
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
-	icqModule := icq.NewAppModule(app.ICQKeeper)
+	icqModule := icq.NewAppModule(app.ICQKeeper, app.GetSubspace(icqtypes.ModuleName))
 	ibcHooksModule := ibc_hooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
 

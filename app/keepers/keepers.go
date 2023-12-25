@@ -53,6 +53,9 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
+	icq "github.com/cosmos/ibc-apps/modules/async-icq/v7"
+	icqkeeper "github.com/cosmos/ibc-apps/modules/async-icq/v7/keeper"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
 	icahost "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
@@ -63,9 +66,6 @@ import (
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	icq "github.com/strangelove-ventures/async-icq/v7"
-	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 
 	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
 
@@ -316,9 +316,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
-		appCodec, appKeepers.keys[icqtypes.StoreKey], appKeepers.GetSubspace(icqtypes.ModuleName),
-		appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper, &appKeepers.IBCKeeper.PortKeeper,
-		scopedICQKeeper, bApp,
+		appCodec,
+		appKeepers.keys[icqtypes.StoreKey],
+		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		scopedICQKeeper,
+		bApp.GRPCQueryRouter(),
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	icqIBCModule := icq.NewIBCModule(appKeepers.ICQKeeper)

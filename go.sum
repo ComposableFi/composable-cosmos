@@ -350,6 +350,8 @@ github.com/cosmos/iavl v0.20.1 h1:rM1kqeG3/HBT85vsZdoSNsehciqUQPWrR4BYmqE2+zg=
 github.com/cosmos/iavl v0.20.1/go.mod h1:WO7FyvaZJoH65+HFOsDir7xU9FWk2w9cHXNW1XHcl7A=
 github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 v7.1.2 h1:6zjj+yIpMbCTRI2eJ2fXuflElENs3mrUSLH/TSWL8fk=
 github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 v7.1.2/go.mod h1:UvDmcGIWJPIytq+Q78/ff5NTOsuX/7IrNgEugTW5i0s=
+github.com/cosmos/ibc-apps/modules/async-icq/v7 v7.1.1 h1:02RCbih5lQ8aGdDMSvxhTnk5JDLEDitn17ytEE1Qhko=
+github.com/cosmos/ibc-apps/modules/async-icq/v7 v7.1.1/go.mod h1:LvVkEXTORVgd87W2Yu7ZY3acKKeTMq/txdTworn8EZI=
 github.com/cosmos/ics23/go v0.10.0 h1:iXqLLgp2Lp+EdpIuwXTYIQU+AiHj9mOC2X9ab++bZDM=
 github.com/cosmos/ics23/go v0.10.0/go.mod h1:ZfJSmng/TBNTBkFemHHHj5YY7VAU/MBU980F4VU1NG0=
 github.com/cosmos/keyring v1.2.0 h1:8C1lBP9xhImmIabyXW4c3vFjjLiBdGCmfLUfeZlV1Yo=
@@ -953,8 +955,6 @@ github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An
 github.com/spf13/viper v1.3.2/go.mod h1:ZiWeW+zYFKm7srdB9IoDzzZXaJaI5eL9QjNiN/DMA2s=
 github.com/spf13/viper v1.16.0 h1:rGGH0XDZhdUOryiDWjmIvUSWpbNqisK8Wk0Vyefw8hc=
 github.com/spf13/viper v1.16.0/go.mod h1:yg78JgCJcbrQOvV9YLXgkLaZqUidkY9K+Dd1FofRzQg=
-github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897 h1:lCTD5L1v1K1KC6KXjyt4o1X+yzV14RbbrPZaF29n8uI=
-github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897/go.mod h1:ag05Q54Wkr0jVwfe+14sxnuWbw0gBOxtPQv9afBBnr0=
 github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
 github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a/go.mod h1:qNTQ5P5JnDBl6z3cMAg/SywNDC5ABu5ApDIw6lUbRmI=
