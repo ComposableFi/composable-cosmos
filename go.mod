@@ -27,7 +27,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529
 	google.golang.org/grpc v1.56.2
 	gotest.tools/v3 v3.5.0
-	mvdan.cc/gofumpt v0.4.0
+	mvdan.cc/gofumpt v0.5.0
 )
 
 require (
