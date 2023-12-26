@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	composable "github.com/notional-labs/composable/v6/app"
 	"github.com/stretchr/testify/require"
 
@@ -98,7 +97,6 @@ func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*composa
 		db,
 		nil,
 		true,
-		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
 		composable.DefaultNodeHome,
 		invCheckPeriod,
