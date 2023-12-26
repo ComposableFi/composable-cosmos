@@ -2,11 +2,6 @@ package app
 
 import (
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
-	"strings"
-
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
@@ -15,6 +10,9 @@ import (
 	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
 	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	"io"
+	"os"
+	"path/filepath"
 
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 
@@ -144,23 +142,6 @@ var (
 	Forks    = []upgrades.Fork{}
 )
 
-// GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
-// produce a list of enabled proposals to pass into wasmd app.
-func GetEnabledProposals() []wasm.ProposalType {
-	if EnableSpecificProposals == "" {
-		if ProposalsEnabled == "true" {
-			return wasm.EnableAllProposals
-		}
-		return wasm.DisableAllProposals
-	}
-	chunks := strings.Split(EnableSpecificProposals, ",")
-	proposals, err := wasm.ConvertToProposals(chunks)
-	if err != nil {
-		panic(err)
-	}
-	return proposals
-}
-
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
 
 func getGovProposalHandlers() []govclient.ProposalHandler {
@@ -232,7 +213,6 @@ var (
 		transfermiddlewaretypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:                nil,
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
 
@@ -274,13 +254,12 @@ func NewComposableApp(
 	db dbm.DB,
 	traceStore io.Writer,
 	loadLatest bool,
-	enabledProposals []wasm.ProposalType,
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
-	wasmOpts []wasm.Option,
+	wasmOpts []wasmkeeper.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *ComposableApp {
 	appCodec := encodingConfig.Marshaler
@@ -320,7 +299,6 @@ func NewComposableApp(
 		homePath,
 		appOpts,
 		wasmOpts,
-		enabledProposals,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
@@ -409,8 +387,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/beginBlockers
+		wasmtypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -442,7 +419,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
+		wasmtypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -479,7 +456,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
+		wasmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 

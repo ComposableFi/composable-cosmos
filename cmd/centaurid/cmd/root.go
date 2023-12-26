@@ -272,7 +272,6 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 	var emptyWasmOpts []wasm.Option
 	newApp := app.NewComposableApp(
 		logger, db, traceStore, true,
-		app.GetEnabledProposals(),
 		skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
@@ -305,7 +304,6 @@ func (a appCreator) appExport(
 			db,
 			traceStore,
 			false,
-			app.GetEnabledProposals(),
 			map[int64]bool{},
 			homePath,
 			uint(1),
@@ -323,7 +321,6 @@ func (a appCreator) appExport(
 			db,
 			traceStore,
 			true,
-			app.GetEnabledProposals(),
 			map[int64]bool{},
 			homePath,
 			uint(1),

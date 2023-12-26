@@ -8,7 +8,6 @@ import (
 
 	"cosmossdk.io/math"
 	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
@@ -95,7 +94,6 @@ func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*composa
 		db,
 		nil,
 		true,
-		wasmtypes.EnableAllProposals,
 		map[int64]bool{},
 		composable.DefaultNodeHome,
 		invCheckPeriod,
