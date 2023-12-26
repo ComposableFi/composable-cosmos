@@ -2,7 +2,9 @@ package types
 
 import (
 	sdkerrors "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 )
@@ -32,10 +34,10 @@ func NewMsgAddParachainIBCTokenInfo(
 }
 
 // Route Implements Msg.
-func (msg MsgAddParachainIBCTokenInfo) Route() string { return RouterKey }
+func (MsgAddParachainIBCTokenInfo) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgAddParachainIBCTokenInfo) Type() string { return TypeMsgAddParachainIBCTokenInfo }
+func (MsgAddParachainIBCTokenInfo) Type() string { return TypeMsgAddParachainIBCTokenInfo }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgAddParachainIBCTokenInfo) GetSignBytes() []byte {
@@ -82,10 +84,10 @@ func NewMsgRemoveParachainIBCTokenInfo(
 }
 
 // Route Implements Msg.
-func (msg MsgRemoveParachainIBCTokenInfo) Route() string { return RouterKey }
+func (MsgRemoveParachainIBCTokenInfo) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgRemoveParachainIBCTokenInfo) Type() string { return TypeMsgRemoveParachainIBCTokenInfo }
+func (MsgRemoveParachainIBCTokenInfo) Type() string { return TypeMsgRemoveParachainIBCTokenInfo }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgRemoveParachainIBCTokenInfo) GetSignBytes() []byte {
@@ -120,10 +122,10 @@ func NewMsgAddRlyAddress(
 }
 
 // Route Implements Msg.
-func (msg MsgAddRlyAddress) Route() string { return RouterKey }
+func (MsgAddRlyAddress) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (msg MsgAddRlyAddress) Type() string { return TypeMsgAddRlyAddress }
+func (MsgAddRlyAddress) Type() string { return TypeMsgAddRlyAddress }
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgAddRlyAddress) GetSignBytes() []byte {

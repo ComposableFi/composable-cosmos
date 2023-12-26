@@ -3,13 +3,14 @@ package simulation
 import (
 	"math/rand"
 
+	"github.com/notional-labs/composable/v6/x/mint/types"
+
 	"cosmossdk.io/math"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	"github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 // Simulation parameter constants

@@ -3,14 +3,15 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/notional-labs/composable/v6/x/mint/types"
+
 	"cosmossdk.io/math"
-	"github.com/cometbft/cometbft/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/notional-labs/composable/v6/x/mint/types"
+	"github.com/cometbft/cometbft/libs/log"
 )
 
 // Keeper of the mint store
@@ -63,7 +64,7 @@ func (k Keeper) GetAuthority() string {
 }
 
 // Logger returns a module-specific logger.
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+func (Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
@@ -76,7 +77,7 @@ func (k Keeper) GetMinter(ctx sdk.Context) (minter types.Minter) {
 	}
 
 	k.cdc.MustUnmarshal(bz, &minter)
-	return
+	return minter
 }
 
 // SetMinter sets the minter.

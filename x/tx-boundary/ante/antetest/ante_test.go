@@ -3,23 +3,24 @@ package antetest
 import (
 	"testing"
 
+	txboundaryante "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	txboundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
 func TestAnteTestSuite(t *testing.T) {
-	suite.Run(t, new(AnteTestSuite))
+	suite.Run(t, new(Suite))
 }
 
-func (s *AnteTestSuite) TestStakingAnteBasic() {
+func (s *Suite) TestStakingAnteBasic() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 	msgDelegateAny, err := cdctypes.NewAnyWithValue(delegateMsg)
@@ -100,12 +101,13 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
 
-		mfd := txboundaryAnte.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
+		mfd := txboundaryante.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
 		antehandler := sdk.ChainAnteDecorators(mfd)
 		s.Require().NoError(s.txBuilder.SetMsgs(tc.txMsg))
 
@@ -120,7 +122,7 @@ func (s *AnteTestSuite) TestStakingAnteBasic() {
 	}
 }
 
-func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
+func (s *Suite) TestStakingAnteUpdateLimit() {
 	_, _, addr1 := testdata.KeyTestPubAddr()
 	delegateMsg := stakingtypes.NewMsgDelegate(s.delegator, s.validators[0].GetOperator(), sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000)))
 
@@ -224,12 +226,13 @@ func (s *AnteTestSuite) TestStakingAnteUpdateLimit() {
 	} {
 		tc := tc
 		s.SetupTest()
-		tc.malleate()
+		err = tc.malleate()
+		s.Require().NoError(err)
 		s.txBuilder = s.clientCtx.TxConfig.NewTxBuilder()
 		priv1, _, _ := testdata.KeyTestPubAddr()
 		privs, accNums, accSeqs := []cryptotypes.PrivKey{priv1}, []uint64{0}, []uint64{0}
 
-		mfd := txboundaryAnte.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
+		mfd := txboundaryante.NewStakingPermissionDecorator(s.app.AppCodec(), s.app.TxBoundaryKeepper)
 		antehandler := sdk.ChainAnteDecorators(mfd)
 		s.Require().NoError(s.txBuilder.SetMsgs(tc.txMsg))
 

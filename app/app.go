@@ -7,19 +7,38 @@ import (
 	"path/filepath"
 	"strings"
 
-	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
-	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
-	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
-	"github.com/cosmos/cosmos-sdk/x/authz"
-	"github.com/cosmos/cosmos-sdk/x/consensus"
-	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
-	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
-	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-
-	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
+	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	"github.com/notional-labs/composable/v6/app/ante"
+	"github.com/notional-labs/composable/v6/app/keepers"
+	"github.com/notional-labs/composable/v6/app/upgrades"
+	version4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
+	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
+	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
+	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+	"github.com/notional-labs/composable/v6/x/mint"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
+	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
+	"github.com/notional-labs/composable/v6/x/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	txboundary "github.com/notional-labs/composable/v6/x/tx-boundary"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/spf13/cast"
+	icq "github.com/strangelove-ventures/async-icq/v7"
+	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
+	alliancemodule "github.com/terra-money/alliance/x/alliance"
+	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
+	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -29,24 +48,21 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
+	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	"github.com/cosmos/cosmos-sdk/x/bank"
-
-	"github.com/notional-labs/composable/v6/app/keepers"
-	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
-	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
-	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
-
-	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-
+	"github.com/cosmos/cosmos-sdk/x/authz"
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
+	"github.com/cosmos/cosmos-sdk/x/bank"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	"github.com/cosmos/cosmos-sdk/x/consensus"
+	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
@@ -60,15 +76,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-
 	"github.com/cosmos/cosmos-sdk/x/group"
 	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
-
-	dbm "github.com/cometbft/cometbft-db"
-	abci "github.com/cometbft/cometbft/abci/types"
-	tmjson "github.com/cometbft/cometbft/libs/json"
-	"github.com/cometbft/cometbft/libs/log"
-	tmos "github.com/cometbft/cometbft/libs/os"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -79,6 +88,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
+	dbm "github.com/cometbft/cometbft-db"
+	abci "github.com/cometbft/cometbft/abci/types"
+	tmjson "github.com/cometbft/cometbft/libs/json"
+	"github.com/cometbft/cometbft/libs/log"
+	tmos "github.com/cometbft/cometbft/libs/os"
+
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
@@ -88,43 +104,11 @@ import (
 	ibcclientclient "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	"github.com/spf13/cast"
-	icq "github.com/strangelove-ventures/async-icq/v7"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
-
-	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
-	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
-	alliancemodule "github.com/terra-money/alliance/x/alliance"
-	alliancemoduleclient "github.com/terra-money/alliance/x/alliance/client"
-	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
-
-	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
-
-	"github.com/notional-labs/composable/v6/app/ante"
-	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-
-	txBoundary "github.com/notional-labs/composable/v6/x/tx-boundary"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
-
-	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-
-	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
-
-	"github.com/notional-labs/composable/v6/x/mint"
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
-
+	tendermint "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
+	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm"
+	wasm08keeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
+	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 	ibctestingtypes "github.com/cosmos/ibc-go/v7/testing/types"
-
-	ibc_hooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-
-	upgrades "github.com/notional-labs/composable/v6/app/upgrades"
 )
 
 const (
@@ -142,7 +126,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
+	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
@@ -217,9 +201,9 @@ var (
 		wasm.AppModuleBasic{},
 		router.AppModuleBasic{},
 		ica.AppModuleBasic{},
-		ibc_hooks.AppModuleBasic{},
+		ibchooks.AppModuleBasic{},
 		transfermiddleware.AppModuleBasic{},
-		txBoundary.AppModuleBasic{},
+		txboundary.AppModuleBasic{},
 		ratelimitmodule.AppModuleBasic{},
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
@@ -334,12 +318,12 @@ func NewComposableApp(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
-	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
+	txBoundaryModule := txboundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper)
-	ibcHooksModule := ibc_hooks.NewAppModule()
+	ibcHooksModule := ibchooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
-	/****  Module Options ****/
+	// ****  Module Options **** //
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
@@ -402,7 +386,7 @@ func NewComposableApp(
 		ibctransfertypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		icqtypes.ModuleName,
@@ -444,7 +428,7 @@ func NewComposableApp(
 		ibchost.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		ibctransfertypes.ModuleName,
@@ -482,7 +466,7 @@ func NewComposableApp(
 		icqtypes.ModuleName,
 		routertypes.ModuleName,
 		transfermiddlewaretypes.ModuleName,
-		txBoundaryTypes.ModuleName,
+		txboundarytypes.ModuleName,
 		ratelimitmoduletypes.ModuleName,
 		ibchookstypes.ModuleName,
 		feegrant.ModuleName,
@@ -596,7 +580,7 @@ func (app *ComposableApp) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 }
 
 // GetTxConfig implements the TestingApp interface.
-func (app *ComposableApp) GetTxConfig() client.TxConfig {
+func (*ComposableApp) GetTxConfig() client.TxConfig {
 	cfg := MakeEncodingConfig()
 	return cfg.TxConfig
 }
@@ -628,7 +612,7 @@ func (app *ComposableApp) LoadHeight(height int64) error {
 }
 
 // ModuleAccountAddrs returns all the app's module account addresses.
-func (app *ComposableApp) ModuleAccountAddrs() map[string]bool {
+func (*ComposableApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
@@ -661,7 +645,7 @@ func (app *ComposableApp) InterfaceRegistry() types.InterfaceRegistry {
 
 // RegisterAPIRoutes registers all application module routes with the provided
 // API server.
-func (app *ComposableApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
+func (*ComposableApp) RegisterAPIRoutes(apiSvr *api.Server, _ config.APIConfig) {
 	clientCtx := apiSvr.ClientCtx
 	// Register new tx routes from grpc-gateway.
 	authtx.RegisterGRPCGatewayRoutes(clientCtx, apiSvr.GRPCGatewayRouter)
@@ -727,7 +711,7 @@ func (app *ComposableApp) setupUpgradeStoreLoaders() {
 	}
 }
 
-func (app *ComposableApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
+func (*ComposableApp) customPreUpgradeHandler(_ upgradetypes.Plan) {
 	// switch upgradeInfo.Name {
 	// default:
 	// }

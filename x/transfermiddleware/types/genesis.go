@@ -1,7 +1,7 @@
 package types
 
 import (
-	fmt "fmt"
+	"fmt"
 )
 
 // DefaultGenesisState returns a GenesisState with "transfer" as the default PortID.

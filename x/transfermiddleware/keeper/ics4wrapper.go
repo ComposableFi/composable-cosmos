@@ -3,24 +3,26 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+
 	"cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
-func (keeper Keeper) hasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
-	store := ctx.KVStore(keeper.storeKey)
+func (k Keeper) hasParachainIBCTokenInfo(ctx sdk.Context, nativeDenom string) bool {
+	store := ctx.KVStore(k.storeKey)
 	return store.Has(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 }
 
-func (keeper Keeper) handleOverrideSendPacketTransferLogic(
+func (k Keeper) handleOverrideSendPacketTransferLogic(
 	ctx sdk.Context,
 	_ *capabilitytypes.Capability,
 	sourcePort, sourceChannel string,
@@ -40,7 +42,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := k.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	// burn native token in escrow address
 	transferAmount, ok := sdk.NewIntFromString(fungibleTokenPacketData.Amount)
@@ -53,17 +55,21 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	ibcTransferToken := sdk.NewCoin(parachainInfo.IbcDenom, transferAmount)
 
 	escrowAddress := transfertypes.GetEscrowAddress(sourcePort, sourceChannel)
-	err = keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, escrowAddress, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
 	if err != nil {
 		return 0, err
 	}
+
 	// burn native token
 	// Get Coin from excrow address
-	keeper.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
+	err = k.bankKeeper.BurnCoins(ctx, transfertypes.ModuleName, sdk.NewCoins(nativeTransferToken))
+	if err != nil {
+		return 0, err
+	}
 
 	// release lock IBC token and send it to sender
 	// TODO: should we use a module address for this ?
-	err = keeper.bankKeeper.SendCoins(ctx, escrowAddress, sender, sdk.NewCoins(ibcTransferToken))
+	err = k.bankKeeper.SendCoins(ctx, escrowAddress, sender, sdk.NewCoins(ibcTransferToken))
 	if err != nil {
 		return 0, err
 	}
@@ -79,7 +85,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 		TimeoutTimestamp: timeoutTimestamp,
 		Memo:             fungibleTokenPacketData.Memo,
 	}
-	res, err := keeper.executeTransferMsg(ctx, &transferMsg)
+	res, err := k.executeTransferMsg(ctx, &transferMsg)
 	if err != nil {
 		return 0, err
 	}
@@ -87,15 +93,15 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	return res.Sequence, nil
 }
 
-func (keeper Keeper) executeTransferMsg(ctx sdk.Context, transferMsg *transfertypes.MsgTransfer) (*transfertypes.MsgTransferResponse, error) {
+func (k Keeper) executeTransferMsg(ctx sdk.Context, transferMsg *transfertypes.MsgTransfer) (*transfertypes.MsgTransferResponse, error) {
 	if err := transferMsg.ValidateBasic(); err != nil {
 		return nil, fmt.Errorf("bad msg %v", err.Error())
 	}
-	return keeper.transferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
+	return k.transferKeeper.Transfer(sdk.WrapSDKContext(ctx), transferMsg)
 }
 
 // SendPacket wraps IBC ChannelKeeper's SendPacket function
-func (keeper Keeper) SendPacket(
+func (k Keeper) SendPacket(
 	ctx sdk.Context,
 	chanCap *capabilitytypes.Capability,
 	sourcePort, sourceChannel string,
@@ -111,31 +117,31 @@ func (keeper Keeper) SendPacket(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := k.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	if parachainInfo.ChannelID != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
-		return keeper.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
+		return k.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 	}
 
-	return keeper.handleOverrideSendPacketTransferLogic(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
+	return k.handleOverrideSendPacketTransferLogic(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
 }
 
 // WriteAcknowledgement wraps IBC ICS4Wrapper WriteAcknowledgement function.
 // ICS29 WriteAcknowledgement is used for asynchronous acknowledgements.
-func (keeper *Keeper) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, acknowledgement ibcexported.Acknowledgement) error {
-	return keeper.ICS4Wrapper.WriteAcknowledgement(ctx, chanCap, packet, acknowledgement)
+func (k *Keeper) WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet ibcexported.PacketI, acknowledgement ibcexported.Acknowledgement) error {
+	return k.ICS4Wrapper.WriteAcknowledgement(ctx, chanCap, packet, acknowledgement)
 }
 
 // WriteAcknowledgement wraps IBC ICS4Wrapper GetAppVersion function.
-func (keeper *Keeper) GetAppVersion(
+func (k *Keeper) GetAppVersion(
 	ctx sdk.Context,
 	portID,
 	channelID string,
 ) (string, bool) {
-	return keeper.ICS4Wrapper.GetAppVersion(ctx, portID, channelID)
+	return k.ICS4Wrapper.GetAppVersion(ctx, portID, channelID)
 }
 
-func (keeper *Keeper) OnAcknowledgementPacket(
+func (k *Keeper) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,
@@ -152,7 +158,7 @@ func (keeper *Keeper) OnAcknowledgementPacket(
 
 	switch ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Error:
-		return keeper.refundToken(ctx, packet, data)
+		return k.refundToken(ctx, packet, data)
 	default:
 		// the acknowledgement succeeded on the receiving chain so nothing
 		// needs to be executed and no error needs to be returned
@@ -160,7 +166,7 @@ func (keeper *Keeper) OnAcknowledgementPacket(
 	}
 }
 
-func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
+func (k Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, data transfertypes.FungibleTokenPacketData) error {
 	// parse the denomination from the full denom path
 	trace := transfertypes.ParseDenomTrace(data.Denom)
 	// parse the transfer amount
@@ -180,11 +186,11 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		// This case should never happened
 		return nil
 	}
-	nativeDenom := keeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
-	paraTokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+	nativeDenom := k.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
+	paraTokenInfo := k.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 
 	// only trigger if source channel is from parachain.
-	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {
+	if !k.hasParachainIBCTokenInfo(ctx, nativeDenom) {
 		return nil
 	}
 
@@ -192,16 +198,16 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		nativeToken := sdk.NewCoin(paraTokenInfo.NativeDenom, transferAmount)
 		// send IBC token to escrow address ibc token
 		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, paraTokenInfo.ChannelID)
-		if err := keeper.bankKeeper.SendCoins(ctx, sender, escrowAddress, sdk.NewCoins(token)); err != nil {
+		if err := k.bankKeeper.SendCoins(ctx, sender, escrowAddress, sdk.NewCoins(token)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from account to module despite previously minting coins to module account: %v", err))
 		}
 
 		// mint native token and send back to sender
-		if err := keeper.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(nativeToken)); err != nil {
+		if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(nativeToken)); err != nil {
 			return err
 		}
 
-		if err := keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(nativeToken)); err != nil {
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(nativeToken)); err != nil {
 			panic(fmt.Sprintf("unable to send coins from module to account despite previously minting coins to module account: %v", err))
 		}
 	}

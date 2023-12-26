@@ -1,15 +1,14 @@
 package gov
 
 import (
+	"github.com/notional-labs/composable/v6/bech32-migration/utils"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/cosmos/cosmos-sdk/x/gov/types"
-	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
-
-	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 )
 
 func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc codec.BinaryCodec) {
@@ -19,7 +18,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		vote := v1beta1.Vote{}
 		err := cdc.Unmarshal(bz, &vote)
 		if err != nil {
-			vote := v1.Vote{}
+			vote := govv1.Vote{}
 			cdc.MustUnmarshal(bz, &vote)
 			vote.Voter = utils.ConvertAccAddr(vote.Voter)
 			voteCount++
@@ -34,7 +33,7 @@ func MigrateAddressBech32(ctx sdk.Context, storeKey storetypes.StoreKey, cdc cod
 		deposit := v1beta1.Deposit{}
 		err := cdc.Unmarshal(bz, &deposit)
 		if err != nil {
-			vote := v1.Deposit{}
+			vote := govv1.Deposit{}
 			cdc.MustUnmarshal(bz, &vote)
 			deposit.Depositor = utils.ConvertAccAddr(deposit.Depositor)
 			depositCount++

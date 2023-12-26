@@ -1,21 +1,21 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/notional-labs/composable/v6/x/mint/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis new mint genesis
-func (keeper Keeper) InitGenesis(ctx sdk.Context, ak types.AccountKeeper, data *types.GenesisState) {
-	keeper.SetMinter(ctx, data.Minter)
+func (k Keeper) InitGenesis(ctx sdk.Context, ak types.AccountKeeper, data *types.GenesisState) {
+	k.SetMinter(ctx, data.Minter)
 
-	if err := keeper.SetParams(ctx, data.Params); err != nil {
+	if err := k.SetParams(ctx, data.Params); err != nil {
 		panic(err)
 	}
 
 	newCoins := sdk.NewCoins(data.IncentivesSupply)
-	if err := keeper.MintCoins(ctx, newCoins); err != nil {
+	if err := k.MintCoins(ctx, newCoins); err != nil {
 		panic(err)
 	}
 
@@ -23,10 +23,10 @@ func (keeper Keeper) InitGenesis(ctx sdk.Context, ak types.AccountKeeper, data *
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
-func (keeper Keeper) ExportGenesis(ctx sdk.Context, authKeeper types.AccountKeeper) *types.GenesisState {
-	minter := keeper.GetMinter(ctx)
-	params := keeper.GetParams(ctx)
+func (k Keeper) ExportGenesis(ctx sdk.Context, authKeeper types.AccountKeeper) *types.GenesisState {
+	minter := k.GetMinter(ctx)
+	params := k.GetParams(ctx)
 
-	remIncentives := keeper.bankKeeper.GetBalance(ctx, authKeeper.GetModuleAddress(types.ModuleName), params.MintDenom)
+	remIncentives := k.bankKeeper.GetBalance(ctx, authKeeper.GetModuleAddress(types.ModuleName), params.MintDenom)
 	return types.NewGenesisState(minter, params, remIncentives)
 }

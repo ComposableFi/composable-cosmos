@@ -2,14 +2,14 @@ package v4
 
 import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
-	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 	tfmdtypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
 func CreateUpgradeHandler(
@@ -28,7 +28,7 @@ func CreateUpgradeHandler(
 		var wasmdParams wasmtypes.Params
 		wasmdParams.CodeUploadAccess = wasmtypes.AccessConfig{Permission: wasmtypes.AccessTypeNobody}
 		wasmdParams.InstantiateDefaultPermission = wasmtypes.AccessTypeNobody
-		keepers.WasmKeeper.SetParams(ctx, wasmdParams)
+		keepers.WasmKeeper.SetParams(ctx, wasmdParams) //nolint:errcheck // TODO: handle error
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}

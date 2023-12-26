@@ -1,12 +1,13 @@
 package v5_1_0
 
 import (
-	"cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/notional-labs/composable/v6/app/keepers"
-	rateLimitKeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
 	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+
+	"cosmossdk.io/math"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const uosmo = "ibc/47BD209179859CDE4A2806763D7189B6E6FE13A17880FE2B42DE1E6C1E329E23"
@@ -19,7 +20,7 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	FixRateLimit(ctx, &keepers.RatelimitKeeper)
 }
 
-func FixRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
+func FixRateLimit(ctx sdk.Context, rlKeeper *ratelimitkeeper.Keeper) {
 	uosmoRateLimit, found := rlKeeper.GetRateLimit(ctx, uosmo, "channel-2")
 	if !found {
 		channelValue := rlKeeper.GetChannelValue(ctx, uosmo)
