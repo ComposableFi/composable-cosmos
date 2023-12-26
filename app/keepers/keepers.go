@@ -310,10 +310,16 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
+	authority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
-		appCodec, appKeepers.keys[icqtypes.StoreKey], appKeepers.GetSubspace(icqtypes.ModuleName),
-		appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper, &appKeepers.IBCKeeper.PortKeeper,
-		scopedICQKeeper, bApp,
+		appCodec,
+		appKeepers.keys[icqtypes.StoreKey],
+		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		scopedICQKeeper,
+		bApp.GRPCQueryRouter(),
+		authority,
 	)
 
 	icqIBCModule := icq.NewIBCModule(appKeepers.ICQKeeper)
