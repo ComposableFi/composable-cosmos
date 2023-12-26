@@ -13,6 +13,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.47.6
 	github.com/cosmos/gogoproto v1.4.10
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0
+	github.com/cosmos/ibc-apps/modules/async-icq/v7 v7.1.1
 	github.com/cosmos/ibc-go/v7 v7.3.1
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.3
@@ -21,7 +22,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/spf13/cast v1.5.1
 	github.com/spf13/cobra v1.7.0
-	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230413165143-a3b65ccdc897
 	github.com/stretchr/testify v1.8.4
 	github.com/terra-money/alliance v0.1.1-0.20230419080242-b29b0ec11186
 	golang.org/x/tools v0.6.0
