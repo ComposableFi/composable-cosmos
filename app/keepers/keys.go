@@ -1,11 +1,10 @@
 package keepers
 
 import (
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-
-	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
@@ -39,7 +38,6 @@ import (
 
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 
-	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
 
@@ -50,8 +48,12 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 	appKeepers.keys = sdk.NewKVStoreKeys(
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
-		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
+		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey,
+		consensusparamtypes.StoreKey, wasm08types.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey,
+		minttypes.StoreKey, wasmtypes.StoreKey,
+		ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey,
+		txBoundaryTypes.StoreKey,
 		authzkeeper.StoreKey,
 	)
 
