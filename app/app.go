@@ -14,9 +14,9 @@ import (
 	"github.com/notional-labs/composable/v6/app/ante"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
-	version4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
-	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
-	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
+	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
+	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
@@ -117,15 +117,7 @@ const (
 )
 
 var (
-	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
-	// If EnabledSpecificProposals is "", and this is not "true", then disable all x/wasm proposals.
-	ProposalsEnabled = "false"
-	// If set to non-empty string it must be comma-separated list of values that are all a subset
-	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
-	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
-	EnableSpecificProposals = ""
-
-	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
