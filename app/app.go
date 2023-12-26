@@ -14,9 +14,9 @@ import (
 	"github.com/notional-labs/composable/v6/app/ante"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
-	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
-	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
-	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	version4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
+	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
+	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
@@ -117,7 +117,7 @@ const (
 )
 
 var (
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
+	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
