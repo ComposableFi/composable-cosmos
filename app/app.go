@@ -40,6 +40,7 @@ import (
 	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
 	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
+	v8 "github.com/notional-labs/composable/v6/app/upgrades/v8"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
@@ -144,7 +145,7 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade}
+	Upgrades = []upgrades.Upgrade{v4.Upgrade, v5.Upgrade, v6.Upgrade, v8.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
