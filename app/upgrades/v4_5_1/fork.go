@@ -1,10 +1,10 @@
 package v4_5_1
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/notional-labs/composable/v6/app/keepers"
-	rateLimitKeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
@@ -15,7 +15,7 @@ func RunForkLogic(ctx sdk.Context, keepers *keepers.AppKeepers) {
 	RemoveRateLimit(ctx, &keepers.RatelimitKeeper)
 }
 
-func RemoveRateLimit(ctx sdk.Context, rlKeeper *rateLimitKeeper.Keeper) {
+func RemoveRateLimit(ctx sdk.Context, rlKeeper *ratelimitkeeper.Keeper) {
 	// Get all current rate limit
 	rateLimits := rlKeeper.GetAllRateLimits(ctx)
 	// Remove Rate limit

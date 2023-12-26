@@ -3,11 +3,12 @@ package cli
 import (
 	"strconv"
 
+	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
-	"github.com/spf13/cobra"
 )
 
 // GetTxCmd returns the tx commands for tx-boundary

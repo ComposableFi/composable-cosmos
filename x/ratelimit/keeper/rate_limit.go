@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 // Get the rate limit byte key built from the denom and channelID
@@ -42,7 +43,7 @@ func EmitTransferDeniedEvent(ctx sdk.Context, reason, denom, channelID string, d
 }
 
 // Adds an amount to the flow in either the SEND or RECV direction
-func (k Keeper) UpdateFlow(_ sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
+func (Keeper) UpdateFlow(_ sdk.Context, rateLimit types.RateLimit, direction types.PacketDirection, amount math.Int) error {
 	switch direction {
 	case types.PACKET_SEND:
 		return rateLimit.Flow.AddOutflow(amount, *rateLimit.Quota, rateLimit.MinRateLimitAmount)

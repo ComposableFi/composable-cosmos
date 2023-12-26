@@ -1,16 +1,19 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // TODO: add init genesis logic
 // InitGenesis initializes the transfermiddleware module's state from a provided genesis state.
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	for _, tokenInfo := range genState.TokenInfos {
-		k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelID, tokenInfo.NativeDenom, tokenInfo.AssetId)
+		err := k.AddParachainIBCInfo(ctx, tokenInfo.IbcDenom, tokenInfo.ChannelID, tokenInfo.NativeDenom, tokenInfo.AssetId)
+		if err != nil {
+			panic(err) // TODO: propagate error up the stack
+		}
 	}
 	k.SetParams(ctx, genState.Params)
 }

@@ -1,46 +1,37 @@
 package keepers
 
 import (
+	"github.com/CosmWasm/wasmd/x/wasm"
+	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
+	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
+	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
+	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
+
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-
-	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/cosmos/cosmos-sdk/x/group"
-
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
-
-	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
-	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
-
-	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
-	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
-	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
-	txBoundaryTypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
-
-	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
-
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
-
-	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
 
@@ -52,7 +43,8 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authtypes.StoreKey, banktypes.StoreKey, stakingtypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
-		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
+		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey,
+		alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txboundarytypes.StoreKey,
 		authzkeeper.StoreKey,
 	)
 

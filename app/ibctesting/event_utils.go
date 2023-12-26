@@ -5,8 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	abci "github.com/cometbft/cometbft/abci/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	abci "github.com/cometbft/cometbft/abci/types"
+
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 )
@@ -43,7 +45,7 @@ func getAckPackets(evts []abci.Event) []PacketAck {
 //	for _, attr := range evt.Attributes {
 //		fmt.Printf("  %s = %s\n", string(attr.Key), string(attr.Value))
 //	}
-//}
+// }
 
 func parsePacketFromEvent(evt abci.Event) channeltypes.Packet {
 	return channeltypes.Packet{

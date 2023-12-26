@@ -3,11 +3,13 @@ package keeper
 import (
 	"context"
 
+	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkquery "github.com/cosmos/cosmos-sdk/types/query"
+
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 func (k Keeper) ParaTokenInfo(c context.Context, req *types.QueryParaTokenInfoRequest) (*types.QueryParaTokenInfoResponse, error) {
@@ -22,7 +24,7 @@ func (k Keeper) ParaTokenInfo(c context.Context, req *types.QueryParaTokenInfoRe
 	}, nil
 }
 
-func (k Keeper) EscrowAddress(_ context.Context, req *types.QueryEscrowAddressRequest) (*types.QueryEscrowAddressResponse, error) {
+func (Keeper) EscrowAddress(_ context.Context, req *types.QueryEscrowAddressRequest) (*types.QueryEscrowAddressResponse, error) {
 	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, req.ChannelID)
 
 	return &types.QueryEscrowAddressResponse{

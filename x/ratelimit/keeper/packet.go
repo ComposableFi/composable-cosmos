@@ -4,17 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/notional-labs/composable/v6/x/ratelimit/types"
+
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+
 	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-
-	"github.com/notional-labs/composable/v6/x/ratelimit/types"
 )
 
 type RateLimitedPacketInfo struct {
@@ -35,7 +37,7 @@ type RateLimitedPacketInfo struct {
 //
 // For NATIVE denoms, return as is (e.g. ustrd)
 // For NON-NATIVE denoms, take the ibc hash (e.g. hash "transfer/channel-2/usoms" into "ibc/...")
-func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacketData) (denom string) {
 	// Determine the denom by looking at the denom trace path
 	denomTrace := transfertypes.ParseDenomTrace(packet.Denom)
 
@@ -82,7 +84,7 @@ func (k Keeper) ParseDenomFromSendPacket(packet transfertypes.FungibleTokenPacke
 //	       Packet Denom:      transfer/channel-X/transfer/channel-Z/ujuno
 //	        -> Remove Prefix: transfer/channel-Z/ujuno
 //	        -> Hash:          ibc/...
-func (k Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
+func (Keeper) ParseDenomFromRecvPacket(packet channeltypes.Packet, packetData transfertypes.FungibleTokenPacketData) (denom string) {
 	// To determine the denom, first check whether Stride is acting as source
 	if transfertypes.ReceiverChainIsSource(packet.GetSourcePort(), packet.GetSourceChannel(), packetData.Denom) {
 		// Remove the source prefix (e.g. transfer/channel-X/transfer/channel-Z/ujuno -> transfer/channel-Z/ujuno)

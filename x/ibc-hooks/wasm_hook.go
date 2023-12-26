@@ -6,17 +6,18 @@ import (
 
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
-	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
-	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-
 	"github.com/notional-labs/composable/v6/x/ibc-hooks/keeper"
 	"github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 
 	errorsmod "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
+	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 )
 
 type ContractAck struct {
@@ -132,12 +133,12 @@ func (h WasmHooks) SendPacketOverride(
 	timeoutTimestamp uint64,
 	data []byte,
 ) (sequence uint64, err error) {
-	isIcs20, Ics20PacketData := isIcs20Packet(data)
+	isIcs20, ics20PacketData := isIcs20Packet(data)
 	if !isIcs20 {
 		return i.channel.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data) // continue
 	}
 
-	isCallbackRouted, metadata := jsonStringHasKey(Ics20PacketData.GetMemo(), types.IBCCallbackKey)
+	isCallbackRouted, metadata := jsonStringHasKey(ics20PacketData.GetMemo(), types.IBCCallbackKey)
 	if !isCallbackRouted {
 		return i.channel.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data) // continue
 	}
@@ -156,11 +157,11 @@ func (h WasmHooks) SendPacketOverride(
 	}
 	stringMetadata := string(bzMetadata)
 	if stringMetadata == "{}" {
-		Ics20PacketData.Memo = ""
+		ics20PacketData.Memo = ""
 	} else {
-		Ics20PacketData.Memo = stringMetadata
+		ics20PacketData.Memo = stringMetadata
 	}
-	dataBytes, err := json.Marshal(Ics20PacketData)
+	dataBytes, err := json.Marshal(ics20PacketData)
 	if err != nil {
 		return 0, errorsmod.Wrap(err, "Send packet with callback error")
 	}

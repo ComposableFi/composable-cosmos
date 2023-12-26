@@ -5,8 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/notional-labs/composable/v6/x/mint/client/cli"
+	"github.com/notional-labs/composable/v6/x/mint/keeper"
+	"github.com/notional-labs/composable/v6/x/mint/simulation"
+	"github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -16,10 +19,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/notional-labs/composable/v6/x/mint/client/cli"
-	"github.com/notional-labs/composable/v6/x/mint/keeper"
-	"github.com/notional-labs/composable/v6/x/mint/simulation"
-	"github.com/notional-labs/composable/v6/x/mint/types"
+	abci "github.com/cometbft/cometbft/abci/types"
 )
 
 var (
@@ -46,7 +46,7 @@ func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 }
 
 // RegisterInterfaces registers the module interface
-func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
+func (AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(reg)
 }
 
@@ -115,7 +115,7 @@ func (AppModule) Name() string {
 }
 
 // RegisterInvariants registers the mint module invariants.
-func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
+func (AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
 // RegisterServices registers a gRPC query service to respond to the
 // module-specific gRPC queries.

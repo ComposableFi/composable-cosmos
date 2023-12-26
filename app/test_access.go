@@ -4,6 +4,9 @@ import (
 	"testing"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
+	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
+	tfmdkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -12,12 +15,10 @@ import (
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasm08 "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-
-	ratelimitkeeper "github.com/notional-labs/composable/v6/x/ratelimit/keeper"
-	tfmdKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
 )
 
 type TestSupport struct {
@@ -82,7 +83,7 @@ func (s TestSupport) GetTxConfig() client.TxConfig {
 	return s.app.GetTxConfig()
 }
 
-func (s TestSupport) TransferMiddleware() tfmdKeeper.Keeper {
+func (s TestSupport) TransferMiddleware() tfmdkeeper.Keeper {
 	return s.app.TransferMiddlewareKeeper
 }
 

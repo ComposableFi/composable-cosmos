@@ -1,18 +1,19 @@
 package ante
 
 import (
-	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
-	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	tfmwkeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
+	txboundaryante "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
+	txboundarykeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ante "github.com/cosmos/cosmos-sdk/x/auth/ante"
+	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	tfmwKeeper "github.com/notional-labs/composable/v6/x/transfermiddleware/keeper"
-	txBoundaryAnte "github.com/notional-labs/composable/v6/x/tx-boundary/ante"
-	txBoundaryKeeper "github.com/notional-labs/composable/v6/x/tx-boundary/keeper"
+
+	ibcante "github.com/cosmos/ibc-go/v7/modules/core/ante"
+	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 )
 
 // Link to default ante handler used by cosmos sdk:
@@ -26,8 +27,8 @@ func NewAnteHandler(
 	sigGasConsumer ante.SignatureVerificationGasConsumer,
 	signModeHandler signing.SignModeHandler,
 	channelKeeper *ibckeeper.Keeper,
-	tfmwKeeper tfmwKeeper.Keeper,
-	txBoundaryKeeper txBoundaryKeeper.Keeper,
+	tfmwKeeper tfmwkeeper.Keeper,
+	txBoundaryKeeper txboundarykeeper.Keeper,
 	codec codec.BinaryCodec,
 ) sdk.AnteHandler {
 	return sdk.ChainAnteDecorators(
@@ -39,7 +40,7 @@ func NewAnteHandler(
 		ante.NewValidateMemoDecorator(ak),
 		ante.NewConsumeGasForTxSizeDecorator(ak),
 		NewIBCPermissionDecorator(codec, tfmwKeeper),
-		txBoundaryAnte.NewStakingPermissionDecorator(codec, txBoundaryKeeper),
+		txboundaryante.NewStakingPermissionDecorator(codec, txBoundaryKeeper),
 		ante.NewSetPubKeyDecorator(ak), // SetPubKeyDecorator must be called before all signature verification decorators
 		ante.NewValidateSigCountDecorator(ak),
 		ante.NewSigGasConsumeDecorator(ak, sigGasConsumer),

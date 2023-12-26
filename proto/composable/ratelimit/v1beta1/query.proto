@@ -50,7 +50,9 @@ message QueryRateLimitsByChainIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryRateLimitsByChannelIDRequest { string ChannelID = 1 [ (gogoproto.customname) = "ChannelID" ]; }
+message QueryRateLimitsByChannelIDRequest {
+  string ChannelID = 1 [ (gogoproto.customname) = "ChannelID" ];
+}
 message QueryRateLimitsByChannelIDResponse {
   repeated RateLimit rate_limits = 1 [ (gogoproto.nullable) = false ];
 }

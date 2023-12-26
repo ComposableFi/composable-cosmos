@@ -1,16 +1,22 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
 // state.
 func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
-	k.SetDelegateBoundary(ctx, genState.DelegateBoundary)
-	k.SetRedelegateBoundary(ctx, genState.RedelegateBoundary)
+	err := k.SetDelegateBoundary(ctx, genState.DelegateBoundary)
+	if err != nil {
+		panic(err) // todo: handle error
+	}
+	err = k.SetRedelegateBoundary(ctx, genState.RedelegateBoundary)
+	if err != nil {
+		panic(err) // todo: handle error
+	}
 }
 
 // ExportGenesis returns the capability module's exported genesis.

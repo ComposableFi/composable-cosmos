@@ -4,13 +4,14 @@ import (
 	"testing"
 	"time"
 
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/suite"
-
 	"github.com/notional-labs/composable/v6/app"
 	"github.com/notional-labs/composable/v6/app/helpers"
 	"github.com/notional-labs/composable/v6/x/tx-boundary/types"
+	"github.com/stretchr/testify/suite"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 )
 
 type KeeperTestSuite struct {
@@ -94,10 +95,11 @@ func (suite *KeeperTestSuite) TestSetDelegateBoundary() {
 }
 
 func (suite *KeeperTestSuite) TestSetRedelegateBoundary() {
-	suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, types.Boundary{
+	err := suite.app.TxBoundaryKeepper.SetRedelegateBoundary(suite.ctx, types.Boundary{
 		TxLimit:             10,
 		BlocksPerGeneration: 5,
 	})
+	suite.NoError(err)
 
 	for _, tc := range []struct {
 		desc             string

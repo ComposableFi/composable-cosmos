@@ -3,9 +3,13 @@ package antetest
 import (
 	"time"
 
+	"github.com/notional-labs/composable/v6/app"
+	"github.com/notional-labs/composable/v6/app/helpers"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+
 	"cosmossdk.io/math"
-	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	tmtypes "github.com/cometbft/cometbft/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -16,16 +20,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	xauthsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	tmtypes "github.com/cometbft/cometbft/types"
+
 	"github.com/cosmos/ibc-go/v7/testing/mock"
-	"github.com/notional-labs/composable/v6/app"
-	"github.com/notional-labs/composable/v6/app/helpers"
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
 )
 
 var BaseBalance = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(10000000000)))
 
-type AnteTestSuite struct {
+type Suite struct {
 	suite.Suite
 
 	ctx sdk.Context
@@ -38,10 +42,11 @@ type AnteTestSuite struct {
 	newvalidators []stakingtypes.Validator
 }
 
-func (suite *AnteTestSuite) SetupTest() {
-	suite.app, suite.delegator, suite.validators = helpers.SetupComposableAppWithValSetWithGenAccout(suite.T())
-	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
-	app.FundAccount(suite.app.BankKeeper, suite.ctx, suite.delegator, BaseBalance)
+func (s *Suite) SetupTest() {
+	s.app, s.delegator, s.validators = helpers.SetupComposableAppWithValSetWithGenAccout(s.T())
+	s.ctx = s.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
+	err := app.FundAccount(s.app.BankKeeper, s.ctx, s.delegator, BaseBalance)
+	require.NoError(s.T(), err)
 
 	encodingConfig := app.MakeEncodingConfig()
 	encodingConfig.Amino.RegisterConcrete(&testdata.TestMsg{}, "testdata.TestMsg", nil)
@@ -49,7 +54,7 @@ func (suite *AnteTestSuite) SetupTest() {
 
 	privVal := mock.NewPV()
 	pubKey, err := privVal.GetPubKey()
-	require.NoError(suite.T(), err)
+	require.NoError(s.T(), err)
 	// create validator set with single validator
 	validator := tmtypes.NewValidator(pubKey, 1)
 	valSet := tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
@@ -73,12 +78,12 @@ func (suite *AnteTestSuite) SetupTest() {
 		}
 		validators = append(validators, validator)
 	}
-	suite.newvalidators = validators
+	s.newvalidators = validators
 
-	suite.clientCtx = client.Context{}.WithTxConfig(encodingConfig.TxConfig)
+	s.clientCtx = client.Context{}.WithTxConfig(encodingConfig.TxConfig)
 }
 
-func (s *AnteTestSuite) CreateTestTx(privs []cryptotypes.PrivKey, accNums, accSeqs []uint64, chainID string) (xauthsigning.Tx, error) {
+func (s *Suite) CreateTestTx(privs []cryptotypes.PrivKey, accNums, accSeqs []uint64, chainID string) (xauthsigning.Tx, error) {
 	var sigsV2 []signing.SignatureV2
 	for i, priv := range privs {
 		sigV2 := signing.SignatureV2{

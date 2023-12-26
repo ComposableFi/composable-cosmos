@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/notional-labs/composable/v6/x/mint/simulation"
+	composableminttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/cosmos/cosmos-sdk/types/module/testutil"
-
-	"github.com/notional-labs/composable/v6/x/mint/simulation"
-	composableminttypes "github.com/notional-labs/composable/v6/x/mint/types"
 )
 
 func TestDecodeStore(t *testing.T) {
