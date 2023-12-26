@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
@@ -118,34 +117,9 @@ const (
 )
 
 var (
-	// If EnabledSpecificProposals is "", and this is "true", then enable all x/wasm proposals.
-	// If EnabledSpecificProposals is "", and this is not "true", then disable all x/wasm proposals.
-	ProposalsEnabled = "false"
-	// If set to non-empty string it must be comma-separated list of values that are all a subset
-	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
-	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
-	EnableSpecificProposals = ""
-
 	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
-
-// GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
-// produce a list of enabled proposals to pass into wasmd app.
-func GetEnabledProposals() []wasm.ProposalType {
-	if EnableSpecificProposals == "" {
-		if ProposalsEnabled == "true" {
-			return wasm.EnableAllProposals
-		}
-		return wasm.DisableAllProposals
-	}
-	chunks := strings.Split(EnableSpecificProposals, ",")
-	proposals, err := wasm.ConvertToProposals(chunks)
-	if err != nil {
-		panic(err)
-	}
-	return proposals
-}
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
 
@@ -266,16 +240,15 @@ func NewComposableApp(
 	db dbm.DB,
 	traceStore io.Writer,
 	loadLatest bool,
-	enabledProposals []wasm.ProposalType,
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
-	wasmOpts []wasm.Option,
+	wasmOpts []wasmkeeper.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *ComposableApp {
-	appCodec := encodingConfig.Marshaler
+	appCodec := encodingConfig.Codec
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
@@ -312,7 +285,6 @@ func NewComposableApp(
 		homePath,
 		appOpts,
 		wasmOpts,
-		enabledProposals,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
@@ -436,7 +408,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
+		wasmtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
 	)
 
@@ -474,7 +446,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
+		wasmtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)

@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
 	routerkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
@@ -81,7 +83,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
 	wasmclientkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	wasmclienttypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
 
 const (
@@ -115,8 +117,8 @@ type AppKeepers struct {
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	AuthzKeeper      authzkeeper.Keeper
 	GroupKeeper      groupkeeper.Keeper
-	Wasm08Keeper     wasmclientkeeper.Keeper // TODO: use this name ?
-	WasmKeeper       wasm.Keeper
+	Wasm08Keeper     wasmclientkeeper.Keeper
+	WasmKeeper       wasmkeeper.Keeper
 	IBCHooksKeeper   *ibchookskeeper.Keeper
 	Ics20WasmHooks   *ibchooks.WasmHooks
 	HooksICS4Wrapper ibchooks.ICS4Middleware
@@ -145,8 +147,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	appOpts servertypes.AppOptions,
-	wasmOpts []wasm.Option,
-	enabledProposals []wasm.ProposalType,
+	wasmOpts []wasmkeeper.Option,
 ) {
 	// add keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -225,7 +226,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeper(appCodec, appKeepers.keys[wasmclienttypes.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
+
+	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeper(appCodec, appKeepers.keys[wasm08types.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -348,9 +351,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
 	availableCapabilities := strings.Join(AllCapabilities(), ",")
-	appKeepers.WasmKeeper = wasm.NewKeeper(
+	appKeepers.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[wasm.StoreKey],
+		appKeepers.keys[wasmtypes.StoreKey],
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.StakingKeeper,
@@ -380,11 +383,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper)).
 		AddRoute(alliancemoduletypes.RouterKey, alliancemodule.NewAllianceProposalHandler(appKeepers.AllianceKeeper))
 
-	// The gov proposal types can be individually enabled
-	if len(enabledProposals) != 0 {
-		govRouter.AddRoute(wasm.RouterKey, wasm.NewWasmProposalHandler(appKeepers.WasmKeeper, enabledProposals))
-	}
-
 	govKeeper := *govkeeper.NewKeeper(
 		appCodec, appKeepers.keys[govtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
 		appKeepers.StakingKeeper, bApp.MsgServiceRouter(), govtypes.DefaultConfig(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
@@ -401,7 +399,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, hooksTransferMiddleware)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
-	ibcRouter.AddRoute(wasm.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
+	ibcRouter.AddRoute(wasmtypes.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
 
 	// this line is used by starport scaffolding # ibc/app/router
@@ -428,7 +426,7 @@ func (appKeepers *AppKeepers) InitSpecialKeepers(
 	// grant capabilities for the ibc and ibc-transfer modules
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasm.ModuleName)
+	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasmtypes.ModuleName)
 	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	appKeepers.ScopedRateLimitKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ratelimitmoduletypes.ModuleName)
 
@@ -454,7 +452,7 @@ func (*AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *cod
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(alliancemoduletypes.ModuleName)
-	paramsKeeper.Subspace(wasm.ModuleName)
+	paramsKeeper.Subspace(wasmtypes.ModuleName)
 	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
 
 	return paramsKeeper

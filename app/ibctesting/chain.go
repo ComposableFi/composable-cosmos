@@ -3,6 +3,7 @@ package ibctesting
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"testing"
@@ -652,7 +653,7 @@ func (chain *TestChain) StoreContractCode(suite *suite.Suite, path string) {
 	wasmCode, err := os.ReadFile(path)
 	suite.Require().NoError(err)
 
-	src := wasmtypes.StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) { //nolint: staticcheck
+	src := StoreCodeProposalFixture(func(p *wasmtypes.StoreCodeProposal) { //nolint: staticcheck
 		p.RunAs = govModuleAddress.String()
 		p.WASMByteCode = wasmCode
 		checksum := sha256.Sum256(wasmCode)
@@ -761,4 +762,28 @@ func (a TestingAppDecorator) GetWasmdKeeper() wasm.Keeper {
 
 func (a TestingAppDecorator) GetWasmKeeper() wasm08.Keeper {
 	return a.TestSupport().Wasm08Keeper()
+}
+
+func StoreCodeProposalFixture(mutators ...func(*wasmtypes.StoreCodeProposal)) *wasmtypes.StoreCodeProposal {
+	const anyAddress = "cosmos1qyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqs2m6sx4"
+	wasm := []byte{0x0}
+	// got the value from shell sha256sum
+	codeHash, err := hex.DecodeString("6E340B9CFFB37A989CA544E6BB780A2C78901D3FB33738768511A30617AFA01D")
+	if err != nil {
+		panic(err)
+	}
+
+	p := &wasmtypes.StoreCodeProposal{
+		Title:        "Foo",
+		Description:  "Bar",
+		RunAs:        anyAddress,
+		WASMByteCode: wasm,
+		Source:       "https://example.com/",
+		Builder:      "cosmwasm/workspace-optimizer:v0.12.8",
+		CodeHash:     codeHash,
+	}
+	for _, m := range mutators {
+		m(p)
+	}
+	return p
 }
