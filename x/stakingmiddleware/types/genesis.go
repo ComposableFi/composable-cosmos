@@ -10,7 +10,7 @@ func NewGenesisState(params Params) *GenesisState {
 // DefaultGenesisState creates a default GenesisState object
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
-		Params: Params{BlocksPerEpoch: 10, AllowUnbondAfterEpochProgressBlockNumber: 7},
+		Params: Params{BlocksPerEpoch: 10},
 	}
 }
 

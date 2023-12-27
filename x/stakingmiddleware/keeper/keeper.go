@@ -50,11 +50,6 @@ func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 			"BlocksPerEpoch must be greater than or equal to 5",
 		)
 	}
-	if p.AllowUnbondAfterEpochProgressBlockNumber > p.BlocksPerEpoch {
-		return fmt.Errorf(
-			"AllowUnbondAfterEpochProgressBlockNumber must be less than or equal to BlocksPerEpoch",
-		)
-	}
 
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&p)
