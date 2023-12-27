@@ -3,12 +3,12 @@ package keepers
 import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 	txboundarytypes "github.com/notional-labs/composable/v6/x/tx-boundary/types"
-	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
 	alliancemoduletypes "github.com/terra-money/alliance/x/alliance/types"
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
