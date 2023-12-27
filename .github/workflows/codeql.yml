@@ -30,9 +30,11 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: "go"
+
           # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
           # Learn more about CodeQL language support at https://git.io/codeql-language-support
-          queries: crypto-com/cosmos-sdk-codeql@main,security-and-quality
+          queries: crypto-com/cosmos-sdk-codeql@main,security-and-quality,github/codeql/go/ql/src/experimental/InconsistentCode/DeferInLoop.ql@main,github/codeql/go/ql/src/experimental/Unsafe/WrongUsageOfUnsafe.ql@main,github/codeql/go/ql/src/experimental/CWE-369/DivideByZero.ql@main
+
           
       - name: Build
         run: make build
