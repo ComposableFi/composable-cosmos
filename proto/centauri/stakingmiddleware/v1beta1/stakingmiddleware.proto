@@ -75,5 +75,7 @@ message CancelUnbondingDelegation {
 message Params {
   // expected blocks per year
   uint64 blocks_per_epoch = 1;
+  // max block allowed before validator set update
+  uint64 allow_unbond_after_epoch_progress_block_number = 2;
 }
 
