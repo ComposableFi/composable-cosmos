@@ -2,15 +2,13 @@ name: "CodeQL"
 
 on:
   pull_request:
-    paths:
-      - "**.go"
-  push:
-    # The branches below must be a subset of the branches above
     branches:
-      - main
+      - master
       - release/**
-    paths:
-      - "**.go"
+  push:
+    branches:
+      - master
+      - release/**
 
 jobs:
   analyze:
@@ -23,21 +21,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+        uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: 1.19
+          go-version: "1.21"
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: "go"
+
           # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
           # Learn more about CodeQL language support at https://git.io/codeql-language-support
-          queries: crypto-com/cosmos-sdk-codeql@main,security-and-quality
+          queries: crypto-com/cosmos-sdk-codeql@main,security-and-quality,github/codeql/go/ql/src/experimental/InconsistentCode/DeferInLoop.ql@main,github/codeql/go/ql/src/experimental/Unsafe/WrongUsageOfUnsafe.ql@main,github/codeql/go/ql/src/experimental/CWE-369/DivideByZero.ql@main
+
           
       - name: Build
         run: make build
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
