@@ -9,7 +9,7 @@ KEYRING="test"
 command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
 
 # remove existing daemon
-rm -rf ~/.centauri*
+rm -rf ~/.banksy*
 
 ~/go/bin/centaurid config keyring-backend $KEYRING
 ~/go/bin/centaurid config chain-id $CHAINID
