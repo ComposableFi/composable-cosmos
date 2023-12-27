@@ -205,6 +205,7 @@ var (
 		transfermiddlewaretypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		ibctransfertypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:                nil,
+		icqtypes.ModuleName:                nil,
 	}
 )
 
