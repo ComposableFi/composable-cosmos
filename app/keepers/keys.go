@@ -4,7 +4,7 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
-	ibchookstypes "github.com/cosmos/ibc-apps/v7/modules/ibc-hooks/types"
+	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"

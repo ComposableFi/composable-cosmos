@@ -13,6 +13,7 @@ require (
 	github.com/cosmos/gogoproto v1.4.10
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0
 	github.com/cosmos/ibc-apps/modules/async-icq/v7 v7.1.1
+	github.com/cosmos/ibc-apps/modules/ibc-hooks/v7 v7.0.0-20231212181537-128259979a8d
 	github.com/cosmos/ibc-go/v7 v7.3.1
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.3

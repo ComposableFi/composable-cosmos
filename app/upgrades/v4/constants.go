@@ -2,7 +2,7 @@ package v4
 
 import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	ibchookstypes "github.com/cosmos/ibc-apps/v7/modules/ibc-hooks/types"
+	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 	ratelimitmoduletypes "github.com/notional-labs/composable/v6/x/ratelimit/types"
 
