@@ -10,10 +10,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	wasmkeeper "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/keeper"
+	wasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
-	wasmkeeper "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/keeper"
-	wasmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
 )
 
 var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
@@ -55,11 +55,11 @@ func (suite *TransferTestSuite) SetupTest() {
 
 	suite.wasmKeeper = suite.chainB.GetTestSupport().Wasm08Keeper()
 
-	msg := wasmtypes.NewMsgPushNewWasmCode(govAuthorityAddress, wasmContract)
-	response, err := suite.wasmKeeper.PushNewWasmCode(suite.ctx, msg)
+	msg := wasmtypes.NewMsgStoreCode(govAuthorityAddress, wasmContract)
+	response, err := suite.wasmKeeper.StoreCode(suite.ctx, msg)
 	suite.Require().NoError(err)
-	suite.Require().NotNil(response.CodeId)
-	suite.coordinator.CodeID = response.CodeId
+	suite.Require().NotNil(response.Checksum)
+	suite.coordinator.CodeID = response.Checksum
 }
 
 func TestTransferTestSuite(t *testing.T) {
