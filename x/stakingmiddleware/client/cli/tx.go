@@ -7,7 +7,7 @@ import (
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
-// GetTxCmd returns the tx commands for mint
+// GetTxCmd returns the tx commands for staking middleware module.
 func GetTxCmd() *cobra.Command {
 	txCmd := &cobra.Command{
 		Use:                        types.ModuleName,

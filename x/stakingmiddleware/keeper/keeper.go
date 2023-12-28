@@ -33,7 +33,7 @@ func NewKeeper(
 	}
 }
 
-// GetAuthority returns the x/mint module's authority.
+// GetAuthority returns the x/stakingmiddleware module's authority.
 func (k Keeper) GetAuthority() string {
 	return k.authority
 }
@@ -43,7 +43,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+types.ModuleName)
 }
 
-// SetParams sets the x/mint module parameters.
+// SetParams sets the x/stakingmiddleware module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	if p.BlocksPerEpoch < 5 {
 		return fmt.Errorf(
@@ -63,7 +63,7 @@ func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	return nil
 }
 
-// GetParams returns the current x/mint module parameters.
+// GetParams returns the current x/stakingmiddleware module parameters.
 func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.ParamsKey)
