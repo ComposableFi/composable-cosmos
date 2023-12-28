@@ -10,7 +10,7 @@ import (
 
 // GetQueryCmd returns the cli query commands for the staking middleware module.
 func GetQueryCmd() *cobra.Command {
-	mintingQueryCmd := &cobra.Command{
+	stakingMiddlewareParamsQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      "Querying commands for the staking middleware module",
 		DisableFlagParsing:         true,
@@ -18,19 +18,19 @@ func GetQueryCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	mintingQueryCmd.AddCommand(
+	stakingMiddlewareParamsQueryCmd.AddCommand(
 		GetCmdQueryParams(),
 	)
 
-	return mintingQueryCmd
+	return stakingMiddlewareParamsQueryCmd
 }
 
-// GetCmdQueryParams implements a command to return the current minting
+// GetCmdQueryParams implements a command to return the current staking middleware's params
 // parameters.
 func GetCmdQueryParams() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "params",
-		Short: "Query the current minting parameters",
+		Short: "Query the current staking middleware parameters",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

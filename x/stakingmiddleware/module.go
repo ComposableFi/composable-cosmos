@@ -16,7 +16,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/notional-labs/composable/v6/x/mint/simulation"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/client/cli"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
@@ -28,19 +27,19 @@ var (
 	_ module.AppModuleSimulation = AppModule{}
 )
 
-// AppModuleBasic defines the basic application module used by the mint module.
+// AppModuleBasic defines the basic application module used by the staking middleware module.
 type AppModuleBasic struct {
 	cdc codec.Codec
 }
 
 var _ module.AppModuleBasic = AppModuleBasic{}
 
-// Name returns the mint module's name.
+// Name returns the staking middleware module's name.
 func (AppModuleBasic) Name() string {
 	return types.ModuleName
 }
 
-// RegisterLegacyAminoCodec registers the mint module's types on the given LegacyAmino codec.
+// RegisterLegacyAminoCodec registers the staking middleware module's types on the given LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	types.RegisterLegacyAminoCodec(cdc)
 }
@@ -50,13 +49,13 @@ func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(reg)
 }
 
-// DefaultGenesis returns default genesis state as raw bytes for the mint
+// DefaultGenesis returns default genesis state as raw bytes for the staking middleware
 // module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesisState())
 }
 
-// ValidateGenesis performs genesis state validation for the mint module.
+// ValidateGenesis performs genesis state validation for the staking middleware module.
 func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingConfig, bz json.RawMessage) error {
 	var data types.GenesisState
 	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
@@ -66,24 +65,24 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingCo
 	return types.ValidateGenesis(data)
 }
 
-// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the mint module.
+// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the staking middleware module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
 
-// GetTxCmd returns no root tx command for the mint module.
+// GetTxCmd returns no root tx command for the staking middleware module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
 	return cli.GetTxCmd()
 }
 
-// GetQueryCmd returns the root query command for the mint module.
+// GetQueryCmd returns the root query command for the staking middleware module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 	return cli.GetQueryCmd()
 }
 
-// AppModule implements an application module for the mint module.
+// AppModule implements an application module for the staking middleware module.
 type AppModule struct {
 	AppModuleBasic
 
@@ -99,12 +98,12 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper) AppModule {
 	}
 }
 
-// Name returns the mint module's name.
+// Name returns the staking middleware module's name.
 func (AppModule) Name() string {
 	return types.ModuleName
 }
 
-// RegisterInvariants registers the mint module invariants.
+// RegisterInvariants registers the staking middleware module invariants.
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
 // RegisterServices registers a gRPC query service to respond to the
@@ -114,7 +113,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 }
 
-// InitGenesis performs genesis initialization for the mint module. It returns
+// InitGenesis performs genesis initialization for the staking middleware module. It returns
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
 	var genesisState types.GenesisState
@@ -124,7 +123,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 	return []abci.ValidatorUpdate{}
 }
 
-// ExportGenesis returns the exported genesis state as raw bytes for the mint
+// ExportGenesis returns the exported genesis state as raw bytes for the staking middleware
 // module.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
 	gs := am.keeper.ExportGenesis(ctx)
@@ -134,28 +133,24 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 // ConsensusVersion implements AppModule/ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 { return 1 }
 
-// BeginBlock returns the begin blocker for the mint module.
+// BeginBlock returns the begin blocker for the staking middleware module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	// BeginBlocker(ctx, am.keeper) ???
 }
 
 // AppModuleSimulation functions
-// GenerateGenesisState creates a randomized GenState of the mint module.
-func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	simulation.RandomizedGenState(simState)
-}
+// GenerateGenesisState creates a randomized GenState of the staking middleware module.
+func (AppModule) GenerateGenesisState(simState *module.SimulationState) {}
 
 // ProposalContents doesn't return any content functions for governance proposals.
 func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedProposalMsg {
 	return nil
 }
 
-// RegisterStoreDecoder registers a decoder for mint module's types.
-func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
-	sdr[types.StoreKey] = simulation.NewDecodeStore(am.cdc)
-}
+// RegisterStoreDecoder registers a decoder for staking middleware module's types.
+func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
-// WeightedOperations doesn't return any mint module operation.
+// WeightedOperations doesn't return any staking middleware module operation.
 func (AppModule) WeightedOperations(_ module.SimulationState) []simtypes.WeightedOperation {
 	return nil
 }
