@@ -13,6 +13,8 @@ import (
 	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	icq "github.com/cosmos/ibc-apps/modules/async-icq/v7"
 	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
+	ibchooks "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7"
+	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
 	"github.com/notional-labs/composable/v6/app/ante"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
@@ -20,8 +22,6 @@ import (
 	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
-	ibchooks "github.com/notional-labs/composable/v6/x/ibc-hooks"
-	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	"github.com/notional-labs/composable/v6/x/mint"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	ratelimitmodule "github.com/notional-labs/composable/v6/x/ratelimit"
@@ -293,7 +293,6 @@ func NewComposableApp(
 	txBoundaryModule := txboundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
 	icqModule := icq.NewAppModule(app.ICQKeeper, app.GetSubspace(icqtypes.ModuleName))
-	ibcHooksModule := ibchooks.NewAppModule()
 	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper) // Only ICA Host
 	// ****  Module Options **** //
 
@@ -328,7 +327,6 @@ func NewComposableApp(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		icqModule,
-		ibcHooksModule,
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		wasm08.NewAppModule(app.Wasm08Keeper),
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
