@@ -33,6 +33,6 @@ jobs:
           mv genesis.json  ~/.banksy/config/genesis.json
           mv composable_3095956.tar.lz4 ~/.banksy/composable_3095956.tar.lz4
           cd ~/.banksy
-          lz4 -d composable_3035461.tar.lz4 | tar -xvf -
+          lz4 -d composable_3095956.tar.lz4 | tar -xvf -
           timeout 10m centaurid start --p2p.seeds "ebc272824924ea1a27ea3183dd0b9ba713494f83@composable-mainnet-seed.autostake.com:26976,20e1000e88125698264454a884812746c2eb4807@seeds.lavenderfive.com:22256,d2362ebcdd562500ac8c4cfa2214a89ad811033c@seeds.whispernode.com:22256" || ( [[ $? -eq 124 ]] && echo "HAPPY: Timeout reached without apphash issues" )
         
