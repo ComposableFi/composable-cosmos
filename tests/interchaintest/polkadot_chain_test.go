@@ -85,7 +85,7 @@ func TestPolkadotCentauriChainStart(t *testing.T) {
 
 	PARACHAIN_DEFAULT_AMOUNT := 1_152_921_504_606_847_000
 	RELAYCHAIN_DEFAULT_AMOUNT := 1_100_000_000_000_000_000
-	faucetAmount := 100_000_000_000_000_000 // set in interchain.go/global
+	FAUCET_AMOUNT := 100_000_000_000_000_000 // set in interchain.go/global
 	// RELAYER_AMOUNT :=                   1_000_000_000_000 // set in interchain.go/global
 
 	// Check the faucet amounts
