@@ -1,4 +1,4 @@
-# Picasso
+# Composable-Cosmos
 
 Picasso is a blockchain built with the cosmos-sdk that uses [IBC](github.com/cosmos/ibc-go) to securely connect chains like:
 
