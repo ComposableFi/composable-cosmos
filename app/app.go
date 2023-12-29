@@ -374,7 +374,7 @@ func NewComposableApp(
 		consensusparamtypes.ModuleName,
 		wasm08types.ModuleName,
 		icatypes.ModuleName,
-		wasm.ModuleName,
+		wasmtypes.ModuleName,
 		alliancemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
