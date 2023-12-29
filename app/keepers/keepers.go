@@ -210,6 +210,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.BankKeeper,
 		appKeepers.StakingKeeper,
 		appKeepers.DistrKeeper,
+		authtypes.FeeCollectorName,
 	)
 
 	appKeepers.BankKeeper.RegisterKeepers(appKeepers.AllianceKeeper, appKeepers.StakingKeeper)
@@ -228,7 +229,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 
 	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
 
-	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeperWithVM(appCodec, appKeepers.keys[wasm08types.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	appKeepers.Wasm08Keeper = wasmclientkeeper.NewKeeperWithVM(appCodec, appKeepers.keys[wasm08types.StoreKey], &appKeepers.IBCKeeper.ClientKeeper, govModuleAuthority, vm, bApp.GRPCQueryRouter())
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
