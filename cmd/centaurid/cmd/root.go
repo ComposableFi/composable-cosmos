@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/notional-labs/composable/v6/app"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -266,7 +266,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
-	var emptyWasmOpts []wasm.Option
+	var emptyWasmOpts []wasmkeeper.Option
 	newApp := app.NewComposableApp(
 		logger, db, traceStore, true,
 		skipUpgradeHeights,
@@ -293,7 +293,7 @@ func (a appCreator) appExport(
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
-	var emptyWasmOpts []wasm.Option
+	var emptyWasmOpts []wasmkeeper.Option
 
 	if height != -1 {
 		anApp = app.NewComposableApp(

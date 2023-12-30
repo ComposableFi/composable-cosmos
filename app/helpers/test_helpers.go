@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	composable "github.com/notional-labs/composable/v6/app"
 	"github.com/stretchr/testify/require"
 
@@ -89,7 +89,7 @@ func Setup(t *testing.T, isCheckTx bool, invCheckPeriod uint) *composable.Compos
 	return app
 }
 
-func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*composable.ComposableApp, composable.GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint, opts ...wasmkeeper.Option) (*composable.ComposableApp, composable.GenesisState) {
 	db := dbm.NewMemDB()
 	encCdc := composable.MakeEncodingConfig()
 	app := composable.NewComposableApp(

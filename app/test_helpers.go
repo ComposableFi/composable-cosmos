@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/stretchr/testify/require"
 
@@ -71,7 +71,7 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*ComposableApp
 	baseAppOpts := []func(*baseapp.BaseApp){baseapp.SetSnapshot(snapshotStore, types.SnapshotOptions{
 		KeepRecent: 2,
 	})}
-	var wasmOpts []wasm.Option
+	var wasmOpts []wasmkeeper.Option
 	db := dbm.NewMemDB()
 	app := NewComposableApp(
 		log.NewNopLogger(),
