@@ -252,14 +252,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 	appKeepers.IBCHooksKeeper = &hooksKeeper
 
-	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	wasmHooks := ibchooks.NewWasmHooks(&hooksKeeper, nil, composablePrefix) // The contract keeper needs to be set later
-	appKeepers.Ics20WasmHooks = &wasmHooks
-	appKeepers.HooksICS4Wrapper = ibchooks.NewICS4Middleware(
-		appKeepers.IBCKeeper.ChannelKeeper,
-		appKeepers.Ics20WasmHooks,
-	)
-
 	appKeepers.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
 		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
@@ -299,6 +291,50 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.IBCKeeper.ChannelKeeper,
 	)
 
+	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+
+	wasmDir := filepath.Join(homePath, "wasm")
+	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
+	if err != nil {
+		panic(fmt.Sprintf("error while reading wasm config: %s", err))
+	}
+
+	// increase default wasm size in all wasmd related codes (as on Neutorn/Osmosis)
+	wasmtypes.MaxWasmSize = wasmtypes.MaxWasmSize * 2
+
+	// The last arguments can contain custom message handlers, and custom query handlers,
+	// if we want to allow any custom callbacks
+	availableCapabilities := strings.Join(AllCapabilities(), ",")
+	wasmKeeper := wasmkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[wasmtypes.StoreKey],
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.StakingKeeper,
+		distrkeeper.NewQuerier(appKeepers.DistrKeeper),
+		appKeepers.IBCKeeper.ChannelKeeper, // ISC4 Wrapper: fee IBC middleware
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedWasmKeeper,
+		appKeepers.TransferKeeper,
+		bApp.MsgServiceRouter(),
+		bApp.GRPCQueryRouter(),
+		wasmDir,
+		wasmConfig,
+		availableCapabilities,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		wasmOpts...,
+	)
+
+	wasmHooks := ibchooks.NewWasmHooks(&hooksKeeper, &wasmKeeper, composablePrefix)
+	hooksICS4Wrapper := ibchooks.NewICS4Middleware(
+		appKeepers.IBCKeeper.ChannelKeeper,
+		wasmHooks,
+	)
+	appKeepers.Ics20WasmHooks = &wasmHooks
+	appKeepers.HooksICS4Wrapper = hooksICS4Wrapper
+	appKeepers.WasmKeeper = wasmKeeper
+
 	appKeepers.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[ratelimitmoduletypes.StoreKey],
@@ -306,7 +342,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.BankKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		// TODO: Implement ICS4Wrapper in Records and pass records keeper here
-		&appKeepers.HooksICS4Wrapper, // ICS4Wrapper
+		&hooksICS4Wrapper,
 		appKeepers.TransferMiddlewareKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
@@ -340,7 +376,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
-	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &appKeepers.HooksICS4Wrapper)
+	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &hooksICS4Wrapper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -348,38 +384,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	appKeepers.EvidenceKeeper = *evidenceKeeper
-
-	wasmDir := filepath.Join(homePath, "wasm")
-	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
-	if err != nil {
-		panic(fmt.Sprintf("error while reading wasm config: %s", err))
-	}
-
-	// The last arguments can contain custom message handlers, and custom query handlers,
-	// if we want to allow any custom callbacks
-	availableCapabilities := strings.Join(AllCapabilities(), ",")
-	appKeepers.WasmKeeper = wasmkeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[wasmtypes.StoreKey],
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.StakingKeeper,
-		distrkeeper.NewQuerier(appKeepers.DistrKeeper),
-		appKeepers.IBCKeeper.ChannelKeeper, // ISC4 Wrapper: fee IBC middleware
-		appKeepers.IBCKeeper.ChannelKeeper,
-		&appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.ScopedWasmKeeper,
-		appKeepers.TransferKeeper,
-		bApp.MsgServiceRouter(),
-		bApp.GRPCQueryRouter(),
-		wasmDir,
-		wasmConfig,
-		availableCapabilities,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		wasmOpts...,
-	)
-
-	appKeepers.Ics20WasmHooks.ContractKeeper = &appKeepers.WasmKeeper
 
 	// Register Gov (must be registered after stakeibc)
 	govRouter := govtypesv1beta1.NewRouter()
