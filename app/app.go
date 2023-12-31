@@ -703,11 +703,3 @@ func (app *ComposableApp) setupUpgradeHandlers() {
 		)
 	}
 }
-
-// overrideWasmVariables overrides the wasm variables to:
-//   - allow for larger wasm files
-func overrideWasmVariables() {
-	// Override Wasm size limitation from WASMD.
-	wasmtypes.MaxWasmSize = 1_677_722 // ~1.6 mb (1024 * 1024 * 1.6)
-	wasmtypes.MaxProposalWasmSize = wasmtypes.MaxWasmSize
-}
