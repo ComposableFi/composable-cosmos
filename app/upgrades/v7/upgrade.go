@@ -10,6 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	pfmkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
+	pfmtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 )
 
 func CreateUpgradeHandler(
@@ -33,6 +35,13 @@ func CreateUpgradeHandler(
 		if err != nil {
 			return nil, err
 		}
+
+		migrator := pfmkeeper.NewMigrator(keepers.RouterKeeper, keepers.GetSubspace(pfmtypes.ModuleName))
+		err = migrator.Migrate1to2(ctx)
+		if err != nil {
+			return nil, err
+		}
+
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
