@@ -7,12 +7,24 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs@{ flake-parts, gomod2nix, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = inputs @ {
+    flake-parts,
+    gomod2nix,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
       ];
-      systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aaarch64-darwin" ];
-      perSystem = { config, self', inputs', pkgs, system, ... }: {
+      systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+      perSystem = {
+        config,
+        self',
+        inputs',
+        pkgs,
+        system,
+        ...
+      }: {
+        formatter = pkgs.alejandra;
         devShells = {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
@@ -23,15 +35,16 @@
               pkgs.gci
               gomod2nix.packages.${system}.default
             ];
-            shellHook = ''            
+            shellHook = ''
               go get mvdan.cc/gofumpt
               go get github.com/client9/misspell/cmd/misspell
               go get golang.org/x/tools/cmd/goimports
               go mod tidy
-              '';
+              make lint
+              nix fmt
+            '';
           };
         };
       };
     };
 }
-
