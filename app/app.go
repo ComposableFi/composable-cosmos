@@ -21,7 +21,7 @@ import (
 	version4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
 	version5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
 	version6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
-	version7_0_0 "github.com/notional-labs/composable/v6/app/upgrades/v7_0_0"
+	version7 "github.com/notional-labs/composable/v6/app/upgrades/v7"
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 	"github.com/notional-labs/composable/v6/x/mint"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
@@ -118,7 +118,7 @@ const (
 )
 
 var (
-	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade, version7_0_0.Upgrade}
+	Upgrades = []upgrades.Upgrade{version4.Upgrade, version5.Upgrade, version6.Upgrade, version7.Upgrade}
 	Forks    = []upgrades.Fork{}
 )
 
