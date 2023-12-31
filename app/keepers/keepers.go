@@ -300,7 +300,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	}
 
 	// increase default wasm size in all wasmd related codes (as on Neutorn/Osmosis)
-	wasmtypes.MaxWasmSize = wasmtypes.MaxWasmSize * 2
+	wasmtypes.MaxWasmSize *= 2
 
 	// The last arguments can contain custom message handlers, and custom query handlers,
 	// if we want to allow any custom callbacks
