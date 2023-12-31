@@ -8,9 +8,9 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	router "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
-	routerkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
-	routertypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
+	pfmrouter "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward"
+	pmfkeeper "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/keeper"
+	pfmtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	icq "github.com/cosmos/ibc-apps/modules/async-icq/v7"
 	icqkeeper "github.com/cosmos/ibc-apps/modules/async-icq/v7/keeper"
 	icqtypes "github.com/cosmos/ibc-apps/modules/async-icq/v7/types"
@@ -132,7 +132,7 @@ type AppKeepers struct {
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
 	TxBoundaryKeepper        txboundarykeeper.Keeper
-	RouterKeeper             *routerkeeper.Keeper
+	RouterKeeper             *pmfkeeper.Keeper
 	RatelimitKeeper          ratelimitmodulekeeper.Keeper
 	AllianceKeeper           alliancemodulekeeper.Keeper
 }
@@ -279,10 +279,10 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.ScopedTransferKeeper,
 	)
 
-	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
+	appKeepers.RouterKeeper = pmfkeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[routertypes.StoreKey],
-		appKeepers.GetSubspace(routertypes.ModuleName),
+		appKeepers.keys[pfmtypes.StoreKey],
+		appKeepers.GetSubspace(pfmtypes.ModuleName),
 		appKeepers.TransferKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
@@ -368,12 +368,12 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.TransferMiddlewareKeeper,
 	)
 
-	ibcMiddlewareStack := router.NewIBCMiddleware(
+	ibcMiddlewareStack := pfmrouter.NewIBCMiddleware(
 		transfermiddlewareStack,
 		appKeepers.RouterKeeper,
 		0,
-		routerkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
-		routerkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
+		pmfkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
+		pmfkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
 	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &hooksICS4Wrapper)
@@ -453,8 +453,8 @@ func (*AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *cod
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
-	paramsKeeper.Subspace(routertypes.ModuleName).WithKeyTable(routertypes.ParamKeyTable()) // TODO:
-	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable())     //nolint:staticcheck
+	paramsKeeper.Subspace(pfmtypes.ModuleName).WithKeyTable(pfmtypes.ParamKeyTable())   // TODO:
+	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govtypesv1.ParamKeyTable()) //nolint:staticcheck
 	paramsKeeper.Subspace(minttypes.ModuleName).WithKeyTable(minttypes.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
