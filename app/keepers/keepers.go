@@ -282,13 +282,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.RouterKeeper = pmfkeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[pfmtypes.StoreKey],
-		appKeepers.GetSubspace(pfmtypes.ModuleName),
 		appKeepers.TransferKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.TransferMiddlewareKeeper,
-		appKeepers.IBCKeeper.ChannelKeeper,
+		govModuleAuthority,
+		// appKeepers.GetSubspace(pfmtypes.ModuleName),
+		// appKeepers.IBCKeeper.ChannelKeeper,
 	)
 
 	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
