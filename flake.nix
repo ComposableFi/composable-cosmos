@@ -42,6 +42,7 @@
               go mod tidy
               make lint
               nix fmt
+              gomod2nix
             '';
           };
         };
