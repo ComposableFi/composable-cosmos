@@ -27,6 +27,7 @@
               go get mvdan.cc/gofumpt
               go get github.com/client9/misspell/cmd/misspell
               go get golang.org/x/tools/cmd/goimports
+              go mod tidy
               '';
           };
         };
