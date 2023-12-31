@@ -13,6 +13,7 @@ import (
 	simappupgrades "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades"
 	version6 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v6"
 	version7 "github.com/notional-labs/composable/v6/app/ibctesting/simapp/upgrades/v7"
+
 	// TODO: mint module not complete yet,
 	"github.com/notional-labs/composable/v6/x/mint"
 	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"

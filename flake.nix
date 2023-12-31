@@ -11,7 +11,7 @@
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ pkgs.go pkgs.gnumake ];
+            buildInputs = with pkgs; [ pkgs.go pkgs.gnumake pkgs.gotools ];
           };
         };
       };

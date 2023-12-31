@@ -20,7 +20,6 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
-
 		allowed := []string{
 			keepers.AccountKeeper.GetModuleAddress(wasmtypes.ModuleName).String(),
 			keepers.AccountKeeper.GetModuleAddress(govtypes.ModuleName).String(),
