@@ -250,7 +250,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	hooksKeeper := ibchookskeeper.NewKeeper(
 		appKeepers.keys[ibchookstypes.StoreKey],
 	)
-	appKeepers.IBCHooksKeeper = &hooksKeeper
 
 	appKeepers.TransferMiddlewareKeeper = transfermiddlewarekeeper.NewKeeper(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
@@ -277,19 +276,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.ScopedTransferKeeper,
-	)
-
-	appKeepers.RouterKeeper = pmfkeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[pfmtypes.StoreKey],
-		appKeepers.TransferKeeper,
-		appKeepers.IBCKeeper.ChannelKeeper,
-		&appKeepers.DistrKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.TransferMiddlewareKeeper,
-		govModuleAuthority,
-		// appKeepers.GetSubspace(pfmtypes.ModuleName),
-		// appKeepers.IBCKeeper.ChannelKeeper,
 	)
 
 	composablePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
@@ -369,15 +355,37 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.TransferMiddlewareKeeper,
 	)
 
+	pfmRouterKeeper := pmfkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[pfmtypes.StoreKey],
+		appKeepers.TransferKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.DistrKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.TransferMiddlewareKeeper,
+		govModuleAuthority,
+	)
+
 	ibcMiddlewareStack := pfmrouter.NewIBCMiddleware(
 		transfermiddlewareStack,
-		appKeepers.RouterKeeper,
+		pfmRouterKeeper,
 		0,
 		pmfkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		pmfkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
 	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
 	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &hooksICS4Wrapper)
+
+	ibcRouter := porttypes.NewRouter()
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, hooksTransferMiddleware)
+	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
+	ibcRouter.AddRoute(wasmtypes.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
+	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
+
+	appKeepers.RouterKeeper = pfmRouterKeeper
+	appKeepers.IBCHooksKeeper = &hooksKeeper
+	// this line is used by starport scaffolding # ibc/app/router
+	appKeepers.IBCKeeper.SetRouter(ibcRouter)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -407,15 +415,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		// register the governance hooks
 		),
 	)
-
-	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, hooksTransferMiddleware)
-	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
-	ibcRouter.AddRoute(wasmtypes.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
-	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
-
-	// this line is used by starport scaffolding # ibc/app/router
-	appKeepers.IBCKeeper.SetRouter(ibcRouter)
 }
 
 // InitSpecialKeepers initiates special keepers (upgradekeeper, params keeper)
