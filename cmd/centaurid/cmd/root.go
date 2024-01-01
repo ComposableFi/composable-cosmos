@@ -5,11 +5,11 @@ import (
 	"io"
 	"os"
 
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/notional-labs/composable/v6/app"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	dbm "github.com/cometbft/cometbft-db"
 	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"

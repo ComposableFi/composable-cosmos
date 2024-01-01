@@ -210,7 +210,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.BankKeeper,
 		appKeepers.StakingKeeper,
 		appKeepers.DistrKeeper,
-		authtypes.FeeCollectorName,
+		authtypes.FeeCollectorName, // used only in later alliance versions
 	)
 
 	appKeepers.BankKeeper.RegisterKeepers(appKeepers.AllianceKeeper, appKeepers.StakingKeeper)
