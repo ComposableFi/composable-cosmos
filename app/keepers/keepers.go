@@ -255,7 +255,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.keys[transfermiddlewaretypes.StoreKey],
 		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
-		&appKeepers.RatelimitKeeper,
+		&ratelimitKeeper,
 		&appKeepers.TransferKeeper,
 		appKeepers.BankKeeper,
 		authorityAddress,
@@ -314,15 +314,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	wasmHooks := ibchooks.NewWasmHooks(&hooksKeeper, &wasmKeeper, composablePrefix)
+	appKeepers.WasmKeeper = wasmKeeper
+
 	hooksICS4Wrapper := ibchooks.NewICS4Middleware(
 		appKeepers.IBCKeeper.ChannelKeeper,
 		wasmHooks,
 	)
-	appKeepers.Ics20WasmHooks = &wasmHooks
-	appKeepers.HooksICS4Wrapper = hooksICS4Wrapper
-	appKeepers.WasmKeeper = wasmKeeper
 
-	appKeepers.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
+	ratelimitKeeper := *ratelimitmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[ratelimitmoduletypes.StoreKey],
 		appKeepers.GetSubspace(ratelimitmoduletypes.ModuleName),
@@ -338,7 +337,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
-	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
+	icqKeeper := icqkeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[icqtypes.StoreKey],
 		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware
@@ -349,7 +348,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authority,
 	)
 
-	icqIBCModule := icq.NewIBCModule(appKeepers.ICQKeeper)
+	icqIBCModule := icq.NewIBCModule(icqKeeper)
 	transfermiddlewareStack := transfermiddleware.NewIBCMiddleware(
 		transferIBCModule,
 		appKeepers.TransferMiddlewareKeeper,
@@ -366,24 +365,29 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		govModuleAuthority,
 	)
 
-	ibcMiddlewareStack := pfmrouter.NewIBCMiddleware(
+	pfmrouterMiddlewareStack := pfmrouter.NewIBCMiddleware(
 		transfermiddlewareStack,
 		pfmRouterKeeper,
 		0,
 		pmfkeeper.DefaultForwardTransferPacketTimeoutTimestamp,
 		pmfkeeper.DefaultRefundTransferPacketTimeoutTimestamp,
 	)
-	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(appKeepers.RatelimitKeeper, ibcMiddlewareStack)
-	hooksTransferMiddleware := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &hooksICS4Wrapper)
+	ratelimitMiddlewareStack := ratelimitmodule.NewIBCMiddleware(ratelimitKeeper, pfmrouterMiddlewareStack)
+	hooksTransferMiddlewareStack := ibchooks.NewIBCMiddleware(ratelimitMiddlewareStack, &hooksICS4Wrapper)
 
 	ibcRouter := porttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, hooksTransferMiddleware)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, hooksTransferMiddlewareStack)
 	ibcRouter.AddRoute(icqtypes.ModuleName, icqIBCModule)
-	ibcRouter.AddRoute(wasmtypes.ModuleName, wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
+	ibcRouter.AddRoute(wasmtypes.ModuleName, wasm.NewIBCHandler(wasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCKeeper.ChannelKeeper))
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
 
 	appKeepers.RouterKeeper = pfmRouterKeeper
 	appKeepers.IBCHooksKeeper = &hooksKeeper
+	appKeepers.ICQKeeper = icqKeeper
+	appKeepers.RatelimitKeeper = ratelimitKeeper
+	appKeepers.Ics20WasmHooks = &wasmHooks
+	appKeepers.HooksICS4Wrapper = hooksICS4Wrapper
+
 	// this line is used by starport scaffolding # ibc/app/router
 	appKeepers.IBCKeeper.SetRouter(ibcRouter)
 
