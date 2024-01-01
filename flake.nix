@@ -47,7 +47,7 @@
               make lint
               nix fmt
               go mod tidy
-              golangci-lint run ./... --fix
+              golangci-lint run --fix
               make build
           '';
         };
