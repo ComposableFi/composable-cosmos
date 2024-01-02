@@ -7,9 +7,9 @@ var (
 
 const (
 	// module name
-	ModuleName = "customstakingparams"
+	ModuleName = "stakingmiddleware"
 
 	// StoreKey is the default store key for stakingmiddleware module that store params when apply validator set changes and when allow to unbond/redelegate
 
-	StoreKey = ModuleName // not using the module name because of collisions with key "staking"
+	StoreKey = "customstakingparams" // not using the module name because of collisions with key "staking"
 )
