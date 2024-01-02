@@ -3,7 +3,7 @@
     "description": "update parameter blocks per epoch to value 100",
     "changes": [
       {
-        "subspace": "customstakingparams",
+        "subspace": "stakingmiddleware",
         "key": "blocks_per_epoch",
         "value": 200
       }

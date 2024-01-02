@@ -466,6 +466,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
+	paramsKeeper.Subspace(stakingmiddlewaretypes.ModuleName)
 
 	return paramsKeeper
 }
