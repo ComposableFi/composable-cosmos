@@ -32,7 +32,7 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicomet
 	shouldExecuteBatch := (height % int64(params.BlocksPerEpoch)) == 0
 	var validatorUpdates []abcicometbft.ValidatorUpdate
 	if shouldExecuteBatch {
-		println("Should Execute ApplyAndReturnValidatorSetUpdates at height : ", height)
+		k.Logger(ctx).Info("Should Execute ApplyAndReturnValidatorSetUpdates at height : ", height)
 		v, err := k.ApplyAndReturnValidatorSetUpdates(ctx)
 		if err != nil {
 			panic(err)
