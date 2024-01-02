@@ -14,6 +14,7 @@
   outputs = inputs @ {
     flake-parts,
     gomod2nix,
+    cosmos,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
@@ -29,6 +30,9 @@
         ...
       }: let
         inherit (inputs.gomod2nix.legacyPackages.${system}) buildGoApplication mkGoEvn gomod2nix;
+        libwasmvm = cosmos.packages.${system}.libwasmvm_1_5_0;
+        cosmwasm-check = cosmos.packages.${system}.cosmwasm-check;
+        cosmosLib = cosmos.lib {inherit pkgs cosmwasm-check;};
       in {
         formatter = pkgs.alejandra;
         devShells = {
@@ -50,7 +54,12 @@
             pname = "centaurid";
             version = "v7.0.0";
             src = ./.;
+            subPackages = ["cmd/centaurid"];
             modules = ./gomod2nix.toml;
+            preFixup = ''
+              ${cosmosLib.wasmdPreFixupPhase libwasmvm "centaurid"}
+            '';
+            buildInputs = [libwasmvm];
           };
           default = pkgs.writeShellApplication {
             name = "ci";
