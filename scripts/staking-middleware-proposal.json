@@ -1,0 +1,12 @@
+{
+    "title": "Staking middleware blocks_per_epoch to 100",
+    "description": "update parameter blocks per epoch to value 100",
+    "changes": [
+      {
+        "subspace": "customstakingparams",
+        "key": "blocks_per_epoch",
+        "value": 200
+      }
+    ],
+    "deposit": "10000000stake"
+  }
