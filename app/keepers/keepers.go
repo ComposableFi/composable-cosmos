@@ -193,10 +193,6 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	// appKeepers.CustomStakingKeeper = customstaking.NewKeeper(
-	// 	appCodec, *appKeepers.StakingKeeper, &appKeepers.StakingMiddlewareKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	// )
-
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec, appKeepers.keys[distrtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
 		appKeepers.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
