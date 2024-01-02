@@ -42,6 +42,7 @@ func (ms msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdatePara
 func (ms msgServer) FundModuleAccount(goCtx context.Context, req *types.MsgFundModuleAccount) (*types.MsgFundModuleAccountResponse, error) {
 	// Unwrap context
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	// Check sender address
 	sender, err := sdk.AccAddressFromBech32(req.FromAddress)
 	if err != nil {

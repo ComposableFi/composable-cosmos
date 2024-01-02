@@ -41,6 +41,9 @@ import (
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasm08types "github.com/cosmos/ibc-go/v7/modules/light-clients/08-wasm/types"
+
+	// customstakingtypes "github.com/notional-labs/composable/v6/custom/staking/types"
+	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
 // GenerateKeys generates new keys (KV Store, Transient store, and memory store).
@@ -52,7 +55,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
 		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
-		authzkeeper.StoreKey,
+		authzkeeper.StoreKey, stakingmiddleware.StoreKey,
 	)
 
 	// Define transient store keys
