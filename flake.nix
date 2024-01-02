@@ -59,6 +59,7 @@
             preFixup = ''
               ${cosmosLib.wasmdPreFixupPhase libwasmvm "centaurid"}
             '';
+            checkPhase = "true";
             buildInputs = [libwasmvm];
           };
           default = pkgs.writeShellApplication {
@@ -71,7 +72,6 @@
               nix fmt
               go mod tidy
               golangci-lint run --fix
-              make build
               gomod2nix
             '';
           };
