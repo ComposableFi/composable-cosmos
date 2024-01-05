@@ -324,7 +324,7 @@ require (
 	github.com/zondax/ledger-go v0.14.3 // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
 	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb // indirect
+	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
@@ -343,6 +343,9 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
+	// CometBFT has a change now that forces the canonical vote to have fixed lenght (on the timestamp)
+	github.com/cometbft/cometbft => github.com/composableFi/cometbft v0.37.2-fixed-length
+
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
@@ -355,4 +358,5 @@ replace (
 
 	// lock the version of ledger-go
 	github.com/zondax/ledger-go => github.com/zondax/ledger-go v0.14.3
+
 )
