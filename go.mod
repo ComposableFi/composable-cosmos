@@ -344,7 +344,7 @@ replace (
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
 	// CometBFT has a change now that forces the canonical vote to have fixed lenght (on the timestamp)
-	github.com/cometbft/cometbft => github.com/composableFi/cometbft v0.37.2-fixed-length
+	github.com/cometbft/cometbft => github.com/composableFi/cometbft v0.37.2-original-version-tag
 
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
 	// ibc-go with wasm client
