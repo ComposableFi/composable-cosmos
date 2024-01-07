@@ -15,6 +15,7 @@
     flake-parts,
     gomod2nix,
     cosmos,
+    self,
     ...
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
@@ -50,17 +51,20 @@
         };
 
         packages = {
-          centaurid = buildGoApplication {
+          centaurid = buildGoApplication rec {
             pname = "centaurid";
             version = "v7.0.0";
             src = ./.;
-            subPackages = ["cmd/centaurid"];
+            subPackages = ["cmd/${pname}"];
             modules = ./gomod2nix.toml;
             preFixup = ''
-              ${cosmosLib.wasmdPreFixupPhase libwasmvm "centaurid"}
+              ${cosmosLib.wasmdPreFixupPhase libwasmvm pname}
             '';
             checkPhase = "true";
             buildInputs = [libwasmvm];
+            ldflags = ''
+              -X github.com/cosmos/cosmos-sdk/version.Name=centauri -X github.com/cosmos/cosmos-sdk/version.AppName=${pname} -X github.com/cosmos/cosmos-sdk/version.Version=${version} -X github.com/cosmos/cosmos-sdk/version.Commit=${self.rev or self.dirtyRev or "dirty"} -X github.com/cometbft/cometbft/version.TMCoreSemVer=v0.37.2
+            '';
           };
           default = pkgs.writeShellApplication {
             name = "ci";
