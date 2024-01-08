@@ -57,7 +57,6 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, icqtypes.StoreKey, capabilitytypes.StoreKey, consensusparamtypes.StoreKey, wasm08types.StoreKey,
 		authzkeeper.StoreKey, stakingmiddleware.StoreKey,
 		crisistypes.StoreKey, routertypes.StoreKey, transfermiddlewaretypes.StoreKey, group.StoreKey, minttypes.StoreKey, alliancemoduletypes.StoreKey, wasm.StoreKey, ibchookstypes.StoreKey, icahosttypes.StoreKey, ratelimitmoduletypes.StoreKey, txBoundaryTypes.StoreKey,
-		authzkeeper.StoreKey,
 	)
 
 	// Define transient store keys
