@@ -1,0 +1,14 @@
+syntax = "proto3";
+package centauri.stakingmiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "centauri/stakingmiddleware/v1beta1/stakingmiddleware.proto";
+import "amino/amino.proto";
+
+
+option go_package = "x/stakingmiddleware/types";
+
+// GenesisState defines the stakingmiddleware module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
