@@ -1,8 +1,8 @@
 syntax = "proto3";
-package centauri.stakingmiddleware.v1beta1;
+package composable.stakingmiddleware.v1beta1;
 
 import "gogoproto/gogo.proto";
-import "centauri/stakingmiddleware/v1beta1/stakingmiddleware.proto";
+import "composable/stakingmiddleware/v1beta1/stakingmiddleware.proto";
 import "amino/amino.proto";
 
 
