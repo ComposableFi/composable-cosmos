@@ -36,9 +36,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/notional-labs/composable/v6/app/keepers"
-	v4 "github.com/notional-labs/composable/v6/app/upgrades/v4"
-	v5 "github.com/notional-labs/composable/v6/app/upgrades/v5"
-	v6 "github.com/notional-labs/composable/v6/app/upgrades/v6"
 	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 	v8 "github.com/notional-labs/composable/v6/app/upgrades/v8"
 
