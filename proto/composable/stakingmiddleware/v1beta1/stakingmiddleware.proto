@@ -1,5 +1,5 @@
 syntax = "proto3";
-package centauri.stakingmiddleware.v1beta1;
+package composable.stakingmiddleware.v1beta1;
 
 option go_package = "x/stakingmiddleware/types";
 

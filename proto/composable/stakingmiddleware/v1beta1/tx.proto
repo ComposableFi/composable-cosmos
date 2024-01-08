@@ -1,11 +1,11 @@
 syntax = "proto3";
-package centauri.stakingmiddleware.v1beta1;
+package composable.stakingmiddleware.v1beta1;
 
 import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "centauri/stakingmiddleware/v1beta1/stakingmiddleware.proto";
+import "composable/stakingmiddleware/v1beta1/stakingmiddleware.proto";
 
 option go_package = "x/stakingmiddleware/types";
 
@@ -21,7 +21,7 @@ service Msg {
 // Since: cosmos-sdk 0.47
 message MsgUpdateEpochParams {
   option (cosmos.msg.v1.signer) = "authority";
-  option (amino.name) = "centauri/x/stakingmiddleware/MsgUpdateParams";
+  option (amino.name) = "composable/x/stakingmiddleware/MsgUpdateParams";
 
   // authority is the address that controls the module (defaults to x/gov unless
   // overwritten).
