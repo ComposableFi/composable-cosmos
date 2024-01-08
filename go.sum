@@ -1155,8 +1155,8 @@ github.com/rs/zerolog v1.30.0/go.mod h1:/tk+P47gFdPXq4QYjvCmT5/Gsug2nagsFWBWhAiS
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
-github.com/rust-ninja/cometbft v0.37.2 h1:s6/EPmGJ1zOzaoaJmzNRgX6BNKzeI2hZ+RHBl9vzi9A=
-github.com/rust-ninja/cometbft v0.37.2/go.mod h1:Y2MMMN//O5K4YKd8ze4r9jmk4Y7h0ajqILXbH5JQFVs=
+github.com/rust-ninja/cometbft v0.37.2-gogo-proto-fork h1:cQiCEB3f0vXi4gmKKbSc6inHOnWnKK90YWQ/TQsMlXY=
+github.com/rust-ninja/cometbft v0.37.2-gogo-proto-fork/go.mod h1:F6A6lBKfGrg/4X1uf9xx33kplVXFV4VKtLSBGP2e+hs=
 github.com/ryancurrah/gomodguard v1.3.0 h1:q15RT/pd6UggBXVBuLps8BXRvl5GPBcwVA7BJHMLuTw=
 github.com/ryancurrah/gomodguard v1.3.0/go.mod h1:ggBxb3luypPEzqVtq33ee7YSN35V28XeGnid8dnni50=
 github.com/ryanrolds/sqlclosecheck v0.5.1 h1:dibWW826u0P8jNLsLN+En7+RqWWTYrjCB9fJfSfdyCU=
