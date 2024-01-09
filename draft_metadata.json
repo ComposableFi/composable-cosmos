@@ -1,0 +1,10 @@
+{
+ "title": "Title of proposal",
+ "authors": [
+  "rustninja and kostuy and robert"
+ ],
+ "summary": "Update chain with a new epoch staking",
+ "details": "Some details for proposal",
+ "proposal_forum_url": "https://centauri.com",
+ "vote_option_context": "Yes No Abstain No with veto"
+}

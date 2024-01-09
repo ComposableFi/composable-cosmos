@@ -1,0 +1,17 @@
+{
+ "messages": [
+  {
+   "@type": "/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade",
+   "authority": "layer10d07y265gmmuvt4z0w9aw880jnsr700j2q996p",
+   "plan": {
+    "name": "v8",
+    "height": "50",
+    "info": "Some info about plan",
+    "upgraded_client_state": null
+   }
+  }
+ ],
+ "deposit": "10000000stake",
+ "title": "Title of proposal",
+ "summary": "Update chain with a new epoch staking"
+}
