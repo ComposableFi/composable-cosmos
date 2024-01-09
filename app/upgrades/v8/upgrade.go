@@ -20,7 +20,7 @@ func CreateUpgradeHandler(
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		// Add params for custom middleware
-		custommiddlewareparams := customstmiddleware.Params{BlocksPerEpoch: 100, AllowUnbondAfterEpochProgressBlockNumber: 0}
+		custommiddlewareparams := customstmiddleware.Params{BlocksPerEpoch: 360, AllowUnbondAfterEpochProgressBlockNumber: 0}
 		keepers.StakingMiddlewareKeeper.SetParams(ctx, custommiddlewareparams)
 
 		return mm.RunMigrations(ctx, configurator, vm)
