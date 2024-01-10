@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "x/transfermiddleware/types";
+option (gogoproto.goproto_getters_all) = false;
 
 // ParachainIBCTokenInfo represents information about transferable IBC tokens
 // from Parachain.
