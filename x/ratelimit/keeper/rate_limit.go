@@ -111,7 +111,7 @@ func (k Keeper) UndoSendPacket(ctx sdk.Context, channelID string, sequence uint6
 // and all pending send packet sequence numbers should be removed
 func (k Keeper) ResetRateLimit(ctx sdk.Context, denom, channelID string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
-		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		tokenInfo := k.tfmwKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if channelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
@@ -147,7 +147,7 @@ func (k Keeper) SetRateLimit(ctx sdk.Context, rateLimit types.RateLimit) {
 // Removes a rate limit object from the store using denom and channel-id
 func (k Keeper) RemoveRateLimit(ctx sdk.Context, denom, channelID string) error {
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
-		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		tokenInfo := k.tfmwKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if channelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
@@ -185,7 +185,7 @@ func (k Keeper) AddRateLimit(ctx sdk.Context, msg *types.MsgAddRateLimit) error 
 	// Check if this is denom - channel transfer from Picasso
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
-		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		tokenInfo := k.tfmwKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if msg.ChannelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}
@@ -233,7 +233,7 @@ func (k Keeper) UpdateRateLimit(ctx sdk.Context, msg *types.MsgUpdateRateLimit) 
 	// Check if this is denom - channel transfer from Picasso
 	denom := msg.Denom
 	if k.tfmwKeeper.HasParachainIBCTokenInfoByNativeDenom(ctx, denom) {
-		tokenInfo := k.tfmwKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, denom)
+		tokenInfo := k.tfmwKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, denom)
 		if msg.ChannelID == tokenInfo.ChannelID {
 			denom = tokenInfo.IbcDenom
 		}

@@ -40,7 +40,7 @@ func (keeper Keeper) handleOverrideSendPacketTransferLogic(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := keeper.ParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	// burn native token in escrow address
 	transferAmount, ok := sdk.NewIntFromString(fungibleTokenPacketData.Amount)
@@ -111,7 +111,7 @@ func (keeper Keeper) SendPacket(
 	}
 
 	// check if denom in fungibleTokenPacketData is native denom in parachain info and
-	parachainInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
+	parachainInfo := keeper.ParachainIBCTokenInfoByNativeDenom(ctx, fungibleTokenPacketData.Denom)
 
 	if parachainInfo.ChannelID != sourceChannel || parachainInfo.NativeDenom != fungibleTokenPacketData.Denom {
 		return keeper.ICS4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)
@@ -181,7 +181,7 @@ func (keeper Keeper) refundToken(ctx sdk.Context, packet channeltypes.Packet, da
 		return nil
 	}
 	nativeDenom := keeper.GetNativeDenomByIBCDenomSecondaryIndex(ctx, trace.IBCDenom())
-	paraTokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+	paraTokenInfo := keeper.ParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 
 	// only trigger if source channel is from parachain.
 	if !keeper.hasParachainIBCTokenInfo(ctx, nativeDenom) {

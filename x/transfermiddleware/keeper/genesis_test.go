@@ -25,8 +25,8 @@ func TestTFMInitGenesis(t *testing.T) {
 		TokenInfos: tokenInfos,
 	})
 
-	info := app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, "pica")
-	require.Equal(t, info, app.TransferMiddlewareKeeper.GetParachainIBCTokenInfoByNativeDenom(ctx, "pica"))
+	info := app.TransferMiddlewareKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, "pica")
+	require.Equal(t, info, app.TransferMiddlewareKeeper.ParachainIBCTokenInfoByNativeDenom(ctx, "pica"))
 	require.Equal(t, "1", info.AssetId)
 	require.Equal(t, "pica", info.NativeDenom)
 	require.Equal(t, "ibc-test", info.IbcDenom)

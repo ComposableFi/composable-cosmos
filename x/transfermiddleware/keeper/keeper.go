@@ -15,7 +15,12 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v7/modules/core/exported"
 
+	pcktfrwdtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
+)
+
+var (
+	_ pcktfrwdtypes.TransferMiddlewareKeeper = Keeper{}
 )
 
 type Keeper struct {
@@ -138,7 +143,7 @@ func (keeper Keeper) RemoveParachainIBCInfo(ctx sdk.Context, nativeDenom string)
 	}
 
 	// get the IBCdenom
-	tokenInfo := keeper.GetParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+	tokenInfo := keeper.ParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
 	ibcDenom := tokenInfo.IbcDenom
 	assetID := tokenInfo.AssetId
 
@@ -204,9 +209,14 @@ func (keeper Keeper) HasParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID 
 	return store.Has(key)
 }
 
+// GetParachainIBCTokenInfoByNativeDenom implements types.TransferMiddlewareKeeper.
+func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) pcktfrwdtypes.ParaChainIBCTokenInfo {
+	return keeper.ParachainIBCTokenInfoByNativeDenom(ctx, nativeDenom)
+}
+
 // TODO: testing
-// GetParachainIBCTokenInfo add new information about parachain token to chain state.
-func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
+// ParachainIBCTokenInfoByNativeDenom returns the ParachainIBCTokenInfo based on the native denom.
+func (keeper Keeper) ParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nativeDenom string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByNativeDenom(nativeDenom))
 
@@ -215,7 +225,13 @@ func (keeper Keeper) GetParachainIBCTokenInfoByNativeDenom(ctx sdk.Context, nati
 	return info
 }
 
-func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) (info types.ParachainIBCTokenInfo) {
+// GetParachainIBCTokenInfoByAssetID implements types.TransferMiddlewareKeeper.
+func (keeper Keeper) GetParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) pcktfrwdtypes.ParaChainIBCTokenInfo {
+	return keeper.ParachainIBCTokenInfoByAssetID(ctx, assetID)
+}
+
+// ParachainIBCTokenInfoByAssetID returns the ParachainIBCTokenInfo based on the AssetID.
+func (keeper Keeper) ParachainIBCTokenInfoByAssetID(ctx sdk.Context, assetID string) (info types.ParachainIBCTokenInfo) {
 	store := ctx.KVStore(keeper.storeKey)
 	bz := store.Get(types.GetKeyParachainIBCTokenInfoByAssetID(assetID))
 
