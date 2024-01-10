@@ -298,13 +298,13 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[routertypes.StoreKey],
-		appKeepers.GetSubspace(routertypes.ModuleName),
 		appKeepers.TransferKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.TransferMiddlewareKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.RatelimitKeeper = *ratelimitmodulekeeper.NewKeeper(
