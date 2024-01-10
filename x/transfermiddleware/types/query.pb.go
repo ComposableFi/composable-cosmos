@@ -236,8 +236,8 @@ func (m *QueryParaTokenInfoResponse) GetAssetId() string {
 	return ""
 }
 
-// QueryIBCWhiteListRequest is the response type for the QueryIBCWhiteListRequest
-// RPC method.
+// QueryIBCWhiteListRequest is the response type for the
+// QueryIBCWhiteListRequest RPC method.
 type QueryIBCWhiteListRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -282,8 +282,8 @@ func (m *QueryIBCWhiteListRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryIBCWhiteListResponse is the response type for the QueryIBCWhiteListRequest
-// RPC method.
+// QueryIBCWhiteListResponse is the response type for the
+// QueryIBCWhiteListRequest RPC method.
 type QueryIBCWhiteListResponse struct {
 	WhiteList []string `protobuf:"bytes,1,rep,name=white_list,json=whiteList,proto3" json:"white_list,omitempty" yaml:"white_list"`
 	// pagination defines an optional pagination for the request.

@@ -68,8 +68,8 @@ func (m *Delegation) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Delegation proto.InternalMessageInfo
 
-// BeginRedelegate defines a SDK message for performing a begin redelegation of coins
-// from a delegator to a validator.
+// BeginRedelegate defines a SDK message for performing a begin redelegation of
+// coins from a delegator to a validator.
 type BeginRedelegate struct {
 	DelegatorAddress    string     `protobuf:"bytes,1,opt,name=delegator_address,json=delegatorAddress,proto3" json:"delegator_address,omitempty"`
 	ValidatorSrcAddress string     `protobuf:"bytes,2,opt,name=validator_src_address,json=validatorSrcAddress,proto3" json:"validator_src_address,omitempty"`
