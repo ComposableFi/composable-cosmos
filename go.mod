@@ -318,7 +318,7 @@ replace (
 	// Use the keyring specified by the cosmos-sdk
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
 	// lock wasmvm so we do not break the grandpa contract
-	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
+	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.5
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 
