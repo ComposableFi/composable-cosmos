@@ -325,7 +325,7 @@ require (
 // composable replaces
 replace (
 	// lock wasmvm so we do not break the grandpa contract
-	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
+	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.5
 
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
 	// ibc-go with wasm client
