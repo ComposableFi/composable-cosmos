@@ -62,7 +62,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=centauri \
 		  -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
+		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)"
 
 ifeq (cleveldb,$(findstring cleveldb,$(COSMOS_BUILD_OPTIONS)))
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
@@ -127,7 +127,49 @@ proto-lint:
 proto-check-breaking:
 	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=main
 
-.PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking 
+.PHONY: proto-all proto-gen proto-format proto-lint proto-check-breaking
+
+
+###############################################################################
+###                                  Tests                                  ###
+###############################################################################
+
+test-unit:
+PACKAGES_UNIT=$(shell go list ./... )
+TEST_PACKAGES=$(PACKAGES_UNIT)
+TEST_TARGETS := test-unit test-unit-cover test-race
+TEST_COVERAGE_PROFILE=coverage.txt
+TMP_COVERAGE=$(TEST_COVERAGE_PROFILE).tmp
+BASE_FLAGS=-mod=readonly -timeout=5m
+
+test-unit: ARGS=-tags=norace
+test-unit-cover: ARGS=-tags='norace' -coverprofile=$(TEST_COVERAGE_PROFILE) -covermode=atomic
+test-race: ARGS=-race
+$(TEST_TARGETS): run-tests
+
+run-tests:
+	@echo "--> Running tests $(BASE_FLAGS) $(ARGS)"
+ifneq (,$(shell which tparse 2>/dev/null))
+	@go test $(BASE_FLAGS) -json $(ARGS) $(TEST_PACKAGES) | tparse
+else
+	@go test $(BASE_FLAGS) $(ARGS) $(TEST_PACKAGES)
+endif
+
+test-unit-cover:
+	@echo "--> Removing .pb from $(TEST_COVERAGE_PROFILE)"
+ifneq ("$(wildcard $(TEST_COVERAGE_PROFILE))","") # checks of file exists
+	@grep -vE .pb $(TEST_COVERAGE_PROFILE) > $(TMP_COVERAGE)
+	@cp $(TMP_COVERAGE) $(TEST_COVERAGE_PROFILE)
+	@rm -f $(TMP_COVERAGE)
+endif
+
+cover-html: test-unit-cover
+	@echo "--> Opening in the browser"
+	@go tool cover -html=$(TEST_COVERAGE_PROFILE)
+
+.PHONY: conver-html test-unit test-unit-cover $(TEST_TARGETS)
+
+###############################################################################
 ###                             Interchain test                             ###
 ###############################################################################
 
