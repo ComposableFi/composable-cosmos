@@ -79,3 +79,8 @@ message Params {
   uint64 allow_unbond_after_epoch_progress_block_number = 2;
 }
 
+// Params holds parameters for the stakingmiddleware module.
+message RewardDenom {
+  // reward denom to add to stakers
+  string denom = 1;
+}

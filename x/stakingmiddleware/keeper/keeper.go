@@ -13,8 +13,10 @@ import (
 
 // Keeper of the staking middleware store
 type Keeper struct {
-	cdc      codec.BinaryCodec
-	storeKey storetypes.StoreKey
+	cdc           codec.BinaryCodec
+	storeKey      storetypes.StoreKey
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
 	authority string
@@ -24,12 +26,16 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	key storetypes.StoreKey,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
 	authority string,
 ) Keeper {
 	return Keeper{
-		cdc:       cdc,
-		storeKey:  key,
-		authority: authority,
+		cdc:           cdc,
+		storeKey:      key,
+		accountKeeper: ak,
+		bankKeeper:    bk,
+		authority:     authority,
 	}
 }
 
@@ -63,6 +69,28 @@ func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	return nil
 }
 
+// SetParams sets the x/stakingmiddleware module parameters.
+func (k Keeper) SetDenom(ctx sdk.Context, rd types.RewardDenom) error {
+
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(&rd)
+	store.Set(types.RewardDenomKey, bz)
+
+	return nil
+}
+
+// GetParams returns the current x/stakingmiddleware module parameters.
+func (k Keeper) GetRewardDenom(ctx sdk.Context) (rd types.RewardDenom) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.RewardDenomKey)
+	if bz == nil {
+		return rd
+	}
+
+	k.cdc.MustUnmarshal(bz, &rd)
+	return rd
+}
+
 // GetParams returns the current x/stakingmiddleware module parameters.
 func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
 	store := ctx.KVStore(k.storeKey)
@@ -73,4 +101,9 @@ func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
 
 	k.cdc.MustUnmarshal(bz, &p)
 	return p
+}
+
+func (k Keeper) GetModuleAccountAccAddress(ctx sdk.Context) sdk.AccAddress {
+	moduleAccount := k.accountKeeper.GetModuleAccount(ctx, types.RewardModuleName)
+	return moduleAccount.GetAddress()
 }

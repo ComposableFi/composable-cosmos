@@ -11,7 +11,7 @@ LOGLEVEL="info"
 TRACE=""
 
 # remove existing daemon
-rm -rf ~/.centauri*
+rm -rf ~/.banksy*
 
 layerd config keyring-backend $KEYRING
 layerd config chain-id $CHAINID
@@ -39,7 +39,7 @@ fi
 
 # update request max size so that we can upload the light client
 # '' -e is a must have params on mac, if use linux please delete before run
-sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.centauri/config/config.toml
+sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.toml
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
 layerd start --pruning=nothing  --minimum-gas-prices=0.0001stake --rpc.laddr tcp://0.0.0.0:26657

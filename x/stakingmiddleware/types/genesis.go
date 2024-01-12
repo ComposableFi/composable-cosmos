@@ -1,9 +1,10 @@
 package types
 
 // NewGenesisState creates a new GenesisState object
-func NewGenesisState(params Params) *GenesisState {
+func NewGenesisState(params Params, rewardDenom RewardDenom) *GenesisState {
 	return &GenesisState{
-		Params: params,
+		Params:      params,
+		RewardDenom: rewardDenom,
 	}
 }
 
@@ -11,6 +12,8 @@ func NewGenesisState(params Params) *GenesisState {
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Params: Params{BlocksPerEpoch: 10, AllowUnbondAfterEpochProgressBlockNumber: 0},
+		// need to change to ppica for mainnet
+		RewardDenom: RewardDenom{Denom: "stake"},
 	}
 }
 
