@@ -19,9 +19,7 @@ import (
 	"github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
-var (
-	_ pcktfrwdtypes.TransferMiddlewareKeeper = Keeper{}
-)
+var _ pcktfrwdtypes.TransferMiddlewareKeeper = Keeper{}
 
 type Keeper struct {
 	cdc            codec.BinaryCodec

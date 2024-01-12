@@ -7,9 +7,7 @@ import (
 	pcktfrwdtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7/packetforward/types"
 )
 
-var (
-	_ pcktfrwdtypes.ParaChainIBCTokenInfo = ParachainIBCTokenInfo{}
-)
+var _ pcktfrwdtypes.ParaChainIBCTokenInfo = ParachainIBCTokenInfo{}
 
 func (p ParachainIBCTokenInfo) ValidateBasic() error {
 	_, err := strconv.Atoi(p.AssetId)
