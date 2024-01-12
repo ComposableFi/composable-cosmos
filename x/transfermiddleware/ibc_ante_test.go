@@ -15,6 +15,7 @@ import (
 	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
+
 // NOTE: This is the address of the gov authority on the chain that is being tested.
 // This means that we need to check bech32 .... everywhere.
 var govAuthorityAddress = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
