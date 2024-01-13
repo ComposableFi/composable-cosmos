@@ -343,7 +343,7 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
-	// github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-print-commit-tag
+	github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-print-commit-tag
 
 	// github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-timestamp-rounding-tag
 
