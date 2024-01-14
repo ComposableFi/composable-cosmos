@@ -343,11 +343,11 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
-	github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-print-commit-tag
+	// github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-print-commit-tag
 
-	// github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-timestamp-rounding-tag
+	github.com/cometbft/cometbft v0.37.2 => github.com/rust-ninja/cometbft v0.37.2-fixed-len-new-proto-timestamp-rounding-print-gogoproto-tag
 
-	github.com/cosmos/gogoproto v1.4.10 => github.com/rustninja/gogoproto v1.4.10-fixed-len-final-tag
+	github.com/cosmos/gogoproto v1.4.10 => github.com/rustninja/gogoproto v1.4.10-timestamp-validation-len-final-tag
 
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
 	// ibc-go with wasm client
