@@ -47,7 +47,7 @@ func (s TestSupport) ScopedTransferKeeper() capabilitykeeper.ScopedKeeper {
 }
 
 func (s TestSupport) StakingKeeper() *stakingkeeper.Keeper {
-	return s.app.StakingKeeper
+	return &s.app.StakingKeeper.Keeper
 }
 
 func (s TestSupport) AccountKeeper() authkeeper.AccountKeeper {
