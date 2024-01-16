@@ -1,6 +1,5 @@
 module github.com/notional-labs/composable/v6
 
-// TODO: move module to github.com/ComposableFi/composable-cosmos
 go 1.21
 
 toolchain go1.21.5
@@ -344,7 +343,6 @@ replace (
 	// lock wasmvm so we do not break the grandpa contract
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.1
 
-	// TODO: Move to notional once https://github.com/notional-labs/ibc-apps/pull/1 is merged.
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/RafilxTenfen/ibc-apps/middleware/packet-forward-middleware/v7 v7.1.3-0.20240110012424-6c70c9f1396d
 
 	// ibc-go with wasm client
