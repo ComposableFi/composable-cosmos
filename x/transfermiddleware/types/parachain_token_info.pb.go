@@ -74,6 +74,7 @@ func (m *ParachainIBCTokenInfo) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ParachainIBCTokenInfo proto.InternalMessageInfo
 
+// RemoveParachainIBCTokenInfo removes parachain IBC token info.
 type RemoveParachainIBCTokenInfo struct {
 	// native denom is new native minted denom in centauri chain.
 	NativeDenom string `protobuf:"bytes,1,opt,name=native_denom,json=nativeDenom,proto3" json:"native_denom,omitempty" yaml:"native_denom"`

@@ -13,8 +13,7 @@ option go_package = "x/stakingmiddleware/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
-  rpc UpdateEpochParams(MsgUpdateEpochParams)
-      returns (MsgUpdateParamsEpochResponse);
+  rpc UpdateEpochParams(MsgUpdateEpochParams) returns (MsgUpdateParamsEpochResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
