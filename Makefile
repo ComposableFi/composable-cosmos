@@ -104,7 +104,7 @@ lint:
 ###                                  Proto                                  ###
 ###############################################################################
 
-protoVer=0.11.6
+protoVer=0.12.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 containerProtoGen=proto-gen-$(protoVer)
 containerProtoFmt=proto-fmt-$(protoVer)

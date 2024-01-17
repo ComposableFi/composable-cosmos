@@ -36,3 +36,31 @@ func (ms msgServer) UpdateEpochParams(goCtx context.Context, req *types.MsgUpdat
 
 	return &types.MsgUpdateParamsEpochResponse{}, nil
 }
+
+// UpdateParams updates the params.
+func (ms msgServer) AddRevenueFundsToStaking(goCtx context.Context, req *types.MsgAddRevenueFundsToStakingParams) (*types.MsgAddRevenueFundsToStakingResponse, error) {
+	// Unwrap context
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Check sender address
+	sender, err := sdk.AccAddressFromBech32(req.FromAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	rewardDenom := ms.Keeper.stakingKeeper.BondDenom(ctx)
+
+	// Check that reward is 1 coin rewardDenom
+	if len(req.Amount.Denoms()) != 1 || req.Amount[0].Denom != rewardDenom {
+		return nil, errorsmod.Wrapf(types.ErrInvalidCoin, "Invalid coin")
+	}
+
+	// Send Fund to account module
+	moduleAccountAccAddress := ms.GetModuleAccountAccAddress(ctx)
+	err = ms.bankKeeper.SendCoins(ctx, sender, moduleAccountAccAddress, req.Amount)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgAddRevenueFundsToStakingResponse{}, nil
+}
