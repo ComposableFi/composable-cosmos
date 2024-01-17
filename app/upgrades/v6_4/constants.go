@@ -4,7 +4,6 @@ import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/notional-labs/composable/v6/app/upgrades"
-	customstmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
 const (
@@ -16,7 +15,7 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added:   []string{customstmiddleware.StoreKey},
+		Added:   []string{},
 		Deleted: []string{},
 	},
 }
