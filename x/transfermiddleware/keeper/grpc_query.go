@@ -12,7 +12,7 @@ import (
 
 func (k Keeper) ParaTokenInfo(c context.Context, req *types.QueryParaTokenInfoRequest) (*types.QueryParaTokenInfoResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	info := k.ParachainIBCTokenInfoByNativeDenom(ctx, req.NativeDenom)
+	info := k.GetParachainIBCTokenInfoByNativeDenom(ctx, req.NativeDenom)
 
 	return &types.QueryParaTokenInfoResponse{
 		IbcDenom:    info.IbcDenom,

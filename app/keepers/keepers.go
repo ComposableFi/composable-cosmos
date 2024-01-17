@@ -302,8 +302,8 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
 		appKeepers.BankKeeper,
-		appKeepers.TransferMiddlewareKeeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.TransferMiddlewareKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
