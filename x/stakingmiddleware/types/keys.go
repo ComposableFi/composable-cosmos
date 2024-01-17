@@ -2,8 +2,7 @@ package types
 
 // ParamsKey is the key to use for the keeper store.
 var (
-	ParamsKey      = []byte{0x01} // key for global staking middleware params in the keeper store
-	RewardDenomKey = []byte{0x02}
+	ParamsKey = []byte{0x01} // key for global staking middleware params in the keeper store
 )
 
 const (
