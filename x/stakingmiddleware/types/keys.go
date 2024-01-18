@@ -7,7 +7,8 @@ var (
 
 const (
 	// module name
-	ModuleName = "stakingmiddleware"
+	ModuleName       = "stakingmiddleware"
+	RewardModuleName = "fee_collector"
 
 	// StoreKey is the default store key for stakingmiddleware module that store params when apply validator set changes and when allow to unbond/redelegate
 
