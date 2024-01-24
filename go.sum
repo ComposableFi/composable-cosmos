@@ -1109,8 +1109,8 @@ github.com/rs/zerolog v1.30.0/go.mod h1:/tk+P47gFdPXq4QYjvCmT5/Gsug2nagsFWBWhAiS
 github.com/russross/blackfriday v1.5.2/go.mod h1:JO/DiYxRf+HjHt06OyowR9PTA263kcR/rfWxYHBV53g=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
-github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-tag h1:EhBU/3NES0fnFHFpyBvXTTgvju5nX5RFcUE/zvxuNLM=
-github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-tag/go.mod h1:EHwCeN9IXonsjKcjpS12MqeStdZvIdxt3VYXhus3G3c=
+github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-trim-tag h1:hRig0sGiufr4UszAaCZlg0ZJVGBjYyIQwC+NUf2f/GE=
+github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-trim-tag/go.mod h1:EHwCeN9IXonsjKcjpS12MqeStdZvIdxt3VYXhus3G3c=
 github.com/ryancurrah/gomodguard v1.2.4 h1:CpMSDKan0LtNGGhPrvupAoLeObRFjND8/tU1rEOtBp4=
 github.com/ryancurrah/gomodguard v1.2.4/go.mod h1:+Kem4VjWwvFpUJRJSwa16s1tBJe+vbv02+naTow2f6M=
 github.com/ryanrolds/sqlclosecheck v0.3.0 h1:AZx+Bixh8zdUBxUA1NxbxVAS78vTPq4rCb8OUZI9xFw=
