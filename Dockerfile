@@ -7,13 +7,15 @@ ARG RUNNER_IMAGE="gcr.io/distroless/static-debian11"
 # Builder
 # --------------------------------------------------------
 
-FROM golang:${GO_VERSION}-alpine as builder
+FROM golang:${GO_VERSION}-alpine3.18 as builder
 
 ARG GIT_VERSION
 ARG GIT_COMMIT
 
 RUN apk add --no-cache \
     ca-certificates \
+    musl-dev \
+    openssl-dev \
     build-base \
     linux-headers
 
