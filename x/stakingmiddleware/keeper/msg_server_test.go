@@ -24,7 +24,7 @@ func (s *KeeperTestSuite) TestMsgUpdateEpochParams() {
 			input: &stakingmiddlewaretypes.MsgUpdateEpochParams{
 				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 				Params: stakingmiddlewaretypes.Params{
-					BlocksPerEpoch:                           10,
+					BlocksPerEpoch:                           20,
 					AllowUnbondAfterEpochProgressBlockNumber: 7,
 				},
 			},
@@ -35,7 +35,7 @@ func (s *KeeperTestSuite) TestMsgUpdateEpochParams() {
 			input: &stakingmiddlewaretypes.MsgUpdateEpochParams{
 				Authority: "invalid",
 				Params: stakingmiddlewaretypes.Params{
-					BlocksPerEpoch:                           10,
+					BlocksPerEpoch:                           20,
 					AllowUnbondAfterEpochProgressBlockNumber: 7,
 				},
 			},
