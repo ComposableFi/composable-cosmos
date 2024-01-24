@@ -329,11 +329,11 @@ replace (
 	github.com/CosmWasm/wasmvm => github.com/CosmWasm/wasmvm v1.2.6
 
 	github.com/cometbft/cometbft v0.37.2 => github.com/composablefi/cometbft v0.37.2-fixed-len-vote-time-tag
+	github.com/cosmos/cosmos-sdk v0.47.5 => github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-tag
 
 	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
-
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647
 )
