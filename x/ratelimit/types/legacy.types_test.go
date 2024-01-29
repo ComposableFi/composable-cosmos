@@ -1,4 +1,4 @@
-package legacy
+package types
 
 import (
 	"testing"
@@ -14,8 +14,13 @@ import (
 
 func TestAnyPackUnpack(t *testing.T) {
 	registry := types.NewInterfaceRegistry()
+	registry.RegisterInterface("centauri.ratelimit.v1beta1.MsgAddRateLimit", (*sdk.Msg)(nil))
+	registry.RegisterImplementations(
+		(*sdk.Msg)(nil),
+		&MsgAddRateLimitLegacy{},
+	)
 
-	input := &MsgAddRateLimit{
+	input := &MsgAddRateLimitLegacy{
 		Authority:          authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		Denom:              "test",
 		ChannelId:          "test",
@@ -30,7 +35,6 @@ func TestAnyPackUnpack(t *testing.T) {
 	any, err := types.NewAnyWithValue(input)
 	require.NoError(t, err)
 	require.Equal(t, input, any.GetCachedValue())
-
 	err = registry.UnpackAny(any, &msg)
 
 	require.NoError(t, err)
