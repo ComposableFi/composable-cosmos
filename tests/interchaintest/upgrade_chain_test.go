@@ -20,7 +20,7 @@ const (
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, repo, version, "v6")
+	CosmosChainUpgradeTest(t, repo, version, "v7")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
