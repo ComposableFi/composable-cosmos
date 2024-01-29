@@ -1,6 +1,6 @@
 module github.com/notional-labs/composable-testnet/tests/interchaintest
 
-go 1.19
+go 1.20
 
 require (
 	github.com/cosmos/ibc-go/v7 v7.0.0
