@@ -492,7 +492,9 @@ func (appKeepers *AppKeepers) BlacklistedModuleAccountAddrs(maccPerms map[string
 	modAccAddrs := make(map[string]bool)
 	// DO NOT REMOVE: StringMapKeys fixes non-deterministic map iteration
 	for acc := range maccPerms {
-		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+		if acc != authtypes.FeeCollectorName {
+			modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+		}
 	}
 	return modAccAddrs
 }
