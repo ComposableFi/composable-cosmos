@@ -11,8 +11,6 @@ import (
 	groupcodec "github.com/cosmos/cosmos-sdk/x/group/codec"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	legacyMsg "github.com/notional-labs/composable/v6/x/ratelimit/types/legacy"
 )
 
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
@@ -31,13 +29,13 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		&MsgUpdateRateLimit{},
 		&MsgRemoveRateLimit{},
 		&MsgResetRateLimit{},
-
-		&legacyMsg.MsgAddRateLimit{},
-		&legacyMsg.MsgUpdateRateLimit{},
-		&legacyMsg.MsgRemoveRateLimit{},
-		&legacyMsg.MsgResetRateLimit{},
 	)
-	msgservice.RegisterMsgServiceDesc(registry, &legacyMsg.Msg_serviceDesc)
+	registry.RegisterImplementations(
+		(*sdk.Msg)(nil),
+		&MsgAddRateLimitLegacy{},
+		&MsgUpdateRateLimitLegacy{},
+	)
+	msgservice.RegisterMsgServiceDesc(registry, &Msg_serviceDesc)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 

@@ -10,8 +10,6 @@ option go_package = "x/ratelimit/types/legacy";
 service Msg {
   rpc AddTransferRateLimit(MsgAddRateLimit) returns (MsgAddRateLimitResponse);
   rpc UpdateTransferRateLimit(MsgUpdateRateLimit) returns (MsgUpdateRateLimitResponse);
-  rpc RemoveTransferRateLimit(MsgRemoveRateLimit) returns (MsgRemoveRateLimitResponse);
-  rpc ResetTransferRateLimit(MsgResetRateLimit) returns (MsgResetRateLimitResponse);
 }
 
 message MsgAddRateLimit {
@@ -69,27 +67,3 @@ message MsgUpdateRateLimit {
 }
 
 message MsgUpdateRateLimitResponse {}
-
-message MsgRemoveRateLimit {
-  option (cosmos.msg.v1.signer) = "authority";
-
-  // authority is the address that controls the module (defaults to x/gov unless
-  // overwritten).
-  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
-  string denom = 2;
-  string channel_id = 3;
-}
-
-message MsgRemoveRateLimitResponse {}
-
-message MsgResetRateLimit {
-  option (cosmos.msg.v1.signer) = "authority";
-
-  // authority is the address that controls the module (defaults to x/gov unless
-  // overwritten).
-  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
-  string denom = 2;
-  string channel_id = 3;
-}
-
-message MsgResetRateLimitResponse {}

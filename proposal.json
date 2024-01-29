@@ -5,7 +5,7 @@
                 "@type": "/cosmos.gov.v1.MsgSubmitProposal",
                 "messages": [
                     {
-                        "@type": "/centauri.ratelimit.v1beta1.MsgUpdateRateLimit",
+                        "@type": "/composable.ratelimit.v1beta1.MsgUpdateRateLimit",
                         "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
                         "denom": "ibc/EF48E6B1A1A19F47ECAEA62F5670C37C0580E86A9E88498B7E393EB6F49F33C0",
                         "min_rate_limit_amount": "30410000000",
@@ -15,7 +15,7 @@
                         "duration_hours": "1"
                     },
                     {
-                        "@type": "/centauri.ratelimit.v1beta1.MsgUpdateRateLimit",
+                        "@type": "/composable.ratelimit.v1beta1.MsgUpdateRateLimit",
                         "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
                         "denom": "ibc/3CC19CEC7E5A3E90E78A5A9ECC5A0E2F8F826A375CF1E096F4515CF09DA3E366",
                         "min_rate_limit_amount": "513350000000000",
@@ -25,7 +25,7 @@
                         "duration_hours": "1"
                     },
                     {
-                        "@type": "/centauri.ratelimit.v1beta1.MsgUpdateRateLimit",
+                        "@type": "/composable.ratelimit.v1beta1.MsgUpdateRateLimit",
                         "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
                         "denom": "ibc/EE9046745AEC0E8302CB7ED9D5AD67F528FB3B7AE044B247FB0FB293DBDA35E9",
                         "channel_id": "channel-2",
@@ -35,7 +35,7 @@
                         "duration_hours": "1"
                     },
                     {
-                        "@type": "/centauri.ratelimit.v1beta1.MsgUpdateRateLimit",
+                        "@type": "/composable.ratelimit.v1beta1.MsgUpdateRateLimit",
                         "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
                         "denom": "ibc/F3EC9F834E57DF704FA3AEAF14E8391C2E58397FE56960AD70E67562990D8265",
                         "min_rate_limit_amount": "250000000000",
@@ -45,7 +45,7 @@
                         "duration_hours": "1"
                     },
                     {
-                        "@type": "/centauri.ratelimit.v1beta1.MsgUpdateRateLimit",
+                        "@type": "/composable.ratelimit.v1beta1.MsgUpdateRateLimit",
                         "authority": "centauri10d07y265gmmuvt4z0w9aw880jnsr700j7g7ejq",
                         "denom": "ibc/47BD209179859CDE4A2806763D7189B6E6FE13A17880FE2B42DE1E6C1E329E23",
                         "min_rate_limit_amount": "1",
