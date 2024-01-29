@@ -1,7 +1,6 @@
 syntax = "proto3";
 package composable.stakingmiddleware.v1beta1;
 
-import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
@@ -15,7 +14,6 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc UpdateEpochParams(MsgUpdateEpochParams) returns (MsgUpdateParamsEpochResponse);
-  rpc AddRevenueFundsToStaking(MsgAddRevenueFundsToStakingParams) returns (MsgAddRevenueFundsToStakingResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -41,16 +39,3 @@ message MsgUpdateEpochParams {
 //
 // Since: cosmos-sdk 0.47
 message MsgUpdateParamsEpochResponse {}
-
-message MsgAddRevenueFundsToStakingParams {
-  option (cosmos.msg.v1.signer) = "from_address";
-
-  string from_address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  repeated cosmos.base.v1beta1.Coin amount = 3 [
-    (gogoproto.nullable)     = false,
-    (amino.dont_omitempty)   = true,
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-}
-
-message MsgAddRevenueFundsToStakingResponse {}
