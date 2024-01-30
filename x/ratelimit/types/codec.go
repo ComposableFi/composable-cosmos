@@ -30,6 +30,12 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 		&MsgRemoveRateLimit{},
 		&MsgResetRateLimit{},
 	)
+	registry.RegisterImplementations(
+		(*sdk.Msg)(nil),
+		&MsgAddRateLimitLegacy{},
+		&MsgUpdateRateLimitLegacy{},
+	)
+	msgservice.RegisterMsgServiceDesc(registry, &Msg_serviceDesc)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
