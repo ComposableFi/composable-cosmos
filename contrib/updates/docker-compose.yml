@@ -1,0 +1,125 @@
+version: '3'
+
+services:
+  centauridnode0:
+    container_name: centauridnode0
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    ports:
+      - "9090:9090"
+      - "26656-26657:26656-26657"
+    environment:
+      - ID=0
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node0/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.2
+
+  centauridnode1:
+    container_name: centauridnode1
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    ports:
+      - "9091:9090"
+      - "26659-26660:26656-26657"
+    environment:
+      - ID=1
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node1/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.3
+
+  centauridnode2:
+    container_name: centauridnode2
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    environment:
+      - ID=2
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node2/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9092:9090"
+      - "26661-26662:26656-26657"
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.4
+        
+  centauridnode3:
+    container_name: centauridnode3
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    environment:
+      - ID=3
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node3/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9093:9090"
+      - "26663-26664:26656-26657"
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.5
+
+  centauridnode4:
+    container_name: centauridnode4
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    environment:
+      - ID=4
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node4/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9094:9090"
+      - "26665-26666:26656-26657"
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.6
+
+  centauridnode5:
+    container_name: centauridnode5
+    platform: linux/amd64
+    image: "centauri/centaurid-upgrade-env"
+    environment:
+      - ID=5
+      - LOG=centaurid.log
+      - DAEMON_HOME=/centaurid/node5/centaurid
+      - DAEMON_NAME=centaurid
+      - DAEMON_RESTART_AFTER_UPGRADE=true
+    ports:
+      - "9095:9090"
+      - "26667-26668:26656-26657"
+    volumes:
+      - ../../build:/centaurid:Z
+    networks:
+      localnet:
+        ipv4_address: 192.168.0.7
+
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 192.168.0.0/16

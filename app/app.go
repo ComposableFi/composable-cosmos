@@ -267,7 +267,6 @@ func NewComposableApp(
 		interfaceRegistry: interfaceRegistry,
 		invCheckPeriod:    invCheckPeriod,
 	}
-
 	app.InitSpecialKeepers(
 		appCodec,
 		cdc,

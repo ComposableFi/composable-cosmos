@@ -17,6 +17,8 @@ DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
 HTTPS_GIT := https://github.com/notional-labs/composable-centauri.git
+TESTNET_NVAL := 6
+TESTNET_CHAINID := test-1
 
 export GO111MODULE = on
 
@@ -160,3 +162,47 @@ ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
 .PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
+
+###############################################################################
+###                                Localnet                                 ###
+###############################################################################
+
+build-linux:
+	mkdir -p $(BUILDDIR)
+	docker build --platform linux/amd64 --tag centaurid ./
+	docker create --platform linux/amd64 --name temp centaurid:latest 
+	docker cp temp:/bin/centaurid $(BUILDDIR)/
+	docker rm temp
+
+localnet-start: localnet-stop
+	@if ! [ -f build/node0/$(BINARY)/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/centauri:Z centaurid testnet init-files --chain-id ${TESTNET_CHAINID} --v ${TESTNET_NVAL} -o /centauri --keyring-backend=test --starting-ip-address 192.168.0.2; fi
+
+localnet-stop:
+	docker-compose down
+	rm -rf build/node*
+	rm -rf build/gentxs.
+
+###############################################################################
+###                                Upgrade                                 ###
+###############################################################################
+build-cosmovisor-linux:
+	@if [ -z "$(docker images -q centauri/centauri.cosmovisor-binary 2> /dev/null)" ]; then \
+		$(MAKE) -C contrib/updates build-cosmovisor-linux BUILDDIR=$(BUILDDIR); \
+	fi
+
+build-centaurid-env:
+	@if [ -z "$(docker images -q centauri/centaurid-upgrade-env 2> /dev/null)" ]; then \
+		$(MAKE) -C contrib/centaurid-env centaurid-upgrade-env; \
+	fi
+	
+## Presiquites: build-cosmovisor-linux build-linux build-centaurid-env 
+localnet-start-upgrade: localnet-upgrade-stop build-cosmovisor-linux build-linux build-centaurid-env 
+	bash contrib/updates/prepare_cosmovisor.sh $(BUILDDIR) ${TESTNET_NVAL} ${TESTNET_CHAINID}
+	docker-compose -f ./contrib/updates/docker-compose.yml up -d
+	@./contrib/updates/upgrade-test.sh
+	$(MAKE) localnet-upgrade-stop
+
+localnet-upgrade-stop:
+	docker-compose -f contrib/updates/docker-compose.yml down
+	rm -rf build
+	rm -rf _build
