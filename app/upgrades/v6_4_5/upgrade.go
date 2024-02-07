@@ -18,7 +18,10 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
-
+		BrokenProposals := [3]uint64{2, 6, 11}
+		for _, proposal := range BrokenProposals {
+			keepers.GovKeeper.DeleteProposal(ctx, proposal)
+		}
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
