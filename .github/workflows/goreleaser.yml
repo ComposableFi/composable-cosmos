@@ -49,4 +49,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/composable-cosmos/composable-cosmos:${{ steps.get_version.outputs.version }}
+          tags: |
+            ghcr.io/composable-cosmos/composable-cosmos:${{ steps.get_version.outputs.version }}
+            ghcr.io/composable-cosmos/composable-cosmos:v${{ steps.get_version.outputs.major }}
+            ghcr.io/composable-cosmos/composable-cosmos:v${{ steps.get_version.outputs.major }}.${{ steps.get_version.outputs.minor }}
