@@ -79,14 +79,3 @@ builds:
   #     - muslc
   #     - static
   #     - static_wasm
-
-# dockers:
-#   - dockerfile: "goreleaser.Dockerfile"
-#     image_templates:
-#       - "ghcr.io/composable-cosmos/goapp:{{ .Tag }}"
-#     build_flag_templates:
-#       - "--label=org.opencontainers.image.created={{.Date}}"
-#       - "--label=org.opencontainers.image.name={{.ProjectName}}"
-#       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-#       - "--label=org.opencontainers.image.version={{.Version}}"
-#     use: buildx
