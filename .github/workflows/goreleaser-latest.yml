@@ -46,4 +46,4 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/rjonczy/composable-cosmos:latest
+          tags: ghcr.io/composable-cosmos/composable-cosmos:latest

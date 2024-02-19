@@ -83,7 +83,7 @@ builds:
 # dockers:
 #   - dockerfile: "goreleaser.Dockerfile"
 #     image_templates:
-#       - "ghcr.io/rjonczy/goapp:{{ .Tag }}"
+#       - "ghcr.io/composable-cosmos/goapp:{{ .Tag }}"
 #     build_flag_templates:
 #       - "--label=org.opencontainers.image.created={{.Date}}"
 #       - "--label=org.opencontainers.image.name={{.ProjectName}}"
