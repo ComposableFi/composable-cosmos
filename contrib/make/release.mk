@@ -2,7 +2,7 @@
 ###                               Release                                   ###
 ###############################################################################
 
-PACKAGE_NAME		  := github.com/rjonczy/composable-cosmos
+PACKAGE_NAME		  := github.com/composable-cosmos/composable-cosmos
 GOLANG_CROSS_VERSION  ?= v1.20
 
 # The `make release` command is running a Docker container with the image 
