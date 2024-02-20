@@ -12,7 +12,7 @@ RUN if [ "${TARGETARCH}" = "arm64" ]; then \
 
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates jq
 COPY --from=builder /root/centaurid /usr/local/bin/centaurid
 
 RUN addgroup --gid 1025 -S composable && adduser --uid 1025 -S composable -G composable
