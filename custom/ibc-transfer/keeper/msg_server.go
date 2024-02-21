@@ -21,12 +21,9 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 	params := k.Keeper.IbcTransfermiddleware.GetParams(ctx)
 	if params.ChannelFees != nil && len(params.ChannelFees) > 0 {
 		channelFee := findChannelParams(params.ChannelFees, msg.SourceChannel)
-		//find the channel fee with a matching channel
 		if channelFee != nil {
-			//find the coin with a matching denom
 			coin := findCoinByDenom(channelFee.AllowedTokens, msg.Token.Denom)
 			if coin != nil {
-				//token not allowed by this channel. should ignore the transfer
 				return &types.MsgTransferResponse{}, nil
 			}
 			minFee := coin.MinFee.Amount
@@ -38,13 +35,11 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 			newAmount := msg.Token.Amount.Sub(charge)
 
 			if newAmount.IsPositive() {
-				//if Percentage = 100 it means we charge 1 % of the amount
 				percentageCharge := newAmount.QuoRaw(coin.Percentage)
 				newAmount = newAmount.Sub(percentageCharge)
 				charge = charge.Add(percentageCharge)
 			}
 
-			//address from string
 			msgSender, err := sdk.AccAddressFromBech32(msg.Sender)
 			if err != nil {
 				return nil, err
@@ -58,7 +53,6 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 			k.bank.SendCoins(ctx, msgSender, feeAddress, sdk.NewCoins(sdk.NewCoin(msg.Token.Denom, charge)))
 
 			if newAmount.IsZero() {
-				//if the new amount is zero, then the transfer should be ignored
 				return &types.MsgTransferResponse{}, nil
 			}
 			msg.Token.Amount = newAmount
@@ -77,6 +71,7 @@ func findChannelParams(channelFees []*ibctransfermiddlewaretypes.ChannelFee, tar
 	}
 	return nil // If the channel is not found
 }
+
 func findCoinByDenom(allowedTokens []*ibctransfermiddlewaretypes.CoinItem, denom string) *ibctransfermiddlewaretypes.CoinItem {
 	for _, coin := range allowedTokens {
 		if coin.MinFee.Denom == denom {
