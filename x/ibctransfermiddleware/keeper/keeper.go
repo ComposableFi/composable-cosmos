@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 
@@ -45,16 +43,6 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 
 // SetParams sets the x/ibctransfermiddleware module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
-	if p.BlocksPerEpoch < 5 {
-		return fmt.Errorf(
-			"BlocksPerEpoch must be greater than or equal to 5",
-		)
-	}
-	if p.AllowUnbondAfterEpochProgressBlockNumber > p.BlocksPerEpoch {
-		return fmt.Errorf(
-			"AllowUnbondAfterEpochProgressBlockNumber must be less than or equal to BlocksPerEpoch",
-		)
-	}
 
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&p)
