@@ -13,7 +13,7 @@ type msgServer struct {
 
 var _ types.MsgServer = msgServer{}
 
-// TODO - Add the stakingkeeper.Keeper as a parameter to the NewMsgServerImpl function
+// // TODO - Add the stakingkeeper.Keeper as a parameter to the NewMsgServerImpl function
 // func NewMsgServerImpl(stakingKeeper stakingkeeper.Keeper, customstakingkeeper Keeper) types.MsgServer {
 // 	return &msgServer{Keeper: customstakingkeeper, msgServer: stakingkeeper.NewMsgServerImpl(&stakingKeeper)}
 // }
