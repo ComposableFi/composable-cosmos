@@ -95,9 +95,9 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 			ChainConfig: ibc.ChainConfig{
 				Type:           "cosmos",
 				Name:           "centauri",
-				ChainID:        "centaurid",
+				ChainID:        "picad",
 				Images:         []ibc.DockerImage{CentauriImage},
-				Bin:            "centaurid",
+				Bin:            "picad",
 				Bech32Prefix:   "centauri",
 				Denom:          "stake",
 				GasPrices:      "0.00stake",
@@ -128,7 +128,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	).Build(t, client, network)
 
 	// Build the network; spin up the chains and configure the relayer
-	const pathName = "composable-centaurid"
+	const pathName = "composable-picad"
 	const relayerName = "hyperspace"
 
 	ic := interchaintest.NewInterchain().
@@ -192,7 +192,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	require.NoError(t, err)
 
 	// Get channels - Query channels was removed
-	/*cosmosChannelOutput, err := r.GetChannels(ctx, eRep, centaurid.Config().ChainID)
+	/*cosmosChannelOutput, err := r.GetChannels(ctx, eRep, picad.Config().ChainID)
 	require.NoError(t, err)
 	require.Equal(t, len(cosmosChannelOutput), 1)
 	require.Equal(t, cosmosChannelOutput[0].ChannelID, "channel-0")
@@ -227,7 +227,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	require.NoError(t, err)
 
 	/*// Trace IBC Denom of stake on parachain
-	srcDenomTrace := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(cosmosChannelOutput[0].PortID, cosmosChannelOutput[0].ChannelID, centaurid.Config().Denom))
+	srcDenomTrace := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(cosmosChannelOutput[0].PortID, cosmosChannelOutput[0].ChannelID, picad.Config().Denom))
 	dstIbcDenom := srcDenomTrace.IBCDenom()
 	fmt.Println("Dst Ibc denom: ", dstIbcDenom)
 	// Test destination wallet has increased funds, this is not working, want to verify IBC balance on parachain
@@ -283,7 +283,7 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 	fmt.Println("********* Test passed **********")
 	fmt.Println("********************************")
 
-	// err = testutil.WaitForBlocks(ctx, 50, centaurid, composable)
+	// err = testutil.WaitForBlocks(ctx, 50, picad, composable)
 	// require.NoError(t, err)
 }
 

@@ -13,25 +13,25 @@ TRACE=""
 # remove existing daemon
 rm -rf ~/.banksy*
 
-centaurid config keyring-backend $KEYRING
-centaurid config chain-id $CHAINID
+picad config keyring-backend $KEYRING
+picad config chain-id $CHAINID
 
 # if $KEY exists it should be deleted
-echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | centaurid keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
+echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | picad keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
 
-centaurid init $MONIKER --chain-id $CHAINID 
+picad init $MONIKER --chain-id $CHAINID
 
 # Allocate genesis accounts (cosmos formatted addresses)
-centaurid add-genesis-account $KEY 100000000000000000000000000stake --keyring-backend $KEYRING
+picad add-genesis-account $KEY 100000000000000000000000000stake --keyring-backend $KEYRING
 
 # Sign genesis transaction
-centaurid gentx $KEY 1000000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+picad gentx $KEY 1000000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
 # Collect genesis tx
-centaurid collect-gentxs
+picad collect-gentxs
 
 # Run this to ensure everything worked and that the genesis file is setup correctly
-centaurid validate-genesis
+picad validate-genesis
 
 if [[ $1 == "pending" ]]; then
   echo "pending mode is on, please wait for the first block committed."
@@ -42,4 +42,4 @@ fi
 sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.toml
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-centaurid start --pruning=nothing  --minimum-gas-prices=0.0001stake --rpc.laddr tcp://0.0.0.0:26657
+picad start --pruning=nothing  --minimum-gas-prices=0.0001stake --rpc.laddr tcp://0.0.0.0:26657

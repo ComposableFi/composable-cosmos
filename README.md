@@ -1,4 +1,4 @@
-# Centauri
+# Pica
 Cosmos blockchain with IBC-v7 and wasm client enable.
 
 ## Hardware Recommendation
@@ -13,7 +13,7 @@ Requires [Go 1.20](https://go.dev/doc/install) or higher.
 
 ```bash
 make install
-centaurid version
+picad version
 ```
 Then you can run a node with a single command.
 

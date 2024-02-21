@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     linux-headers
 
 # Download go dependencies
-WORKDIR /centauri
+WORKDIR /pica
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
@@ -36,22 +36,22 @@ RUN set -eux; \
 # Copy the remaining files
 COPY . .
 
-# Build centaurid binary
+# Build picad binary
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/root/go/pkg/mod \
     GOWORK=off go build \
         -mod=readonly \
         -tags "netgo,ledger,muslc" \
         -ldflags \
-            "-X github.com/cosmos/cosmos-sdk/version.Name="centauri" \
-            -X github.com/cosmos/cosmos-sdk/version.AppName="centaurid" \
+            "-X github.com/cosmos/cosmos-sdk/version.Name="pica" \
+            -X github.com/cosmos/cosmos-sdk/version.AppName="picad" \
             -X github.com/cosmos/cosmos-sdk/version.Version=${GIT_VERSION} \
             -X github.com/cosmos/cosmos-sdk/version.Commit=${GIT_COMMIT} \
             -X github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc \
             -w -s -linkmode=external -extldflags '-Wl,-z,muldefs -static'" \
         -trimpath \
-        -o /centauri/build/centaurid \
-        /centauri/cmd/centaurid
+        -o /pica/build/picad \
+        /pica/cmd/picad
 
 
 # --------------------------------------------------------
@@ -69,7 +69,7 @@ FROM ${RUNNER_IMAGE}
 
 COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/sh
 
-COPY --from=builder /centauri/build/centaurid /bin/centaurid
+COPY --from=builder /pica/build/picad /bin/picad
 
 # Install composable user
 COPY --from=busybox /etc/passwd /etc/passwd
@@ -87,4 +87,4 @@ EXPOSE 26657
 # grpc
 EXPOSE 9090
 
-ENTRYPOINT ["centaurid"]
+ENTRYPOINT ["picad"]

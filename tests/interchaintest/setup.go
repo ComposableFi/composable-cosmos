@@ -23,7 +23,7 @@ var (
 		Name:                "centauri",
 		ChainID:             "centauri-2",
 		Images:              []ibc.DockerImage{CentauriImage},
-		Bin:                 "centaurid",
+		Bin:                 "picad",
 		Bech32Prefix:        "centauri",
 		Denom:               "stake",
 		CoinType:            "118",
