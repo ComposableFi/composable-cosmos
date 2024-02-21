@@ -25,7 +25,7 @@ const (
 	maxDepositPeriod = "10s"
 )
 
-// Spin up a picad chain, push a contract, and get that contract code from chain
+// Spin up a centaurid chain, push a contract, and get that contract code from chain
 func TestPushWasmClientCode(t *testing.T) {
 	if testing.Short() {
 		t.Skip()
@@ -67,10 +67,10 @@ func TestPushWasmClientCode(t *testing.T) {
 			ChainConfig: ibc.ChainConfig{
 				Type:           "cosmos",
 				Name:           "centauri",
-				ChainID:        "picad",
+				ChainID:        "centaurid",
 				Images:         []ibc.DockerImage{CentauriImage},
 				Bin:            "picad",
-				Bech32Prefix:   "centauri",
+				Bech32Prefix:   "pica",
 				Denom:          "stake",
 				GasPrices:      "0.00stake",
 				GasAdjustment:  1.3,
