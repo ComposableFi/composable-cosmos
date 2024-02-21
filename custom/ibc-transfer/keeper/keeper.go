@@ -27,18 +27,12 @@ func NewKeeper(
 	channelKeeper types.ChannelKeeper,
 	portKeeper types.PortKeeper,
 	authKeeper types.AccountKeeper,
-	// ak types.AccountKeeper,
 	bk types.BankKeeper,
 	scopedKeeper exported.ScopedKeeper,
-	// authority string,
 	ibcTransfermiddleware *ibctransfermiddleware.Keeper,
-	//return type from this function is different from the staking keeper.
-	//todo double check if this is correct
 ) Keeper {
 	keeper := Keeper{
-		Keeper: ibctransferkeeper.NewKeeper(cdc, key, paramSpace, ics4Wrapper, channelKeeper, portKeeper, authKeeper, bk, scopedKeeper),
-		// authority:         authority,
-		// Stakingmiddleware: stakingmiddleware,
+		Keeper:                ibctransferkeeper.NewKeeper(cdc, key, paramSpace, ics4Wrapper, channelKeeper, portKeeper, authKeeper, bk, scopedKeeper),
 		IbcTransfermiddleware: ibcTransfermiddleware,
 		cdc:                   cdc,
 	}
