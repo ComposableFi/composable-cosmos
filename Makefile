@@ -16,7 +16,7 @@ SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bufbuild/buf:1.0.0-rc8
 BUILDDIR ?= $(CURDIR)/build
-HTTPS_GIT := https://github.com/notional-labs/composable-centauri.git
+HTTPS_GIT := https://github.com/notional-labs/composable-pica.git
 
 export GO111MODULE = on
 
@@ -58,8 +58,8 @@ comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
 # process linker flags
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=centauri \
-		  -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid \
+ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=pica \
+		  -X github.com/cosmos/cosmos-sdk/version.AppName=picad \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" 
@@ -86,18 +86,18 @@ endif
 all: install
 
 install: go.sum
-	go install -mod=readonly $(BUILD_FLAGS) ./cmd/centaurid
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/picad
 
 build:
-	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
+	go build $(BUILD_FLAGS) -o bin/picad ./cmd/picad
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t pica:debug -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run github.com/client9/misspell/cmd/misspell -w
-	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run golang.org/x/tools/cmd/goimports -w -local github.com/notional-labs/centauri
+	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run golang.org/x/tools/cmd/goimports -w -local github.com/notional-labs/pica
 .PHONY: lint
 
 ###############################################################################

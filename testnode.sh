@@ -44,4 +44,4 @@ sed -i'' -e 's/max_body_bytes = /max_body_bytes = 1/g' ~/.banksy/config/config.t
 cat $HOME/.banksy/config/genesis.json | jq '.app_state["gov"]["params"]["voting_period"]="45s"' > $HOME/.banksy/config/tmp_genesis.json && mv $HOME/.banksy/config/tmp_genesis.json $HOME/.banksy/config/genesis.json
 
 # Start the node (remove the --pruning=nothing flag if historical queries are not needed)
-# centaurid start --pruning=nothing  --minimum-gas-prices=0stake 
+# picad start --pruning=nothing  --minimum-gas-prices=0stake

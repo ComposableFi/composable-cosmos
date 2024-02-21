@@ -6,8 +6,8 @@ import (
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
 	"github.com/notional-labs/composable/v6/app"
-	cmd "github.com/notional-labs/composable/v6/cmd/centaurid/cmd"
-	cmdcfg "github.com/notional-labs/composable/v6/cmd/centaurid/config"
+	cmd "github.com/notional-labs/composable/v6/cmd/picad/cmd"
+	cmdcfg "github.com/notional-labs/composable/v6/cmd/picad/config"
 )
 
 func main() {
