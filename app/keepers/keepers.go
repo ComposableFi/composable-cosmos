@@ -317,7 +317,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.ScopedTransferKeeper,
-		// &appKeepers.StakingMiddlewareKeeper,x
+		&appKeepers.IbcTransferMiddlewareKeeper,
 	)
 
 	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
