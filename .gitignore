@@ -24,6 +24,9 @@ scripts/temp.sh
 wasm_client*
 vue/*
 bin/*
+
+dist/
+
 # Test binary, built with `go test -c`
 *.test
 
