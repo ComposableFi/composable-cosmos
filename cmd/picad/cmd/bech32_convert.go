@@ -12,8 +12,8 @@ var flagBech32Prefix = "prefix"
 func AddBech32ConvertCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bech32-convert [address]",
-		Short: "Convert any bech32 string to the centauri prefix",
-		Long: `Convert any bech32 string to the centauri prefix
+		Short: "Convert any bech32 string to the pica prefix",
+		Long: `Convert any bech32 string to the pica prefix
 
 Example:
 	picad debug bech32-convert akash1a6zlyvpnksx8wr6wz8wemur2xe8zyh0ytz6d88
@@ -43,7 +43,7 @@ Example:
 		},
 	}
 
-	cmd.Flags().StringP(flagBech32Prefix, "p", "composable", "Bech32 Prefix to encode to")
+	cmd.Flags().StringP(flagBech32Prefix, "p", "picasso", "Bech32 Prefix to encode to")
 
 	return cmd
 }
