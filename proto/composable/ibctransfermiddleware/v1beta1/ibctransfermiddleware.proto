@@ -84,6 +84,7 @@ message Params {
 message ChannelFee{
   string channel  = 1;
   repeated CoinItem allowed_tokens = 2;
+  string fee_address = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message CoinItem{

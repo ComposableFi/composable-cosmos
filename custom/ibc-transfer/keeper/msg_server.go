@@ -10,15 +10,11 @@ import (
 
 type msgServer struct {
 	Keeper
+	bank      types.BankKeeper
 	msgServer types.MsgServer
 }
 
 var _ types.MsgServer = msgServer{}
-
-// // TODO - Add the stakingkeeper.Keeper as a parameter to the NewMsgServerImpl function
-// func NewMsgServerImpl(stakingKeeper stakingkeeper.Keeper, customstakingkeeper Keeper) types.MsgServer {
-// 	return &msgServer{Keeper: customstakingkeeper, msgServer: stakingkeeper.NewMsgServerImpl(&stakingKeeper)}
-// }
 
 func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -48,7 +44,19 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 				charge = charge.Add(percentageCharge)
 			}
 
-			//TODO call bank transfer to transfer the charge to the fee address
+			//address from string
+			msgSender, err := sdk.AccAddressFromBech32(msg.Sender)
+			if err != nil {
+				return nil, err
+			}
+
+			feeAddress, err := sdk.AccAddressFromBech32(channelFee.FeeAddress)
+			if err != nil {
+				return nil, err
+			}
+
+			k.bank.SendCoins(ctx, msgSender, feeAddress, sdk.NewCoins(sdk.NewCoin(msg.Token.Denom, charge)))
+
 			if newAmount.IsZero() {
 				//if the new amount is zero, then the transfer should be ignored
 				return &types.MsgTransferResponse{}, nil
