@@ -59,7 +59,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 # --------------------------------------------------------
 
 FROM busybox:1.35.0-uclibc as busybox
-RUN addgroup --gid 1025 -S composable && adduser --uid 1025 -S composable -G composable
+RUN addgroup --gid 1025 -S pica && adduser --uid 1025 -S pica -G pica
 
 
 # --------------------------------------------------------
@@ -73,10 +73,10 @@ COPY --from=builder /pica/build/picad /bin/picad
 
 # Install composable user
 COPY --from=busybox /etc/passwd /etc/passwd
-COPY --from=busybox --chown=1025:1025 /home/composable /home/composable
+COPY --from=busybox --chown=1025:1025 /home/pica /home/pica
 
-WORKDIR /home/composable
-USER composable
+WORKDIR /home/pica
+USER pica
 
 # rest server
 EXPOSE 1317

@@ -130,7 +130,7 @@ import (
 )
 
 const (
-	Name       = "centauri"
+	Name       = "picasso"
 	dirName    = "banksy"
 	ForkHeight = 244008
 )

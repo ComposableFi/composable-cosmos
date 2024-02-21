@@ -109,8 +109,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "picasso"
-	authorityAddress     = "pica10556m38z4x6pqalr9rl5ytf3cff8q46nf36090" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
+	authorityAddress = "pica10556m38z4x6pqalr9rl5ytf3cff8q46nf36090" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 )
 
 type AppKeepers struct {
@@ -176,7 +175,8 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 ) {
 	// add keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
-		appCodec, appKeepers.keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms, AccountAddressPrefix, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appCodec, appKeepers.keys[authtypes.StoreKey], authtypes.ProtoBaseAccount, maccPerms,
+		sdk.GetConfig().GetBech32AccountAddrPrefix(), authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.BankKeeper = custombankkeeper.NewBaseKeeper(
