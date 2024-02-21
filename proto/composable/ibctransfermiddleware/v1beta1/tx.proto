@@ -13,13 +13,13 @@ option go_package = "x/ibctransfermiddleware/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
-  rpc UpdateEpochParams(MsgUpdateEpochParams) returns (MsgUpdateParamsEpochResponse);
+  rpc UpdateEpochParams(MsgUpdateCustomIbcParams) returns (MsgUpdateParamsCustomIbcResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 //
 // Since: cosmos-sdk 0.47
-message MsgUpdateEpochParams {
+message MsgUpdateCustomIbcParams {
   option (cosmos.msg.v1.signer) = "authority";
   option (amino.name) = "composable/x/ibctransfermiddleware/MsgUpdateParams";
 
@@ -38,4 +38,4 @@ message MsgUpdateEpochParams {
 // MsgUpdateParams message.
 //
 // Since: cosmos-sdk 0.47
-message MsgUpdateParamsEpochResponse {}
+message MsgUpdateParamsCustomIbcResponse {}
