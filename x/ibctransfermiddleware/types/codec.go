@@ -16,13 +16,13 @@ import (
 // RegisterLegacyAminoCodec registers the account interfaces and concrete types on the
 // provided LegacyAmino codec. These types are used for Amino JSON serialization
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	legacy.RegisterAminoMsg(cdc, &MsgUpdateEpochParams{}, "composable/MsgUpdateEpochParams")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateCustomIbcParams{}, "composable/MsgUpdateCustomIbcParams")
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations(
 		(*sdk.Msg)(nil),
-		&MsgUpdateEpochParams{},
+		&MsgUpdateCustomIbcParams{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
