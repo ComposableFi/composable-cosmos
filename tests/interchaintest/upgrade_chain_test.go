@@ -34,8 +34,8 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 		{
 			ChainConfig: ibc.ChainConfig{
 				Type:    "cosmos",
-				Name:    "picasso",
-				ChainID: "picad",
+				Name:    "centauri",
+				ChainID: "centaurid",
 				Images: []ibc.DockerImage{
 					{
 						Repository: "ghcr.io/composablefi/composable-cosmos",
