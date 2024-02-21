@@ -34,7 +34,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 		{
 			ChainConfig: ibc.ChainConfig{
 				Type:    "cosmos",
-				Name:    "centauri",
+				Name:    "picasso",
 				ChainID: "picad",
 				Images: []ibc.DockerImage{
 					{
@@ -44,7 +44,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 					},
 				},
 				Bin:            "picad",
-				Bech32Prefix:   "centauri",
+				Bech32Prefix:   "pica",
 				Denom:          "ppica",
 				GasPrices:      "0.00ppica",
 				GasAdjustment:  1.3,
