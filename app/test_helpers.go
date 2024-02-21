@@ -30,6 +30,7 @@ import (
 	stakinghelper "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 	typesconfig "github.com/notional-labs/composable/v6/cmd/picad/config"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	"github.com/stretchr/testify/require"
@@ -77,7 +78,7 @@ func (s *KeeperTestHelper) Setup(_ *testing.T) {
 		GRPCQueryRouter: s.App.GRPCQueryRouter(),
 		Ctx:             s.Ctx,
 	}
-	s.TestAccs = CreateRandomAccounts(3)
+	s.TestAccs = CreateRandomAccounts(10)
 
 	s.StakingHelper = stakinghelper.NewHelper(s.Suite.T(), s.Ctx, &s.App.StakingKeeper.Keeper)
 	s.StakingHelper.Denom = "upica"
@@ -90,6 +91,11 @@ func (s *KeeperTestHelper) ConfirmUpgradeSucceeded(upgradeName string, upgradeHe
 	s.Require().NoError(err)
 	_, exists := s.App.UpgradeKeeper.GetUpgradePlan(s.Ctx)
 	s.Require().True(exists)
+
+	// NEW PREFIX: pica
+	sdk.GetConfig().SetBech32PrefixForAccount(utils.NewBech32PrefixAccAddr, utils.NewBech32PrefixAccPub)
+	sdk.GetConfig().SetBech32PrefixForValidator(utils.NewBech32PrefixValAddr, utils.NewBech32PrefixValPub)
+	sdk.GetConfig().SetBech32PrefixForConsensusNode(utils.NewBech32PrefixConsAddr, utils.NewBech32PrefixConsPub)
 
 	s.Ctx = s.Ctx.WithBlockHeight(upgradeHeight)
 	s.Require().NotPanics(func() {
