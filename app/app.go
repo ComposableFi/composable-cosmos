@@ -87,6 +87,7 @@ import (
 	ibcclientclient "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	customibctransfer "github.com/notional-labs/composable/v6/custom/ibc-transfer"
 	customstaking "github.com/notional-labs/composable/v6/custom/staking"
 	"github.com/spf13/cast"
 	icq "github.com/strangelove-ventures/async-icq/v7"
@@ -334,7 +335,8 @@ func NewComposableApp(
 		enabledProposals,
 	)
 
-	transferModule := transfer.NewAppModule(app.TransferKeeper)
+	// transferModule := transfer.NewAppModule(app.TransferKeeper)
+	transferModule := customibctransfer.NewAppModule(appCodec, app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
@@ -589,7 +591,7 @@ func (app *ComposableApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 
 // GetIBCKeeper implements the TestingApp interface.
 func (app *ComposableApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
-	return &app.TransferKeeper
+	return &app.TransferKeeper.Keeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.

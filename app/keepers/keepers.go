@@ -57,12 +57,16 @@ import (
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
+
+	// ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
+
+	// ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibcclient "github.com/cosmos/ibc-go/v7/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	customibctransferkeeper "github.com/notional-labs/composable/v6/custom/ibc-transfer/keeper"
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
@@ -133,7 +137,7 @@ type AppKeepers struct {
 	ParamsKeeper     paramskeeper.Keeper
 	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	EvidenceKeeper   evidencekeeper.Keeper
-	TransferKeeper   ibctransferkeeper.Keeper
+	TransferKeeper   customibctransferkeeper.Keeper
 	ICQKeeper        icqkeeper.Keeper
 	ICAHostKeeper    icahostkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
@@ -290,7 +294,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
 		&appKeepers.RatelimitKeeper,
-		&appKeepers.TransferKeeper,
+		&appKeepers.TransferKeeper.Keeper,
 		appKeepers.BankKeeper,
 		authorityAddress,
 	)
@@ -301,7 +305,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authorityAddress,
 	)
 
-	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
+	appKeepers.TransferKeeper = customibctransferkeeper.NewKeeper(
 		appCodec, appKeepers.keys[ibctransfertypes.StoreKey],
 		appKeepers.GetSubspace(ibctransfertypes.ModuleName),
 		&appKeepers.TransferMiddlewareKeeper, // ICS4Wrapper
@@ -310,13 +314,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.ScopedTransferKeeper,
+		// &appKeepers.StakingMiddlewareKeeper,x
 	)
 
 	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[routertypes.StoreKey],
 		appKeepers.GetSubspace(routertypes.ModuleName),
-		appKeepers.TransferKeeper,
+		appKeepers.TransferKeeper.Keeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
 		appKeepers.BankKeeper,
@@ -336,7 +341,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
+	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper.Keeper)
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
