@@ -88,8 +88,6 @@ func (suite *TransferMiddlewareTestSuite) TestOnrecvPacket() {
 			// and dest chain balance contains voucher
 			expBalance := originalChainBBalance.Add(expChainBBalanceDiff)
 			gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
-			fmt.Println("expBalance", expBalance)
-			fmt.Println("gotBalance", gotBalance)
 			suite.Require().Equal(expBalance, gotBalance)
 			suite.Require().NoError(err)
 		})
