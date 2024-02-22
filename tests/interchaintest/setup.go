@@ -2,7 +2,6 @@ package interchaintest
 
 import (
 	"os"
-	"strings"
 
 	"github.com/strangelove-ventures/interchaintest/v7/ibc"
 )
@@ -50,6 +49,7 @@ func GetDockerImageInfo() (repo, version string) {
 	}
 
 	// github converts / to - for pushed docker images
-	branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
+	// branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
+	branchVersion = "latest"
 	return repo, branchVersion
 }

@@ -158,3 +158,5 @@ ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
 .PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
+
+include contrib/make/release.mk

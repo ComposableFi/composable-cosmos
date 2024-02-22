@@ -20,7 +20,7 @@ const (
 
 func TestCentauriUpgrade(t *testing.T) {
 	repo, version := GetDockerImageInfo()
-	CosmosChainUpgradeTest(t, repo, version, "v6_4")
+	CosmosChainUpgradeTest(t, repo, version, "v6_4_5")
 }
 
 func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, upgradeName string) {
@@ -39,7 +39,7 @@ func CosmosChainUpgradeTest(t *testing.T, upgradeContainerRepo, upgradeVersion, 
 				Images: []ibc.DockerImage{
 					{
 						Repository: "ghcr.io/composablefi/composable-cosmos",
-						Version:    "6.3.7",
+						Version:    "6.4.4",
 						UidGid:     "1025:1025",
 					},
 				},
