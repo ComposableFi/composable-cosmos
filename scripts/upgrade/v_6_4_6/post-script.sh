@@ -11,6 +11,9 @@ KEY2="test2"
 WALLET_1=$($BINARY keys show $KEY1 -a --keyring-backend test --home $CHAIN_DIR)  
 echo "wallet 1: $WALLET_1"
 
+WALLET_2=$($BINARY keys show $KEY2 -a --keyring-backend test --home $CHAIN_DIR)
+echo "wallet 2: $WALLET_2"
+
 DEFAULT_GAS_FLAG="--gas 3000000 --gas-prices 0.025$DENOM --gas-adjustment 1.5"
 DEFAULT_ENV_FLAG="--keyring-backend test --chain-id localpica --home $CHAIN_DIR"
 
@@ -26,7 +29,18 @@ CODE_ID=1 ## TODO: hardfix for now to get the contract, and overide the contract
 CONTRACT_ADDRESS=$($BINARY query wasm list-contract-by-code $CODE_ID -o json | jq -r '.contracts[0]') 
 echo "Query contract address: $CONTRACT_ADDRESS"
 
-## Execute the contract, increment counter to 1
+## Execute contract with new address
+$BINARY tx wasm execute $CONTRACT_ADDRESS '{"increment":{}}' --from $KEY2 $DEFAULT_ENV_FLAG $DEFAULT_GAS_FLAG -y -o json > /dev/null # tx1 is to init the counter== 0
+
+sleep 1
+$BINARY tx wasm execute $CONTRACT_ADDRESS '{"increment":{}}' --from $KEY2 $DEFAULT_ENV_FLAG $DEFAULT_GAS_FLAG -y -o json > /dev/null 
+
+sleep 1
+COUNTER_VALUE_2=$($BINARY query wasm contract-state smart $CONTRACT_ADDRESS '{"get_count":{"addr": "'"$WALLET_2"'"}}' -o json | jq -r '.data.count')
+echo "COUNTER_VALUE_2 = $COUNTER_VALUE_2"
+
+
+## Execute the contract, with the existing address. increment counter to 2
 $BINARY tx wasm execute $CONTRACT_ADDRESS '{"increment":{}}' --from $KEY1 $DEFAULT_ENV_FLAG $DEFAULT_GAS_FLAG -y -o json > /dev/null
 
 ## assert counter value to be 1
