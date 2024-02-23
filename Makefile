@@ -159,9 +159,9 @@ ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
 ###  Upgrade Test ###
-upgrade-test: clean-testing-data
+test-upgrade: clean-testing-data
 	@echo "Starting upgrade test"
-	./scripts/upgrade-test.sh
+	./scripts/test-upgrade.sh
 
 
 clean-testing-data:
