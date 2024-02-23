@@ -11,7 +11,7 @@ DENOM=pica
 CHAIN_ID=localpica
 SOFTWARE_UPGRADE_NAME="v6_4_6"
 ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_6/pre-script.sh" 
-ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
+ADDITIONAL_AFTER_SCRIPTS="./scripts/upgrade/v_6_4_6/post-script.sh"
 
 SLEEP_TIME=1
 
@@ -63,7 +63,8 @@ if [ ! -z "$ADDITIONAL_PRE_SCRIPTS" ]; then
          # check if SCRIPT is a file
         if [ -f "$SCRIPT" ]; then
             echo "executing additional pre scripts from $SCRIPT"
-            source $SCRIPT _build/old/centaurid 
+            source $SCRIPT _build/old/centaurid
+            echo "CONTRACT_ADDRESS = $CONTRACT_ADDRESS"
             sleep 5
         else
             echo "$SCRIPT is not a file"
@@ -146,16 +147,16 @@ else
     run_upgrade
 fi
 
-sleep 2
+sleep 1
 
 # run new node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    CONTINUE="true" bash scripts/localnode.sh _build/new/picad $DENOM
+    CONTINUE="true" screen -L -dmS picad bash scripts/localnode.sh _build/new/picad $DENOM
 else
-    CONTINUE="true" bash scripts/localnode.sh _build/new/picad $DENOM
+    CONTINUE="true" screen -L -dmS picad bash scripts/localnode.sh _build/new/picad $DENOM
 fi
 
-sleep 20
+sleep 5
 
 
 # execute additional after scripts
@@ -166,7 +167,7 @@ if [ ! -z "$ADDITIONAL_AFTER_SCRIPTS" ]; then
          # check if SCRIPT is a file
         if [ -f "$SCRIPT" ]; then
             echo "executing additional after scripts from $SCRIPT"
-            source $SCRIPT
+            source $SCRIPT _build/new/picad
             sleep 5
         else
             echo "$SCRIPT is not a file"
