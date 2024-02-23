@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	COIN_DENOM = "stake"
+	COIN_DENOM = "upica"
 )
 
 type UpgradeTestSuite struct {
@@ -31,11 +31,6 @@ func TestUpgradeTestSuite(t *testing.T) {
 
 // Ensures the test does not error out.
 func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
-	// DEFAULT PREFIX: centauri
-	sdk.GetConfig().SetBech32PrefixForAccount(utils.OldBech32PrefixAccAddr, utils.OldBech32PrefixAccPub)
-	sdk.GetConfig().SetBech32PrefixForValidator(utils.OldBech32PrefixValAddr, utils.OldBech32PrefixValPub)
-	sdk.GetConfig().SetBech32PrefixForConsensusNode(utils.OldBech32PrefixConsAddr, utils.OldBech32PrefixConsPub)
-
 	s.Setup(s.T())
 
 	acc1, proposal, oldAccBal := prepareForTestingGovModule(s)
