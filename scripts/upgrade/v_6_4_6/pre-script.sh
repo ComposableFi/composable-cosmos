@@ -1,7 +1,7 @@
 echo "********** Running Pre-Scripts **********"
 
 BINARY=$1 
-DENOM=${2:-upica}
+DENOM=${2:-pica}
 CHAIN_DIR=$(pwd)/mytestnet
 
 KEY="test0"

@@ -10,7 +10,7 @@ ROOT=$(pwd)
 DENOM=pica
 CHAIN_ID=localpica
 SOFTWARE_UPGRADE_NAME="v6_4_6"
-ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
+ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_6/pre-script.sh" 
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
 
 if [[ "$FORK" == "true" ]]; then
@@ -60,7 +60,7 @@ if [ ! -z "$ADDITIONAL_PRE_SCRIPTS" ]; then
          # check if SCRIPT is a file
         if [ -f "$SCRIPT" ]; then
             echo "executing additional pre scripts from $SCRIPT"
-            source $SCRIPT
+            source $SCRIPT _build/old/centaurid
             sleep 5
         else
             echo "$SCRIPT is not a file"
@@ -145,9 +145,9 @@ fi
 
 # run new node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    CONTINUE="true" screen -L -dmS node1 bash scripts/run-node.sh _build/new/picad $DENOM
+    CONTINUE="true" bash scripts/run-node.sh _build/new/picad $DENOM
 else
-    CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/new/picad $DENOM
+    CONTINUE="true"  bash scripts/run-node.sh _build/new/picad $DENOM
 fi
 
 sleep 5
