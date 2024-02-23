@@ -18,6 +18,7 @@ DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace bu
 BUILDDIR ?= $(CURDIR)/build
 HTTPS_GIT := https://github.com/notional-labs/composable-pica.git
 
+
 export GO111MODULE = on
 
 # process build tags
@@ -156,6 +157,19 @@ ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 # Executes push wasm client tests via interchaintest
 ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
+
+###  Upgrade Test ###
+upgrade-test: clean-testing-data
+	@echo "Starting upgrade test"
+	./scripts/upgrade-test.sh
+
+
+clean-testing-data:
+	@echo "Killing binary and removing previous data"
+	-@pkill centaurid 2>/dev/null
+	-@pkill picad 2>/dev/null
+	-@pkill rly 2>/dev/null
+	-@rm -rf ./mytestnet
 
 .PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
 
