@@ -3,6 +3,7 @@ package types
 // Minting module event types
 const (
 	EventTypeMint              = ModuleName
+	EventTypeReward            = "reward_distributed"
 	EventAddAllowedFundAddress = "add_allowed_fund"
 
 	AttributeKeyBondedRatio      = "bonded_ratio"
