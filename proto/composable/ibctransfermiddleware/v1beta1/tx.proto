@@ -13,7 +13,7 @@ option go_package = "x/ibctransfermiddleware/types";
 service Msg {
   option (cosmos.msg.v1.service) = true;
 
-  rpc UpdateEpochParams(MsgUpdateCustomIbcParams) returns (MsgUpdateParamsCustomIbcResponse);
+  rpc UpdateCustomIbcParams(MsgUpdateCustomIbcParams) returns (MsgUpdateParamsCustomIbcResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.

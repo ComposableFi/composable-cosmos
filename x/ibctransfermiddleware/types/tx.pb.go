@@ -141,7 +141,7 @@ func init() {
 }
 
 var fileDescriptor_bf5c053de6965bca = []byte{
-	// 378 bytes of a gzipped FileDescriptorProto
+	// 372 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x32, 0x4c, 0xce, 0xcf, 0x2d,
 	0xc8, 0x2f, 0x4e, 0x4c, 0xca, 0x49, 0xd5, 0xcf, 0x4c, 0x4a, 0x2e, 0x29, 0x4a, 0xcc, 0x2b, 0x4e,
 	0x4b, 0x2d, 0xca, 0xcd, 0x4c, 0x49, 0xc9, 0x49, 0x2d, 0x4f, 0x2c, 0x4a, 0xd5, 0x2f, 0x33, 0x4c,
@@ -159,13 +159,13 @@ var fileDescriptor_bf5c053de6965bca = []byte{
 	0x62, 0xb3, 0x13, 0xe7, 0x89, 0x7b, 0xf2, 0x0c, 0x2b, 0x9e, 0x6f, 0xd0, 0x62, 0x0c, 0x82, 0x1a,
 	0x65, 0xe5, 0xda, 0xf4, 0x7c, 0x83, 0x16, 0xc2, 0x92, 0xae, 0xe7, 0x1b, 0xb4, 0x8c, 0x90, 0x82,
 	0xa0, 0x02, 0x47, 0x20, 0xc0, 0x3d, 0x07, 0x31, 0x59, 0x49, 0x89, 0x4b, 0x01, 0x4d, 0x08, 0xee,
-	0xeb, 0xa0, 0xd4, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0xa3, 0x4d, 0x8c, 0x5c, 0xcc, 0xbe, 0xc5,
-	0xe9, 0x42, 0x8b, 0x19, 0xb9, 0x04, 0x21, 0x2a, 0x5d, 0x0b, 0xf2, 0x93, 0x33, 0xa0, 0xa1, 0xe2,
-	0x44, 0xbc, 0x6f, 0x70, 0x85, 0xac, 0x94, 0x17, 0x19, 0x66, 0xe0, 0x70, 0xad, 0x14, 0x6b, 0x03,
-	0x28, 0x9c, 0x9c, 0xcc, 0x4f, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39,
-	0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x16,
-	0x57, 0xd8, 0x94, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x53, 0x82, 0x31, 0x20, 0x00, 0x00,
-	0xff, 0xff, 0x6a, 0x14, 0xf9, 0x95, 0x0b, 0x03, 0x00, 0x00,
+	0xeb, 0xa0, 0xd4, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0xa3, 0x6d, 0x8c, 0x5c, 0xcc, 0xbe, 0xc5,
+	0xe9, 0x42, 0xcb, 0x19, 0xb9, 0x44, 0xb1, 0x87, 0x8c, 0x13, 0xf1, 0x3e, 0xc2, 0x15, 0xba, 0x52,
+	0x5e, 0x64, 0x98, 0x81, 0xc3, 0xc5, 0x52, 0xac, 0x0d, 0xa0, 0xb0, 0x72, 0x32, 0x3f, 0xf1, 0x48,
+	0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0,
+	0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0x59, 0x5c, 0xe1, 0x53, 0x52, 0x59, 0x90, 0x5a,
+	0x9c, 0xc4, 0x06, 0x4e, 0x0d, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc6, 0x4e, 0xf0, 0x3b,
+	0x0f, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -180,7 +180,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	UpdateEpochParams(ctx context.Context, in *MsgUpdateCustomIbcParams, opts ...grpc.CallOption) (*MsgUpdateParamsCustomIbcResponse, error)
+	UpdateCustomIbcParams(ctx context.Context, in *MsgUpdateCustomIbcParams, opts ...grpc.CallOption) (*MsgUpdateParamsCustomIbcResponse, error)
 }
 
 type msgClient struct {
@@ -191,9 +191,9 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) UpdateEpochParams(ctx context.Context, in *MsgUpdateCustomIbcParams, opts ...grpc.CallOption) (*MsgUpdateParamsCustomIbcResponse, error) {
+func (c *msgClient) UpdateCustomIbcParams(ctx context.Context, in *MsgUpdateCustomIbcParams, opts ...grpc.CallOption) (*MsgUpdateParamsCustomIbcResponse, error) {
 	out := new(MsgUpdateParamsCustomIbcResponse)
-	err := c.cc.Invoke(ctx, "/composable.ibctransfermiddleware.v1beta1.Msg/UpdateEpochParams", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/composable.ibctransfermiddleware.v1beta1.Msg/UpdateCustomIbcParams", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -202,35 +202,35 @@ func (c *msgClient) UpdateEpochParams(ctx context.Context, in *MsgUpdateCustomIb
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	UpdateEpochParams(context.Context, *MsgUpdateCustomIbcParams) (*MsgUpdateParamsCustomIbcResponse, error)
+	UpdateCustomIbcParams(context.Context, *MsgUpdateCustomIbcParams) (*MsgUpdateParamsCustomIbcResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) UpdateEpochParams(ctx context.Context, req *MsgUpdateCustomIbcParams) (*MsgUpdateParamsCustomIbcResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateEpochParams not implemented")
+func (*UnimplementedMsgServer) UpdateCustomIbcParams(ctx context.Context, req *MsgUpdateCustomIbcParams) (*MsgUpdateParamsCustomIbcResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustomIbcParams not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_UpdateEpochParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Msg_UpdateCustomIbcParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgUpdateCustomIbcParams)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateEpochParams(ctx, in)
+		return srv.(MsgServer).UpdateCustomIbcParams(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/composable.ibctransfermiddleware.v1beta1.Msg/UpdateEpochParams",
+		FullMethod: "/composable.ibctransfermiddleware.v1beta1.Msg/UpdateCustomIbcParams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateEpochParams(ctx, req.(*MsgUpdateCustomIbcParams))
+		return srv.(MsgServer).UpdateCustomIbcParams(ctx, req.(*MsgUpdateCustomIbcParams))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -240,8 +240,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpdateEpochParams",
-			Handler:    _Msg_UpdateEpochParams_Handler,
+			MethodName: "UpdateCustomIbcParams",
+			Handler:    _Msg_UpdateCustomIbcParams_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

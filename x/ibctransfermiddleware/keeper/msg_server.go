@@ -24,7 +24,7 @@ func NewMsgServerImpl(k Keeper) types.MsgServer {
 }
 
 // UpdateParams updates the params.
-func (ms msgServer) UpdateEpochParams(goCtx context.Context, req *types.MsgUpdateCustomIbcParams) (*types.MsgUpdateParamsCustomIbcResponse, error) {
+func (ms msgServer) UpdateCustomIbcParams(goCtx context.Context, req *types.MsgUpdateCustomIbcParams) (*types.MsgUpdateParamsCustomIbcResponse, error) {
 	if ms.authority != req.Authority {
 		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
 	}
