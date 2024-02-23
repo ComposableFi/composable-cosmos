@@ -52,3 +52,5 @@ if [ "$COUNTER_VALUE" -ne 1 ]; then
 fi
 echo "Assertion passed: Counter value is 1 as expected"
 
+export CONTRACT_ADDRESS=$CONTRACT_ADDRESS
+
