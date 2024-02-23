@@ -16,7 +16,6 @@ import (
 	bech32govmigration "github.com/notional-labs/composable/v6/bech32-migration/gov"
 	bech32slashingmigration "github.com/notional-labs/composable/v6/bech32-migration/slashing"
 	bech32stakingmigration "github.com/notional-labs/composable/v6/bech32-migration/staking"
-	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 )
 
 func CreateUpgradeHandler(
@@ -30,10 +29,6 @@ func CreateUpgradeHandler(
 		keys := keepers.GetKVStoreKey()
 		// Migration prefix
 		ctx.Logger().Info("First step: Migrate addresses stored in bech32 form to use new prefix")
-		sdk.GetConfig().SetBech32PrefixForAccount(utils.NewBech32PrefixAccAddr, utils.NewBech32PrefixAccPub)
-		sdk.GetConfig().SetBech32PrefixForValidator(utils.NewBech32PrefixValAddr, utils.NewBech32PrefixValPub)
-		sdk.GetConfig().SetBech32PrefixForConsensusNode(utils.NewBech32PrefixConsAddr, utils.NewBech32PrefixConsPub)
-
 		bech32stakingmigration.MigrateAddressBech32(ctx, keys[stakingtypes.StoreKey], codec)
 		bech32slashingmigration.MigrateAddressBech32(ctx, keys[slashingtypes.StoreKey], codec)
 		bech32govmigration.MigrateAddressBech32(ctx, keys[govtypes.StoreKey], codec)
