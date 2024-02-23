@@ -7,7 +7,7 @@ OLD_VERSION=v6.4.3
 UPGRADE_WAIT=${UPGRADE_WAIT:-20}
 HOME=mytestnet
 ROOT=$(pwd)
-DENOM=upica
+DENOM=pica
 CHAIN_ID=localpica
 SOFTWARE_UPGRADE_NAME="v6_4_6"
 ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_6/pre-script.sh" 
@@ -92,7 +92,8 @@ run_upgrade () {
 
     # Get upgrade height, 12 block after (6s)
     STATUS_INFO=($(./_build/old/centaurid status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
-    UPGRADE_HEIGHT=$((STATUS_INFO[1] + 12))
+    UPGRADE_HEIGHT=$((STATUS_INFO[1] + 20))
+    echo "UPGRADE_HEIGHT = $UPGRADE_HEIGHT"
 
     tar -cf ./_build/new/picad.tar -C ./_build/new picad
     SUM=$(shasum -a 256 ./_build/new/picad.tar | cut -d ' ' -f1)
