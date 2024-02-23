@@ -13,6 +13,8 @@ SOFTWARE_UPGRADE_NAME="v6_4_6"
 ADDITIONAL_PRE_SCRIPTS=${ADDITIONAL_PRE_SCRIPTS:-""}
 ADDITIONAL_AFTER_SCRIPTS=${ADDITIONAL_AFTER_SCRIPTS:-""}
 
+SLEEP_TIME=1
+
 if [[ "$FORK" == "true" ]]; then
     export PICA_HALT_HEIGHT=20
 fi
@@ -45,12 +47,12 @@ fi
 
 # run old node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    screen -L -dmS node1 bash scripts/run-node.sh _build/old/centaurid $DENOM --Logfile $HOME/log-screen.txt
+    screen -L -dmS node1 bash scripts/localnode.sh _build/old/centaurid $DENOM --Logfile $HOME/log-screen.txt
 else
-    screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/old/centaurid $DENOM
+    screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/localnode.sh _build/old/centaurid $DENOM
 fi
 
-sleep 20
+sleep 5 # wait for note to start 
 
 # execute additional pre scripts
 if [ ! -z "$ADDITIONAL_PRE_SCRIPTS" ]; then
@@ -87,6 +89,7 @@ run_fork () {
 run_upgrade () {
     echo "start upgrading"
 
+    # Get upgrade height, 12 block after (6s)
     STATUS_INFO=($(./_build/old/centaurid status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
     UPGRADE_HEIGHT=$((STATUS_INFO[1] + 12))
 
@@ -103,19 +106,19 @@ run_upgrade () {
 
     ./_build/old/centaurid tx gov submit-legacy-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "$UPGRADE_INFO" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME -y
 
-    sleep 5
+    sleep $SLEEP_TIME
 
     ./_build/old/centaurid tx gov deposit 1 "20000000${DENOM}" --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME -y
 
-    sleep 5
+    sleep $SLEEP_TIME
 
     ./_build/old/centaurid tx gov vote 1 yes --from test0 --keyring-backend test --chain-id $CHAIN_ID --home $HOME -y
 
-    sleep 5
+    sleep $SLEEP_TIME
 
     ./_build/old/centaurid tx gov vote 1 yes --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME -y
 
-    sleep 5
+    sleep $SLEEP_TIME
 
     # determine block_height to halt
     while true; do
@@ -128,7 +131,7 @@ run_upgrade () {
         else
             ./_build/old/centaurid q gov proposal 1 --output=json | jq ".status"
             echo "BLOCK_HEIGHT = $BLOCK_HEIGHT"
-            sleep 10
+            sleep 1 
         fi
     done
 }
@@ -141,13 +144,13 @@ else
     run_upgrade
 fi
 
-sleep 5
+sleep 2
 
 # run new node
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    CONTINUE="true" screen -L -dmS node1 bash scripts/run-node.sh _build/new/picad $DENOM
+    CONTINUE="true" screen -L -dmS node1 bash scripts/localnode.sh _build/new/picad $DENOM
 else
-    CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/run-node.sh _build/new/picad $DENOM
+    CONTINUE="true" screen -L -Logfile $HOME/log-screen.txt -dmS node1 bash scripts/localnode.sh _build/new/picad $DENOM
 fi
 
 sleep 20
