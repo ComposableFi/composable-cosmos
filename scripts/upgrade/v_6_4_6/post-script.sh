@@ -1,4 +1,4 @@
-echo "********** Running Post-Scripts **********"
+echo -e  "\n ********** Running Post-Scripts **********"
 
 BINARY=$1 
 DENOM=${2:-pica}
