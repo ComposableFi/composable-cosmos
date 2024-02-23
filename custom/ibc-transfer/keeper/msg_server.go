@@ -16,6 +16,13 @@ type msgServer struct {
 
 var _ types.MsgServer = msgServer{}
 
+// Transfer is the server API around the Transfer method of the IBC transfer module.
+// It checks if the sender is allowed to transfer the token and if the channel has fees.
+// If the channel has fees, it will charge the sender and send the fees to the fee address.
+// If the sender is not allowed to transfer the token because this tokens does not exists in the allowed tokens list, it just return without doing anything.
+// If the sender is allowed to transfer the token, it will call the original transfer method.
+// If the transfer amount is less than the minimum fee, it will charge the full transfer amount.
+// If the transfer amount is greater than the minimum fee, it will charge the minimum fee and the percentage fee.
 func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.MsgTransferResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	params := k.Keeper.IbcTransfermiddleware.GetParams(ctx)
@@ -50,16 +57,17 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 				return nil, err
 			}
 
-			k.bank.SendCoins(ctx, msgSender, feeAddress, sdk.NewCoins(sdk.NewCoin(msg.Token.Denom, charge)))
+			send_err := k.bank.SendCoins(ctx, msgSender, feeAddress, sdk.NewCoins(sdk.NewCoin(msg.Token.Denom, charge)))
+			if send_err != nil {
+				return nil, send_err
+			}
 
-			if newAmount.IsZero() {
+			if newAmount.LTE(sdk.ZeroInt()) {
 				return &types.MsgTransferResponse{}, nil
 			}
 			msg.Token.Amount = newAmount
 		}
-
 	}
-
 	return k.msgServer.Transfer(goCtx, msg)
 }
 
