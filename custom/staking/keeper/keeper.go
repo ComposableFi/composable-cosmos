@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"cosmossdk.io/math"
 	abcicometbft "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -140,13 +142,21 @@ func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddr
 	amountBurned := k.Slash(ctx, consAddr, infractionHeight, power, slashFactor)
 	// after usual slashing and burning is done, mint burned coinds into community pool
 	coins := sdk.NewCoins(sdk.NewCoin(k.BondDenom(ctx), amountBurned))
-	k.mintKeeper.MintCoins(ctx, types.ModuleName, coins)
-	k.distrKeeper.FundCommunityPool(ctx, coins, k.authKeeper.GetModuleAddress(types.ModuleName))
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			minttypes.EventTypeMint,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, amountBurned.String()),
-		),
-	)
+	err := k.mintKeeper.MintCoins(ctx, types.ModuleName, coins)
+	if err != nil {
+		k.Logger(ctx).Error("Failed to mint slashed coins: ", amountBurned)
+	} else {
+		err = k.distrKeeper.FundCommunityPool(ctx, coins, k.authKeeper.GetModuleAddress(types.ModuleName))
+		if err != nil {
+			k.Logger(ctx).Error(fmt.Sprintf("Failed to fund community pool. Tokens minted to the staking module account: %d. ", amountBurned))
+		} else {
+			ctx.EventManager().EmitEvent(
+				sdk.NewEvent(
+					minttypes.EventTypeMintSlashed,
+					sdk.NewAttribute(sdk.AttributeKeyAmount, amountBurned.String()),
+				),
+			)
+		}
+	}
 	return amountBurned
 }
