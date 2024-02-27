@@ -25,6 +25,9 @@ func CreateUpgradeHandler(
 		}
 
 		// burn extra ppica in escrow account
+		// this ppica is unused because it is a native token stored in escrow account
+		// it was unnecessarily minted to match pica escrowed on picasso to ppica minted
+		// in genesis, to make initial native ppica transferrable to picasso
 		amount, ok := sdk.NewIntFromString("1066669217167120000000")
 		if ok {
 			coins := sdk.Coins{sdk.NewCoin("ppica", amount)}
