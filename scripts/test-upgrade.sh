@@ -3,11 +3,11 @@
 # the upgrade is a fork, "true" otherwise
 FORK=${FORK:-"false"}
 
-OLD_VERSION=v6.4.3
+OLD_VERSION=v6.4.4
 UPGRADE_WAIT=${UPGRADE_WAIT:-20}
 HOME=mytestnet
 ROOT=$(pwd)
-DENOM=pica
+DENOM=upica
 CHAIN_ID=localpica
 SOFTWARE_UPGRADE_NAME="v6_4_6"
 ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_6/pre-script.sh" 
@@ -89,7 +89,7 @@ run_fork () {
 }
 
 run_upgrade () {
-    echo "start upgrading"
+    echo -e "\n\n=> =>start upgrading"
 
     # Get upgrade height, 12 block after (6s)
     STATUS_INFO=($(./_build/old/centaurid status --home $HOME | jq -r '.NodeInfo.network,.SyncInfo.latest_block_height'))
@@ -105,7 +105,6 @@ run_upgrade () {
         }
     }')
 
-    ./_build/old/centaurid keys list --home $HOME --keyring-backend test
 
     ./_build/old/centaurid tx gov submit-legacy-proposal software-upgrade "$SOFTWARE_UPGRADE_NAME" --upgrade-height $UPGRADE_HEIGHT --upgrade-info "$UPGRADE_INFO" --title "upgrade" --description "upgrade"  --from test1 --keyring-backend test --chain-id $CHAIN_ID --home $HOME -y > /dev/null
 
@@ -150,6 +149,7 @@ fi
 sleep 1
 
 # run new node
+echo -e "\n\n=> =>continue running nodes after upgrade"   
 if [[ "$OSTYPE" == "darwin"* ]]; then
     CONTINUE="true" screen -L -dmS picad bash scripts/localnode.sh _build/new/picad $DENOM
 else

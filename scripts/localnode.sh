@@ -8,6 +8,7 @@ HOME_DIR=mytestnet
 ENV=${ENV:-""}
 
 if [ "$CONTINUE" == "true" ]; then
+    echo "\n ->> continuing from previous state"
     $BINARY start --home $HOME_DIR --log_level debug
     exit 0
 fi
