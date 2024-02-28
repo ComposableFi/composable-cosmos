@@ -77,6 +77,8 @@ func (k Keeper) TotalSupply(ctx context.Context, req *types.QueryTotalSupplyRequ
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-
+	// Get duplicate token from transfermiddeware
+	duplicateCoins := k.tfmk.GetTotalEscrowedToken(sdkCtx)
+	totalSupply = totalSupply.Sub(duplicateCoins...)
 	return &types.QueryTotalSupplyResponse{Supply: totalSupply, Pagination: pageRes}, nil
 }
