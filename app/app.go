@@ -292,6 +292,7 @@ func NewComposableApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
+	devnetGov *string,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *ComposableApp {
 	appCodec := encodingConfig.Marshaler
@@ -332,6 +333,7 @@ func NewComposableApp(
 		appOpts,
 		wasmOpts,
 		enabledProposals,
+		devnetGov,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
