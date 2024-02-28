@@ -296,6 +296,7 @@ func NewCentauriApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
+	devnetGov *string,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *CentauriApp {
 	appCodec := encodingConfig.Marshaler
@@ -336,6 +337,7 @@ func NewCentauriApp(
 		appOpts,
 		wasmOpts,
 		enabledProposals,
+		devnetGov,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
