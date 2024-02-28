@@ -165,6 +165,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
 	enabledProposals []wasm.ProposalType,
+	devnetGov *string,
 ) {
 	// add keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -236,6 +237,9 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
+	if devnetGov != nil {
+		govModuleAuthority = *devnetGov
+	}
 
 	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasmtypes.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
@@ -377,7 +381,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		wasmDir,
 		wasmConfig,
 		availableCapabilities,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		govModuleAuthority,
 		wasmOpts...,
 	)
 
