@@ -103,6 +103,7 @@ func setup(withGenesis bool, invCheckPeriod uint, opts ...wasmkeeper.Option) (*c
 		encCdc,
 		EmptyAppOptions{},
 		opts,
+		nil,
 	)
 	if withGenesis {
 		return app, composable.NewDefaultGenesisState()

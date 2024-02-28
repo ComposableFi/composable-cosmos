@@ -248,6 +248,7 @@ func NewComposableApp(
 	encodingConfig EncodingConfig,
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasmkeeper.Option,
+	devnetGov *string,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *ComposableApp {
 	appCodec := encodingConfig.Codec
@@ -286,6 +287,7 @@ func NewComposableApp(
 		homePath,
 		appOpts,
 		wasmOpts,
+		devnetGov,
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
