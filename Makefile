@@ -158,11 +158,14 @@ ictest-all: ictest-start-cosmos ictest-start-polkadot ictest-ibc
 ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
+# Init 2 cosmos chains and setup ibc between them
+init-test-interchain: clean-testing-data install
+	./scripts/test-upgrade-cosmos-chains.sh
+
 ###  Upgrade Test ###
 test-upgrade: clean-testing-data
 	@echo "Starting upgrade test"
 	./scripts/test-upgrade.sh
-
 
 clean-testing-data:
 	@echo "Killing binary and removing previous data"
