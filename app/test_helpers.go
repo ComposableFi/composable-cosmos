@@ -84,6 +84,7 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*CentauriApp, 
 		MakeEncodingConfig(),
 		EmptyBaseAppOptions{},
 		wasmOpts,
+		nil,
 		baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState()

@@ -38,6 +38,11 @@ import (
 	// this line is used by starport scaffolding # stargate/root/import
 )
 
+const (
+	// if set, than uses specific key for governance instead of default (default is production; this override for local devtest)
+	flagDevnetGov = "devnet-gov"
+)
+
 var ChainID string
 
 // NewRootCmd creates a new root command for simd. It is called once in the
@@ -75,7 +80,6 @@ func NewRootCmd() (*cobra.Command, app.EncodingConfig) {
 			if err := client.SetCmdClientContextHandler(initClientCtx, cmd); err != nil {
 				return err
 			}
-
 			customAppTemplate, customAppConfig := initAppConfig()
 
 			customTMConfig := initTendermintConfig()
@@ -184,8 +188,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 		// this line is used by starport scaffolding # stargate/root/commands
 	)
 
-	a := appCreator{encodingConfig}
-	server.AddCommands(rootCmd, app.DefaultNodeHome, a.newApp, a.appExport, addModuleInitFlags)
+	appCreator := appCreator{encodingConfig}
+	server.AddCommands(rootCmd, app.DefaultNodeHome, appCreator.newApp, appCreator.appExport, addModuleInitFlags)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(
@@ -198,6 +202,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig app.EncodingConfig) {
 
 func addModuleInitFlags(startCmd *cobra.Command) {
 	crisis.AddModuleInitFlags(startCmd)
+	startCmd.Flags().String(flagDevnetGov, "", "Sets the devnet governance key (if not set, uses the default production key)")
 	// this line is used by starport scaffolding # stargate/root/initFlags
 }
 
@@ -267,6 +272,11 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		skipUpgradeHeights[h] = true
 	}
 
+	var devnetGov *string
+	devnetGovOption, _ := appOpts.Get(flagDevnetGov).(string)
+	if devnetGovOption != "" {
+		devnetGov = &devnetGovOption
+	}
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
 	var emptyWasmOpts []wasm.Option
@@ -280,6 +290,7 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		// this line is used by starport scaffolding # stargate/root/appArgument
 		appOpts,
 		emptyWasmOpts,
+		devnetGov,
 		baseappOptions...,
 	)
 
@@ -312,6 +323,7 @@ func (a appCreator) appExport(
 			a.encCfg,
 			appOpts,
 			emptyWasmOpts,
+			nil,
 		)
 
 		if err := anApp.LoadHeight(height); err != nil {
@@ -330,6 +342,7 @@ func (a appCreator) appExport(
 			a.encCfg,
 			appOpts,
 			emptyWasmOpts,
+			nil,
 		)
 	}
 

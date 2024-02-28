@@ -102,6 +102,7 @@ func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*centaur
 		encCdc,
 		EmptyAppOptions{},
 		opts,
+		nil,
 	)
 	if withGenesis {
 		return app, centauri.NewDefaultGenesisState()
