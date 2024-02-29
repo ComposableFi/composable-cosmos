@@ -2,6 +2,7 @@ package v6_4_6_test
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
@@ -20,6 +21,7 @@ import (
 	"github.com/notional-labs/composable/v6/app/upgrades/v6_4_6"
 	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 	"github.com/stretchr/testify/suite"
+	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
 )
 
 const (
@@ -37,6 +39,8 @@ func TestUpgradeTestSuite(t *testing.T) {
 // Ensures the test does not error out.
 func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 	// DEFAULT PREFIX: centauri
+	sdk.SetAddrCacheEnabled(false)
+
 	sdk.GetConfig().SetBech32PrefixForAccount(utils.OldBech32PrefixAccAddr, utils.OldBech32PrefixAccPub)
 	sdk.GetConfig().SetBech32PrefixForValidator(utils.OldBech32PrefixValAddr, utils.OldBech32PrefixValPub)
 	sdk.GetConfig().SetBech32PrefixForConsensusNode(utils.OldBech32PrefixConsAddr, utils.OldBech32PrefixConsPub)
@@ -51,6 +55,8 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 
 	baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount := prepareForTestingAuthModule(s)
 
+	prepareForTestingAllianceModule(s)
+
 	/* == UPGRADE == */
 	upgradeHeight := int64(5)
 	s.ConfirmUpgradeSucceeded(v6_4_6.UpgradeName, upgradeHeight)
@@ -60,6 +66,7 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 	checkUpgradeSlashingModule(s, oldConsAddress)
 	checkUpgradeStakingModule(s, oldValAddress, oldValAddress2, acc3, afterOneDay)
 	checkUpgradeAuthModule(s, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount)
+	checkUpgradeAllianceModule(s)
 }
 
 func prepareForTestingGovModule(s *UpgradeTestSuite) (sdk.AccAddress, govtypes.Proposal) {
@@ -165,6 +172,19 @@ func prepareForTestingAuthModule(s *UpgradeTestSuite) (sdk.AccAddress, sdk.AccAd
 	return baseAccount.GetAddress(), stakingModuleAccount.GetAddress(), baseVestingAccount.GetAddress(), continuousVestingAccount.GetAddress(), delayedVestingAccount.GetAddress(), periodicVestingAccount.GetAddress(), permanentLockedAccount.GetAddress()
 }
 
+func prepareForTestingAllianceModule(s *UpgradeTestSuite) {
+	oldValAddress := s.SetupValidator(stakingtypes.Bonded)
+	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
+	oldBech32Addr, _ := bech32.ConvertAndEncode(utils.OldBech32PrefixValAddr, bz)
+
+	s.App.AllianceKeeper.InitGenesis(s.Ctx, &alliancetypes.GenesisState{
+		ValidatorInfos: []alliancetypes.ValidatorInfoState{{
+			ValidatorAddress: oldBech32Addr,
+			Validator:        alliancetypes.NewAllianceValidatorInfo(),
+		}},
+	})
+}
+
 func checkUpgradeGovModule(s *UpgradeTestSuite, acc1 sdk.AccAddress, proposal govtypes.Proposal) {
 	// CONVERT ACC TO NEW PREFIX
 	_, bz, _ := bech32.DecodeAndConvert(acc1.String())
@@ -206,19 +226,16 @@ func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress
 	// CONVERT TO ACC TO NEW PREFIX
 	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bz)
-	// parsedNewPrefixValAddr, _ := utils.ValAddressFromOldBech32(newBech32Addr, utils.NewBech32PrefixValAddr)
 	newValAddr, err := utils.ValAddressFromOldBech32(newBech32Addr, utils.NewBech32PrefixValAddr)
 	s.Suite.Equal(err, nil)
 
 	_, bzVal2, _ := bech32.DecodeAndConvert(oldValAddress2.String())
 	newBech32AddrVal2, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bzVal2)
-	// parsedNewPrefixVal2Addr, _ := utils.ValAddressFromOldBech32(newBech32AddrVal2, utils.NewBech32PrefixValAddr)
 	newValAddr2, err := utils.ValAddressFromOldBech32(newBech32AddrVal2, utils.NewBech32PrefixValAddr)
 	s.Suite.Equal(err, nil)
 
 	_, bz1, _ := bech32.DecodeAndConvert(acc1.String())
 	newBech32DelAddr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz1)
-	// parsedNewPrefixAccAddr, _ := utils.AccAddressFromOldBech32(newBech32DelAddr, utils.NewBech32PrefixAccAddr)
 	newAccAddr, err := utils.AccAddressFromOldBech32(newBech32DelAddr, utils.NewBech32PrefixAccAddr)
 	s.Suite.Equal(err, nil)
 
@@ -336,6 +353,14 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	default:
 		s.Suite.NotNil(nil)
 	}
+}
+
+func checkUpgradeAllianceModule(s *UpgradeTestSuite) {
+	// the validator address in alliance genesis file is converted into accAdd type
+	// and then used for key storage
+	// so the migration do not affect this module
+	genesis := s.App.AllianceKeeper.ExportGenesis(s.Ctx)
+	s.Suite.Equal(strings.Contains(genesis.ValidatorInfos[0].ValidatorAddress, "pica"), true)
 }
 
 func CreateVestingAccount(s *UpgradeTestSuite,
