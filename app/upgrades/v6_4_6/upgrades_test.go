@@ -25,7 +25,9 @@ import (
 )
 
 const (
-	COIN_DENOM = "upica"
+	COIN_DENOM   = "upica"
+	CONNECTION_0 = "connection-0"
+	PORT_0       = "port-0"
 )
 
 type UpgradeTestSuite struct {
@@ -57,6 +59,8 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 
 	prepareForTestingAllianceModule(s)
 
+	prepareForTestingICAHostModule(s)
+
 	/* == UPGRADE == */
 	upgradeHeight := int64(5)
 	s.ConfirmUpgradeSucceeded(v6_4_6.UpgradeName, upgradeHeight)
@@ -67,6 +71,7 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 	checkUpgradeStakingModule(s, oldValAddress, oldValAddress2, acc3, afterOneDay)
 	checkUpgradeAuthModule(s, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount)
 	checkUpgradeAllianceModule(s)
+	checkUpgradeICAHostModule(s)
 }
 
 func prepareForTestingGovModule(s *UpgradeTestSuite) (sdk.AccAddress, govtypes.Proposal) {
@@ -170,6 +175,11 @@ func prepareForTestingAuthModule(s *UpgradeTestSuite) (sdk.AccAddress, sdk.AccAd
 	s.App.AccountKeeper.SetAccount(s.Ctx, permanentLockedAccount)
 
 	return baseAccount.GetAddress(), stakingModuleAccount.GetAddress(), baseVestingAccount.GetAddress(), continuousVestingAccount.GetAddress(), delayedVestingAccount.GetAddress(), periodicVestingAccount.GetAddress(), permanentLockedAccount.GetAddress()
+}
+
+func prepareForTestingICAHostModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	s.App.ICAHostKeeper.SetInterchainAccountAddress(s.Ctx, CONNECTION_0, PORT_0, acc1.String())
 }
 
 func prepareForTestingAllianceModule(s *UpgradeTestSuite) {
@@ -356,11 +366,17 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 }
 
 func checkUpgradeAllianceModule(s *UpgradeTestSuite) {
-	// the validator address in alliance genesis file is converted into accAdd type
+	// the validator address in alliance genesis file is converted into accAddr type
 	// and then used for key storage
 	// so the migration do not affect this module
 	genesis := s.App.AllianceKeeper.ExportGenesis(s.Ctx)
 	s.Suite.Equal(strings.Contains(genesis.ValidatorInfos[0].ValidatorAddress, "pica"), true)
+}
+
+func checkUpgradeICAHostModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	interchainAccount, _ := s.App.ICAHostKeeper.GetInterchainAccountAddress(s.Ctx, CONNECTION_0, PORT_0)
+	s.Suite.Equal(acc1.String(), interchainAccount)
 }
 
 func CreateVestingAccount(s *UpgradeTestSuite,
