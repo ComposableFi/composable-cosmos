@@ -9,10 +9,12 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 	bech32authmigration "github.com/notional-labs/composable/v6/bech32-migration/auth"
 	bech32govmigration "github.com/notional-labs/composable/v6/bech32-migration/gov"
+	bech32icamigration "github.com/notional-labs/composable/v6/bech32-migration/ica"
 	bech32slashingmigration "github.com/notional-labs/composable/v6/bech32-migration/slashing"
 	bech32stakingmigration "github.com/notional-labs/composable/v6/bech32-migration/staking"
 )
@@ -32,6 +34,7 @@ func CreateUpgradeHandler(
 		bech32slashingmigration.MigrateAddressBech32(ctx, keys[slashingtypes.StoreKey], codec)
 		bech32govmigration.MigrateAddressBech32(ctx, keys[govtypes.StoreKey], codec)
 		bech32authmigration.MigrateAddressBech32(ctx, keys[authtypes.StoreKey], codec)
+		bech32icamigration.MigrateAddressBech32(ctx, keys[icahosttypes.StoreKey], codec)
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
