@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
@@ -15,8 +16,11 @@ import (
 	bech32authmigration "github.com/notional-labs/composable/v6/bech32-migration/auth"
 	bech32govmigration "github.com/notional-labs/composable/v6/bech32-migration/gov"
 	bech32icamigration "github.com/notional-labs/composable/v6/bech32-migration/ica"
+	bech32mintmigration "github.com/notional-labs/composable/v6/bech32-migration/mint"
 	bech32slashingmigration "github.com/notional-labs/composable/v6/bech32-migration/slashing"
 	bech32stakingmigration "github.com/notional-labs/composable/v6/bech32-migration/staking"
+	bech32transfermiddlewaremigration "github.com/notional-labs/composable/v6/bech32-migration/transfermiddleware"
+	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
@@ -31,10 +35,13 @@ func CreateUpgradeHandler(
 		// Migration prefix
 		ctx.Logger().Info("First step: Migrate addresses stored in bech32 form to use new prefix")
 		bech32stakingmigration.MigrateAddressBech32(ctx, keys[stakingtypes.StoreKey], codec)
+		bech32stakingmigration.MigrateUnbonding(ctx, keys[stakingtypes.StoreKey], codec)
 		bech32slashingmigration.MigrateAddressBech32(ctx, keys[slashingtypes.StoreKey], codec)
 		bech32govmigration.MigrateAddressBech32(ctx, keys[govtypes.StoreKey], codec)
 		bech32authmigration.MigrateAddressBech32(ctx, keys[authtypes.StoreKey], codec)
 		bech32icamigration.MigrateAddressBech32(ctx, keys[icahosttypes.StoreKey], codec)
+		bech32mintmigration.MigrateAddressBech32(ctx, keys[minttypes.StoreKey], codec)
+		bech32transfermiddlewaremigration.MigrateAddressBech32(ctx, keys[transfermiddlewaretypes.StoreKey], codec)
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }

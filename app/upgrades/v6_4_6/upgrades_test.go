@@ -28,6 +28,7 @@ const (
 	COIN_DENOM   = "upica"
 	CONNECTION_0 = "connection-0"
 	PORT_0       = "port-0"
+	CHANNEL_0    = "channel-0"
 )
 
 type UpgradeTestSuite struct {
@@ -50,16 +51,13 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 	s.Setup(s.T())
 
 	acc1, proposal := prepareForTestingGovModule(s)
-
 	oldConsAddress := prepareForTestingSlashingModule(s)
-
 	oldValAddress, oldValAddress2, acc3, afterOneDay := prepareForTestingStakingModule(s)
-
 	baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount := prepareForTestingAuthModule(s)
-
 	prepareForTestingAllianceModule(s)
-
 	prepareForTestingICAHostModule(s)
+	prepareForTestingMintModule(s)
+	prepareForTestingTransferMiddlewareModule(s)
 
 	/* == UPGRADE == */
 	upgradeHeight := int64(5)
@@ -72,6 +70,8 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 	checkUpgradeAuthModule(s, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount)
 	checkUpgradeAllianceModule(s)
 	checkUpgradeICAHostModule(s)
+	checkUpgradeMintModule(s)
+	checkUpgradeTransferMiddlewareModule(s)
 }
 
 func prepareForTestingGovModule(s *UpgradeTestSuite) (sdk.AccAddress, govtypes.Proposal) {
@@ -137,6 +137,15 @@ func prepareForTestingStakingModule(s *UpgradeTestSuite) (sdk.ValAddress, sdk.Va
 
 	// Undelegate part of the tokens from val2 (test instant unbonding on undelegation started before upgrade)
 	s.StakingHelper.Undelegate(acc3, oldValAddress, sdk.NewInt(10), true)
+
+	s.App.StakingKeeper.SetRedelegationQueueTimeSlice(s.Ctx, time.Date(2024, time.March, 4, 12, 0, 0, 0, time.UTC), []stakingtypes.DVVTriplet{
+		{
+			DelegatorAddress:    s.TestAccs[2].String(),
+			ValidatorDstAddress: oldValAddress.String(),
+			ValidatorSrcAddress: oldValAddress2.String(),
+		},
+	})
+
 	return oldValAddress, oldValAddress2, acc3, afterOneDay
 }
 
@@ -182,6 +191,11 @@ func prepareForTestingICAHostModule(s *UpgradeTestSuite) {
 	s.App.ICAHostKeeper.SetInterchainAccountAddress(s.Ctx, CONNECTION_0, PORT_0, acc1.String())
 }
 
+func prepareForTestingMintModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	s.App.MintKeeper.SetAllowedAddress(s.Ctx, acc1.String())
+}
+
 func prepareForTestingAllianceModule(s *UpgradeTestSuite) {
 	oldValAddress := s.SetupValidator(stakingtypes.Bonded)
 	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
@@ -193,6 +207,11 @@ func prepareForTestingAllianceModule(s *UpgradeTestSuite) {
 			Validator:        alliancetypes.NewAllianceValidatorInfo(),
 		}},
 	})
+}
+
+func prepareForTestingTransferMiddlewareModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	s.App.TransferMiddlewareKeeper.SetAllowRlyAddress(s.Ctx, acc1.String())
 }
 
 func checkUpgradeGovModule(s *UpgradeTestSuite, acc1 sdk.AccAddress, proposal govtypes.Proposal) {
@@ -270,6 +289,11 @@ func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress
 	s.Suite.Equal(redelegation.DelegatorAddress, newBech32DelAddr)
 	s.Suite.Equal(redelegation.ValidatorSrcAddress, newBech32Addr)
 	s.Suite.Equal(redelegation.ValidatorDstAddress, newBech32AddrVal2)
+
+	RedelegationQueueTimeSlice := s.App.StakingKeeper.GetRedelegationQueueTimeSlice(s.Ctx, time.Date(2024, time.March, 4, 12, 0, 0, 0, time.UTC))
+	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].DelegatorAddress, "pica"), true)
+	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorDstAddress, "pica"), true)
+	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorSrcAddress, "pica"), true)
 }
 
 func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, stakingModuleAccount sdk.AccAddress, baseVestingAccount sdk.AccAddress, continuousVestingAccount sdk.AccAddress, delayedVestingAccount sdk.AccAddress, periodicVestingAccount sdk.AccAddress, permanentLockedAccount sdk.AccAddress) {
@@ -377,6 +401,18 @@ func checkUpgradeICAHostModule(s *UpgradeTestSuite) {
 	acc1 := s.TestAccs[0]
 	interchainAccount, _ := s.App.ICAHostKeeper.GetInterchainAccountAddress(s.Ctx, CONNECTION_0, PORT_0)
 	s.Suite.Equal(acc1.String(), interchainAccount)
+}
+
+func checkUpgradeMintModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	found := s.App.MintKeeper.IsAllowedAddress(s.Ctx, acc1.String())
+	s.Suite.Equal(found, true)
+}
+
+func checkUpgradeTransferMiddlewareModule(s *UpgradeTestSuite) {
+	acc1 := s.TestAccs[0]
+	found := s.App.TransferMiddlewareKeeper.HasAllowRlyAddress(s.Ctx, acc1.String())
+	s.Suite.Equal(found, true)
 }
 
 func CreateVestingAccount(s *UpgradeTestSuite,
