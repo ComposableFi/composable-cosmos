@@ -58,7 +58,7 @@ func ConvertAccAddr(accAddr string) string {
 	_, bz, _ := bech32.DecodeAndConvert(parsedAccAddr.String())
 	bech32Addr, _ := bech32.ConvertAndEncode(NewBech32PrefixAccAddr, bz)
 	if err != nil {
-		return accAddr
+		panic(err)
 	}
 	return bech32Addr
 }
