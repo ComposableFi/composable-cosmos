@@ -22,9 +22,9 @@ type AppModule struct {
 
 // NewAppModule creates a new AppModule object
 func NewAppModule(cdc codec.Codec, keeper customibctransferkeeper.Keeper) AppModule {
-	stakingModule := ibctransfermodule.NewAppModule(keeper.Keeper)
+	ibctransferModule := ibctransfermodule.NewAppModule(keeper.Keeper)
 	return AppModule{
-		AppModule: stakingModule,
+		AppModule: ibctransferModule,
 		keeper:    keeper,
 		// subspace:  ss,
 		msgServer: keeper.Keeper,
