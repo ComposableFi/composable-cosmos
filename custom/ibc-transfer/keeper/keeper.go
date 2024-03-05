@@ -16,7 +16,6 @@ type Keeper struct {
 	ibctransferkeeper.Keeper
 	cdc                   codec.BinaryCodec
 	IbcTransfermiddleware *ibctransfermiddleware.Keeper
-	// authority         string
 }
 
 func NewKeeper(
