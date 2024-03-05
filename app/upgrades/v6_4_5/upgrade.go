@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
+	ibctransfermiddleware "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
@@ -34,6 +35,9 @@ func CreateUpgradeHandler(
 			keepers.BankKeeper.SendCoinsFromAccountToModule(ctx, sdk.MustAccAddressFromBech32("centauri12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vmvgw48"), "gov", coins)
 			keepers.BankKeeper.BurnCoins(ctx, "gov", coins)
 		}
+
+		custommiddlewareparams := ibctransfermiddleware.DefaultGenesisState()
+		keepers.IbcTransferMiddlewareKeeper.SetParams(ctx, custommiddlewareparams.Params)
 
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
