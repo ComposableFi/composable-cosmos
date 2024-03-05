@@ -63,7 +63,7 @@ func (s TestSupport) GovKeeper() govkeeper.Keeper {
 }
 
 func (s TestSupport) TransferKeeper() ibctransferkeeper.Keeper {
-	return s.app.TransferKeeper
+	return s.app.TransferKeeper.Keeper
 }
 
 func (s TestSupport) Wasm08Keeper() wasm08.Keeper {

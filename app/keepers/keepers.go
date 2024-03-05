@@ -57,12 +57,13 @@ import (
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
+
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibcclient "github.com/cosmos/ibc-go/v7/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	customibctransferkeeper "github.com/notional-labs/composable/v6/custom/ibc-transfer/keeper"
 	icq "github.com/strangelove-ventures/async-icq/v7"
 	icqkeeper "github.com/strangelove-ventures/async-icq/v7/keeper"
 	icqtypes "github.com/strangelove-ventures/async-icq/v7/types"
@@ -106,6 +107,9 @@ import (
 	ibchookstypes "github.com/notional-labs/composable/v6/x/ibc-hooks/types"
 	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 	stakingmiddlewaretypes "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
+
+	ibctransfermiddleware "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/keeper"
+	ibctransfermiddlewaretypes "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
 const (
@@ -133,7 +137,7 @@ type AppKeepers struct {
 	ParamsKeeper     paramskeeper.Keeper
 	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	EvidenceKeeper   evidencekeeper.Keeper
-	TransferKeeper   ibctransferkeeper.Keeper
+	TransferKeeper   customibctransferkeeper.Keeper
 	ICQKeeper        icqkeeper.Keeper
 	ICAHostKeeper    icahostkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
@@ -152,12 +156,13 @@ type AppKeepers struct {
 	ScopedRateLimitKeeper capabilitykeeper.ScopedKeeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	TransferMiddlewareKeeper transfermiddlewarekeeper.Keeper
-	TxBoundaryKeepper        txBoundaryKeeper.Keeper
-	RouterKeeper             *routerkeeper.Keeper
-	RatelimitKeeper          ratelimitmodulekeeper.Keeper
-	AllianceKeeper           alliancemodulekeeper.Keeper
-	StakingMiddlewareKeeper  stakingmiddleware.Keeper
+	TransferMiddlewareKeeper    transfermiddlewarekeeper.Keeper
+	TxBoundaryKeepper           txBoundaryKeeper.Keeper
+	RouterKeeper                *routerkeeper.Keeper
+	RatelimitKeeper             ratelimitmodulekeeper.Keeper
+	AllianceKeeper              alliancemodulekeeper.Keeper
+	StakingMiddlewareKeeper     stakingmiddleware.Keeper
+	IbcTransferMiddlewareKeeper ibctransfermiddleware.Keeper
 }
 
 // InitNormalKeepers initializes all 'normal' keepers.
@@ -172,6 +177,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
 	enabledProposals []wasm.ProposalType,
+	devnetGov *string,
 ) {
 	// add keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -190,6 +196,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 	)
 
 	appKeepers.StakingMiddlewareKeeper = stakingmiddleware.NewKeeper(appCodec, appKeepers.keys[stakingmiddlewaretypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
+	appKeepers.IbcTransferMiddlewareKeeper = ibctransfermiddleware.NewKeeper(appCodec, appKeepers.keys[ibctransfermiddlewaretypes.StoreKey], authtypes.NewModuleAddress(govtypes.ModuleName).String())
 
 	appKeepers.StakingKeeper = customstaking.NewKeeper(
 		appCodec, appKeepers.keys[stakingtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(), &appKeepers.StakingMiddlewareKeeper,
@@ -254,7 +261,12 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[ibchost.StoreKey], appKeepers.GetSubspace(ibchost.ModuleName), appKeepers.StakingKeeper, appKeepers.UpgradeKeeper, appKeepers.ScopedIBCKeeper,
 	)
 
-	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasm08types.StoreKey], authorityAddress, homePath, &appKeepers.IBCKeeper.ClientKeeper)
+	govModuleAuthority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
+	if devnetGov != nil {
+		govModuleAuthority = *devnetGov
+	}
+
+	appKeepers.Wasm08Keeper = wasm08Keeper.NewKeeper(appCodec, appKeepers.keys[wasm08types.StoreKey], govModuleAuthority, homePath, &appKeepers.IBCKeeper.ClientKeeper)
 
 	// ICA Host keeper
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -290,7 +302,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.GetSubspace(transfermiddlewaretypes.ModuleName),
 		appCodec,
 		&appKeepers.RatelimitKeeper,
-		&appKeepers.TransferKeeper,
+		&appKeepers.TransferKeeper.Keeper,
 		appKeepers.BankKeeper,
 		authorityAddress,
 	)
@@ -301,7 +313,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authorityAddress,
 	)
 
-	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
+	appKeepers.TransferKeeper = customibctransferkeeper.NewKeeper(
 		appCodec, appKeepers.keys[ibctransfertypes.StoreKey],
 		appKeepers.GetSubspace(ibctransfertypes.ModuleName),
 		&appKeepers.TransferMiddlewareKeeper, // ICS4Wrapper
@@ -310,13 +322,14 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.ScopedTransferKeeper,
+		&appKeepers.IbcTransferMiddlewareKeeper,
 	)
 
 	appKeepers.RouterKeeper = routerkeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[routertypes.StoreKey],
 		appKeepers.GetSubspace(routertypes.ModuleName),
-		appKeepers.TransferKeeper,
+		appKeepers.TransferKeeper.Keeper,
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.DistrKeeper,
 		appKeepers.BankKeeper,
@@ -336,7 +349,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
+	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper.Keeper)
 	scopedICQKeeper := appKeepers.CapabilityKeeper.ScopeToModule(icqtypes.ModuleName)
 
 	appKeepers.ICQKeeper = icqkeeper.NewKeeper(
@@ -391,13 +404,13 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appKeepers.IBCKeeper.ChannelKeeper,
 		&appKeepers.IBCKeeper.PortKeeper,
 		appKeepers.ScopedWasmKeeper,
-		appKeepers.TransferKeeper,
+		appKeepers.TransferKeeper.Keeper,
 		bApp.MsgServiceRouter(),
 		bApp.GRPCQueryRouter(),
 		wasmDir,
 		wasmConfig,
 		availableCapabilities,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		govModuleAuthority,
 		wasmOpts...,
 	)
 
@@ -489,6 +502,7 @@ func (appKeepers *AppKeepers) initParamsKeeper(appCodec codec.BinaryCodec, legac
 	paramsKeeper.Subspace(wasm.ModuleName)
 	paramsKeeper.Subspace(transfermiddlewaretypes.ModuleName)
 	paramsKeeper.Subspace(stakingmiddlewaretypes.ModuleName)
+	paramsKeeper.Subspace(ibctransfermiddlewaretypes.ModuleName)
 
 	return paramsKeeper
 }
