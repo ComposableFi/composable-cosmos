@@ -15,7 +15,7 @@ UPICA_DENOM=stake
 WALLET_1=$($NEW_BINARY keys show wallet1 -a --keyring-backend test --home $CHAIN_DIR/test-1)
 WALLET_2=$($BINARY keys show wallet2 -a --keyring-backend test --home $CHAIN_DIR/test-2)
 
-ACCOUNT_BALANCE_OF_WALLET1=$($NEW_BINARY q bank balances $WALLET_1 --chain-id test-1 --home $CHAIN_DIR/test-1 --node tcp://localhost:16657  -o json | jq -r '.balances[0].amount')
+ACCOUNT_BALANCE_OF_WALLET1=$($NEW_BINARY q bank balances $WALLET_1 --chain-id test-1 --node tcp://localhost:16657 -o json | jq -r '.balances[0].amount')
 echo "CHECK BALANCE POST UPGRADE: $ACCOUNT_BALANCE_OF_WALLET1"
 
 echo "Sending tokens from validator wallet on test-1 to validator wallet on test-2"

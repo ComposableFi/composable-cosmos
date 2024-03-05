@@ -60,11 +60,8 @@ echo "setting up ibc"
 source $SETUP_RELAYER_SCRIPTS
 
 # Transfer from chain 1 to chain 2 and return balance of sender on chain 1
-# echo "executing additional pre scripts from $ADDITIONAL_PRE_SCRIPTS"
-# bash ./scripts/upgrade/v_6_4_6/pre-script-ibc-transfer.sh
-
-echo "executing additional pre scripts from pre-script-ica.sh"
-bash ./scripts/upgrade/v_6_4_6/pre-script-ica.sh
+echo "executing additional pre scripts from $ADDITIONAL_PRE_SCRIPTS"
+bash ./scripts/upgrade/v_6_4_6/pre-script-ibc-transfer.sh
 
 run_fork () {
     echo "forking"
@@ -150,8 +147,8 @@ CONTINUE="true" bash scripts/two-testnodes.sh _build/new/picad
 
 sleep 5
 
-# echo "executing additional post scripts from $ADDITIONAL_AFTER_SCRIPTS"
-# bash ./scripts/upgrade/v_6_4_6/post-script-ibc-transfer.sh
+echo "executing additional post scripts from $ADDITIONAL_AFTER_SCRIPTS"
+bash ./scripts/upgrade/v_6_4_6/post-script-ibc-transfer.sh
 
 echo ""
 echo "#########################################################"
