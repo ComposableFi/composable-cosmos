@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap/zaptest"
 )
 
-// TestStartCentauri is a basic test to assert that spinning up a Centauri network with 1 validator works properly.
+// TestBasicCentauri is a basic test to assert that spinning up a Centauri network with 1 validator works properly.
 func TestBasicCentauri(t *testing.T) {
 	if testing.Short() {
 		t.Skip()

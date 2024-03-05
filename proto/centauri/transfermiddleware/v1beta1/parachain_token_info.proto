@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "x/transfermiddleware/types";
+option (gogoproto.goproto_getters_all) = false;
 
 // ParachainIBCTokenInfo represents information about transferable IBC tokens
 // from Parachain.
@@ -23,6 +24,7 @@ message ParachainIBCTokenInfo {
   string asset_id = 4 [ (gogoproto.moretags) = "yaml:\"asset_id\"" ];
 }
 
+// RemoveParachainIBCTokenInfo removes parachain IBC token info.
 message RemoveParachainIBCTokenInfo {
   // native denom is new native minted denom in centauri chain.
   string native_denom = 1 [ (gogoproto.moretags) = "yaml:\"native_denom\"" ];

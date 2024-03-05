@@ -332,7 +332,7 @@ func NewComposableApp(
 	)
 
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
-	routerModule := router.NewAppModule(app.RouterKeeper)
+	routerModule := router.NewAppModule(app.RouterKeeper, app.GetSubspace(routertypes.ModuleName))
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
 	ratelimitModule := ratelimitmodule.NewAppModule(&app.RatelimitKeeper)
