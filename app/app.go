@@ -87,6 +87,7 @@ import (
 	ibcclientclient "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
+	customibctransfer "github.com/notional-labs/composable/v6/custom/ibc-transfer"
 	customstaking "github.com/notional-labs/composable/v6/custom/staking"
 	"github.com/spf13/cast"
 	icq "github.com/strangelove-ventures/async-icq/v7"
@@ -101,6 +102,7 @@ import (
 	custombankmodule "github.com/notional-labs/composable/v6/custom/bank"
 
 	"github.com/notional-labs/composable/v6/app/ante"
+	"github.com/notional-labs/composable/v6/x/ibctransfermiddleware"
 	"github.com/notional-labs/composable/v6/x/stakingmiddleware"
 	transfermiddleware "github.com/notional-labs/composable/v6/x/transfermiddleware"
 	transfermiddlewaretypes "github.com/notional-labs/composable/v6/x/transfermiddleware/types"
@@ -126,6 +128,7 @@ import (
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	upgrades "github.com/notional-labs/composable/v6/app/upgrades"
+	ibctransfermiddlewaretypes "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 	stakingmiddlewaretypes "github.com/notional-labs/composable/v6/x/stakingmiddleware/types"
 )
 
@@ -226,6 +229,7 @@ var (
 		consensus.AppModuleBasic{},
 		alliancemodule.AppModuleBasic{},
 		stakingmiddleware.AppModuleBasic{},
+		ibctransfermiddleware.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -336,7 +340,8 @@ func NewComposableApp(
 		devnetGov,
 	)
 
-	transferModule := transfer.NewAppModule(app.TransferKeeper)
+	// transferModule := transfer.NewAppModule(app.TransferKeeper)
+	transferModule := customibctransfer.NewAppModule(appCodec, app.TransferKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
@@ -371,6 +376,7 @@ func NewComposableApp(
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		customstaking.NewAppModule(appCodec, *app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		stakingmiddleware.NewAppModule(appCodec, app.StakingMiddlewareKeeper),
+		ibctransfermiddleware.NewAppModule(appCodec, app.IbcTransferMiddlewareKeeper),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
@@ -427,6 +433,7 @@ func NewComposableApp(
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		stakingmiddlewaretypes.ModuleName,
+		ibctransfermiddlewaretypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -462,6 +469,7 @@ func NewComposableApp(
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		stakingmiddlewaretypes.ModuleName,
+		ibctransfermiddlewaretypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -501,6 +509,7 @@ func NewComposableApp(
 		wasm.ModuleName,
 		alliancemoduletypes.ModuleName,
 		stakingmiddlewaretypes.ModuleName,
+		ibctransfermiddlewaretypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -591,7 +600,7 @@ func (app *ComposableApp) GetStakingKeeper() ibctestingtypes.StakingKeeper {
 
 // GetIBCKeeper implements the TestingApp interface.
 func (app *ComposableApp) GetTransferKeeper() *ibctransferkeeper.Keeper {
-	return &app.TransferKeeper
+	return &app.TransferKeeper.Keeper
 }
 
 // GetIBCKeeper implements the TestingApp interface.
