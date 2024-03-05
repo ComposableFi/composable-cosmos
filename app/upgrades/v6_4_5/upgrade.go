@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
+	ibctransfermiddleware "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
@@ -18,10 +19,26 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
+		// remove broken proposals
 		BrokenProposals := [3]uint64{2, 6, 11}
 		for _, proposal := range BrokenProposals {
 			keepers.GovKeeper.DeleteProposal(ctx, proposal)
 		}
+
+		// burn extra ppica in escrow account
+		// this ppica is unused because it is a native token stored in escrow account
+		// it was unnecessarily minted to match pica escrowed on picasso to ppica minted
+		// in genesis, to make initial native ppica transferrable to picasso
+		amount, ok := sdk.NewIntFromString("1066669217167120000000")
+		if ok {
+			coins := sdk.Coins{sdk.NewCoin("ppica", amount)}
+			keepers.BankKeeper.SendCoinsFromAccountToModule(ctx, sdk.MustAccAddressFromBech32("centauri12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vmvgw48"), "gov", coins)
+			keepers.BankKeeper.BurnCoins(ctx, "gov", coins)
+		}
+
+		custommiddlewareparams := ibctransfermiddleware.DefaultGenesisState()
+		keepers.IbcTransferMiddlewareKeeper.SetParams(ctx, custommiddlewareparams.Params)
+
 		return mm.RunMigrations(ctx, configurator, vm)
 	}
 }
