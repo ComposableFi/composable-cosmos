@@ -81,7 +81,7 @@ func (s *KeeperTestHelper) Setup(_ *testing.T) {
 	s.TestAccs = CreateRandomAccounts(10)
 
 	s.StakingHelper = stakinghelper.NewHelper(s.Suite.T(), s.Ctx, &s.App.StakingKeeper.Keeper)
-	s.StakingHelper.Denom = "upica"
+	s.StakingHelper.Denom = "stake"
 }
 
 func (s *KeeperTestHelper) ConfirmUpgradeSucceeded(upgradeName string, upgradeHeight int64) {
@@ -109,7 +109,7 @@ func (s *KeeperTestHelper) SetupValidator(bondStatus stakingtypes.BondStatus) sd
 	valPriv := secp256k1.GenPrivKey()
 	valPub := valPriv.PubKey()
 	valAddr := sdk.ValAddress(valPub.Address())
-	bondDenom := "upica"
+	bondDenom := "stake"
 	selfBond := sdk.NewCoins(sdk.Coin{Amount: sdk.NewInt(100), Denom: bondDenom})
 
 	s.FundAcc(sdk.AccAddress(valAddr), selfBond)

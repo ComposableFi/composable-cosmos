@@ -15,7 +15,7 @@ import (
 	customibctesting "github.com/notional-labs/composable/v6/app/ibctesting"
 )
 
-var govAuthorityAddress = "pica10556m38z4x6pqalr9rl5ytf3cff8q46nf36090" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
+var govAuthorityAddress = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn" // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
 
 type TransferTestSuite struct {
 	suite.Suite
