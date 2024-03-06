@@ -1,9 +1,7 @@
 package v6_4_5
 
 import (
-	store "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/notional-labs/composable/v6/app/upgrades"
-	ibctransfermiddleware "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
 const (
@@ -14,8 +12,4 @@ const (
 var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
-	StoreUpgrades: store.StoreUpgrades{
-		Added:   []string{ibctransfermiddleware.StoreKey},
-		Deleted: []string{},
-	},
 }

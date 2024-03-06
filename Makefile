@@ -92,7 +92,7 @@ build:
 	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t centauri:local -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
