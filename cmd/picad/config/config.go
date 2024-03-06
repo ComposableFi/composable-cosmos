@@ -29,7 +29,7 @@ const (
 
 const (
 	HumanReadableCoinUnit = "PICA"
-	BaseCoinUnit          = "upica"
+	BaseCoinUnit          = "stake"
 	DefaultBondDenom      = BaseCoinUnit
 )
 
