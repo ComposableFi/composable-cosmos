@@ -25,7 +25,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 	minter.AnnualProvisions = minter.NextAnnualProvisions(params, totalStakingSupply)
 	k.SetMinter(ctx, minter)
 
-	// calculate how many we would mint, but we dont mint them, we take them from the prefunded account
+	// mint coins, update supply
 	mintedCoin := minter.BlockProvision(params)
 	mintedCoins := sdk.NewCoins(mintedCoin)
 
@@ -41,7 +41,10 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper, ic types.InflationCalculatio
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
-			types.EventTypeReward,
+			types.EventTypeMint,
+			sdk.NewAttribute(types.AttributeKeyBondedRatio, bondedRatio.String()),
+			sdk.NewAttribute(types.AttributeKeyInflation, minter.Inflation.String()),
+			sdk.NewAttribute(types.AttributeKeyAnnualProvisions, minter.AnnualProvisions.String()),
 			sdk.NewAttribute(sdk.AttributeKeyAmount, mintedCoin.Amount.String()),
 		),
 	)

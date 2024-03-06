@@ -1,17 +1,13 @@
 package keeper
 
 import (
-	"fmt"
-
-	"cosmossdk.io/math"
 	abcicometbft "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	distkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
-	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
+
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 )
 
@@ -20,9 +16,6 @@ type Keeper struct {
 	cdc               codec.BinaryCodec
 	Stakingmiddleware *stakingmiddleware.Keeper
 	authority         string
-	mintKeeper        minttypes.BankKeeper
-	distrKeeper       distkeeper.Keeper
-	authKeeper        minttypes.AccountKeeper
 }
 
 func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicometbft.ValidatorUpdate {
@@ -124,39 +117,6 @@ func NewKeeper(
 		authority:         authority,
 		Stakingmiddleware: stakingmiddleware,
 		cdc:               cdc,
-		mintKeeper:        nil,
-		distrKeeper:       distkeeper.Keeper{},
-		authKeeper:        ak,
 	}
 	return &keeper
-}
-
-func (k *Keeper) RegisterKeepers(dk distkeeper.Keeper, mk minttypes.BankKeeper) {
-	k.distrKeeper = dk
-	k.mintKeeper = mk
-}
-
-// SlashWithInfractionReason send coins to community pool
-func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddress, infractionHeight, power int64, slashFactor sdk.Dec, _ types.Infraction) math.Int {
-	// keep slashing logic the same
-	amountBurned := k.Slash(ctx, consAddr, infractionHeight, power, slashFactor)
-	// after usual slashing and burning is done, mint burned coinds into community pool
-	coins := sdk.NewCoins(sdk.NewCoin(k.BondDenom(ctx), amountBurned))
-	err := k.mintKeeper.MintCoins(ctx, types.ModuleName, coins)
-	if err != nil {
-		k.Logger(ctx).Error("Failed to mint slashed coins: ", amountBurned)
-	} else {
-		err = k.distrKeeper.FundCommunityPool(ctx, coins, k.authKeeper.GetModuleAddress(types.ModuleName))
-		if err != nil {
-			k.Logger(ctx).Error(fmt.Sprintf("Failed to fund community pool. Tokens minted to the staking module account: %d. ", amountBurned))
-		} else {
-			ctx.EventManager().EmitEvent(
-				sdk.NewEvent(
-					minttypes.EventTypeMintSlashed,
-					sdk.NewAttribute(sdk.AttributeKeyAmount, amountBurned.String()),
-				),
-			)
-		}
-	}
-	return amountBurned
 }

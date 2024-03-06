@@ -45,10 +45,11 @@ func GetDockerImageInfo() (repo, version string) {
 	if !found {
 		// make local-image
 		repo = "centauri"
-		branchVersion = "local"
+		branchVersion = "debug"
 	}
 
 	// github converts / to - for pushed docker images
 	// branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
+	branchVersion = "latest"
 	return repo, branchVersion
 }
