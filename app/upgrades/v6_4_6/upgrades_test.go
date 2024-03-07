@@ -10,7 +10,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	authvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktestutil "github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
@@ -161,26 +160,26 @@ func prepareForTestingAuthModule(s *UpgradeTestSuite) (sdk.AccAddress, sdk.AccAd
 
 	addr2 := s.TestAccs[2]
 	baseAccount2 := authtypes.NewBaseAccount(addr2, nil, 0, 0)
-	baseVestingAccount := authvesting.NewBaseVestingAccount(baseAccount2, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	baseVestingAccount := vestingtypes.NewBaseVestingAccount(baseAccount2, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
 	s.App.AccountKeeper.SetAccount(s.Ctx, baseVestingAccount)
 
 	continuousVestingAccount := CreateVestingAccount(s)
 
 	addr3 := s.TestAccs[3]
 	baseAccount3 := authtypes.NewBaseAccount(addr3, nil, 0, 0)
-	baseVestingAccount2 := authvesting.NewBaseVestingAccount(baseAccount3, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
-	delayedVestingAccount := authvesting.NewDelayedVestingAccountRaw(baseVestingAccount2)
+	baseVestingAccount2 := vestingtypes.NewBaseVestingAccount(baseAccount3, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	delayedVestingAccount := vestingtypes.NewDelayedVestingAccountRaw(baseVestingAccount2)
 	s.App.AccountKeeper.SetAccount(s.Ctx, delayedVestingAccount)
 
 	addr4 := s.TestAccs[4]
 	baseAccount4 := authtypes.NewBaseAccount(addr4, nil, 0, 0)
-	baseVestingAccount3 := authvesting.NewBaseVestingAccount(baseAccount4, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
-	periodicVestingAccount := authvesting.NewPeriodicVestingAccountRaw(baseVestingAccount3, 0, vestingtypes.Periods{})
+	baseVestingAccount3 := vestingtypes.NewBaseVestingAccount(baseAccount4, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	periodicVestingAccount := vestingtypes.NewPeriodicVestingAccountRaw(baseVestingAccount3, 0, vestingtypes.Periods{})
 	s.App.AccountKeeper.SetAccount(s.Ctx, periodicVestingAccount)
 
 	addr5 := s.TestAccs[5]
 	baseAccount5 := authtypes.NewBaseAccount(addr5, nil, 0, 0)
-	permanentLockedAccount := authvesting.NewPermanentLockedAccount(baseAccount5, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))))
+	permanentLockedAccount := vestingtypes.NewPermanentLockedAccount(baseAccount5, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))))
 	s.App.AccountKeeper.SetAccount(s.Ctx, permanentLockedAccount)
 
 	return baseAccount.GetAddress(), stakingModuleAccount.GetAddress(), baseVestingAccount.GetAddress(), continuousVestingAccount.GetAddress(), delayedVestingAccount.GetAddress(), periodicVestingAccount.GetAddress(), permanentLockedAccount.GetAddress()
@@ -251,7 +250,7 @@ func checkUpgradeSlashingModule(s *UpgradeTestSuite, oldConsAddress sdk.ConsAddr
 	s.Suite.Equal(valSigningInfo.Address, newBech32Addr)
 }
 
-func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress, oldValAddress2 sdk.ValAddress, acc1 sdk.AccAddress, afterOneDay time.Time) {
+func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress, oldValAddress2 sdk.ValAddress, acc1 sdk.AccAddress, afterOneDay time.Time) {
 	// CONVERT TO ACC TO NEW PREFIX
 	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bz)
@@ -296,7 +295,7 @@ func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress
 	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorSrcAddress, "pica"), true)
 }
 
-func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, stakingModuleAccount sdk.AccAddress, baseVestingAccount sdk.AccAddress, continuousVestingAccount sdk.AccAddress, delayedVestingAccount sdk.AccAddress, periodicVestingAccount sdk.AccAddress, permanentLockedAccount sdk.AccAddress) {
+func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount sdk.AccAddress) {
 	/* CHECK BASE ACCOUNT */
 	_, bz, _ := bech32.DecodeAndConvert(baseAccount.String())
 	newBech32AddrBaseAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
