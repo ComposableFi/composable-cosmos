@@ -63,6 +63,28 @@ func ConvertAccAddr(accAddr string) string {
 	return bech32Addr
 }
 
+// Input is type string -> need safe convert
+func SafeConvertAddress(accAddr string) string {
+	if len(accAddr) == 0 {
+		return ""
+	}
+
+	parsedAccAddr, err := AccAddressFromOldBech32(accAddr, OldBech32PrefixAccAddr)
+	if err != nil {
+		return accAddr
+	}
+	_, bz, err := bech32.DecodeAndConvert(parsedAccAddr.String())
+	if err != nil {
+		return accAddr
+	}
+	bech32Addr, err := bech32.ConvertAndEncode(NewBech32PrefixAccAddr, bz)
+	if err != nil {
+		return accAddr
+	}
+
+	return bech32Addr
+}
+
 func ConvertConsAddr(consAddr string) string {
 	parsedConsAddr, err := ConsAddressFromOldBech32(consAddr, OldBech32PrefixConsAddr)
 	_, bz, _ := bech32.DecodeAndConvert(parsedConsAddr.String())
