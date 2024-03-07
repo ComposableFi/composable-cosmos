@@ -37,6 +37,25 @@ CODE_ID=1 ## TODO: hardfix for now to get the contract, and overide the contract
 CONTRACT_ADDRESS=$($BINARY query wasm list-contract-by-code $CODE_ID -o json | jq -r '.contracts[0]') 
 echo "Query contract address: $CONTRACT_ADDRESS"
 
+## Fetch code info 
+CREATOR=$($BINARY query wasm code-info $CODE_ID -o json | jq -r '.creator')
+if [ "$CREATOR" == "$WALLET_1" ]; then
+    echo "Assertion passed: Code creator ($CREATOR) is equal to Wallet 1 ($WALLET_1)"
+else
+    echo "Assertion failed: Code creator ($CREATOR) is not equal to Wallet 1 ($WALLET_1)"
+    exit 1
+fi
+
+
+## Fetch contract info 
+CONTRACT_CREATOR=$($BINARY query wasm contract $CONTRACT_ADDRESS -o json | jq -r '.contract_info.creator')
+if [ "$CONTRACT_CREATOR" == "$WALLET_1" ]; then
+    echo "Assertion passed: Contract creator ($CONTRACT_CREATOR) is equal to Wallet 1 ($WALLET_1)"
+else
+    echo "Assertion failed: Contract creator ($CONTRACT_CREATOR) is not equal to Wallet 1 ($WALLET_1)"
+    exit 1
+fi
+
 echo -e "\n Testing with new wallet / wallet that has not interacted with the contract before"
 ## Execute contract with new address
 echo "wallet2: init the counter"
