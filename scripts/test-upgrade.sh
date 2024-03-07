@@ -3,15 +3,15 @@
 # the upgrade is a fork, "true" otherwise
 FORK=${FORK:-"false"}
 
-OLD_VERSION=v6.4.4
+OLD_VERSION=v6.4.5-fix
 UPGRADE_WAIT=${UPGRADE_WAIT:-20}
 HOME=mytestnet
 ROOT=$(pwd)
 DENOM=upica
 CHAIN_ID=localpica
-SOFTWARE_UPGRADE_NAME="v6_4_6"
-ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_6/pre-script.sh" 
-ADDITIONAL_AFTER_SCRIPTS="./scripts/upgrade/v_6_4_6/post-script.sh"
+SOFTWARE_UPGRADE_NAME="v6_4_7"
+ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_7/pre-script.sh"
+ADDITIONAL_AFTER_SCRIPTS="./scripts/upgrade/v_6_4_7/post-script.sh"
 
 SLEEP_TIME=1
 
