@@ -84,7 +84,6 @@ func setup(tb testing.TB, withGenesis bool, invCheckPeriod uint) (*ComposableApp
 		MakeEncodingConfig(),
 		EmptyBaseAppOptions{},
 		wasmOpts,
-		nil,
 		baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState()
