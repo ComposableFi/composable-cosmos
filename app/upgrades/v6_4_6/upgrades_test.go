@@ -299,9 +299,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	/* CHECK BASE ACCOUNT */
 	_, bz, _ := bech32.DecodeAndConvert(baseAccount.String())
 	newBech32AddrBaseAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrBA authtypes.AccountI
-	newPrefixAddrBA = s.App.AccountKeeper.GetAccount(s.Ctx, baseAccount)
-	switch acci := newPrefixAddrBA.(type) {
+	var newPrefixAddr authtypes.AccountI
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, baseAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *authtypes.BaseAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrBaseAccount)
@@ -312,9 +312,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	/* CHECK MODULE ACCOUNT */
 	_, bz, _ = bech32.DecodeAndConvert(stakingModuleAccount.String())
 	newBech32AddrModuleAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrMA authtypes.AccountI
-	newPrefixAddrMA = s.App.AccountKeeper.GetAccount(s.Ctx, stakingModuleAccount)
-	switch acci := newPrefixAddrMA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, stakingModuleAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *authtypes.ModuleAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrModuleAccount)
@@ -325,9 +324,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	/* CHECK BASE VESTING ACCOUNT */
 	_, bz, _ = bech32.DecodeAndConvert(baseVestingAccount.String())
 	newBech32AddrBaseVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrBVA authtypes.AccountI
-	newPrefixAddrBVA = s.App.AccountKeeper.GetAccount(s.Ctx, baseVestingAccount)
-	switch acci := newPrefixAddrBVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, baseVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.BaseVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrBaseVestingAccount)
@@ -338,9 +336,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	// CHECK CONTINUOUS VESTING ACCOUNT AND MULTISIG
 	_, bz, _ = bech32.DecodeAndConvert(continuousVestingAccount.String())
 	newBech32AddrConVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrCVA authtypes.AccountI
-	newPrefixAddrCVA = s.App.AccountKeeper.GetAccount(s.Ctx, continuousVestingAccount)
-	switch acci := newPrefixAddrCVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, continuousVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.ContinuousVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrConVestingAccount)
@@ -351,9 +348,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	// CHECK DELAYED VESTING ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(delayedVestingAccount.String())
 	newBech32AddrDelayedVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrDVA authtypes.AccountI
-	newPrefixAddrDVA = s.App.AccountKeeper.GetAccount(s.Ctx, delayedVestingAccount)
-	switch acci := newPrefixAddrDVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, delayedVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.DelayedVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrDelayedVestingAccount)
@@ -364,9 +360,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	// CHECK PERIODIC VESTING ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(periodicVestingAccount.String())
 	newBech32AddrPeriodicVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrPVA authtypes.AccountI
-	newPrefixAddrPVA = s.App.AccountKeeper.GetAccount(s.Ctx, periodicVestingAccount)
-	switch acci := newPrefixAddrPVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, periodicVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PeriodicVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrPeriodicVestingAccount)
@@ -377,9 +372,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	// CHECK PERMANENT LOCKED ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(permanentLockedAccount.String())
 	newBech32AddrPermanentVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrPLA authtypes.AccountI
-	newPrefixAddrPLA = s.App.AccountKeeper.GetAccount(s.Ctx, permanentLockedAccount)
-	switch acci := newPrefixAddrPLA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, permanentLockedAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PermanentLockedAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrPermanentVestingAccount)
