@@ -10,7 +10,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	authvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktestutil "github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
@@ -25,7 +24,7 @@ import (
 )
 
 const (
-	COIN_DENOM   = "upica"
+	COIN_DENOM   = "stake"
 	CONNECTION_0 = "connection-0"
 	PORT_0       = "port-0"
 	CHANNEL_0    = "channel-0"
@@ -161,26 +160,26 @@ func prepareForTestingAuthModule(s *UpgradeTestSuite) (sdk.AccAddress, sdk.AccAd
 
 	addr2 := s.TestAccs[2]
 	baseAccount2 := authtypes.NewBaseAccount(addr2, nil, 0, 0)
-	baseVestingAccount := authvesting.NewBaseVestingAccount(baseAccount2, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	baseVestingAccount := vestingtypes.NewBaseVestingAccount(baseAccount2, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
 	s.App.AccountKeeper.SetAccount(s.Ctx, baseVestingAccount)
 
 	continuousVestingAccount := CreateVestingAccount(s)
 
 	addr3 := s.TestAccs[3]
 	baseAccount3 := authtypes.NewBaseAccount(addr3, nil, 0, 0)
-	baseVestingAccount2 := authvesting.NewBaseVestingAccount(baseAccount3, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
-	delayedVestingAccount := authvesting.NewDelayedVestingAccountRaw(baseVestingAccount2)
+	baseVestingAccount2 := vestingtypes.NewBaseVestingAccount(baseAccount3, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	delayedVestingAccount := vestingtypes.NewDelayedVestingAccountRaw(baseVestingAccount2)
 	s.App.AccountKeeper.SetAccount(s.Ctx, delayedVestingAccount)
 
 	addr4 := s.TestAccs[4]
 	baseAccount4 := authtypes.NewBaseAccount(addr4, nil, 0, 0)
-	baseVestingAccount3 := authvesting.NewBaseVestingAccount(baseAccount4, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
-	periodicVestingAccount := authvesting.NewPeriodicVestingAccountRaw(baseVestingAccount3, 0, vestingtypes.Periods{})
+	baseVestingAccount3 := vestingtypes.NewBaseVestingAccount(baseAccount4, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))), 60)
+	periodicVestingAccount := vestingtypes.NewPeriodicVestingAccountRaw(baseVestingAccount3, 0, vestingtypes.Periods{})
 	s.App.AccountKeeper.SetAccount(s.Ctx, periodicVestingAccount)
 
 	addr5 := s.TestAccs[5]
 	baseAccount5 := authtypes.NewBaseAccount(addr5, nil, 0, 0)
-	permanentLockedAccount := authvesting.NewPermanentLockedAccount(baseAccount5, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))))
+	permanentLockedAccount := vestingtypes.NewPermanentLockedAccount(baseAccount5, sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))))
 	s.App.AccountKeeper.SetAccount(s.Ctx, permanentLockedAccount)
 
 	return baseAccount.GetAddress(), stakingModuleAccount.GetAddress(), baseVestingAccount.GetAddress(), continuousVestingAccount.GetAddress(), delayedVestingAccount.GetAddress(), periodicVestingAccount.GetAddress(), permanentLockedAccount.GetAddress()
@@ -251,7 +250,7 @@ func checkUpgradeSlashingModule(s *UpgradeTestSuite, oldConsAddress sdk.ConsAddr
 	s.Suite.Equal(valSigningInfo.Address, newBech32Addr)
 }
 
-func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress, oldValAddress2 sdk.ValAddress, acc1 sdk.AccAddress, afterOneDay time.Time) {
+func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress, oldValAddress2 sdk.ValAddress, acc1 sdk.AccAddress, afterOneDay time.Time) {
 	// CONVERT TO ACC TO NEW PREFIX
 	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bz)
@@ -296,13 +295,13 @@ func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress sdk.ValAddress
 	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorSrcAddress, "pica"), true)
 }
 
-func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, stakingModuleAccount sdk.AccAddress, baseVestingAccount sdk.AccAddress, continuousVestingAccount sdk.AccAddress, delayedVestingAccount sdk.AccAddress, periodicVestingAccount sdk.AccAddress, permanentLockedAccount sdk.AccAddress) {
+func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount sdk.AccAddress) {
 	/* CHECK BASE ACCOUNT */
 	_, bz, _ := bech32.DecodeAndConvert(baseAccount.String())
 	newBech32AddrBaseAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrBA authtypes.AccountI
-	newPrefixAddrBA = s.App.AccountKeeper.GetAccount(s.Ctx, baseAccount)
-	switch acci := newPrefixAddrBA.(type) {
+	var newPrefixAddr authtypes.AccountI
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, baseAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *authtypes.BaseAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrBaseAccount)
@@ -313,9 +312,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	/* CHECK MODULE ACCOUNT */
 	_, bz, _ = bech32.DecodeAndConvert(stakingModuleAccount.String())
 	newBech32AddrModuleAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrMA authtypes.AccountI
-	newPrefixAddrMA = s.App.AccountKeeper.GetAccount(s.Ctx, stakingModuleAccount)
-	switch acci := newPrefixAddrMA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, stakingModuleAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *authtypes.ModuleAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrModuleAccount)
@@ -326,9 +324,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	/* CHECK BASE VESTING ACCOUNT */
 	_, bz, _ = bech32.DecodeAndConvert(baseVestingAccount.String())
 	newBech32AddrBaseVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrBVA authtypes.AccountI
-	newPrefixAddrBVA = s.App.AccountKeeper.GetAccount(s.Ctx, baseVestingAccount)
-	switch acci := newPrefixAddrBVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, baseVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.BaseVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrBaseVestingAccount)
@@ -339,9 +336,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	// CHECK CONTINUOUS VESTING ACCOUNT AND MULTISIG
 	_, bz, _ = bech32.DecodeAndConvert(continuousVestingAccount.String())
 	newBech32AddrConVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrCVA authtypes.AccountI
-	newPrefixAddrCVA = s.App.AccountKeeper.GetAccount(s.Ctx, continuousVestingAccount)
-	switch acci := newPrefixAddrCVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, continuousVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.ContinuousVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrConVestingAccount)
@@ -352,9 +348,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	// CHECK DELAYED VESTING ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(delayedVestingAccount.String())
 	newBech32AddrDelayedVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrDVA authtypes.AccountI
-	newPrefixAddrDVA = s.App.AccountKeeper.GetAccount(s.Ctx, delayedVestingAccount)
-	switch acci := newPrefixAddrDVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, delayedVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.DelayedVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrDelayedVestingAccount)
@@ -365,9 +360,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	// CHECK PERIODIC VESTING ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(periodicVestingAccount.String())
 	newBech32AddrPeriodicVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrPVA authtypes.AccountI
-	newPrefixAddrPVA = s.App.AccountKeeper.GetAccount(s.Ctx, periodicVestingAccount)
-	switch acci := newPrefixAddrPVA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, periodicVestingAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PeriodicVestingAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrPeriodicVestingAccount)
@@ -378,9 +372,8 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount sdk.AccAddress, sta
 	// CHECK PERMANENT LOCKED ACCOUNT
 	_, bz, _ = bech32.DecodeAndConvert(permanentLockedAccount.String())
 	newBech32AddrPermanentVestingAccount, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
-	var newPrefixAddrPLA authtypes.AccountI
-	newPrefixAddrPLA = s.App.AccountKeeper.GetAccount(s.Ctx, permanentLockedAccount)
-	switch acci := newPrefixAddrPLA.(type) {
+	newPrefixAddr = s.App.AccountKeeper.GetAccount(s.Ctx, permanentLockedAccount)
+	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PermanentLockedAccount:
 		acc := acci
 		s.Suite.Equal(acc.Address, newBech32AddrPermanentVestingAccount)
@@ -417,7 +410,7 @@ func checkUpgradeTransferMiddlewareModule(s *UpgradeTestSuite) {
 
 func CreateVestingAccount(s *UpgradeTestSuite,
 ) vestingtypes.ContinuousVestingAccount {
-	str := `{"@type":"/cosmos.vesting.v1beta1.ContinuousVestingAccount","base_vesting_account":{"base_account":{"address":"centauri1alga5e8vr6ccr9yrg0kgxevpt5xgmgrvfkc5p8","pub_key":{"@type":"/cosmos.crypto.multisig.LegacyAminoPubKey","threshold":4,"public_keys":[{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AlnzK22KrkylnvTCvZZc8eZnydtQuzCWLjJJSMFUvVHf"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Aiw2Ftg+fnoHDU7M3b0VMRsI0qurXlerW0ahtfzSDZA4"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AvEHv+MVYRVau8FbBcJyG0ql85Tbbn7yhSA0VGmAY4ku"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Az5VHWqi3zMJu1rLGcu2EgNXLLN+al4Dy/lj6UZTzTCl"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Ai4GlSH3uG+joMnAFbQC3jQeHl9FPvVTlRmwIFt7d7TI"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"A2kAzH2bZr530jmFq/bRFrT2q8SRqdnfIebba+YIBqI1"}]},"account_number":46,"sequence":27},"original_vesting":[{"denom":"upica","amount":"22165200000000"}],"delegated_free":[{"denom":"upica","amount":"443382497453"}],"delegated_vesting":[{"denom":"upica","amount":"22129422502547"}],"end_time":1770994800},"start_time":1676300400}`
+	str := `{"@type":"/cosmos.vesting.v1beta1.ContinuousVestingAccount","base_vesting_account":{"base_account":{"address":"centauri1alga5e8vr6ccr9yrg0kgxevpt5xgmgrvfkc5p8","pub_key":{"@type":"/cosmos.crypto.multisig.LegacyAminoPubKey","threshold":4,"public_keys":[{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AlnzK22KrkylnvTCvZZc8eZnydtQuzCWLjJJSMFUvVHf"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Aiw2Ftg+fnoHDU7M3b0VMRsI0qurXlerW0ahtfzSDZA4"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AvEHv+MVYRVau8FbBcJyG0ql85Tbbn7yhSA0VGmAY4ku"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Az5VHWqi3zMJu1rLGcu2EgNXLLN+al4Dy/lj6UZTzTCl"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"Ai4GlSH3uG+joMnAFbQC3jQeHl9FPvVTlRmwIFt7d7TI"},{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"A2kAzH2bZr530jmFq/bRFrT2q8SRqdnfIebba+YIBqI1"}]},"account_number":46,"sequence":27},"original_vesting":[{"denom":"stake","amount":"22165200000000"}],"delegated_free":[{"denom":"stake","amount":"443382497453"}],"delegated_vesting":[{"denom":"stake","amount":"22129422502547"}],"end_time":1770994800},"start_time":1676300400}`
 
 	var acc vestingtypes.ContinuousVestingAccount
 	if err := json.Unmarshal([]byte(str), &acc); err != nil {
