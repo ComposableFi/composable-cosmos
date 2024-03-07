@@ -85,7 +85,6 @@ func IterateStoreByPrefix(
 		newValue := fn(iterator.Value())
 		store.Set(iterator.Key(), newValue)
 	}
-
 }
 
 // AccAddressFromBech32 creates an AccAddress from a Bech32 string.
