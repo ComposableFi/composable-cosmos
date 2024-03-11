@@ -33,7 +33,8 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/notional-labs/centauri-ictest:latest
+            ghcr.io/composablefi/composable-cosmos/centauri-ictest:latest
+            
   test-start-cosmos-chain:
     runs-on: ubuntu-latest
     needs: build-and-push-image
