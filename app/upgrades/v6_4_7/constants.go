@@ -1,4 +1,4 @@
-package v6_4_8
+package v6_4_7
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
@@ -8,7 +8,7 @@ import (
 
 const (
 	// UpgradeName defines the on-chain upgrade name for the composable upgrade.
-	UpgradeName = "v6_4_8"
+	UpgradeName = "v6_4_7"
 )
 
 var Upgrade = upgrades.Upgrade{
