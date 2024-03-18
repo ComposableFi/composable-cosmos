@@ -48,7 +48,5 @@ func GetDockerImageInfo() (repo, version string) {
 		branchVersion = "local"
 	}
 
-	// github converts / to - for pushed docker images
-	// branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
 	return repo, branchVersion
 }

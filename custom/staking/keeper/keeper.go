@@ -6,6 +6,7 @@ import (
 	"cosmossdk.io/math"
 	abcicometbft "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
+
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	distkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
