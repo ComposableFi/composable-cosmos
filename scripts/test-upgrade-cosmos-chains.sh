@@ -9,9 +9,9 @@ HOME=mytestnet
 ROOT=$(pwd)
 DENOM=stake
 CHAIN_ID1=test-1
-SOFTWARE_UPGRADE_NAME="v6_4_6"
-ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_7/pre-script-ibc-transfer.sh"
-ADDITIONAL_AFTER_SCRIPTS="./scripts/upgrade/v_6_4_7/post-script-ibc-transfer.sh"
+SOFTWARE_UPGRADE_NAME="v6_4_8"
+ADDITIONAL_PRE_SCRIPTS="./scripts/upgrade/v_6_4_8/pre-script-ibc-transfer.sh"
+ADDITIONAL_AFTER_SCRIPTS="./scripts/upgrade/v_6_4_8/post-script-ibc-transfer.sh"
 SETUP_RELAYER_SCRIPTS="./scripts/relayer/relayer-init.sh"
 
 CHAIN_DIR=$(pwd)/data
@@ -61,7 +61,7 @@ source $SETUP_RELAYER_SCRIPTS
 
 # Transfer from chain 1 to chain 2 and return balance of sender on chain 1
 echo "executing additional pre scripts from $ADDITIONAL_PRE_SCRIPTS"
-bash ./scripts/upgrade/v_6_4_7/pre-script-ibc-transfer.sh
+bash ./scripts/upgrade/v_6_4_8/pre-script-ibc-transfer.sh
 
 run_fork () {
     echo "forking"
@@ -148,7 +148,7 @@ CONTINUE="true" bash scripts/two-testnodes.sh _build/new/picad
 sleep 5
 
 echo "executing additional post scripts from $ADDITIONAL_AFTER_SCRIPTS"
-bash ./scripts/upgrade/v_6_4_7/post-script-ibc-transfer.sh
+bash ./scripts/upgrade/v_6_4_8/post-script-ibc-transfer.sh
 
 echo ""
 echo "#########################################################"

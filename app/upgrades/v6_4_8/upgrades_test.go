@@ -1,4 +1,4 @@
-package v6_4_7_test
+package v6_4_8_test
 
 import (
 	"encoding/json"
@@ -17,7 +17,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	apptesting "github.com/notional-labs/composable/v6/app"
-	"github.com/notional-labs/composable/v6/app/upgrades/v6_4_7"
+	"github.com/notional-labs/composable/v6/app/upgrades/v6_4_8"
 	"github.com/notional-labs/composable/v6/bech32-migration/utils"
 	"github.com/stretchr/testify/suite"
 	alliancetypes "github.com/terra-money/alliance/x/alliance/types"
@@ -60,7 +60,7 @@ func (s *UpgradeTestSuite) TestForMigratingNewPrefix() {
 
 	/* == UPGRADE == */
 	upgradeHeight := int64(5)
-	s.ConfirmUpgradeSucceeded(v6_4_7.UpgradeName, upgradeHeight)
+	s.ConfirmUpgradeSucceeded(v6_4_8.UpgradeName, upgradeHeight)
 
 	/* == CHECK AFTER UPGRADE == */
 	checkUpgradeGovModule(s, acc1, proposal)
