@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -30,8 +31,17 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 	if params.ChannelFees != nil && len(params.ChannelFees) > 0 {
 		channelFee := findChannelParams(params.ChannelFees, msg.SourceChannel)
 		if channelFee != nil {
-			if channelFee.MinTimeoutTimestamp > 0 && msg.TimeoutTimestamp < channelFee.MinTimeoutTimestamp {
-				return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer")
+			if channelFee.MinTimeoutTimestamp > 0 {
+
+				goCtx := sdk.UnwrapSDKContext(goCtx)
+				blockTime := goCtx.BlockTime()
+
+				timeoutTimeInFuture := time.Unix(0, int64(msg.TimeoutTimestamp))
+				difference := timeoutTimeInFuture.Sub(blockTime).Nanoseconds()
+
+				if difference < channelFee.MinTimeoutTimestamp {
+					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer")
+				}
 			}
 			coin := findCoinByDenom(channelFee.AllowedTokens, msg.Token.Denom)
 			if coin != nil {
