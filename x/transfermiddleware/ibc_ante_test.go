@@ -17,7 +17,7 @@ import (
 
 // NOTE: This is the address of the gov authority on the chain that is being tested.
 // This means that we need to check bech32 .... everywhere.
-var govAuthorityAddress = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
+var govAuthorityAddress = "centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m"
 
 // ORIGINAL NOTES:
 // convert from: centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m
