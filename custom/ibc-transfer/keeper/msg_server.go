@@ -37,10 +37,14 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 				blockTime := goCtx.BlockTime()
 
 				timeoutTimeInFuture := time.Unix(0, int64(msg.TimeoutTimestamp))
+				if timeoutTimeInFuture.Before(blockTime) {
+					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer. timeout timestamp is in the past")
+				}
+
 				difference := timeoutTimeInFuture.Sub(blockTime).Nanoseconds()
 
 				if difference < channelFee.MinTimeoutTimestamp {
-					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer")
+					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer. too soon")
 				}
 			}
 			coin := findCoinByDenom(channelFee.AllowedTokens, msg.Token.Denom)
