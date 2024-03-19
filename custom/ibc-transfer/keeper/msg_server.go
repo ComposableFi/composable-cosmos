@@ -31,7 +31,7 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 		channelFee := findChannelParams(params.ChannelFees, msg.SourceChannel)
 		if channelFee != nil {
 			if channelFee.MinTimeoutTimestamp > 0 && msg.TimeoutTimestamp < channelFee.MinTimeoutTimestamp {
-				return nil, ErrInvalidTimeoutTimestamp
+				return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer")
 			}
 			coin := findCoinByDenom(channelFee.AllowedTokens, msg.Token.Denom)
 			if coin != nil {
@@ -92,7 +92,3 @@ func findCoinByDenom(allowedTokens []*ibctransfermiddlewaretypes.CoinItem, denom
 	}
 	return nil // If the denom is not found
 }
-
-var (
-	ErrInvalidTimeoutTimestamp = fmt.Errorf("proto: incorrect timeout timestamp found during ibc transfer")
-)
