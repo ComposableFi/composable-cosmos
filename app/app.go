@@ -36,7 +36,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 
 	"github.com/notional-labs/composable/v6/app/keepers"
-	"github.com/notional-labs/composable/v6/app/upgrades/v6_4_5"
+
+	"github.com/notional-labs/composable/v6/app/upgrades/v6_4_8"
 
 	// bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
@@ -144,8 +145,9 @@ var (
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
 
-	Upgrades = []upgrades.Upgrade{v6_4_5.Upgrade}
-	Forks    = []upgrades.Fork{}
+	Upgrades = []upgrades.Upgrade{v6_4_8.Upgrade}
+
+	Forks = []upgrades.Fork{}
 )
 
 // GetEnabledProposals parses the ProposalsEnabled / EnableSpecificProposals values to
