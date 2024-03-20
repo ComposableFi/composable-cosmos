@@ -20,6 +20,7 @@ func CreateUpgradeHandler(
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
 		// remove broken proposals
 		BrokenProposals := [3]uint64{2, 6, 11}
+
 		for _, proposal_id := range BrokenProposals {
 			_, ok := keepers.GovKeeper.GetProposal(ctx, proposal_id)
 			if ok {
