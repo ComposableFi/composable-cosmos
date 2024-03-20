@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/notional-labs/composable/v6/app/keepers"
 	"github.com/notional-labs/composable/v6/app/upgrades"
+	ibctransfermiddleware "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
 func CreateUpgradeHandler(
@@ -18,9 +19,11 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
+		custommiddlewareparams := ibctransfermiddleware.DefaultGenesisState()
+		keepers.IbcTransferMiddlewareKeeper.SetParams(ctx, custommiddlewareparams.Params)
+
 		// remove broken proposals
 		BrokenProposals := [3]uint64{2, 6, 11}
-
 		for _, proposal_id := range BrokenProposals {
 			_, ok := keepers.GovKeeper.GetProposal(ctx, proposal_id)
 			if ok {
