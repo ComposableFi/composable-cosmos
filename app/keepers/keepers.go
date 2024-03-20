@@ -210,7 +210,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 		appCodec, appKeepers.keys[distrtypes.StoreKey], appKeepers.AccountKeeper, appKeepers.BankKeeper,
 		appKeepers.StakingKeeper, authtypes.FeeCollectorName, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-	appKeepers.StakingKeeper.RegisterKeepers(appKeepers.DistrKeeper, appKeepers.BankKeeper)
+	appKeepers.StakingKeeper.RegisterKeepers(appKeepers.DistrKeeper, appKeepers.MintKeeper)
 	appKeepers.SlashingKeeper = slashingkeeper.NewKeeper(
 		appCodec, cdc, appKeepers.keys[slashingtypes.StoreKey], appKeepers.StakingKeeper, authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)

@@ -12,6 +12,7 @@ import (
 	distkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	mintkeeper "github.com/notional-labs/composable/v6/x/mint/keeper"
 	minttypes "github.com/notional-labs/composable/v6/x/mint/types"
 	stakingmiddleware "github.com/notional-labs/composable/v6/x/stakingmiddleware/keeper"
 )
@@ -21,7 +22,7 @@ type Keeper struct {
 	cdc               codec.BinaryCodec
 	Stakingmiddleware *stakingmiddleware.Keeper
 	authority         string
-	mintKeeper        minttypes.BankKeeper
+	mintKeeper        mintkeeper.Keeper
 	distrKeeper       distkeeper.Keeper
 	authKeeper        minttypes.AccountKeeper
 }
@@ -125,14 +126,14 @@ func NewKeeper(
 		authority:         authority,
 		Stakingmiddleware: stakingmiddleware,
 		cdc:               cdc,
-		mintKeeper:        nil,
+		mintKeeper:        mintkeeper.Keeper{},
 		distrKeeper:       distkeeper.Keeper{},
 		authKeeper:        ak,
 	}
 	return &keeper
 }
 
-func (k *Keeper) RegisterKeepers(dk distkeeper.Keeper, mk minttypes.BankKeeper) {
+func (k *Keeper) RegisterKeepers(dk distkeeper.Keeper, mk mintkeeper.Keeper) {
 	k.distrKeeper = dk
 	k.mintKeeper = mk
 }
@@ -143,11 +144,11 @@ func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddr
 	amountBurned := k.Slash(ctx, consAddr, infractionHeight, power, slashFactor)
 	// after usual slashing and burning is done, mint burned coinds into community pool
 	coins := sdk.NewCoins(sdk.NewCoin(k.BondDenom(ctx), amountBurned))
-	err := k.mintKeeper.MintCoins(ctx, types.ModuleName, coins)
+	err := k.mintKeeper.MintCoins(ctx, coins)
 	if err != nil {
 		k.Logger(ctx).Error("Failed to mint slashed coins: ", amountBurned)
 	} else {
-		err = k.distrKeeper.FundCommunityPool(ctx, coins, k.authKeeper.GetModuleAddress(types.ModuleName))
+		err = k.distrKeeper.FundCommunityPool(ctx, coins, k.authKeeper.GetModuleAddress(minttypes.ModuleName))
 		if err != nil {
 			k.Logger(ctx).Error(fmt.Sprintf("Failed to fund community pool. Tokens minted to the staking module account: %d. ", amountBurned))
 		} else {
