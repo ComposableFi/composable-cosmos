@@ -9,10 +9,10 @@ KEYALGO="secp256k1"
 KEYRING="test"
 LOGL="info"
 
-centaurid config keyring-backend $KEYRING
-centaurid config chain-id $CHAINID
+picad config keyring-backend $KEYRING
+picad config chain-id $CHAINID
 
-command -v centaurid > /dev/null 2>&1 || { echo >&2 "centaurid command not found. Ensure this is setup / properly installed in your GOPATH."; exit 1; }
+command -v picad > /dev/null 2>&1 || { echo >&2 "centaurid command not found. Ensure this is setup / properly installed in your GOPATH."; exit 1; }
 command -v jq > /dev/null 2>&1 || { echo >&2 "jq not installed. More info: https://stedolan.github.io/jq/download/"; exit 1; }
 
 from_scratch () {
@@ -23,11 +23,11 @@ from_scratch () {
   rm -rf ~/.banksy/*
 
   # juno1efd63aw40lxf3n4mhf7dzhjkr453axurv2zdzk
-  echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | centaurid keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
+  echo "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry" | picad keys add $KEY --keyring-backend $KEYRING --algo $KEYALGO --recover
   # juno1hj5fveer5cjtn4wd6wstzugjfdxzl0xps73ftl
-  echo "wealth flavor believe regret funny network recall kiss grape useless pepper cram hint member few certain unveil rather brick bargain curious require crowd raise" | centaurid keys add myaccount --keyring-backend $KEYRING --algo $KEYALGO --recover
+  echo "wealth flavor believe regret funny network recall kiss grape useless pepper cram hint member few certain unveil rather brick bargain curious require crowd raise" | picad keys add myaccount --keyring-backend $KEYRING --algo $KEYALGO --recover
 
-  centaurid init $MONIKER --chain-id $CHAINID
+  picad init $MONIKER --chain-id $CHAINID
 
   # Function updates the config based on a jq argument as a string
   update_test_genesis () {
@@ -52,16 +52,16 @@ from_scratch () {
   update_test_genesis '.app_state["feeshare"]["params"]["allowed_denoms"]=["stake"]'
 
   # Allocate genesis accounts
-  centaurid add-genesis-account $KEY 10000000000000000000stake,100000000000000utest --keyring-backend $KEYRING
-  centaurid add-genesis-account myaccount 1000000000stake,100000000000000utest --keyring-backend $KEYRING
+  picad add-genesis-account $KEY 10000000000000000000stake,100000000000000utest --keyring-backend $KEYRING
+  picad add-genesis-account myaccount 1000000000stake,100000000000000utest --keyring-backend $KEYRING
 
-  centaurid gentx $KEY 10000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
+  picad gentx $KEY 10000000000000000000stake --keyring-backend $KEYRING --chain-id $CHAINID
 
   # Collect genesis tx
-  centaurid collect-gentxs
+  picad collect-gentxs
 
   # Run this to ensure junorything worked and that the genesis file is setup correctly
-  centaurid validate-genesis
+  picad validate-genesis
 }
 
 
@@ -78,9 +78,9 @@ sed -i 's/cors_allowed_origins = \[\]/cors_allowed_origins = \["\*"\]/g' ~/.bank
 sed -i 's/enable = false/enable = true/g' ~/.banksy/config/app.toml
 sed -i '/address = "tcp:\/\/0.0.0.0:1317"/c\address = "tcp:\/\/0.0.0.0:1318"' ~/.banksy/config/app.toml
 
-centaurid config node tcp://0.0.0.0:2241
-centaurid start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
+picad config node tcp://0.0.0.0:2241
+picad start --pruning=nothing  --minimum-gas-prices=0stake --p2p.laddr tcp://0.0.0.0:2240 --rpc.laddr tcp://0.0.0.0:2241 --grpc.address 0.0.0.0:2242 --grpc-web.address 0.0.0.0:2243
 
 #MEMO='{"forward":{"receiver":"cosmos18p5cs3z0q68hq7q0d8tr8kp3ldnqkx2fx3f88w","port":"transfer","channel":"channel-0","timeout":600000000000,"retries":0,"next":"{}"}'
-#hermes --config scripts/relayer_hermes/config_compose_gaia.toml create channel --a-chain centaurid-t1 --b-chain gaiad-t1 --a-port transfer --b-port transfer --new-client-connection --yes
-#centaurid tx ibc-transfer transfer transfer channel-0 cosmos1alc8mjana7ssgeyffvlfza08gu6rtav8rmj6nv 10000000stake --from myaccount --keyring-backend test --chain-id centaurid-t1 --yes --fees 5000stake
+#hermes --config scripts/relayer_hermes/config_compose_gaia.toml create channel --a-chain picad-t1 --b-chain gaiad-t1 --a-port transfer --b-port transfer --new-client-connection --yes
+#picad tx ibc-transfer transfer transfer channel-0 cosmos1alc8mjana7ssgeyffvlfza08gu6rtav8rmj6nv 10000000stake --from myaccount --keyring-backend test --chain-id picad-t1 --yes --fees 5000stake

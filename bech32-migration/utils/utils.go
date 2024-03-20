@@ -6,6 +6,7 @@ import (
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 )
 
 const (
@@ -24,30 +25,74 @@ const (
 	OldBech32PrefixConsAddr = OldBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus
 	// OldBech32PrefixConsPub defines the Bech32 prefix of a consensus node public key
 	OldBech32PrefixConsPub = OldBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus + sdk.PrefixPublic
+
+	// OldBech32Prefix defines the Bech32 prefix used for EthAccounts
+	NewBech32Prefix = "pica"
+
+	// NewBech32PrefixAccAddr defines the Bech32 prefix of an account's address
+	NewBech32PrefixAccAddr = NewBech32Prefix
+	// NewBech32PrefixAccPub defines the Bech32 prefix of an account's public key
+	NewBech32PrefixAccPub = NewBech32Prefix + sdk.PrefixPublic
+	// NewBech32PrefixValAddr defines the Bech32 prefix of a validator's operator address
+	NewBech32PrefixValAddr = NewBech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator
+	// NewBech32PrefixValPub defines the Bech32 prefix of a validator's operator public key
+	NewBech32PrefixValPub = NewBech32Prefix + sdk.PrefixValidator + sdk.PrefixOperator + sdk.PrefixPublic
+	// NewBech32PrefixConsAddr defines the Bech32 prefix of a consensus node address
+	NewBech32PrefixConsAddr = NewBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus
+	// NewBech32PrefixConsPub defines the Bech32 prefix of a consensus node public key
+	NewBech32PrefixConsPub = NewBech32Prefix + sdk.PrefixValidator + sdk.PrefixConsensus + sdk.PrefixPublic
 )
 
 func ConvertValAddr(valAddr string) string {
 	parsedValAddr, err := ValAddressFromOldBech32(valAddr, OldBech32PrefixValAddr)
+	_, bz, _ := bech32.DecodeAndConvert(parsedValAddr.String())
+	bech32Addr, _ := bech32.ConvertAndEncode(NewBech32PrefixValAddr, bz)
 	if err != nil {
 		return valAddr
 	}
-	return parsedValAddr.String()
+	return bech32Addr
 }
 
 func ConvertAccAddr(accAddr string) string {
 	parsedAccAddr, err := AccAddressFromOldBech32(accAddr, OldBech32PrefixAccAddr)
+	_, bz, _ := bech32.DecodeAndConvert(parsedAccAddr.String())
+	bech32Addr, _ := bech32.ConvertAndEncode(NewBech32PrefixAccAddr, bz)
+	if err != nil {
+		panic(err)
+	}
+	return bech32Addr
+}
+
+// Input is type string -> need safe convert
+func SafeConvertAddress(accAddr string) string {
+	if len(accAddr) == 0 {
+		return ""
+	}
+
+	parsedAccAddr, err := AccAddressFromOldBech32(accAddr, OldBech32PrefixAccAddr)
 	if err != nil {
 		return accAddr
 	}
-	return parsedAccAddr.String()
+	_, bz, err := bech32.DecodeAndConvert(parsedAccAddr.String())
+	if err != nil {
+		return accAddr
+	}
+	bech32Addr, err := bech32.ConvertAndEncode(NewBech32PrefixAccAddr, bz)
+	if err != nil {
+		return accAddr
+	}
+
+	return bech32Addr
 }
 
 func ConvertConsAddr(consAddr string) string {
 	parsedConsAddr, err := ConsAddressFromOldBech32(consAddr, OldBech32PrefixConsAddr)
+	_, bz, _ := bech32.DecodeAndConvert(parsedConsAddr.String())
+	bech32Addr, _ := bech32.ConvertAndEncode(NewBech32PrefixConsAddr, bz)
 	if err != nil {
 		return consAddr
 	}
-	return parsedConsAddr.String()
+	return bech32Addr
 }
 
 func IterateStoreByPrefix(

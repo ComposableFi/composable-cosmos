@@ -29,7 +29,8 @@ dist/
 
 # Test binary, built with `go test -c`
 *.test
-
+# Test data
+data/*
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
@@ -47,3 +48,9 @@ dist/
 vendor
 go.work
 go.work.sum
+
+_build/
+
+mytestnet/
+
+screenlog.0
