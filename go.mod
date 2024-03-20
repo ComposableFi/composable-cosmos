@@ -332,7 +332,7 @@ replace (
 
 	github.com/cosmos/cosmos-sdk v0.47.5 => github.com/rust-ninja/cosmos-sdk v0.47.5-patch-validators-trim-tag
 
-	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/kkast/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20240318214000-902597680c1e
+	github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v7 => github.com/ComposableFi/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20240320115741-f32994360827
 	// ibc-go with wasm client
 	github.com/cosmos/ibc-go/v7 => github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f
 
