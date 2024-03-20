@@ -247,6 +247,7 @@ var (
 		alliancemoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 		alliancemoduletypes.RewardsPoolName: nil,
 		icatypes.ModuleName:                 nil,
+		stakingtypes.ModuleName:             nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
