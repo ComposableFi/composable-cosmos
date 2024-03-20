@@ -7,9 +7,9 @@ var (
 
 const (
 	// module name
-	ModuleName = "ibctransfermiddleware"
+	ModuleName = "ibctransferparamsmodule"
 
 	// StoreKey is the default store key for ibctransfermiddleware module that store params when apply validator set changes and when allow to unbond/redelegate
 
-	StoreKey = "customibctransferparams" // not using the module name because of collisions with key "staking"
+	StoreKey = "customibcparams" // not using the module name because of collisions with key "staking"
 )
