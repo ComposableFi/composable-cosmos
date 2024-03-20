@@ -1,6 +1,7 @@
 package v6_4_8
 
 import (
+	store "github.com/cosmos/cosmos-sdk/store/types"
 	"github.com/notional-labs/composable/v6/app/upgrades"
 )
 
@@ -12,4 +13,8 @@ const (
 var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
+	StoreUpgrades: store.StoreUpgrades{
+		Added:   []string{},
+		Deleted: []string{"customibctransferparams"},
+	},
 }
