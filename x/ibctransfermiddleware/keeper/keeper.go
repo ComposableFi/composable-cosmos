@@ -16,6 +16,8 @@ type Keeper struct {
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
 	authority string
+
+	addresses []string
 }
 
 // NewKeeper creates a new middleware Keeper instance
@@ -23,11 +25,13 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	key storetypes.StoreKey,
 	authority string,
+	addresses []string,
 ) Keeper {
 	return Keeper{
 		cdc:       cdc,
 		storeKey:  key,
 		authority: authority,
+		addresses: addresses,
 	}
 }
 

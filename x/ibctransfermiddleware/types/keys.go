@@ -12,4 +12,6 @@ const (
 	// StoreKey is the default store key for ibctransfermiddleware module that store params when apply validator set changes and when allow to unbond/redelegate
 
 	StoreKey = "customibcparams" // not using the module name because of collisions with key "staking"
+
+	RouterKey = ModuleName
 )

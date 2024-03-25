@@ -14,6 +14,16 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc UpdateCustomIbcParams(MsgUpdateCustomIbcParams) returns (MsgUpdateParamsCustomIbcResponse);
+
+  rpc AddIBCFeeConfig(MsgAddIBCFeeConfig)
+      returns (MsgAddIBCFeeConfigResponse);
+  rpc RemoveIBCFeeConfig(MsgRemoveIBCFeeConfig)
+    returns (MsgRemoveIBCFeeConfigResponse);
+
+  rpc AddAllowedIbcToken(MsgAddAllowedIbcToken)
+      returns (MsgAddAllowedIbcTokenResponse);
+  rpc RemoveAllowedIbcToken(MsgRemoveAllowedIbcToken)
+    returns (MsgRemoveAllowedIbcTokenResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -39,3 +49,90 @@ message MsgUpdateCustomIbcParams {
 //
 // Since: cosmos-sdk 0.47
 message MsgUpdateParamsCustomIbcResponse {}
+
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddIBCFeeConfig {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+  string fee_address = 3 [ (gogoproto.moretags) = "yaml:\"rly_address\"" ];
+
+  int64 min_timeout_timestamp = 4;
+}
+
+message MsgAddIBCFeeConfigResponse {}
+
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain
+// info.
+message MsgRemoveIBCFeeConfig {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+  ;
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+}
+
+message MsgRemoveIBCFeeConfigResponse {}
+
+
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddAllowedIbcToken {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+
+  string denom = 3 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "Denom"
+  ];
+
+  int64 amount = 4;
+
+  int64 percentage = 5;
+}
+
+message MsgAddAllowedIbcTokenResponse {}
+
+
+message MsgRemoveAllowedIbcToken {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+  ;
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+
+  string denom = 3 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "Denom"
+  ];
+}
+
+message MsgRemoveAllowedIbcTokenResponse {}
