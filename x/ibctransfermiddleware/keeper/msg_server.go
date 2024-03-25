@@ -39,8 +39,8 @@ func (ms msgServer) UpdateCustomIbcParams(goCtx context.Context, req *types.MsgU
 
 // AddIBCFeeConfig(MsgAddIBCFeeConfig) returns (MsgAddIBCFeeConfigResponse);
 func (ms msgServer) AddIBCFeeConfig(goCtx context.Context, req *types.MsgAddIBCFeeConfig) (*types.MsgAddIBCFeeConfigResponse, error) {
-	if ms.authority != req.Authority {
-		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; Nikita expected %s, got %s", ms.authority, req.Authority)
+	if !contains(ms.addresses, req.Authority) && ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected of this addresses from list: %s, got %s", ms.addresses, req.Authority)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -72,8 +72,8 @@ func (ms msgServer) AddIBCFeeConfig(goCtx context.Context, req *types.MsgAddIBCF
 }
 
 func (ms msgServer) RemoveIBCFeeConfig(goCtx context.Context, req *types.MsgRemoveIBCFeeConfig) (*types.MsgRemoveIBCFeeConfigResponse, error) {
-	if ms.authority != req.Authority {
-		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
+	if !contains(ms.addresses, req.Authority) && ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected of this addresses from list: %s, got %s", ms.addresses, req.Authority)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -94,8 +94,8 @@ func (ms msgServer) RemoveIBCFeeConfig(goCtx context.Context, req *types.MsgRemo
 }
 
 func (ms msgServer) AddAllowedIbcToken(goCtx context.Context, req *types.MsgAddAllowedIbcToken) (*types.MsgAddAllowedIbcTokenResponse, error) {
-	if ms.authority != req.Authority {
-		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; Nikita expected %s, got %s", ms.authority, req.Authority)
+	if !contains(ms.addresses, req.Authority) && ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected of this addresses from list: %s, got %s", ms.addresses, req.Authority)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -133,8 +133,8 @@ func (ms msgServer) AddAllowedIbcToken(goCtx context.Context, req *types.MsgAddA
 }
 
 func (ms msgServer) RemoveAllowedIbcToken(goCtx context.Context, req *types.MsgRemoveAllowedIbcToken) (*types.MsgRemoveAllowedIbcTokenResponse, error) {
-	if ms.authority != req.Authority {
-		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
+	if !contains(ms.addresses, req.Authority) && ms.authority != req.Authority {
+		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected of this addresses from list: %s, got %s", ms.addresses, req.Authority)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -175,6 +175,15 @@ func findCoinByDenom(allowedTokens []*types.CoinItem, denom string) *types.CoinI
 		}
 	}
 	return nil // If the denom is not found
+}
+
+func contains(arr []string, element string) bool {
+	for _, v := range arr {
+		if v == element {
+			return true
+		}
+	}
+	return false
 }
 
 // rpc AddAllowedIbcToken(MsgAddAllowedIbcToken)
