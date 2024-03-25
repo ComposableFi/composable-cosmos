@@ -7,6 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	custombankkeeper "github.com/notional-labs/composable/v6/custom/bank/keeper"
 	ibctransfermiddlewaretypes "github.com/notional-labs/composable/v6/x/ibctransfermiddleware/types"
 )
 
@@ -17,6 +18,10 @@ type msgServer struct {
 }
 
 var _ types.MsgServer = msgServer{}
+
+func NewMsgServerImpl(ibcKeeper Keeper, bankKeeper custombankkeeper.Keeper) types.MsgServer {
+	return &msgServer{Keeper: ibcKeeper, bank: bankKeeper, msgServer: ibcKeeper.Keeper}
+}
 
 // Transfer is the server API around the Transfer method of the IBC transfer module.
 // It checks if the sender is allowed to transfer the token and if the channel has fees.
@@ -42,14 +47,13 @@ func (k msgServer) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*typ
 				}
 
 				difference := timeoutTimeInFuture.Sub(blockTime).Nanoseconds()
-
 				if difference < channelFee.MinTimeoutTimestamp {
 					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer. too soon")
 				}
 			}
 			coin := findCoinByDenom(channelFee.AllowedTokens, msg.Token.Denom)
-			if coin != nil {
-				return &types.MsgTransferResponse{}, nil
+			if coin == nil {
+				return nil, fmt.Errorf("token not allowed to be transferred in this channel")
 			}
 			minFee := coin.MinFee.Amount
 			charge := minFee
