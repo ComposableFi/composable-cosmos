@@ -93,6 +93,72 @@ func (ms msgServer) RemoveIBCFeeConfig(goCtx context.Context, req *types.MsgRemo
 	return &types.MsgRemoveIBCFeeConfigResponse{}, nil
 }
 
+func (ms msgServer) AddAllowedIbcToken(goCtx context.Context, req *types.MsgAddAllowedIbcToken) (*types.MsgAddAllowedIbcTokenResponse, error) {
+	if ms.authority != req.Authority {
+		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; Nikita expected %s, got %s", ms.authority, req.Authority)
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	params := ms.Keeper.GetParams(ctx)
+	channelFee := findChannelParams(params.ChannelFees, req.ChannelID)
+	if channelFee != nil {
+		coin := findCoinByDenom(channelFee.AllowedTokens, req.Denom)
+		if coin != nil {
+			coin_c := sdk.Coin{
+				Denom:  req.Denom,
+				Amount: sdk.NewInt(req.Amount),
+			}
+			coin.MinFee = coin_c
+			coin.Percentage = req.Percentage
+		} else {
+			coin_c := sdk.Coin{
+				Denom:  req.Denom,
+				Amount: sdk.NewInt(req.Amount),
+			}
+			coin := &types.CoinItem{
+				MinFee:     coin_c,
+				Percentage: req.Percentage,
+			}
+			channelFee.AllowedTokens = append(channelFee.AllowedTokens, coin)
+		}
+	} else {
+		return nil, errorsmod.Wrapf(types.ErrChannelFeeNotFound, "channel fee not found for channel %s", req.ChannelID)
+	}
+	errSetParams := ms.Keeper.SetParams(ctx, params)
+	if errSetParams != nil {
+		return nil, errSetParams
+	}
+
+	return &types.MsgAddAllowedIbcTokenResponse{}, nil
+}
+
+func (ms msgServer) RemoveAllowedIbcToken(goCtx context.Context, req *types.MsgRemoveAllowedIbcToken) (*types.MsgRemoveAllowedIbcTokenResponse, error) {
+	if ms.authority != req.Authority {
+		// return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", ms.authority, req.Authority)
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	params := ms.Keeper.GetParams(ctx)
+	channelFee := findChannelParams(params.ChannelFees, req.ChannelID)
+	if channelFee != nil {
+		for i, coin := range channelFee.AllowedTokens {
+			if coin.MinFee.Denom == req.Denom {
+				channelFee.AllowedTokens = append(channelFee.AllowedTokens[:i], channelFee.AllowedTokens[i+1:]...)
+				break
+			}
+		}
+	} else {
+		return nil, errorsmod.Wrapf(types.ErrChannelFeeNotFound, "channel fee not found for channel %s", req.ChannelID)
+	}
+
+	errSetParams := ms.Keeper.SetParams(ctx, params)
+	if errSetParams != nil {
+		return nil, errSetParams
+	}
+
+	return &types.MsgRemoveAllowedIbcTokenResponse{}, nil
+}
+
 func findChannelParams(channelFees []*types.ChannelFee, targetChannelID string) *types.ChannelFee {
 	for _, fee := range channelFees {
 		if fee.Channel == targetChannelID {
@@ -101,3 +167,17 @@ func findChannelParams(channelFees []*types.ChannelFee, targetChannelID string) 
 	}
 	return nil // If the channel is not found
 }
+
+func findCoinByDenom(allowedTokens []*types.CoinItem, denom string) *types.CoinItem {
+	for _, coin := range allowedTokens {
+		if coin.MinFee.Denom == denom {
+			return coin
+		}
+	}
+	return nil // If the denom is not found
+}
+
+// rpc AddAllowedIbcToken(MsgAddAllowedIbcToken)
+//       returns (MsgAddAllowedIbcTokenResponse);
+//   rpc RemoveAllowedIbcToken(MsgRemoveAllowedIbcToken)
+//     returns (MsgRemoveAllowedIbcTokenResponse);

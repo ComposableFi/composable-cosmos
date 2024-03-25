@@ -330,6 +330,219 @@ func (m *MsgRemoveIBCFeeConfigResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRemoveIBCFeeConfigResponse proto.InternalMessageInfo
 
+// MsgAddParachainInfo represents a message to add new parachain info.
+type MsgAddAllowedIbcToken struct {
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
+	Authority  string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	ChannelID  string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	Denom      string `protobuf:"bytes,3,opt,name=denom,proto3" json:"denom,omitempty" yaml:"channel_id"`
+	Amount     int64  `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	Percentage int64  `protobuf:"varint,5,opt,name=percentage,proto3" json:"percentage,omitempty"`
+}
+
+func (m *MsgAddAllowedIbcToken) Reset()         { *m = MsgAddAllowedIbcToken{} }
+func (m *MsgAddAllowedIbcToken) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAllowedIbcToken) ProtoMessage()    {}
+func (*MsgAddAllowedIbcToken) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bf5c053de6965bca, []int{6}
+}
+func (m *MsgAddAllowedIbcToken) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddAllowedIbcToken) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddAllowedIbcToken.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddAllowedIbcToken) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAllowedIbcToken.Merge(m, src)
+}
+func (m *MsgAddAllowedIbcToken) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddAllowedIbcToken) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAllowedIbcToken.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddAllowedIbcToken proto.InternalMessageInfo
+
+func (m *MsgAddAllowedIbcToken) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgAddAllowedIbcToken) GetChannelID() string {
+	if m != nil {
+		return m.ChannelID
+	}
+	return ""
+}
+
+func (m *MsgAddAllowedIbcToken) GetDenom() string {
+	if m != nil {
+		return m.Denom
+	}
+	return ""
+}
+
+func (m *MsgAddAllowedIbcToken) GetAmount() int64 {
+	if m != nil {
+		return m.Amount
+	}
+	return 0
+}
+
+func (m *MsgAddAllowedIbcToken) GetPercentage() int64 {
+	if m != nil {
+		return m.Percentage
+	}
+	return 0
+}
+
+type MsgAddAllowedIbcTokenResponse struct {
+}
+
+func (m *MsgAddAllowedIbcTokenResponse) Reset()         { *m = MsgAddAllowedIbcTokenResponse{} }
+func (m *MsgAddAllowedIbcTokenResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAllowedIbcTokenResponse) ProtoMessage()    {}
+func (*MsgAddAllowedIbcTokenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bf5c053de6965bca, []int{7}
+}
+func (m *MsgAddAllowedIbcTokenResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddAllowedIbcTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddAllowedIbcTokenResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddAllowedIbcTokenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAllowedIbcTokenResponse.Merge(m, src)
+}
+func (m *MsgAddAllowedIbcTokenResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddAllowedIbcTokenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAllowedIbcTokenResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddAllowedIbcTokenResponse proto.InternalMessageInfo
+
+type MsgRemoveAllowedIbcToken struct {
+	// authority is the address that controls the module (defaults to x/gov unless
+	// overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty" yaml:"authority"`
+	ChannelID string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty" yaml:"channel_id"`
+	Denom     string `protobuf:"bytes,3,opt,name=denom,proto3" json:"denom,omitempty" yaml:"channel_id"`
+}
+
+func (m *MsgRemoveAllowedIbcToken) Reset()         { *m = MsgRemoveAllowedIbcToken{} }
+func (m *MsgRemoveAllowedIbcToken) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAllowedIbcToken) ProtoMessage()    {}
+func (*MsgRemoveAllowedIbcToken) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bf5c053de6965bca, []int{8}
+}
+func (m *MsgRemoveAllowedIbcToken) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAllowedIbcToken) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAllowedIbcToken.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAllowedIbcToken) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAllowedIbcToken.Merge(m, src)
+}
+func (m *MsgRemoveAllowedIbcToken) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAllowedIbcToken) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAllowedIbcToken.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAllowedIbcToken proto.InternalMessageInfo
+
+func (m *MsgRemoveAllowedIbcToken) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgRemoveAllowedIbcToken) GetChannelID() string {
+	if m != nil {
+		return m.ChannelID
+	}
+	return ""
+}
+
+func (m *MsgRemoveAllowedIbcToken) GetDenom() string {
+	if m != nil {
+		return m.Denom
+	}
+	return ""
+}
+
+type MsgRemoveAllowedIbcTokenResponse struct {
+}
+
+func (m *MsgRemoveAllowedIbcTokenResponse) Reset()         { *m = MsgRemoveAllowedIbcTokenResponse{} }
+func (m *MsgRemoveAllowedIbcTokenResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAllowedIbcTokenResponse) ProtoMessage()    {}
+func (*MsgRemoveAllowedIbcTokenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bf5c053de6965bca, []int{9}
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAllowedIbcTokenResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAllowedIbcTokenResponse.Merge(m, src)
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAllowedIbcTokenResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAllowedIbcTokenResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgUpdateCustomIbcParams)(nil), "composable.ibctransfermiddleware.v1beta1.MsgUpdateCustomIbcParams")
 	proto.RegisterType((*MsgUpdateParamsCustomIbcResponse)(nil), "composable.ibctransfermiddleware.v1beta1.MsgUpdateParamsCustomIbcResponse")
@@ -337,6 +550,10 @@ func init() {
 	proto.RegisterType((*MsgAddIBCFeeConfigResponse)(nil), "composable.ibctransfermiddleware.v1beta1.MsgAddIBCFeeConfigResponse")
 	proto.RegisterType((*MsgRemoveIBCFeeConfig)(nil), "composable.ibctransfermiddleware.v1beta1.MsgRemoveIBCFeeConfig")
 	proto.RegisterType((*MsgRemoveIBCFeeConfigResponse)(nil), "composable.ibctransfermiddleware.v1beta1.MsgRemoveIBCFeeConfigResponse")
+	proto.RegisterType((*MsgAddAllowedIbcToken)(nil), "composable.ibctransfermiddleware.v1beta1.MsgAddAllowedIbcToken")
+	proto.RegisterType((*MsgAddAllowedIbcTokenResponse)(nil), "composable.ibctransfermiddleware.v1beta1.MsgAddAllowedIbcTokenResponse")
+	proto.RegisterType((*MsgRemoveAllowedIbcToken)(nil), "composable.ibctransfermiddleware.v1beta1.MsgRemoveAllowedIbcToken")
+	proto.RegisterType((*MsgRemoveAllowedIbcTokenResponse)(nil), "composable.ibctransfermiddleware.v1beta1.MsgRemoveAllowedIbcTokenResponse")
 }
 
 func init() {
@@ -344,45 +561,53 @@ func init() {
 }
 
 var fileDescriptor_bf5c053de6965bca = []byte{
-	// 600 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x94, 0xcf, 0x6b, 0x13, 0x41,
-	0x14, 0xc7, 0x33, 0x8d, 0x16, 0x76, 0x0a, 0x6a, 0xd7, 0x56, 0xd7, 0xc5, 0xee, 0x86, 0x3d, 0x85,
-	0x82, 0x59, 0x13, 0xc1, 0x42, 0x10, 0x24, 0x9b, 0xa8, 0x44, 0x08, 0xc8, 0xb6, 0x5e, 0xbc, 0x84,
-	0x49, 0x76, 0xb2, 0x5d, 0xc8, 0xec, 0x2c, 0x3b, 0x93, 0xd8, 0xdc, 0xc4, 0x93, 0x78, 0xf2, 0xe2,
-	0xb5, 0x57, 0x3d, 0xe6, 0xe0, 0x1f, 0xd1, 0x63, 0xf1, 0xe4, 0x29, 0x48, 0x72, 0xc8, 0x4d, 0x21,
-	0x7f, 0x81, 0x64, 0x67, 0x93, 0xd4, 0xfc, 0x80, 0xd4, 0x5e, 0xbc, 0x64, 0x67, 0xde, 0x9b, 0xf7,
-	0x99, 0xef, 0x7c, 0xf3, 0x66, 0x60, 0xb6, 0x4e, 0x49, 0x40, 0x19, 0xaa, 0x35, 0xb1, 0xe9, 0xd5,
-	0xea, 0x3c, 0x44, 0x3e, 0x6b, 0xe0, 0x90, 0x78, 0x8e, 0xd3, 0xc4, 0x6f, 0x51, 0x88, 0xcd, 0x76,
-	0xb6, 0x86, 0x39, 0xca, 0x9a, 0xfc, 0x24, 0x13, 0x84, 0x94, 0x53, 0x39, 0x3d, 0x2b, 0xc9, 0x2c,
-	0x2d, 0xc9, 0xc4, 0x25, 0xea, 0xdd, 0x3a, 0x65, 0x84, 0x32, 0x93, 0x30, 0xd7, 0x6c, 0x67, 0xc7,
-	0x1f, 0x81, 0x50, 0xb7, 0x11, 0xf1, 0x7c, 0x6a, 0x46, 0xbf, 0x71, 0x68, 0xc7, 0xa5, 0x2e, 0x8d,
-	0x86, 0xe6, 0x78, 0x14, 0x47, 0xef, 0x09, 0x42, 0x55, 0x24, 0xc4, 0x24, 0x4e, 0x95, 0xd6, 0x56,
-	0xbe, 0x5c, 0x64, 0x44, 0x31, 0x7e, 0x01, 0xa8, 0x54, 0x98, 0xfb, 0x3a, 0x70, 0x10, 0xc7, 0xc5,
-	0x16, 0xe3, 0x94, 0x94, 0x6b, 0xf5, 0x57, 0x28, 0x44, 0x84, 0xc9, 0x8f, 0xa1, 0x84, 0x5a, 0xfc,
-	0x98, 0x86, 0x1e, 0xef, 0x28, 0x20, 0x05, 0xd2, 0x92, 0xa5, 0x7c, 0xff, 0xf6, 0x60, 0x27, 0xd6,
-	0x51, 0x70, 0x9c, 0x10, 0x33, 0x76, 0xc8, 0x43, 0xcf, 0x77, 0xed, 0xd9, 0x52, 0xf9, 0x10, 0x6e,
-	0x06, 0x11, 0x41, 0xd9, 0x48, 0x81, 0xf4, 0x56, 0xee, 0x61, 0x66, 0x5d, 0xcb, 0x32, 0x62, 0x67,
-	0x4b, 0x3a, 0xeb, 0xe9, 0x89, 0xaf, 0xc3, 0xee, 0x3e, 0xb0, 0x63, 0x54, 0xfe, 0xd9, 0xfb, 0x61,
-	0x77, 0x7f, 0xb6, 0xc9, 0xc7, 0x61, 0x77, 0x3f, 0x77, 0xc1, 0x82, 0x93, 0x15, 0x26, 0x4c, 0x0f,
-	0x27, 0xc8, 0x86, 0x01, 0x53, 0x73, 0xa1, 0xe9, 0xa9, 0x6d, 0xcc, 0x02, 0xea, 0x33, 0x6c, 0x7c,
-	0xd8, 0x80, 0x72, 0x85, 0xb9, 0x05, 0xc7, 0x29, 0x5b, 0xc5, 0xe7, 0x18, 0x17, 0xa9, 0xdf, 0xf0,
-	0x5c, 0x39, 0xb7, 0x68, 0xc7, 0xce, 0xa8, 0xa7, 0xdf, 0xea, 0x20, 0xd2, 0xcc, 0x1b, 0xd3, 0x94,
-	0x71, 0xd1, 0x8a, 0x02, 0x84, 0xf5, 0x63, 0xe4, 0xfb, 0xb8, 0x59, 0xf5, 0x9c, 0xc8, 0x0e, 0xc9,
-	0x32, 0xfa, 0x3d, 0x5d, 0x2a, 0x8a, 0x68, 0xb9, 0x34, 0xea, 0xe9, 0xdb, 0x82, 0x30, 0x5b, 0x68,
-	0xd8, 0x52, 0x3c, 0x29, 0x3b, 0xf2, 0x01, 0xdc, 0x6a, 0x60, 0x5c, 0x45, 0xc2, 0x6d, 0x25, 0x19,
-	0x31, 0xee, 0x8c, 0x7a, 0xba, 0x2c, 0xca, 0xc2, 0x66, 0x67, 0x92, 0x34, 0x6c, 0xd8, 0xc0, 0x38,
-	0xfe, 0x5f, 0xe4, 0x1c, 0xdc, 0x25, 0x9e, 0x5f, 0xe5, 0x1e, 0xc1, 0xb4, 0xc5, 0xa3, 0x2f, 0xe3,
-	0x88, 0x04, 0xca, 0xb5, 0x14, 0x48, 0x27, 0xed, 0xdb, 0xc4, 0xf3, 0x8f, 0x44, 0xee, 0x68, 0x92,
-	0xca, 0xdf, 0xf8, 0xdb, 0x65, 0xe3, 0x3e, 0x54, 0x17, 0x9d, 0x98, 0x1a, 0x75, 0x0a, 0xe0, 0x6e,
-	0x85, 0xb9, 0x36, 0x26, 0xb4, 0x8d, 0xff, 0x03, 0xaf, 0x16, 0xe4, 0xeb, 0x70, 0x6f, 0xa9, 0xbe,
-	0xc9, 0x09, 0x72, 0xbf, 0x93, 0x30, 0x59, 0x61, 0xae, 0xfc, 0x05, 0xc0, 0xdd, 0xe5, 0x97, 0xc0,
-	0x5a, 0xbf, 0x79, 0x57, 0x5d, 0x24, 0xf5, 0xe5, 0x3f, 0x30, 0x56, 0x34, 0xa7, 0xfc, 0x19, 0xc0,
-	0x9b, 0xf3, 0x9d, 0xf9, 0xe4, 0x52, 0xfc, 0xb9, 0x6a, 0xb5, 0x74, 0x95, 0xea, 0xa9, 0xae, 0x53,
-	0x00, 0xe5, 0x25, 0x8d, 0xf0, 0xf4, 0x52, 0xf0, 0x45, 0x80, 0xfa, 0xe2, 0x8a, 0x80, 0x89, 0x40,
-	0xf5, 0xfa, 0xbb, 0xf1, 0x7b, 0x62, 0x1d, 0x9c, 0xf5, 0x35, 0x70, 0xde, 0xd7, 0xc0, 0xcf, 0xbe,
-	0x06, 0x3e, 0x0d, 0xb4, 0xc4, 0xf9, 0x40, 0x4b, 0xfc, 0x18, 0x68, 0x89, 0x37, 0x7b, 0xab, 0xde,
-	0x10, 0xde, 0x09, 0x30, 0xab, 0x6d, 0x46, 0x2f, 0xe6, 0xa3, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff,
-	0x6c, 0xfd, 0xab, 0xe5, 0x33, 0x06, 0x00, 0x00,
+	// 729 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x56, 0xb1, 0x6f, 0xd3, 0x4a,
+	0x18, 0x8f, 0xdb, 0x97, 0x48, 0xb9, 0x4a, 0xef, 0xbd, 0xfa, 0xb5, 0x7d, 0xc1, 0xa2, 0x76, 0xe4,
+	0x29, 0xaa, 0x44, 0x4c, 0x02, 0xa2, 0x52, 0x85, 0x54, 0xc5, 0x09, 0xa0, 0x54, 0x8a, 0x84, 0xdc,
+	0xb2, 0xb0, 0x44, 0x17, 0xfb, 0xe2, 0x5a, 0xf8, 0x7c, 0x96, 0xef, 0xd2, 0x36, 0x1b, 0x62, 0x42,
+	0x88, 0x81, 0x85, 0xb5, 0x2b, 0x8c, 0x1d, 0x98, 0xf8, 0x0b, 0x3a, 0x56, 0x2c, 0x30, 0x45, 0x28,
+	0x1d, 0xba, 0x31, 0xf4, 0x2f, 0x40, 0xf1, 0x39, 0x4e, 0x9b, 0x38, 0x52, 0xd3, 0x0e, 0xc0, 0x12,
+	0xfb, 0xbe, 0xef, 0xbe, 0x9f, 0x7f, 0xdf, 0xef, 0x8b, 0x7f, 0x67, 0x50, 0x32, 0x09, 0xf6, 0x09,
+	0x85, 0x2d, 0x17, 0x69, 0x4e, 0xcb, 0x64, 0x01, 0xf4, 0x68, 0x1b, 0x05, 0xd8, 0xb1, 0x2c, 0x17,
+	0xed, 0xc3, 0x00, 0x69, 0x7b, 0xa5, 0x16, 0x62, 0xb0, 0xa4, 0xb1, 0x83, 0xa2, 0x1f, 0x10, 0x46,
+	0xc4, 0xc2, 0xa8, 0xa4, 0x98, 0x58, 0x52, 0x8c, 0x4a, 0xa4, 0xff, 0x4d, 0x42, 0x31, 0xa1, 0x1a,
+	0xa6, 0xb6, 0xb6, 0x57, 0x1a, 0x5c, 0x38, 0x84, 0xb4, 0x08, 0xb1, 0xe3, 0x11, 0x2d, 0xfc, 0x8d,
+	0x42, 0x4b, 0x36, 0xb1, 0x49, 0x78, 0xab, 0x0d, 0xee, 0xa2, 0xe8, 0x2d, 0x8e, 0xd0, 0xe4, 0x09,
+	0xbe, 0x88, 0x52, 0xb5, 0x2b, 0x33, 0x4f, 0x26, 0x19, 0xa2, 0xa8, 0x3f, 0x04, 0x90, 0x6b, 0x50,
+	0xfb, 0x99, 0x6f, 0x41, 0x86, 0xaa, 0x1d, 0xca, 0x08, 0xae, 0xb7, 0xcc, 0xa7, 0x30, 0x80, 0x98,
+	0x8a, 0x0f, 0x40, 0x16, 0x76, 0xd8, 0x2e, 0x09, 0x1c, 0xd6, 0xcd, 0x09, 0x79, 0xa1, 0x90, 0xd5,
+	0x73, 0x5f, 0x3e, 0xdd, 0x59, 0x8a, 0x78, 0x54, 0x2c, 0x2b, 0x40, 0x94, 0x6e, 0xb3, 0xc0, 0xf1,
+	0x6c, 0x63, 0xb4, 0x55, 0xdc, 0x06, 0x19, 0x3f, 0x44, 0xc8, 0xcd, 0xe5, 0x85, 0xc2, 0x42, 0xf9,
+	0x6e, 0xf1, 0xaa, 0x92, 0x15, 0xf9, 0x93, 0xf5, 0xec, 0x71, 0x4f, 0x49, 0x7d, 0x3c, 0x3b, 0x5a,
+	0x13, 0x8c, 0x08, 0x6a, 0xe3, 0xd1, 0xab, 0xb3, 0xa3, 0xb5, 0xd1, 0x43, 0xde, 0x9c, 0x1d, 0xad,
+	0x95, 0x2f, 0x48, 0x70, 0x30, 0x45, 0x84, 0xb8, 0x39, 0x8e, 0xac, 0xaa, 0x20, 0x3f, 0x16, 0x8a,
+	0xbb, 0x36, 0x10, 0xf5, 0x89, 0x47, 0x91, 0xfa, 0x7a, 0x0e, 0x88, 0x0d, 0x6a, 0x57, 0x2c, 0xab,
+	0xae, 0x57, 0x1f, 0x23, 0x54, 0x25, 0x5e, 0xdb, 0xb1, 0xc5, 0xf2, 0xa4, 0x1c, 0x4b, 0xe7, 0x3d,
+	0xe5, 0xdf, 0x2e, 0xc4, 0xee, 0x86, 0x1a, 0xa7, 0xd4, 0x8b, 0x52, 0x54, 0x00, 0x30, 0x77, 0xa1,
+	0xe7, 0x21, 0xb7, 0xe9, 0x58, 0xa1, 0x1c, 0x59, 0x5d, 0xed, 0xf7, 0x94, 0x6c, 0x95, 0x47, 0xeb,
+	0xb5, 0xf3, 0x9e, 0xb2, 0xc8, 0x11, 0x46, 0x1b, 0x55, 0x23, 0x1b, 0x2d, 0xea, 0x96, 0xb8, 0x0e,
+	0x16, 0xda, 0x08, 0x35, 0x21, 0x57, 0x3b, 0x37, 0x1f, 0x62, 0xac, 0x9c, 0xf7, 0x14, 0x91, 0x97,
+	0x05, 0x6e, 0x77, 0x98, 0x54, 0x0d, 0xd0, 0x46, 0x28, 0x9a, 0x8b, 0x58, 0x06, 0xcb, 0xd8, 0xf1,
+	0x9a, 0xcc, 0xc1, 0x88, 0x74, 0x58, 0x78, 0xa5, 0x0c, 0x62, 0x3f, 0xf7, 0x57, 0x5e, 0x28, 0xcc,
+	0x1b, 0xff, 0x61, 0xc7, 0xdb, 0xe1, 0xb9, 0x9d, 0x61, 0x6a, 0xe3, 0xef, 0xcb, 0x2a, 0xab, 0xb7,
+	0x81, 0x34, 0xa9, 0x44, 0x2c, 0xd4, 0xa1, 0x00, 0x96, 0x1b, 0xd4, 0x36, 0x10, 0x26, 0x7b, 0xe8,
+	0x37, 0xd0, 0x6a, 0x82, 0xbe, 0x02, 0x56, 0x13, 0xf9, 0xc5, 0x1d, 0xbc, 0x9d, 0x0b, 0x3b, 0xa8,
+	0x58, 0x56, 0xc5, 0x75, 0xc9, 0x3e, 0xb2, 0xea, 0x2d, 0x73, 0x87, 0xbc, 0x40, 0xde, 0xaf, 0x9a,
+	0xf6, 0x7d, 0x90, 0xb6, 0x90, 0x47, 0x70, 0x34, 0x67, 0xb9, 0xdf, 0x53, 0xd2, 0xb5, 0x41, 0x20,
+	0xb9, 0x92, 0x6f, 0x16, 0x57, 0x40, 0x06, 0x62, 0xd2, 0xf1, 0x58, 0x34, 0xdb, 0x68, 0x25, 0xca,
+	0x00, 0xf8, 0x28, 0x30, 0x91, 0xc7, 0xa0, 0x8d, 0x72, 0xe9, 0x30, 0x77, 0x21, 0x32, 0x45, 0xaf,
+	0x49, 0x35, 0x62, 0xbd, 0xbe, 0x72, 0xbf, 0xe0, 0x8a, 0xfe, 0xc9, 0x92, 0x4d, 0xb4, 0xce, 0x8d,
+	0x21, 0xb1, 0xb1, 0x61, 0xf7, 0xe5, 0xcf, 0x19, 0x30, 0xdf, 0xa0, 0xb6, 0xf8, 0x41, 0x00, 0xcb,
+	0xc9, 0x96, 0xa9, 0x5f, 0xdd, 0xea, 0xa6, 0xd9, 0xae, 0xb4, 0x75, 0x0d, 0x8c, 0x29, 0x56, 0x26,
+	0xbe, 0x17, 0xc0, 0x3f, 0xe3, 0x3e, 0xf6, 0x70, 0x26, 0xfc, 0xb1, 0x6a, 0xa9, 0x76, 0x93, 0xea,
+	0x98, 0xd7, 0xa1, 0x00, 0xc4, 0x04, 0xdb, 0xd8, 0x9c, 0x09, 0x7c, 0x12, 0x40, 0x7a, 0x72, 0x43,
+	0x80, 0x4b, 0x04, 0x13, 0x5c, 0x61, 0x73, 0xd6, 0xee, 0xc7, 0x00, 0x66, 0x24, 0x38, 0xfd, 0x4d,
+	0x0c, 0xff, 0x83, 0xc9, 0xaf, 0xa1, 0x7e, 0x0d, 0x0d, 0xc6, 0x69, 0x6e, 0xdd, 0x1c, 0x63, 0xc8,
+	0x54, 0x4a, 0xbf, 0x1c, 0x1c, 0xe4, 0xfa, 0xfa, 0x71, 0x5f, 0x16, 0x4e, 0xfa, 0xb2, 0xf0, 0xbd,
+	0x2f, 0x0b, 0xef, 0x4e, 0xe5, 0xd4, 0xc9, 0xa9, 0x9c, 0xfa, 0x76, 0x2a, 0xa7, 0x9e, 0xaf, 0x4e,
+	0x3b, 0xbc, 0x59, 0xd7, 0x47, 0xb4, 0x95, 0x09, 0x3f, 0x55, 0xee, 0xfd, 0x0c, 0x00, 0x00, 0xff,
+	0xff, 0x87, 0x62, 0x58, 0x5e, 0xac, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -400,6 +625,8 @@ type MsgClient interface {
 	UpdateCustomIbcParams(ctx context.Context, in *MsgUpdateCustomIbcParams, opts ...grpc.CallOption) (*MsgUpdateParamsCustomIbcResponse, error)
 	AddIBCFeeConfig(ctx context.Context, in *MsgAddIBCFeeConfig, opts ...grpc.CallOption) (*MsgAddIBCFeeConfigResponse, error)
 	RemoveIBCFeeConfig(ctx context.Context, in *MsgRemoveIBCFeeConfig, opts ...grpc.CallOption) (*MsgRemoveIBCFeeConfigResponse, error)
+	AddAllowedIbcToken(ctx context.Context, in *MsgAddAllowedIbcToken, opts ...grpc.CallOption) (*MsgAddAllowedIbcTokenResponse, error)
+	RemoveAllowedIbcToken(ctx context.Context, in *MsgRemoveAllowedIbcToken, opts ...grpc.CallOption) (*MsgRemoveAllowedIbcTokenResponse, error)
 }
 
 type msgClient struct {
@@ -437,11 +664,31 @@ func (c *msgClient) RemoveIBCFeeConfig(ctx context.Context, in *MsgRemoveIBCFeeC
 	return out, nil
 }
 
+func (c *msgClient) AddAllowedIbcToken(ctx context.Context, in *MsgAddAllowedIbcToken, opts ...grpc.CallOption) (*MsgAddAllowedIbcTokenResponse, error) {
+	out := new(MsgAddAllowedIbcTokenResponse)
+	err := c.cc.Invoke(ctx, "/composable.ibctransfermiddleware.v1beta1.Msg/AddAllowedIbcToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoveAllowedIbcToken(ctx context.Context, in *MsgRemoveAllowedIbcToken, opts ...grpc.CallOption) (*MsgRemoveAllowedIbcTokenResponse, error) {
+	out := new(MsgRemoveAllowedIbcTokenResponse)
+	err := c.cc.Invoke(ctx, "/composable.ibctransfermiddleware.v1beta1.Msg/RemoveAllowedIbcToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	UpdateCustomIbcParams(context.Context, *MsgUpdateCustomIbcParams) (*MsgUpdateParamsCustomIbcResponse, error)
 	AddIBCFeeConfig(context.Context, *MsgAddIBCFeeConfig) (*MsgAddIBCFeeConfigResponse, error)
 	RemoveIBCFeeConfig(context.Context, *MsgRemoveIBCFeeConfig) (*MsgRemoveIBCFeeConfigResponse, error)
+	AddAllowedIbcToken(context.Context, *MsgAddAllowedIbcToken) (*MsgAddAllowedIbcTokenResponse, error)
+	RemoveAllowedIbcToken(context.Context, *MsgRemoveAllowedIbcToken) (*MsgRemoveAllowedIbcTokenResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -456,6 +703,12 @@ func (*UnimplementedMsgServer) AddIBCFeeConfig(ctx context.Context, req *MsgAddI
 }
 func (*UnimplementedMsgServer) RemoveIBCFeeConfig(ctx context.Context, req *MsgRemoveIBCFeeConfig) (*MsgRemoveIBCFeeConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveIBCFeeConfig not implemented")
+}
+func (*UnimplementedMsgServer) AddAllowedIbcToken(ctx context.Context, req *MsgAddAllowedIbcToken) (*MsgAddAllowedIbcTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAllowedIbcToken not implemented")
+}
+func (*UnimplementedMsgServer) RemoveAllowedIbcToken(ctx context.Context, req *MsgRemoveAllowedIbcToken) (*MsgRemoveAllowedIbcTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAllowedIbcToken not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -516,6 +769,42 @@ func _Msg_RemoveIBCFeeConfig_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_AddAllowedIbcToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddAllowedIbcToken)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AddAllowedIbcToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/composable.ibctransfermiddleware.v1beta1.Msg/AddAllowedIbcToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AddAllowedIbcToken(ctx, req.(*MsgAddAllowedIbcToken))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoveAllowedIbcToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveAllowedIbcToken)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoveAllowedIbcToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/composable.ibctransfermiddleware.v1beta1.Msg/RemoveAllowedIbcToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoveAllowedIbcToken(ctx, req.(*MsgRemoveAllowedIbcToken))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "composable.ibctransfermiddleware.v1beta1.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -531,6 +820,14 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveIBCFeeConfig",
 			Handler:    _Msg_RemoveIBCFeeConfig_Handler,
+		},
+		{
+			MethodName: "AddAllowedIbcToken",
+			Handler:    _Msg_AddAllowedIbcToken_Handler,
+		},
+		{
+			MethodName: "RemoveAllowedIbcToken",
+			Handler:    _Msg_RemoveAllowedIbcToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -732,6 +1029,150 @@ func (m *MsgRemoveIBCFeeConfigResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgAddAllowedIbcToken) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddAllowedIbcToken) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddAllowedIbcToken) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Percentage != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Percentage))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.Amount != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.Denom) > 0 {
+		i -= len(m.Denom)
+		copy(dAtA[i:], m.Denom)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Denom)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddAllowedIbcTokenResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddAllowedIbcTokenResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddAllowedIbcTokenResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveAllowedIbcToken) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveAllowedIbcToken) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveAllowedIbcToken) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Denom) > 0 {
+		i -= len(m.Denom)
+		copy(dAtA[i:], m.Denom)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Denom)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelID)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveAllowedIbcTokenResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveAllowedIbcTokenResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveAllowedIbcTokenResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -818,6 +1259,72 @@ func (m *MsgRemoveIBCFeeConfig) Size() (n int) {
 }
 
 func (m *MsgRemoveIBCFeeConfigResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAddAllowedIbcToken) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ChannelID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Denom)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Amount != 0 {
+		n += 1 + sovTx(uint64(m.Amount))
+	}
+	if m.Percentage != 0 {
+		n += 1 + sovTx(uint64(m.Percentage))
+	}
+	return n
+}
+
+func (m *MsgAddAllowedIbcTokenResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRemoveAllowedIbcToken) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ChannelID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Denom)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRemoveAllowedIbcTokenResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1353,6 +1860,436 @@ func (m *MsgRemoveIBCFeeConfigResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgRemoveIBCFeeConfigResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddAllowedIbcToken) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddAllowedIbcToken: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddAllowedIbcToken: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Denom", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Denom = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			m.Amount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Amount |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Percentage", wireType)
+			}
+			m.Percentage = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Percentage |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddAllowedIbcTokenResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddAllowedIbcTokenResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddAllowedIbcTokenResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveAllowedIbcToken) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveAllowedIbcToken: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveAllowedIbcToken: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Denom", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Denom = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveAllowedIbcTokenResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveAllowedIbcTokenResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveAllowedIbcTokenResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
