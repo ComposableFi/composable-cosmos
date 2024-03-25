@@ -50,9 +50,7 @@ func AddIBCFeeConfig() *cobra.Command {
 
 			fromAddress := clientCtx.GetFromAddress().String()
 
-			//string to int64 conversion
 			minTimeoutTimestampInt, err := strconv.ParseInt(minTimeoutTimestamp, 10, 64)
-
 			if err != nil {
 				return err
 			}

@@ -78,7 +78,6 @@ func (ms msgServer) RemoveIBCFeeConfig(goCtx context.Context, req *types.MsgRemo
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	params := ms.Keeper.GetParams(ctx)
-	//remove channel id in list of channel fees
 	for i, fee := range params.ChannelFees {
 		if fee.Channel == req.ChannelID {
 			params.ChannelFees = append(params.ChannelFees[:i], params.ChannelFees[i+1:]...)

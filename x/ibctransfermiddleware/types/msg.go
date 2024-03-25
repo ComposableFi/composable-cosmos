@@ -8,9 +8,8 @@ import (
 var _ sdk.Msg = &MsgAddIBCFeeConfig{}
 
 const (
-	TypeMsgAddIBCFeeConfig    = "add_config"
-	TypeMsgRemoveIBCFeeConfig = "remove_config"
-
+	TypeMsgAddIBCFeeConfig       = "add_config"
+	TypeMsgRemoveIBCFeeConfig    = "remove_config"
 	TypeMsgAddAllowedIbcToken    = "add_allowed_ibc_token"
 	TypeMsgRemoveAllowedIbcToken = "remove_allowed_ibc_token"
 )
