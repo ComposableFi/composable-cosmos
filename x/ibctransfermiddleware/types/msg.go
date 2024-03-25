@@ -52,17 +52,6 @@ func (msg *MsgAddIBCFeeConfig) ValidateBasic() error {
 		return sdkerrors.Wrap(err, "invalid authority address")
 	}
 
-	// // validate channelIDs
-	// if err := host.ChannelIdentifierValidator(msg.ChannelID); err != nil {
-	// 	return err
-	// }
-
-	// // validate ibcDenom
-	// err := ibctransfertypes.ValidateIBCDenom(msg.IbcDenom)
-	// if err != nil {
-	// 	return err
-	// }
-
 	return nil
 }
 
