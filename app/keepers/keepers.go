@@ -201,7 +201,7 @@ func (appKeepers *AppKeepers) InitNormalKeepers(
 			"centauri1r2zlh2xn85v8ljmwymnfrnsmdzjl7k6w6lytan",
 			"centauri10556m38z4x6pqalr9rl5ytf3cff8q46nk85k9m",
 
-			"centauri1wkjvpgkuchq0r8425g4z4sf6n85zj5wtmqzjv9",
+			// "centauri1wkjvpgkuchq0r8425g4z4sf6n85zj5wtmqzjv9",
 
 			// "centauri1hj5fveer5cjtn4wd6wstzugjfdxzl0xpzxlwgs",
 		})
