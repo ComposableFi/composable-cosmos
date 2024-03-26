@@ -1,0 +1,81 @@
+# .goreleaser.yml
+
+project_name: centaurid
+
+env:
+  - CGO_ENABLED=1
+
+builds:
+  - id: linux
+    main: ./cmd/centaurid
+    binary: centaurid
+    hooks:
+      pre:
+        - cmd: bash scripts/release_pre_linux.sh
+          output: false # enable for debug
+          env:
+            - TARGET={{ .Target }}
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CC_linux_amd64=x86_64-linux-gnu-gcc
+      - CC_linux_arm64=aarch64-linux-gnu-gcc
+      - 'CC={{ index .Env (print "CC_" .Os "_" .Arch) }}'
+    flags:
+      - -mod=readonly
+      - -trimpath
+    ldflags:
+      - -X github.com/cosmos/cosmos-sdk/version.Name=centauri
+      - -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid
+      - -X github.com/cosmos/cosmos-sdk/version.Version={{ .Version }}
+      - -X github.com/cosmos/cosmos-sdk/version.Commit={{ .Commit }}
+      - -X "github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc"
+      - -w -s
+      - -linkmode=external
+      - -extldflags '-static -lm -lbz2'
+    tags:
+      - netgo
+      - ledger
+      - muslc
+      - static
+      - static_wasm
+
+  # - id: darwin
+  #   main: ./cmd/centaurid
+  #   binary: centaurid
+  #   hooks:
+  #     pre:
+  #       - cmd: bash scripts/release_pre_darwin.sh
+  #         output: false # enable for debug
+  #         env:
+  #           - TARGET={{ .Target }}
+  #   goos:
+  #     - darwin
+  #   goarch:
+  #     - amd64
+  #     - arm64
+  #   env:
+  #     - CC_darwin_amd64=o64-clang
+  #     - CC_darwin_arm64=oa64-clang
+  #     - 'CC={{ index .Env (print "CC_" .Os "_" .Arch) }}'
+  #   flags:
+  #     - -mod=readonly
+  #     - -trimpath
+  #   ldflags:
+  #     - -X github.com/cosmos/cosmos-sdk/version.Name=centauri
+  #     - -X github.com/cosmos/cosmos-sdk/version.AppName=centaurid
+  #     - -X github.com/cosmos/cosmos-sdk/version.Version={{ .Version }}
+  #     - -X github.com/cosmos/cosmos-sdk/version.Commit={{ .Commit }}
+  #     - -X "github.com/cosmos/cosmos-sdk/version.BuildTags=netgo,ledger,muslc"
+  #     - -w -s
+  #     - -linkmode=external
+  #     - -extldflags '-static -lm -lbz2'
+  #   tags:
+  #     - netgo
+  #     - ledger
+  #     - muslc
+  #     - static
+  #     - static_wasm

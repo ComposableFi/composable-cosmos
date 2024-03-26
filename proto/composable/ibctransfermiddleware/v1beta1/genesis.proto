@@ -1,0 +1,14 @@
+syntax = "proto3";
+package composable.ibctransfermiddleware.v1beta1;
+
+import "gogoproto/gogo.proto";
+import "composable/ibctransfermiddleware/v1beta1/ibctransfermiddleware.proto";
+import "amino/amino.proto";
+
+
+option go_package = "x/ibctransfermiddleware/types";
+
+// GenesisState defines the ibctransfermiddleware module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}

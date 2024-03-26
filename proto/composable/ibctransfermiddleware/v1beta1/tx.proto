@@ -1,0 +1,138 @@
+syntax = "proto3";
+package composable.ibctransfermiddleware.v1beta1;
+
+import "cosmos/msg/v1/msg.proto";
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "composable/ibctransfermiddleware/v1beta1/ibctransfermiddleware.proto";
+
+option go_package = "x/ibctransfermiddleware/types";
+
+// Msg defines the x/ibctransfermiddleware Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc UpdateCustomIbcParams(MsgUpdateCustomIbcParams) returns (MsgUpdateParamsCustomIbcResponse);
+
+  rpc AddIBCFeeConfig(MsgAddIBCFeeConfig)
+      returns (MsgAddIBCFeeConfigResponse);
+  rpc RemoveIBCFeeConfig(MsgRemoveIBCFeeConfig)
+    returns (MsgRemoveIBCFeeConfigResponse);
+
+  rpc AddAllowedIbcToken(MsgAddAllowedIbcToken)
+      returns (MsgAddAllowedIbcTokenResponse);
+  rpc RemoveAllowedIbcToken(MsgRemoveAllowedIbcToken)
+    returns (MsgRemoveAllowedIbcTokenResponse);
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateCustomIbcParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "composable/x/ibctransfermiddleware/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the x/ibctransfermiddleware parameters to update.
+  //
+  // NOTE: All parameters must be supplied.
+  Params params = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+//
+// Since: cosmos-sdk 0.47
+message MsgUpdateParamsCustomIbcResponse {}
+
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddIBCFeeConfig {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+  string fee_address = 3 [ (gogoproto.moretags) = "yaml:\"rly_address\"" ];
+
+  int64 min_timeout_timestamp = 4;
+}
+
+message MsgAddIBCFeeConfigResponse {}
+
+// MsgRemoveParachainIBCTokenInfo represents a message to remove new parachain
+// info.
+message MsgRemoveIBCFeeConfig {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+  ;
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+}
+
+message MsgRemoveIBCFeeConfigResponse {}
+
+
+
+// MsgAddParachainInfo represents a message to add new parachain info.
+message MsgAddAllowedIbcToken {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+
+  string denom = 3 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "Denom"
+  ];
+
+  int64 amount = 4;
+
+  int64 percentage = 5;
+}
+
+message MsgAddAllowedIbcTokenResponse {}
+
+
+message MsgRemoveAllowedIbcToken {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (gogoproto.moretags) = "yaml:\"authority\"" ];
+  ;
+
+  string channel_id = 2 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "ChannelID"
+  ];
+
+  string denom = 3 [
+    (gogoproto.moretags) = "yaml:\"channel_id\"",
+    (gogoproto.customname) = "Denom"
+  ];
+}
+
+message MsgRemoveAllowedIbcTokenResponse {}

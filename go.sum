@@ -221,6 +221,8 @@ github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbi
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d h1:nalkkPQcITbvhmL4+C4cKA87NW0tfm3Kl9VXRoPywFg=
 github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d/go.mod h1:URdX5+vg25ts3aCh8H5IFZybJYKWhJHYMTnf+ULtoC4=
+github.com/ComposableFi/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20240320115741-f32994360827 h1:PkDT2gEjAgttuF9lZTP+niYjcXutnmqHHK2UaAL9bLs=
+github.com/ComposableFi/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20240320115741-f32994360827/go.mod h1:3PHOr4UiPNtnZJutT22fm5+pjIefTlDEgtWGoOJg3A0=
 github.com/CosmWasm/wasmd v0.40.1 h1:LxbO78t/6S8TkeQlUrJ0m5O87HtAwLx4RGHq3rdrOEU=
 github.com/CosmWasm/wasmd v0.40.1/go.mod h1:6EOwnv7MpuFaEqxcUOdFV9i4yvrdOciaY6VQ1o7A3yg=
 github.com/CosmWasm/wasmvm v1.2.6 h1:QmOaiJUyeh8+pPCjJBTgWrbi/hCzCuWewduDO85Pcpc=
@@ -968,8 +970,6 @@ github.com/nishanths/predeclared v0.2.2 h1:V2EPdZPliZymNAn79T8RkNApBjMmVKh5XRpLm
 github.com/nishanths/predeclared v0.2.2/go.mod h1:RROzoN6TnGQupbC+lqggsOlcgysk3LMK/HI84Mp280c=
 github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647 h1:vCSokMIO60u0td51l7NB+pikUChJozIwIb4u8UeqTKI=
 github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647/go.mod h1:GFQ8TsXDMTpu7kif0Dwddz6rxazy0ZJQHfN38ZmAodI=
-github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9 h1:4rte3LTbrQnlu0Gnw6gouj2voGwgjweORA1dcgnQxlU=
-github.com/notional-labs/ibc-apps/middleware/packet-forward-middleware/v7 v7.0.0-20231027045618-f659894b12d9/go.mod h1:3PHOr4UiPNtnZJutT22fm5+pjIefTlDEgtWGoOJg3A0=
 github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f h1:Uw35VHCdLTsQf8B4UGTjHCR6HqcYFF6dwPW8uJzS0f4=
 github.com/notional-labs/ibc-go/v7 v7.2.1-0.20231010040541-6cf43006971f/go.mod h1:hjcl3RPLSDf0LSXrFyk2iTQCCFs5pfLbJb8h/5gJ2Vg=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=

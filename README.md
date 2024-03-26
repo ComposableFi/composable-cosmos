@@ -9,7 +9,7 @@ Cosmos blockchain with IBC-v7 and wasm client enable.
 
 ## Quick start
 
-Requires [Go 1.19](https://go.dev/doc/install) or higher.
+Requires [Go 1.20](https://go.dev/doc/install) or higher.
 
 ```bash
 make install

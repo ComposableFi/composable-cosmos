@@ -92,7 +92,7 @@ build:
 	go build $(BUILD_FLAGS) -o bin/centaurid ./cmd/centaurid
 
 docker-build-debug:
-	@DOCKER_BUILDKIT=1 docker build -t centauri:debug -f Dockerfile .
+	@DOCKER_BUILDKIT=1 docker build -t centauri:local -f Dockerfile .
 
 lint:
 	@find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -name '*.pb.go' -not -name '*.gw.go' | xargs go run mvdan.cc/gofumpt -w .
@@ -158,3 +158,5 @@ ictest-push-wasm:
 	cd tests/interchaintest && go test -race -v -run TestPushWasmClientCode .
 
 .PHONY: ictest-start-cosmos ictest-start-polkadot ictest-ibc ictest-push-wasm ictest-all
+
+include contrib/make/release.mk

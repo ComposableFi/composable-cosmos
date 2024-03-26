@@ -2,14 +2,13 @@ package interchaintest
 
 import (
 	"os"
-	"strings"
 
 	"github.com/strangelove-ventures/interchaintest/v7/ibc"
 )
 
 var (
-	CentauriMainRepo   = "ghcr.io/notional-labs/centauri"
-	CentauriICTestRepo = "ghcr.io/notional-labs/centauri-ictest"
+	CentauriMainRepo   = "ghcr.io/composablefi/composable-cosmos"
+	CentauriICTestRepo = "ghcr.io/composablefi/centauri-ictest"
 
 	repo, version = GetDockerImageInfo()
 
@@ -46,10 +45,7 @@ func GetDockerImageInfo() (repo, version string) {
 	if !found {
 		// make local-image
 		repo = "centauri"
-		branchVersion = "debug"
+		branchVersion = "local"
 	}
-
-	// github converts / to - for pushed docker images
-	branchVersion = strings.ReplaceAll(branchVersion, "/", "-")
 	return repo, branchVersion
 }

@@ -9,17 +9,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	banktypes "github.com/notional-labs/composable/v6/custom/bank/types"
 )
 
 // Keeper of the staking middleware store
 type Keeper struct {
-	cdc           codec.BinaryCodec
-	storeKey      storetypes.StoreKey
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
-	stakingKeeper banktypes.StakingKeeper
+	cdc      codec.BinaryCodec
+	storeKey storetypes.StoreKey
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
 	authority string
@@ -29,22 +24,13 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	key storetypes.StoreKey,
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
 	authority string,
 ) Keeper {
 	return Keeper{
-		cdc:           cdc,
-		storeKey:      key,
-		accountKeeper: ak,
-		bankKeeper:    bk,
-		stakingKeeper: stakingkeeper.Keeper{},
-		authority:     authority,
+		cdc:       cdc,
+		storeKey:  key,
+		authority: authority,
 	}
-}
-
-func (k *Keeper) RegisterKeepers(sk banktypes.StakingKeeper) {
-	k.stakingKeeper = sk
 }
 
 // GetAuthority returns the x/stakingmiddleware module's authority.
@@ -87,9 +73,4 @@ func (k Keeper) GetParams(ctx sdk.Context) (p types.Params) {
 
 	k.cdc.MustUnmarshal(bz, &p)
 	return p
-}
-
-func (k Keeper) GetModuleAccountAccAddress(ctx sdk.Context) sdk.AccAddress {
-	moduleAccount := k.accountKeeper.GetModuleAccount(ctx, types.RewardModuleName)
-	return moduleAccount.GetAddress()
 }
