@@ -339,7 +339,7 @@ func NewComposableApp(
 	)
 
 	// transferModule := transfer.NewAppModule(app.TransferKeeper)
-	transferModule := customibctransfer.NewAppModule(appCodec, app.TransferKeeper)
+	transferModule := customibctransfer.NewAppModule(appCodec, app.TransferKeeper, app.BankKeeper)
 	routerModule := router.NewAppModule(app.RouterKeeper)
 	transfermiddlewareModule := transfermiddleware.NewAppModule(&app.TransferMiddlewareKeeper)
 	txBoundaryModule := txBoundary.NewAppModule(appCodec, app.TxBoundaryKeepper)
