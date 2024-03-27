@@ -42,7 +42,7 @@ var (
 // If testing locally, user should run `make docker-build-debug` and interchaintest will use the local image.
 func GetDockerImageInfo() (repo, version string) {
 	branchVersion, found := os.LookupEnv("BRANCH_CI")
-	repo = CentauriICTestRepo
+	repo = CentauriMainRepo
 	if !found {
 		// make local-image
 		repo = "centauri"

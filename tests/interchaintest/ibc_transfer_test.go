@@ -70,14 +70,14 @@ func TestCentauriPicassoIBCTransfer(t *testing.T) {
 				ChainID: "rococo-local",
 				Images: []ibc.DockerImage{
 					{
-						Repository: "seunlanlege/centauri-polkadot",
-						Version:    "v0.9.27",
+						Repository: "ghcr.io/misko9/polkadot-node",
+						Version:    "v39",
 						UidGid:     "1000:1000",
 					},
 					{
-						Repository: "seunlanlege/centauri-parachain",
-						Version:    "v0.9.27",
-						// UidGid: "1025:1025",
+						Repository: "ghcr.io/misko9/parachain-node",
+						Version:    "20231122v39",
+						UidGid:     "1000:1000",
 					},
 				},
 				Bin:            "polkadot",

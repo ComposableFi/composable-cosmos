@@ -39,14 +39,14 @@ func TestPolkadotCentauriChainStart(t *testing.T) {
 				ChainID: "rococo-local",
 				Images: []ibc.DockerImage{
 					{
-						Repository: "parity/polkadot",
-						Version:    "v0.9.39",
+						Repository: "ghcr.io/misko9/polkadot-node",
+						Version:    "v39",
 						UidGid:     "1000:1000",
 					},
 					{
-						Repository: "composablefi/parachain-node",
-						Version:    "13f3db34-1688755040",
-						// UidGid:     "1025:1025",
+						Repository: "ghcr.io/misko9/parachain-node",
+						Version:    "20231122v39",
+						UidGid:     "1000:1000",
 					},
 				},
 				Bin:            "polkadot",
