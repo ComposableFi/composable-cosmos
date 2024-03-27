@@ -23,14 +23,13 @@ func CreateUpgradeHandler(
 		keepers.IbcTransferMiddlewareKeeper.SetParams(ctx, custommiddlewareparams.Params)
 
 		// remove broken proposals
-		BrokenProposals := [3]uint64{2, 6, 11}
-		for _, proposal_id := range BrokenProposals {
-			_, ok := keepers.GovKeeper.GetProposal(ctx, proposal_id)
-			if ok {
-				keepers.GovKeeper.DeleteProposal(ctx, proposal_id)
-			}
-
-		}
+		// BrokenProposals := [3]uint64{2, 6, 11}
+		// for _, proposal_id := range BrokenProposals {
+		// 	_, ok := keepers.GovKeeper.GetProposal(ctx, proposal_id)
+		// 	if ok {
+		// 		keepers.GovKeeper.DeleteProposal(ctx, proposal_id)
+		// 	}
+		// }
 
 		// burn extra ppica in escrow account
 		// this ppica is unused because it is a native token stored in escrow account
