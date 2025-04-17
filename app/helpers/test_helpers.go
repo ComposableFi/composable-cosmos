@@ -59,7 +59,7 @@ type EmptyAppOptions struct{}
 func (EmptyAppOptions) Get(_ string) interface{} { return nil }
 
 func NewContextForApp(app composable.ComposableApp) sdk.Context {
-	ctx := app.BaseApp.NewContext(false, tmproto.Header{
+	ctx := app.NewContext(false, tmproto.Header{
 		ChainID: fmt.Sprintf("test-chain-%s", tmrand.Str(4)),
 		Height:  1,
 	})

@@ -23,7 +23,7 @@ type KeeperTestSuite struct {
 
 func (suite *KeeperTestSuite) SetupTest() {
 	suite.app = helpers.SetupComposableAppWithValSet(suite.T())
-	suite.ctx = suite.app.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
+	suite.ctx = suite.app.NewContext(false, tmproto.Header{Height: 1, ChainID: "centauri-1", Time: time.Now().UTC()})
 }
 
 func TestKeeperTestSuite(t *testing.T) {

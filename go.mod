@@ -1,6 +1,6 @@
 module github.com/notional-labs/composable/v6
 
-go 1.20
+go 1.24
 
 require (
 	cosmossdk.io/math v1.1.2
@@ -341,5 +341,4 @@ replace (
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/terra-money/alliance => github.com/notional-labs/alliance v1.0.1-0.20231106184124-5cc1ff759647
 	github.com/zondax/ledger-go => github.com/zondax/ledger-go v0.14.3
-
 )

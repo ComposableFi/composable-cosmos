@@ -14,23 +14,33 @@ import (
 // Value to the corresponding mint type.
 func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
 	return func(kvA, kvB kv.Pair) string {
-		fmt.Println("kvA.Key[:1]:", kvA.Key[:1])
+		if len(kvA.Key) == 0 {
+			panic("invalid key length")
+		}
+
 		switch {
-		case bytes.Equal(kvA.Key[:1], types.MinterKey):
-			fmt.Println("types.ParamsKey:", types.ParamsKey)
+		case bytes.Equal(kvA.Key, types.MinterKey):
 			var minterA, minterB types.Minter
-			cdc.MustUnmarshal(kvA.Value, &minterA)
-			cdc.MustUnmarshal(kvB.Value, &minterB)
+			if err := cdc.Unmarshal(kvA.Value, &minterA); err != nil {
+				panic(fmt.Sprintf("failed to unmarshal minter A: %v", err))
+			}
+			if err := cdc.Unmarshal(kvB.Value, &minterB); err != nil {
+				panic(fmt.Sprintf("failed to unmarshal minter B: %v", err))
+			}
 			return fmt.Sprintf("%v\n%v", minterA, minterB)
 
-		// case bytes.Equal(kvA.Key[:1], types.ParamsKey):
-		// 	var paramsA, paramsB types.Params
-		// 	cdc.MustUnmarshal(kvA.Value, &paramsA)
-		// 	cdc.MustUnmarshal(kvB.Value, &paramsB)
-		// 	return fmt.Sprintf("%v\n%v", paramsA, paramsB)
+		case bytes.Equal(kvA.Key, types.ParamsKey):
+			var paramsA, paramsB types.Params
+			if err := cdc.Unmarshal(kvA.Value, &paramsA); err != nil {
+				panic(fmt.Sprintf("failed to unmarshal params A: %v", err))
+			}
+			if err := cdc.Unmarshal(kvB.Value, &paramsB); err != nil {
+				panic(fmt.Sprintf("failed to unmarshal params B: %v", err))
+			}
+			return fmt.Sprintf("%v\n%v", paramsA, paramsB)
 
 		default:
-			panic(fmt.Sprintf("invalid mint key prefix %X", kvA.Key[:1]))
+			panic(fmt.Sprintf("invalid mint key %X", kvA.Key))
 		}
 	}
 }

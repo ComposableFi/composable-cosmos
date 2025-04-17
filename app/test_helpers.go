@@ -77,14 +77,14 @@ type KeeperTestHelper struct {
 func (s *KeeperTestHelper) Setup(_ *testing.T) {
 	t := s.T()
 	s.App = SetupApp(t)
-	s.Ctx = s.App.BaseApp.NewContext(false, tmproto.Header{Height: 1, ChainID: "", Time: time.Now().UTC()})
+	s.Ctx = s.App.NewContext(false, tmproto.Header{Height: 1, ChainID: "", Time: time.Now().UTC()})
 	s.QueryHelper = &baseapp.QueryServiceTestHelper{
 		GRPCQueryRouter: s.App.GRPCQueryRouter(),
 		Ctx:             s.Ctx,
 	}
 	s.TestAccs = createRandomAccounts(10)
 
-	s.StakingHelper = stakinghelper.NewHelper(s.Suite.T(), s.Ctx, &s.App.StakingKeeper.Keeper)
+	s.StakingHelper = stakinghelper.NewHelper(s.T(), s.Ctx, &s.App.StakingKeeper.Keeper)
 	s.StakingHelper.Denom = "stake"
 }
 

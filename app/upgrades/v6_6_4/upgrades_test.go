@@ -95,7 +95,7 @@ func prepareForTestingGovModule(s *UpgradeTestSuite) (sdk.AccAddress, govtypes.P
 
 	// VOTE AND DEPOSIT
 	proposal, err := s.App.GovKeeper.SubmitProposal(s.Ctx, []sdk.Msg{}, "", "test", "description", acc1)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	s.App.GovKeeper.SetVote(s.Ctx, govtypes.Vote{
 		ProposalId: proposal.Id,
@@ -118,7 +118,7 @@ func prepareForTestingSlashingModule(s *UpgradeTestSuite) sdk.ConsAddress {
 	acc2 := s.TestAccs[1]
 
 	oldConsAddress, err := utils.ConsAddressFromOldBech32(acc2.String(), utils.OldBech32PrefixAccAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	// CHECK ValidatorSigningInfo
 	s.App.SlashingKeeper.SetValidatorSigningInfo(s.Ctx, oldConsAddress, slashingtypes.ValidatorSigningInfo{
@@ -295,24 +295,24 @@ func checkUpgradeGovModule(s *UpgradeTestSuite, acc1 sdk.AccAddress, proposal go
 	_, bz, _ := bech32.DecodeAndConvert(acc1.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz)
 	newAddr, err := utils.AccAddressFromOldBech32(newBech32Addr, utils.NewBech32PrefixAccAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	// CHECK PROPOSAL
 	proposal, found := s.App.GovKeeper.GetProposal(s.Ctx, proposal.Id)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(proposal.Proposer, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(proposal.Proposer, newBech32Addr)
 
 	// CHECK VOTER AND DEPOSITER OF NEW ADDRESS
 	existed_proposal, _ := s.App.GovKeeper.GetProposal(s.Ctx, proposal.Id)
-	s.Suite.Equal(existed_proposal.Proposer, newBech32Addr)
+	s.Equal(existed_proposal.Proposer, newBech32Addr)
 
 	vote, found := s.App.GovKeeper.GetVote(s.Ctx, proposal.Id, newAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(vote.Voter, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(vote.Voter, newBech32Addr)
 
 	deposit, found := s.App.GovKeeper.GetDeposit(s.Ctx, proposal.Id, newAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(deposit.Depositor, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(deposit.Depositor, newBech32Addr)
 }
 
 func checkUpgradeSlashingModule(s *UpgradeTestSuite, oldConsAddress sdk.ConsAddress) {
@@ -320,11 +320,11 @@ func checkUpgradeSlashingModule(s *UpgradeTestSuite, oldConsAddress sdk.ConsAddr
 	_, bz, _ := bech32.DecodeAndConvert(oldConsAddress.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixConsAddr, bz)
 	newAddr, err := utils.ConsAddressFromOldBech32(newBech32Addr, utils.NewBech32PrefixConsAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	valSigningInfo, found := s.App.SlashingKeeper.GetValidatorSigningInfo(s.Ctx, newAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(valSigningInfo.Address, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(valSigningInfo.Address, newBech32Addr)
 }
 
 func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress, oldValAddress2 sdk.ValAddress, acc1 sdk.AccAddress, afterOneDay time.Time) {
@@ -332,44 +332,44 @@ func checkUpgradeStakingModule(s *UpgradeTestSuite, oldValAddress, oldValAddress
 	_, bz, _ := bech32.DecodeAndConvert(oldValAddress.String())
 	newBech32Addr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bz)
 	newValAddr, err := utils.ValAddressFromOldBech32(newBech32Addr, utils.NewBech32PrefixValAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	_, bzVal2, _ := bech32.DecodeAndConvert(oldValAddress2.String())
 	newBech32AddrVal2, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixValAddr, bzVal2)
 	newValAddr2, err := utils.ValAddressFromOldBech32(newBech32AddrVal2, utils.NewBech32PrefixValAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	_, bz1, _ := bech32.DecodeAndConvert(acc1.String())
 	newBech32DelAddr, _ := bech32.ConvertAndEncode(utils.NewBech32PrefixAccAddr, bz1)
 	newAccAddr, err := utils.AccAddressFromOldBech32(newBech32DelAddr, utils.NewBech32PrefixAccAddr)
-	s.Suite.Equal(err, nil)
+	s.Equal(err, nil)
 
 	val, found := s.App.StakingKeeper.GetValidator(s.Ctx, newValAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(val.OperatorAddress, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(val.OperatorAddress, newBech32Addr)
 
 	delegation, found := s.App.StakingKeeper.GetDelegation(s.Ctx, newAccAddr, newValAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(delegation.DelegatorAddress, newBech32DelAddr)
-	s.Suite.Equal(delegation.ValidatorAddress, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(delegation.DelegatorAddress, newBech32DelAddr)
+	s.Equal(delegation.ValidatorAddress, newBech32Addr)
 
 	unbonding, found := s.App.StakingKeeper.GetUnbondingDelegation(s.Ctx, newAccAddr, newValAddr)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(unbonding.DelegatorAddress, newBech32DelAddr)
-	s.Suite.Equal(unbonding.ValidatorAddress, newBech32Addr)
+	s.Equal(found, true)
+	s.Equal(unbonding.DelegatorAddress, newBech32DelAddr)
+	s.Equal(unbonding.ValidatorAddress, newBech32Addr)
 
 	s.Ctx = s.Ctx.WithBlockTime(afterOneDay)
 
 	redelegation, found := s.App.StakingKeeper.GetRedelegation(s.Ctx, newAccAddr, newValAddr, newValAddr2)
-	s.Suite.Equal(found, true)
-	s.Suite.Equal(redelegation.DelegatorAddress, newBech32DelAddr)
-	s.Suite.Equal(redelegation.ValidatorSrcAddress, newBech32Addr)
-	s.Suite.Equal(redelegation.ValidatorDstAddress, newBech32AddrVal2)
+	s.Equal(found, true)
+	s.Equal(redelegation.DelegatorAddress, newBech32DelAddr)
+	s.Equal(redelegation.ValidatorSrcAddress, newBech32Addr)
+	s.Equal(redelegation.ValidatorDstAddress, newBech32AddrVal2)
 
 	RedelegationQueueTimeSlice := s.App.StakingKeeper.GetRedelegationQueueTimeSlice(s.Ctx, time.Date(2024, time.March, 4, 12, 0, 0, 0, time.UTC))
-	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].DelegatorAddress, "pica"), true)
-	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorDstAddress, "pica"), true)
-	s.Suite.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorSrcAddress, "pica"), true)
+	s.Equal(strings.Contains(RedelegationQueueTimeSlice[0].DelegatorAddress, "pica"), true)
+	s.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorDstAddress, "pica"), true)
+	s.Equal(strings.Contains(RedelegationQueueTimeSlice[0].ValidatorSrcAddress, "pica"), true)
 }
 
 func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccount, baseVestingAccount, continuousVestingAccount, delayedVestingAccount, periodicVestingAccount, permanentLockedAccount sdk.AccAddress) {
@@ -381,9 +381,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *authtypes.BaseAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrBaseAccount)
+		s.Equal(acc.Address, newBech32AddrBaseAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	/* CHECK MODULE ACCOUNT */
@@ -393,9 +393,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *authtypes.ModuleAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrModuleAccount)
+		s.Equal(acc.Address, newBech32AddrModuleAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	/* CHECK BASE VESTING ACCOUNT */
@@ -405,9 +405,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.BaseVestingAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrBaseVestingAccount)
+		s.Equal(acc.Address, newBech32AddrBaseVestingAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	// CHECK CONTINUOUS VESTING ACCOUNT AND MULTISIG
@@ -417,9 +417,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.ContinuousVestingAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrConVestingAccount)
+		s.Equal(acc.Address, newBech32AddrConVestingAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	// CHECK DELAYED VESTING ACCOUNT
@@ -429,9 +429,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.DelayedVestingAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrDelayedVestingAccount)
+		s.Equal(acc.Address, newBech32AddrDelayedVestingAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	// CHECK PERIODIC VESTING ACCOUNT
@@ -441,9 +441,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PeriodicVestingAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrPeriodicVestingAccount)
+		s.Equal(acc.Address, newBech32AddrPeriodicVestingAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 
 	// CHECK PERMANENT LOCKED ACCOUNT
@@ -453,9 +453,9 @@ func checkUpgradeAuthModule(s *UpgradeTestSuite, baseAccount, stakingModuleAccou
 	switch acci := newPrefixAddr.(type) {
 	case *vestingtypes.PermanentLockedAccount:
 		acc := acci
-		s.Suite.Equal(acc.Address, newBech32AddrPermanentVestingAccount)
+		s.Equal(acc.Address, newBech32AddrPermanentVestingAccount)
 	default:
-		s.Suite.NotNil(nil)
+		s.NotNil(nil)
 	}
 }
 
@@ -464,54 +464,54 @@ func checkUpgradeAllianceModule(s *UpgradeTestSuite) {
 	// and then used for key storage
 	// so the migration do not affect this module
 	genesis := s.App.AllianceKeeper.ExportGenesis(s.Ctx)
-	s.Suite.Equal(strings.Contains(genesis.ValidatorInfos[0].ValidatorAddress, "pica"), true)
+	s.Equal(strings.Contains(genesis.ValidatorInfos[0].ValidatorAddress, "pica"), true)
 }
 
 func checkUpgradeICAHostModule(s *UpgradeTestSuite) {
 	acc1 := s.TestAccs[0]
 	interchainAccount, _ := s.App.ICAHostKeeper.GetInterchainAccountAddress(s.Ctx, CONNECTION_0, PORT_0)
-	s.Suite.Equal(acc1.String(), interchainAccount)
+	s.Equal(acc1.String(), interchainAccount)
 }
 
 func checkUpgradeMintModule(s *UpgradeTestSuite) {
 	acc1 := s.TestAccs[0]
 	found := s.App.MintKeeper.IsAllowedAddress(s.Ctx, acc1.String())
-	s.Suite.Equal(found, true)
+	s.Equal(found, true)
 }
 
 func checkUpgradeTransferMiddlewareModule(s *UpgradeTestSuite) {
 	acc1 := s.TestAccs[0]
 	found := s.App.TransferMiddlewareKeeper.HasAllowRlyAddress(s.Ctx, acc1.String())
-	s.Suite.Equal(found, true)
+	s.Equal(found, true)
 }
 
 func checkUpgradePfmMiddlewareModule(s *UpgradeTestSuite) {
 	data := s.App.RouterKeeper.GetAndClearInFlightPacket(s.Ctx, "channel-9", "transfer", 0)
-	s.Suite.Equal("pica1wkjvpgkuchq0r8425g4z4sf6n85zj5wtykvtv3", data.OriginalSenderAddress)
+	s.Equal("pica1wkjvpgkuchq0r8425g4z4sf6n85zj5wtykvtv3", data.OriginalSenderAddress)
 
 	data = s.App.RouterKeeper.GetAndClearInFlightPacket(s.Ctx, "channel-9", "transfer", 2)
-	s.Suite.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data.OriginalSenderAddress)
+	s.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data.OriginalSenderAddress)
 }
 
 func checkUpgradeIbcTransferMiddlewareModule(s *UpgradeTestSuite) {
 	data := s.App.IbcTransferMiddlewareKeeper.GetChannelFeeAddress(s.Ctx, "channel-9")
-	s.Suite.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
+	s.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
 
 	data = s.App.IbcTransferMiddlewareKeeper.GetChannelFeeAddress(s.Ctx, "channel-7")
-	s.Suite.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
+	s.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
 	data = s.App.IbcTransferMiddlewareKeeper.GetChannelFeeAddress(s.Ctx, "channel-1")
-	s.Suite.Equal("", data)
+	s.Equal("", data)
 }
 
 func checkUpgradeIbcHooksMiddlewareModule(s *UpgradeTestSuite) {
 	data := s.App.IBCHooksKeeper.GetPacketCallback(s.Ctx, "channel-2", 2)
-	s.Suite.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
+	s.Equal("pica1hj5fveer5cjtn4wd6wstzugjfdxzl0xpas3hgy", data)
 
 	data = s.App.IBCHooksKeeper.GetPacketCallback(s.Ctx, "channel-4", 2)
-	s.Suite.Equal("pica1wkjvpgkuchq0r8425g4z4sf6n85zj5wtykvtv3", data)
+	s.Equal("pica1wkjvpgkuchq0r8425g4z4sf6n85zj5wtykvtv3", data)
 
 	data = s.App.IBCHooksKeeper.GetPacketCallback(s.Ctx, "channel-2", 1)
-	s.Suite.Equal("", data)
+	s.Equal("", data)
 }
 
 func CreateVestingAccount(s *UpgradeTestSuite,
@@ -523,13 +523,13 @@ func CreateVestingAccount(s *UpgradeTestSuite,
 		panic(err)
 	}
 
-	err := banktestutil.FundAccount(s.App.BankKeeper, s.Ctx, acc.BaseAccount.GetAddress(),
+	err := banktestutil.FundAccount(s.App.BankKeeper, s.Ctx, acc.GetAddress(),
 		acc.GetOriginalVesting())
 	if err != nil {
 		panic(err)
 	}
 
-	err = banktestutil.FundAccount(s.App.BankKeeper, s.Ctx, acc.BaseAccount.GetAddress(),
+	err = banktestutil.FundAccount(s.App.BankKeeper, s.Ctx, acc.GetAddress(),
 		sdk.NewCoins(sdk.NewCoin(COIN_DENOM, math.NewIntFromUint64(1))))
 	if err != nil {
 		panic(err)

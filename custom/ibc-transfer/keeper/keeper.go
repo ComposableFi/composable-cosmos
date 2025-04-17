@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -64,11 +65,15 @@ func (k Keeper) Transfer(goCtx context.Context, msg *types.MsgTransfer) (*types.
 		channelFee := findChannelParams(params.ChannelFees, msg.SourceChannel)
 		if channelFee != nil {
 			if channelFee.MinTimeoutTimestamp > 0 {
-
 				goCtx := sdk.UnwrapSDKContext(goCtx)
 				blockTime := goCtx.BlockTime()
 
+				// Ensure timeout timestamp can be safely converted to int64
+				if msg.TimeoutTimestamp > uint64(math.MaxInt64) {
+					return nil, fmt.Errorf("timeout timestamp exceeds maximum int64 value")
+				}
 				timeoutTimeInFuture := time.Unix(0, int64(msg.TimeoutTimestamp))
+
 				if timeoutTimeInFuture.Before(blockTime) {
 					return nil, fmt.Errorf("incorrect timeout timestamp found during ibc transfer. timeout timestamp is in the past")
 				}

@@ -205,6 +205,13 @@ func (suite *IBCHooksTestSuite) TestTimeoutHooks() {
 	// Generate swap instructions for the contract
 	callbackMemo := fmt.Sprintf(`{"ibc_callback":"%s"}`, addr)
 
+	// Ensure UnixNano can be safely converted to uint64
+	timeoutNano := suite.coordinator.CurrentTime.Add(time.Minute).UnixNano()
+	if timeoutNano < 0 {
+		panic("negative timeout timestamp not allowed")
+	}
+	timeoutTimestamp := uint64(timeoutNano)
+
 	msg := transfertypes.NewMsgTransfer(
 		path.EndpointA.ChannelConfig.PortID,
 		path.EndpointA.ChannelID,
@@ -212,7 +219,7 @@ func (suite *IBCHooksTestSuite) TestTimeoutHooks() {
 		suite.chainA.SenderAccount.GetAddress().String(),
 		addr.String(),
 		timeoutHeight,
-		uint64(suite.coordinator.CurrentTime.Add(time.Minute).UnixNano()),
+		timeoutTimestamp,
 		callbackMemo,
 	)
 	sdkResult, err := suite.chainA.SendMsgs(msg)

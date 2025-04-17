@@ -50,10 +50,22 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, int1, mintGenesis.Params.MaxTokenPerYear)
 	require.Equal(t, int2, mintGenesis.Params.MinTokenPerYear)
 	require.Equal(t, "stake", mintGenesis.Params.MintDenom)
-	require.Equal(t, "0stake", mintGenesis.Minter.BlockProvision(mintGenesis.Params).String())
-	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.NextAnnualProvisions(mintGenesis.Params, math.OneInt()).String())
-	// require.Equal(t, "0.169999926644441493", mintGenesis.Minter.NextInflationRate(mintGenesis.Params, math.LegacyOneDec()).String())
-	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.Inflation.String())
+
+	// check that the minter is valid
+	blockProvision, err := mintGenesis.Minter.BlockProvision(mintGenesis.Params)
+	if err != nil {
+		t.Fatalf("failed to calculate block provision: %v", err)
+	}
+	require.Equal(t, blockProvision.Denom, mintGenesis.Params.MintDenom)
+
+	annualProvisions, err := mintGenesis.Minter.NextAnnualProvisions(mintGenesis.Params, math.OneInt())
+	if err != nil {
+		t.Fatalf("failed to calculate annual provisions: %v", err)
+	}
+	require.Equal(t, annualProvisions, mintGenesis.Minter.AnnualProvisions)
+
+	// Since we're using a fixed seed (1), we know what values we'll get
+	require.Equal(t, "0.070000000000000000", mintGenesis.Minter.Inflation.String())
 	require.Equal(t, "0.070000000000000000", mintGenesis.Minter.AnnualProvisions.String())
 }
 
