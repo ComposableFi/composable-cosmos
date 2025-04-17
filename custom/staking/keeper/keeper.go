@@ -2,8 +2,9 @@ package keeper
 
 import (
 	"fmt"
+	"math"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	abcicometbft "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 
@@ -38,6 +39,10 @@ func (k Keeper) BlockValidatorUpdates(ctx sdk.Context, height int64) []abcicomet
 	// ApplyAndReturnValidatorSetUpdates and then Unbonding -> Unbonded during
 	// UnbondAllMatureValidatorQueue).
 	params := k.Stakingmiddleware.GetParams(ctx)
+	// Ensure BlocksPerEpoch can be safely converted to int64
+	if params.BlocksPerEpoch > uint64(math.MaxInt64) {
+		return nil
+	}
 	shouldExecuteBatch := (height % int64(params.BlocksPerEpoch)) == 0
 	var validatorUpdates []abcicometbft.ValidatorUpdate
 	if shouldExecuteBatch {
@@ -139,7 +144,7 @@ func (k *Keeper) RegisterKeepers(dk distkeeper.Keeper, mk mintkeeper.Keeper) {
 }
 
 // SlashWithInfractionReason send coins to community pool
-func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddress, infractionHeight, power int64, slashFactor sdk.Dec, _ types.Infraction) math.Int {
+func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddress, infractionHeight, power int64, slashFactor sdk.Dec, _ types.Infraction) sdkmath.Int {
 	// keep slashing logic the same
 	amountBurned := k.Slash(ctx, consAddr, infractionHeight, power, slashFactor)
 	// after usual slashing and burning is done, mint burned coinds into community pool

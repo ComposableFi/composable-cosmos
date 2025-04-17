@@ -14,10 +14,10 @@ import (
 // Value to the corresponding mint type.
 func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
 	return func(kvA, kvB kv.Pair) string {
-		fmt.Println("kvA.Key[:1]:", kvA.Key[:1])
+		fmt.Println("kvA.Key[:1]:", string(kvA.Key[:1]))
 		switch {
 		case bytes.Equal(kvA.Key[:1], types.MinterKey):
-			fmt.Println("types.ParamsKey:", types.ParamsKey)
+			fmt.Println("types.ParamsKey:", string(types.ParamsKey))
 			var minterA, minterB types.Minter
 			cdc.MustUnmarshal(kvA.Value, &minterA)
 			cdc.MustUnmarshal(kvB.Value, &minterB)

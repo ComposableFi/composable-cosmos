@@ -35,11 +35,30 @@ func SimulateMsgUpdateParams(r *rand.Rand, _ sdk.Context, _ []simtypes.Account) 
 	var authority sdk.AccAddress = address.Module("gov")
 
 	params := types.DefaultParams()
-	params.BlocksPerYear = uint64(simtypes.RandIntBetween(r, 1, 60*60*8766))
+
+	// Ensure random number is positive before converting to uint64
+	blocksPerYear := simtypes.RandIntBetween(r, 1, 60*60*8766)
+	if blocksPerYear < 0 {
+		panic("negative blocks per year not allowed")
+	}
+	params.BlocksPerYear = uint64(blocksPerYear)
+
 	params.GoalBonded = sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 0, 100)), 2)
 	params.InflationRateChange = sdk.NewDecWithPrec(int64(simtypes.RandIntBetween(r, 1, 20)), 2)
-	params.MaxTokenPerYear = sdk.NewIntFromUint64(uint64(simtypes.RandIntBetween(r, 1000000000000000, 100000000000000000)))
-	params.MinTokenPerYear = sdk.NewIntFromUint64(uint64(simtypes.RandIntBetween(r, 1, 1000000000000000)))
+
+	// Ensure random numbers are positive before converting to uint64
+	maxToken := simtypes.RandIntBetween(r, 1000000000000000, 100000000000000000)
+	if maxToken < 0 {
+		panic("negative max token not allowed")
+	}
+	params.MaxTokenPerYear = sdk.NewIntFromUint64(uint64(maxToken))
+
+	minToken := simtypes.RandIntBetween(r, 1, 1000000000000000)
+	if minToken < 0 {
+		panic("negative min token not allowed")
+	}
+	params.MinTokenPerYear = sdk.NewIntFromUint64(uint64(minToken))
+
 	params.MintDenom = simtypes.RandStringOfLength(r, 10)
 
 	return &types.MsgUpdateParams{

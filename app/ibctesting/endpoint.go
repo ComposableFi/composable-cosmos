@@ -2,6 +2,7 @@ package ibctesting
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/stretchr/testify/require"
 
@@ -45,7 +46,10 @@ func (endpoint *Endpoint) QueryProof(key []byte) ([]byte, clienttypes.Height) {
 // QueryProofAtHeight queries proof associated with this endpoint using the proof height
 // providied
 func (endpoint *Endpoint) QueryProofAtHeight(key []byte, height uint64) ([]byte, clienttypes.Height) {
-	// query proof on the counterparty using the latest height of the IBC client
+	// Ensure height can be safely converted to int64
+	if height > uint64(math.MaxInt64) {
+		panic("height exceeds maximum int64 value")
+	}
 	return endpoint.Chain.QueryProofAtHeight(key, int64(height))
 }
 

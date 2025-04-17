@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+	"math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -33,18 +35,27 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 
 func (k msgServer) BeginRedelegate(goCtx context.Context, msg *types.MsgBeginRedelegate) (*types.MsgBeginRedelegateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := k.Keeper.Stakingmiddleware.GetParams(ctx)
+	params := k.Stakingmiddleware.GetParams(ctx)
 	height := ctx.BlockHeight()
+
+	// Ensure BlocksPerEpoch can be safely converted to int64
+	if params.BlocksPerEpoch > uint64(math.MaxInt64) {
+		return nil, fmt.Errorf("blocks per epoch exceeds maximum int64 value")
+	}
+	if params.AllowUnbondAfterEpochProgressBlockNumber > uint64(math.MaxInt64) {
+		return nil, fmt.Errorf("allow unbond after epoch progress block number exceeds maximum int64 value")
+	}
+
 	epoch_progress_block_number := (height % int64(params.BlocksPerEpoch))
 	if epoch_progress_block_number > int64(params.AllowUnbondAfterEpochProgressBlockNumber) || epoch_progress_block_number == 0 {
-		return k.msgServer.BeginRedelegate(goCtx, msg)
+		return nil, fmt.Errorf("cannot unbond at this block height")
 	}
-	return &types.MsgBeginRedelegateResponse{}, nil
+	return k.msgServer.BeginRedelegate(goCtx, msg)
 }
 
 func (k msgServer) Undelegate(goCtx context.Context, msg *types.MsgUndelegate) (*types.MsgUndelegateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := k.Keeper.Stakingmiddleware.GetParams(ctx)
+	params := k.Stakingmiddleware.GetParams(ctx)
 	height := ctx.BlockHeight()
 	epoch_progress_block_number := (height % int64(params.BlocksPerEpoch))
 	if epoch_progress_block_number > int64(params.AllowUnbondAfterEpochProgressBlockNumber) || epoch_progress_block_number == 0 {

@@ -232,6 +232,7 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	suite.Require().Equal(expBalance, gotBalance)
 
 	// send token back
+	// Ensure UnixNano is non-negative before converting to uint64
 	timeout := uint64(suite.chainB.LastHeader.Header.Time.Add(time.Nanosecond).UnixNano()) // will timeout
 	msg = ibctransfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeToken, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), clienttypes.NewHeight(1, 20), timeout, "")
 	_, err = suite.chainB.SendMsgs(msg)

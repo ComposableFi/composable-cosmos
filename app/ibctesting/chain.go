@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"math"
 	"os"
 	"testing"
 	"time"
@@ -202,6 +203,10 @@ func (chain *TestChain) QueryProofAtHeight(key []byte, height int64) ([]byte, cl
 
 	revision := clienttypes.ParseChainID(chain.ChainID)
 
+	// Ensure height is non-negative before converting to uint64
+	if res.Height < 0 {
+		panic("negative height not allowed")
+	}
 	// proof height + 1 is returned as the proof created corresponds to the height the proof
 	// was created in the IAVL tree. Tendermint and subsequently the clients that rely on it
 	// have heights 1 above the IAVL tree. Thus we return proof height + 1
@@ -211,6 +216,14 @@ func (chain *TestChain) QueryProofAtHeight(key []byte, height int64) ([]byte, cl
 // QueryUpgradeProof performs an abci query with the given key and returns the proto encoded merkle proof
 // for the query and the height at which the proof will succeed on a tendermint verifier.
 func (chain *TestChain) QueryUpgradeProof(key []byte, height uint64) ([]byte, clienttypes.Height) {
+	// Ensure height is not zero and can be safely converted to int64
+	if height == 0 {
+		panic("height cannot be zero")
+	}
+	if height > uint64(math.MaxInt64) {
+		panic("height exceeds maximum int64 value")
+	}
+
 	res := chain.App.Query(abci.RequestQuery{
 		Path:   "store/upgrade/key",
 		Height: int64(height - 1),
@@ -226,6 +239,13 @@ func (chain *TestChain) QueryUpgradeProof(key []byte, height uint64) ([]byte, cl
 
 	revision := clienttypes.ParseChainID(chain.ChainID)
 
+	// Ensure height is non-negative before converting to uint64
+	if res.Height < 0 {
+		panic("negative height not allowed")
+	}
+	if res.Height+1 > math.MaxInt64 {
+		panic("height+1 exceeds maximum int64 value")
+	}
 	// proof height + 1 is returned as the proof created corresponds to the height the proof
 	// was created in the IAVL tree. Tendermint and subsequently the clients that rely on it
 	// have heights 1 above the IAVL tree. Thus we return proof height + 1
@@ -434,6 +454,10 @@ func (chain *TestChain) ConstructUpdateTMClientHeaderWithTrustedHeight(counterpa
 		// since the last trusted validators for a header at height h
 		// is the NextValidators at h+1 committed to in header h by
 		// NextValidatorsHash
+		// Ensure height can be safely converted to int64
+		if trustedHeight.RevisionHeight > uint64(math.MaxInt64-1) {
+			return nil, errors.Wrapf(ibctmtypes.ErrInvalidHeaderHeight, "trusted height exceeds maximum int64 value")
+		}
 		tmTrustedVals, ok = counterparty.GetValsAtHeight(int64(trustedHeight.RevisionHeight + 1))
 		if !ok {
 			return nil, errors.Wrapf(ibctmtypes.ErrInvalidHeaderHeight, "could not retrieve trusted validators at trustedHeight: %d", trustedHeight)

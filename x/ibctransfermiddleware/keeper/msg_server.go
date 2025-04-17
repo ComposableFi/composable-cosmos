@@ -50,7 +50,7 @@ func (ms msgServer) AddIBCFeeConfig(goCtx context.Context, req *types.MsgAddIBCF
 		return nil, err
 	}
 
-	params := ms.Keeper.GetParams(ctx)
+	params := ms.GetParams(ctx)
 	channelFee := findChannelParams(params.ChannelFees, req.ChannelID)
 	if channelFee != nil {
 		channelFee.FeeAddress = req.FeeAddress
@@ -64,7 +64,7 @@ func (ms msgServer) AddIBCFeeConfig(goCtx context.Context, req *types.MsgAddIBCF
 		}
 		params.ChannelFees = append(params.ChannelFees, channelFee)
 	}
-	errSetParams := ms.Keeper.SetParams(ctx, params)
+	errSetParams := ms.SetParams(ctx, params)
 	if errSetParams != nil {
 		return nil, errSetParams
 	}
@@ -77,14 +77,14 @@ func (ms msgServer) RemoveIBCFeeConfig(goCtx context.Context, req *types.MsgRemo
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := ms.Keeper.GetParams(ctx)
+	params := ms.GetParams(ctx)
 	for i, fee := range params.ChannelFees {
 		if fee.Channel == req.ChannelID {
 			params.ChannelFees = append(params.ChannelFees[:i], params.ChannelFees[i+1:]...)
 			break
 		}
 	}
-	errSetParams := ms.Keeper.SetParams(ctx, params)
+	errSetParams := ms.SetParams(ctx, params)
 	if errSetParams != nil {
 		return nil, errSetParams
 	}
@@ -98,7 +98,7 @@ func (ms msgServer) AddAllowedIbcToken(goCtx context.Context, req *types.MsgAddA
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := ms.Keeper.GetParams(ctx)
+	params := ms.GetParams(ctx)
 	channelFee := findChannelParams(params.ChannelFees, req.ChannelID)
 	if channelFee != nil {
 		coin := findCoinByDenom(channelFee.AllowedTokens, req.MinFee.Denom)
@@ -117,7 +117,7 @@ func (ms msgServer) AddAllowedIbcToken(goCtx context.Context, req *types.MsgAddA
 	} else {
 		return nil, errorsmod.Wrapf(types.ErrChannelFeeNotFound, "channel fee not found for channel %s", req.ChannelID)
 	}
-	errSetParams := ms.Keeper.SetParams(ctx, params)
+	errSetParams := ms.SetParams(ctx, params)
 	if errSetParams != nil {
 		return nil, errSetParams
 	}
@@ -131,7 +131,7 @@ func (ms msgServer) RemoveAllowedIbcToken(goCtx context.Context, req *types.MsgR
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := ms.Keeper.GetParams(ctx)
+	params := ms.GetParams(ctx)
 	channelFee := findChannelParams(params.ChannelFees, req.ChannelID)
 	if channelFee != nil {
 		for i, coin := range channelFee.AllowedTokens {
@@ -144,7 +144,7 @@ func (ms msgServer) RemoveAllowedIbcToken(goCtx context.Context, req *types.MsgR
 		return nil, errorsmod.Wrapf(types.ErrChannelFeeNotFound, "channel fee not found for channel %s", req.ChannelID)
 	}
 
-	errSetParams := ms.Keeper.SetParams(ctx, params)
+	errSetParams := ms.SetParams(ctx, params)
 	if errSetParams != nil {
 		return nil, errSetParams
 	}
