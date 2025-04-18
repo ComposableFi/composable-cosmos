@@ -2,6 +2,7 @@ package transfermiddleware_test
 
 import (
 	"fmt"
+	"math"
 	"testing"
 	"time"
 
@@ -231,8 +232,16 @@ func (suite *TransferMiddlewareTestSuite) TestTimeOutPacket() {
 	gotBalance := suite.chainB.AllBalances(suite.chainB.SenderAccount.GetAddress())
 	suite.Require().Equal(expBalance, gotBalance)
 
-	// send token back
-	timeout := uint64(suite.chainB.LastHeader.Header.Time.Add(time.Nanosecond).UnixNano()) // will timeout
+	// Get the timeout timestamp
+	timeoutTimestamp := suite.chainB.LastHeader.Header.Time.Add(time.Nanosecond)
+	if timeoutTimestamp.UnixNano() < 0 {
+		panic("timeout timestamp cannot be negative")
+	}
+	if timeoutTimestamp.UnixNano() > math.MaxInt64 {
+		panic("timeout timestamp exceeds maximum int64 value")
+	}
+	timeout := uint64(timeoutTimestamp.UnixNano()) // will timeout
+
 	msg = ibctransfertypes.NewMsgTransfer(path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, nativeToken, suite.chainB.SenderAccount.GetAddress().String(), suite.chainA.SenderAccount.GetAddress().String(), clienttypes.NewHeight(1, 20), timeout, "")
 	_, err = suite.chainB.SendMsgs(msg)
 	suite.Require().NoError(err)

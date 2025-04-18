@@ -11,4 +11,5 @@ const (
 	AttributeKeyInflation        = "inflation"
 	AttributeKeyAnnualProvisions = "annual_provisions"
 	AttributeKeyAllowedAddress   = "allowed_address"
+	AttributeKeyError            = "error"
 )

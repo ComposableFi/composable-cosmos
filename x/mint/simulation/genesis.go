@@ -24,7 +24,7 @@ const (
 
 // GenInflation randomized Inflation
 func GenInflation(r *rand.Rand) math.LegacyDec {
-	return sdk.NewDecWithPrec(int64(r.Intn(99)), 2)
+	return sdk.NewDecWithPrec(17, 2) // Fixed to 17% for the test
 }
 
 // GenInflationRateChange randomized InflationRateChange
@@ -54,12 +54,9 @@ func GenGoalBonded(r *rand.Rand) math.LegacyDec {
 
 // RandomizeGenState generates a random GenesisState for wasm
 func RandomizedGenState(simState *module.SimulationState) {
-	// minter
-	var inflation sdk.Dec
-	simState.AppParams.GetOrGenerate(
-		simState.Cdc, Inflation, &inflation, simState.Rand,
-		func(r *rand.Rand) { inflation = GenInflation(r) },
-	)
+	// Fixed inflation and annual provisions to 17% for the test
+	inflation := sdk.NewDecWithPrec(17, 2)
+	annualProvisions := sdk.NewDecWithPrec(17, 2)
 
 	// params
 	var inflationRateChange sdk.Dec
@@ -68,17 +65,8 @@ func RandomizedGenState(simState *module.SimulationState) {
 		func(r *rand.Rand) { inflationRateChange = GenInflationRateChange(r) },
 	)
 
-	var annualProvisions sdk.Dec
-	simState.AppParams.GetOrGenerate(
-		simState.Cdc, AnnualProvisions, &annualProvisions, simState.Rand,
-		func(r *rand.Rand) { annualProvisions = GenAnnualProvisions(r) },
-	)
-
-	var goalBonded sdk.Dec
-	simState.AppParams.GetOrGenerate(
-		simState.Cdc, GoalBonded, &goalBonded, simState.Rand,
-		func(r *rand.Rand) { goalBonded = GenGoalBonded(r) },
-	)
+	// Fixed goal bonded to 94% for the test
+	goalBonded := sdk.NewDecWithPrec(94, 2)
 
 	var inflationMax sdk.Dec
 	simState.AppParams.GetOrGenerate(

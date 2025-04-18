@@ -77,12 +77,8 @@ func (p Params) Validate() error {
 	if err := validateBlocksPerYear(p.BlocksPerYear); err != nil {
 		return err
 	}
-
-	if p.MaxTokenPerYear.LT(p.MinTokenPerYear) {
-		return fmt.Errorf(
-			"MaxTokenPerYear (%s) must be greater than or equal to MinTokenPerYear (%s)",
-			p.MinTokenPerYear, p.MaxTokenPerYear,
-		)
+	if err := validateTokenPerYear(p.MaxTokenPerYear, p.MinTokenPerYear); err != nil {
+		return err
 	}
 
 	return nil
@@ -195,5 +191,24 @@ func validateBlocksPerYear(i interface{}) error {
 		return fmt.Errorf("blocks per year must be positive: %d", v)
 	}
 
+	return nil
+}
+
+func validateTokenPerYear(maxToken, minToken math.Int) error {
+	if maxToken.IsNegative() {
+		return fmt.Errorf("max token per year cannot be negative: %s", maxToken)
+	}
+	if minToken.IsNegative() {
+		return fmt.Errorf("min token per year cannot be negative: %s", minToken)
+	}
+	if maxToken.LT(minToken) {
+		return fmt.Errorf("max token per year (%s) must be greater than or equal to min token per year (%s)", maxToken, minToken)
+	}
+	if maxToken.IsZero() {
+		return fmt.Errorf("max token per year cannot be zero")
+	}
+	if minToken.IsZero() {
+		return fmt.Errorf("min token per year cannot be zero")
+	}
 	return nil
 }

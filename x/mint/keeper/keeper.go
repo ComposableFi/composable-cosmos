@@ -76,7 +76,9 @@ func (k Keeper) GetMinter(ctx sdk.Context) (minter types.Minter) {
 		panic("stored minter should not have been nil")
 	}
 
-	k.cdc.MustUnmarshal(bz, &minter)
+	if err := k.cdc.Unmarshal(bz, &minter); err != nil {
+		panic(fmt.Sprintf("failed to unmarshal minter: %v", err))
+	}
 	return
 }
 
@@ -104,13 +106,16 @@ func (k Keeper) IsAllowedAddress(ctx sdk.Context, address string) bool {
 // SetParams sets the x/mint module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, p types.Params) error {
 	if err := p.Validate(); err != nil {
-		return err
+		return fmt.Errorf("invalid params: %w", err)
 	}
 
 	store := ctx.KVStore(k.storeKey)
-	bz := k.cdc.MustMarshal(&p)
-	store.Set(types.ParamsKey, bz)
+	bz, err := k.cdc.Marshal(&p)
+	if err != nil {
+		return fmt.Errorf("failed to marshal params: %w", err)
+	}
 
+	store.Set(types.ParamsKey, bz)
 	return nil
 }
 
@@ -147,6 +152,44 @@ func (k Keeper) MintCoins(ctx sdk.Context, newCoins sdk.Coins) error {
 	}
 
 	return k.bankKeeper.MintCoins(ctx, types.ModuleName, newCoins)
+}
+
+// GetProvisionsFromBlock returns the provisions for a block based on the mint params
+func (k Keeper) GetProvisionsFromBlock(ctx sdk.Context) (sdk.Coin, error) {
+	minter := k.GetMinter(ctx)
+	params := k.GetParams(ctx)
+
+	// BlockProvisionWithCheck already includes the check for BlocksPerYear
+	return k.BlockProvisionWithCheck(ctx, minter, params)
+}
+
+// BeginBlocker mints new tokens for the previous block.
+func (k Keeper) BeginBlocker(ctx sdk.Context) {
+	provisions, err := k.GetProvisionsFromBlock(ctx)
+	if err != nil {
+		k.Logger(ctx).Error("failed to get provisions from block", "error", err)
+		return
+	}
+
+	if err := k.MintCoins(ctx, sdk.NewCoins(provisions)); err != nil {
+		k.Logger(ctx).Error("failed to mint coins", "error", err)
+		return
+	}
+
+	// send the minted coins to the fee collector account
+	if err := k.DistributeMintedCoin(ctx, provisions); err != nil {
+		k.Logger(ctx).Error("failed to distribute minted coins", "error", err)
+		return
+	}
+}
+
+// DistributeMintedCoin implements the distribution of minted coins to the fee collector account
+func (k Keeper) DistributeMintedCoin(ctx sdk.Context, mintedCoin sdk.Coin) error {
+	if mintedCoin.IsZero() {
+		return nil
+	}
+
+	return k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, k.feeCollectorName, sdk.NewCoins(mintedCoin))
 }
 
 // AddCollectedFees implements an alias call to the underlying supply keeper's
